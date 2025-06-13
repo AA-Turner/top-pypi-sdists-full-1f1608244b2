@@ -5,6 +5,7 @@ import os
 import re
 import io
 import json
+from pathlib import Path
 import uuid
 import pandas as pd
 import pyautogui
@@ -18,7 +19,6 @@ from pywinauto.mouse import double_click
 import win32clipboard
 from pywinauto_recorder.player import set_combobox
 from rich.console import Console
-from worker_automate_hub.api.ahead_service import save_xml_to_downloads
 from worker_automate_hub.api.datalake_service import send_file_to_datalake
 from worker_automate_hub.api.client import (
     get_config_by_name,
@@ -327,12 +327,8 @@ async def extracao_fechamento_contabil(
             data_final_arquivo = periodo_final.replace("/", "")
             
             # Caminho completo para Downloads
-            caminho_downloads = os.path.join(os.environ["USERPROFILE"], "Downloads")
-            nome_arquivo = os.path.join(
-                caminho_downloads,
-                f"balancete_{data_inicial_arquivo}_{data_final_arquivo}_{date_now}.xls"
-            )
-
+            nome_arquivo = f"C:\\Users\\{getpass.getuser()}\\Downloads\\balancete_{data_inicial_arquivo}_{data_final_arquivo}_{date_now}.XLS"
+           
             console.print(f"Salvar arquivo: {nome_arquivo}")
             
             # Inserir nome do arquivo
@@ -347,8 +343,9 @@ async def extracao_fechamento_contabil(
             botao_salvar = main_window.child_window(class_name="Button", found_index=0)
             botao_salvar.click_input()
 
-            await worker_sleep(3)
-
+            await worker_sleep(2)
+            
+            
             ##### Janela Print #####
 
             app = Application(backend="win32").connect(title="Print")
@@ -374,18 +371,22 @@ async def extracao_fechamento_contabil(
             await worker_sleep(5)
 
             username = getpass.getuser()
-            # Nome original (com .XLS maiúsculo)
-            caminho_arquivo = f"C:\\Users\\{username}\\Downloads\\{nome_arquivo}.XLS"
-
-            # Novo nome com extensão minúscula
-            caminho_ajustado = caminho_arquivo.rsplit(".", 1)[0] + ".xls"
-
-            # Renomeia o arquivo
-            os.rename(caminho_arquivo, caminho_ajustado)
 
             await worker_sleep(3)
 
             console.print("Criar arquivo JSON")
+            
+            arquivo_path = Path(nome_arquivo)
+            # Altera a extensão para .XLS maiúsculo (caso o EMSys exporte assim)
+            caminho_arquivo = arquivo_path.with_suffix('.XLS')
+            # Altera a extensão final para .xls minúsculo
+            caminho_ajustado = caminho_arquivo.with_suffix('.xls')
+            nome_com_extensao = caminho_ajustado.name
+            print(nome_com_extensao)
+           # Renomeia o arquivo
+            os.rename(caminho_arquivo, caminho_ajustado)
+
+            console.print(f"Arquivo renomeado para: {caminho_ajustado}")
             # Caminho do arquivo
             arquivo = caminho_ajustado
 
@@ -424,7 +425,8 @@ async def extracao_fechamento_contabil(
             # Salva o JSON
 
             # Caminho completo do arquivo
-            full_path = f"C:\\Users\\{username}\\Downloads\\{nome_arquivo}.json"
+            nome_sem_extensao = caminho_ajustado.stem
+            full_path = f"C:\\Users\\{username}\\Downloads\\{nome_sem_extensao}.json"
             filename = os.path.basename(full_path)
             with open(full_path, "w", encoding="utf-8") as f:
                 json.dump(dados_json, f, ensure_ascii=False, indent=2)
@@ -462,12 +464,14 @@ async def extracao_fechamento_contabil(
             try:
                 await send_file(
                     historico_id,
-                    caminho_ajustado,
+                    nome_com_extensao,
                     "xls",
                     file_bytes,
                     file_extension="xls",
                 )
+                console.print("Removendo arquivo XLS da pasta downloads")
                 os.remove(f"{caminho_ajustado}")
+                console.print("Removendo arquivo JSON da pasta downloads")
                 os.remove(full_path)
             except Exception as e:
                 result = f"Arquivo Balancete contábil gerado com sucesso, porém gerou erro ao realizar o envio para o backoffice {e} - Arquivo ainda salvo na dispositivo utilizado no diretório {caminho_arquivo} !"

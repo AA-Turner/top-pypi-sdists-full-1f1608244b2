@@ -79,29 +79,32 @@ class GenRunner(AllGen):
 
 if __name__ == "__main__":
     args = parse(GenRunner)
-    
+
     # # For your convienience, a list of all available params is shown below
-    with GenRunner(verbose=args.verbose,
-                   hosts=args.hosts,
-                   flush=args.flush,
-                   max_cmd_cnt=args.max_cmd_cnt,
-                   mem_cap=args.mem_cap,
-                   pipe_every_x=args.pipe_every_x,
-                   def_key_size=args.def_key_size,
-                   def_key_pref=args.def_key_pref,
-                   distributions=args.distributions,
-                   expire_precentage=args.expire_precentage,
-                   logfile=args.logfile,
-                   maxmemory_bytes=args.maxmemory_bytes,
-                   print_prefix=args.print_prefix,
-                   ttl_low=args.ttl_low,
-                   ttl_high=args.ttl_high,
-                   max_subelements=args.max_subelements,
-                   subval_size=args.subval_size,
-                   subkey_size=args.subkey_size,
-                   incrby_min=args.incrby_min,
-                   incrby_max=args.incrby_max,
-                   num_threads=args.num_threads,
-                   include_gens=args.include_gens,
-                   exclude_gens=args.exclude_gens) as runner:
-        sleep(10)
+    runner = GenRunner(verbose=args.verbose,
+                       hosts=args.hosts,
+                       flush=args.flush,
+                       max_cmd_cnt=args.max_cmd_cnt,
+                       mem_cap=args.mem_cap,
+                       pipe_every_x=args.pipe_every_x,
+                       def_key_size=args.def_key_size,
+                       def_key_pref=args.def_key_pref,
+                       distributions=args.distributions,
+                       expire_precentage=args.expire_precentage,
+                       logfile=args.logfile,
+                       maxmemory_bytes=args.maxmemory_bytes,
+                       print_prefix=args.print_prefix,
+                       ttl_low=args.ttl_low,
+                       ttl_high=args.ttl_high,
+                       max_subelements=args.max_subelements,
+                       subval_size=args.subval_size,
+                       subkey_size=args.subkey_size,
+                       incrby_min=args.incrby_min,
+                       incrby_max=args.incrby_max,
+                       num_threads=args.num_threads,
+                       include_gens=args.include_gens,
+                       identical_values_across_hosts=args.identical_values_across_hosts,
+                       exclude_gens=args.exclude_gens)
+
+    runner.start()
+    runner.join()

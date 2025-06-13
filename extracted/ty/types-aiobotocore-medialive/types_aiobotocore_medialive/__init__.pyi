@@ -41,6 +41,7 @@ Usage::
         ListNodesPaginator,
         ListOfferingsPaginator,
         ListReservationsPaginator,
+        ListSdiSourcesPaginator,
         ListSignalMapsPaginator,
         MediaLiveClient,
         MultiplexCreatedWaiter,
@@ -102,6 +103,7 @@ Usage::
     list_nodes_paginator: ListNodesPaginator = client.get_paginator("list_nodes")
     list_offerings_paginator: ListOfferingsPaginator = client.get_paginator("list_offerings")
     list_reservations_paginator: ListReservationsPaginator = client.get_paginator("list_reservations")
+    list_sdi_sources_paginator: ListSdiSourcesPaginator = client.get_paginator("list_sdi_sources")
     list_signal_maps_paginator: ListSignalMapsPaginator = client.get_paginator("list_signal_maps")
     ```
 """
@@ -126,6 +128,7 @@ from .paginator import (
     ListNodesPaginator,
     ListOfferingsPaginator,
     ListReservationsPaginator,
+    ListSdiSourcesPaginator,
     ListSignalMapsPaginator,
 )
 from .waiter import (
@@ -187,6 +190,7 @@ __all__ = (
     "ListNodesPaginator",
     "ListOfferingsPaginator",
     "ListReservationsPaginator",
+    "ListSdiSourcesPaginator",
     "ListSignalMapsPaginator",
     "MediaLiveClient",
     "MultiplexCreatedWaiter",

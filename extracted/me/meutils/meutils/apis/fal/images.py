@@ -48,13 +48,13 @@ async def check(token, threshold: float = 0):
         return False
 
 
-async def generate(request: ImageRequest, token: Optional[str] = None):
+async def generate(request: ImageRequest, api_key: Optional[str] = None):
     """https://fal.ai/models/fal-ai/flux-pro/v1.1-ultra/api#api-call-submit-request
     """
     logger.debug(request)
 
     s = time.time()
-    token = token or await get_next_token_for_polling(feishu_url=FEISHU_URL, from_redis=True, check_token=check)
+    token = api_key or await get_next_token_for_polling(feishu_url=FEISHU_URL, from_redis=True, check_token=check)
 
     arguments = request.model_dump(exclude_none=True)
     width, height = request.size.split("x")
@@ -156,10 +156,12 @@ async def generate(request: ImageRequest, token: Optional[str] = None):
             arguments.pop("aspect_ratio", None)
 
             aspect_ratios = {'21:9', '16:9', '4:3', '3:2', '1:1', '2:3', '3:4', '9:16', '9:21'}
-            if request.aspect_ratio in aspect_ratios:
+
+            if aspect_ratio := request.prompt2aspect_ratio(aspect_ratios): # 提示词优先级最高
+                arguments["aspect_ratio"] = aspect_ratio
+
+            elif request.aspect_ratio in aspect_ratios:
                 arguments["aspect_ratio"] = request.aspect_ratio
-
-
 
         logger.debug(bjson(arguments))
 
@@ -266,14 +268,14 @@ if __name__ == '__main__':
 
     tokens = arun(get_series(FEISHU_URL))
     # tokens = ["578e143c-702d-46a1-8c02-d451bc3e155b:bb531a95f79c6026e7bc7ab676163c71"]
-    tokens = """
-30e9fe5c-75d0-4bdd-b11d-ff17dbe4bba5:3de8535e2fa4d9347e599a845cf3e7b8
-05c0b4f6-1443-4b28-aeff-771b65ebaebc:28df6b9b71430b05aca6b8bc7e873a4a
-    """.split()
-
-    r = []
-    for t in tokens:
-        if arun(check(t)):
-            r.append(t)
-
-    print('\n'.join(r))
+#     tokens = """
+# 30e9fe5c-75d0-4bdd-b11d-ff17dbe4bba5:3de8535e2fa4d9347e599a845cf3e7b8
+# 05c0b4f6-1443-4b28-aeff-771b65ebaebc:28df6b9b71430b05aca6b8bc7e873a4a
+#     """.split()
+#
+#     r = []
+#     for t in tokens:
+#         if arun(check(t)):
+#             r.append(t)
+#
+#     print('\n'.join(r))

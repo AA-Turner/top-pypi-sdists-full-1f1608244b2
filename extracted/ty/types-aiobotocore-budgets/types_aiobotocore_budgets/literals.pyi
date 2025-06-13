@@ -38,8 +38,11 @@ __all__ = (
     "DescribeBudgetsPaginatorName",
     "DescribeNotificationsForBudgetPaginatorName",
     "DescribeSubscribersForNotificationPaginatorName",
+    "DimensionType",
     "EventTypeType",
     "ExecutionTypeType",
+    "MatchOptionType",
+    "MetricType",
     "NotificationStateType",
     "NotificationTypeType",
     "PaginatorName",
@@ -85,11 +88,66 @@ DescribeBudgetPerformanceHistoryPaginatorName = Literal["describe_budget_perform
 DescribeBudgetsPaginatorName = Literal["describe_budgets"]
 DescribeNotificationsForBudgetPaginatorName = Literal["describe_notifications_for_budget"]
 DescribeSubscribersForNotificationPaginatorName = Literal["describe_subscribers_for_notification"]
+DimensionType = Literal[
+    "AZ",
+    "BILLING_ENTITY",
+    "CACHE_ENGINE",
+    "COST_CATEGORY_NAME",
+    "DATABASE_ENGINE",
+    "DEPLOYMENT_OPTION",
+    "INSTANCE_TYPE",
+    "INSTANCE_TYPE_FAMILY",
+    "INVOICING_ENTITY",
+    "LEGAL_ENTITY_NAME",
+    "LINKED_ACCOUNT",
+    "LINKED_ACCOUNT_NAME",
+    "OPERATING_SYSTEM",
+    "OPERATION",
+    "PAYMENT_OPTION",
+    "PLATFORM",
+    "PURCHASE_TYPE",
+    "RECORD_TYPE",
+    "REGION",
+    "RESERVATION_ID",
+    "RESERVATION_MODIFIED",
+    "RESOURCE_ID",
+    "RIGHTSIZING_TYPE",
+    "SAVINGS_PLANS_TYPE",
+    "SAVINGS_PLAN_ARN",
+    "SCOPE",
+    "SERVICE",
+    "SERVICE_CODE",
+    "SUBSCRIPTION_ID",
+    "TAG_KEY",
+    "TENANCY",
+    "USAGE_TYPE",
+    "USAGE_TYPE_GROUP",
+]
 EventTypeType = Literal[
     "CREATE_ACTION", "DELETE_ACTION", "EXECUTE_ACTION", "SYSTEM", "UPDATE_ACTION"
 ]
 ExecutionTypeType = Literal[
     "APPROVE_BUDGET_ACTION", "RESET_BUDGET_ACTION", "RETRY_BUDGET_ACTION", "REVERSE_BUDGET_ACTION"
+]
+MatchOptionType = Literal[
+    "ABSENT",
+    "CASE_INSENSITIVE",
+    "CASE_SENSITIVE",
+    "CONTAINS",
+    "ENDS_WITH",
+    "EQUALS",
+    "GREATER_THAN_OR_EQUAL",
+    "STARTS_WITH",
+]
+MetricType = Literal[
+    "AmortizedCost",
+    "BlendedCost",
+    "Hours",
+    "NetAmortizedCost",
+    "NetUnblendedCost",
+    "NormalizedUsageAmount",
+    "UnblendedCost",
+    "UsageQuantity",
 ]
 NotificationStateType = Literal["ALARM", "OK"]
 NotificationTypeType = Literal["ACTUAL", "FORECASTED"]
@@ -253,6 +311,7 @@ ServiceName = Literal[
     "freetier",
     "fsx",
     "gamelift",
+    "gameliftstreams",
     "geo-maps",
     "geo-places",
     "geo-routes",
@@ -278,6 +337,7 @@ ServiceName = Literal[
     "iot",
     "iot-data",
     "iot-jobs-data",
+    "iot-managed-integrations",
     "iotanalytics",
     "iotdeviceadvisor",
     "iotevents",
@@ -392,7 +452,6 @@ ServiceName = Literal[
     "pipes",
     "polly",
     "pricing",
-    "privatenetworks",
     "proton",
     "qapps",
     "qbusiness",
@@ -453,7 +512,6 @@ ServiceName = Literal[
     "signer",
     "simspaceweaver",
     "sms",
-    "sms-voice",
     "snow-device-management",
     "snowball",
     "sns",
@@ -461,6 +519,7 @@ ServiceName = Literal[
     "sqs",
     "ssm",
     "ssm-contacts",
+    "ssm-guiconnect",
     "ssm-incidents",
     "ssm-quicksetup",
     "ssm-sap",

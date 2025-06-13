@@ -10,33 +10,52 @@ See https://github.com/github/rest-api-description for more information.
 from __future__ import annotations
 
 from datetime import datetime
-from typing import Literal, Union
+from typing import Literal
 from typing_extensions import NotRequired, TypedDict
 
-from .group_0003 import SimpleUserType
 
+class PackageVersionType(TypedDict):
+    """Package Version
 
-class ProjectType(TypedDict):
-    """Project
-
-    Projects are a way to organize columns and cards of work.
+    A version of a software package
     """
 
-    owner_url: str
-    url: str
-    html_url: str
-    columns_url: str
     id: int
-    node_id: str
     name: str
-    body: Union[str, None]
-    number: int
-    state: str
-    creator: Union[None, SimpleUserType]
+    url: str
+    package_html_url: str
+    html_url: NotRequired[str]
+    license_: NotRequired[str]
+    description: NotRequired[str]
     created_at: datetime
     updated_at: datetime
-    organization_permission: NotRequired[Literal["read", "write", "admin", "none"]]
-    private: NotRequired[bool]
+    deleted_at: NotRequired[datetime]
+    metadata: NotRequired[PackageVersionPropMetadataType]
 
 
-__all__ = ("ProjectType",)
+class PackageVersionPropMetadataType(TypedDict):
+    """Package Version Metadata"""
+
+    package_type: Literal["npm", "maven", "rubygems", "docker", "nuget", "container"]
+    container: NotRequired[PackageVersionPropMetadataPropContainerType]
+    docker: NotRequired[PackageVersionPropMetadataPropDockerType]
+
+
+class PackageVersionPropMetadataPropContainerType(TypedDict):
+    """Container Metadata"""
+
+    tags: list[str]
+
+
+class PackageVersionPropMetadataPropDockerType(TypedDict):
+    """Docker Metadata"""
+
+    tag: NotRequired[list[str]]
+
+
+__all__ = (
+    "PackageVersionPropMetadataPropContainerType",
+    "PackageVersionPropMetadataPropDockerType",
+    "PackageVersionPropMetadataType",
+    "PackageVersionType",
+)

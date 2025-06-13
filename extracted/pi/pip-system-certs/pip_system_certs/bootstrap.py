@@ -16,13 +16,10 @@ def _register_bootstrap_functions():
     try:
         _registered = True
 
-        # Now discover and register post import hook
-        #
-        # It should be safe to import wrapt at this point as this code
-        # will be executed after all module search path has been setup.
-
-        # This will register the patches
+        # Inject truststore into SSL to use system certificates
+        # This should be safe to do at this point as module search path is setup
         from . import wrapt_requests
+        wrapt_requests.inject_truststore()
     except Exception as ex:
         print("pip_system_certs: ERROR: could not register module:", ex)
 

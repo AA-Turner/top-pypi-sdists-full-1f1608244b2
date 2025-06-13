@@ -58,6 +58,7 @@ __all__ = (
     "ServiceName",
     "SignalDecoderTypeType",
     "SignalNodeTypeType",
+    "SignalValueTypeType",
     "SpoolingModeType",
     "StorageCompressionFormatType",
     "StorageMaximumSizeUnitType",
@@ -159,6 +160,7 @@ SignalDecoderTypeType = Literal[
 SignalNodeTypeType = Literal[
     "ACTUATOR", "ATTRIBUTE", "BRANCH", "CUSTOM_PROPERTY", "CUSTOM_STRUCT", "SENSOR"
 ]
+SignalValueTypeType = Literal["FLOATING_POINT", "INTEGER"]
 SpoolingModeType = Literal["OFF", "TO_DISK"]
 StorageCompressionFormatType = Literal["GZIP", "NONE"]
 StorageMaximumSizeUnitType = Literal["GB", "MB", "TB"]
@@ -330,6 +332,7 @@ ServiceName = Literal[
     "freetier",
     "fsx",
     "gamelift",
+    "gameliftstreams",
     "geo-maps",
     "geo-places",
     "geo-routes",
@@ -355,6 +358,7 @@ ServiceName = Literal[
     "iot",
     "iot-data",
     "iot-jobs-data",
+    "iot-managed-integrations",
     "iotanalytics",
     "iotdeviceadvisor",
     "iotevents",
@@ -469,7 +473,6 @@ ServiceName = Literal[
     "pipes",
     "polly",
     "pricing",
-    "privatenetworks",
     "proton",
     "qapps",
     "qbusiness",
@@ -530,7 +533,6 @@ ServiceName = Literal[
     "signer",
     "simspaceweaver",
     "sms",
-    "sms-voice",
     "snow-device-management",
     "snowball",
     "sns",
@@ -538,6 +540,7 @@ ServiceName = Literal[
     "sqs",
     "ssm",
     "ssm-contacts",
+    "ssm-guiconnect",
     "ssm-incidents",
     "ssm-quicksetup",
     "ssm-sap",

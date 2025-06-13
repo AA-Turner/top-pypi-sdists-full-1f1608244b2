@@ -29,6 +29,7 @@ from .literals import (
     ArcThicknessOptionsType,
     ArcThicknessType,
     AssetBundleExportFormatType,
+    AssetBundleExportJobDataSetPropertyToOverrideType,
     AssetBundleExportJobDataSourcePropertyToOverrideType,
     AssetBundleExportJobFolderPropertyToOverrideType,
     AssetBundleExportJobStatusType,
@@ -165,6 +166,7 @@ from .literals import (
     PropertyUsageType,
     PurchaseModeType,
     QAResultTypeType,
+    QBusinessInsightsStatusType,
     QSearchStatusType,
     QueryExecutionModeType,
     RadarChartAxesRangeScaleType,
@@ -174,6 +176,7 @@ from .literals import (
     ReferenceLinePatternTypeType,
     ReferenceLineSeriesTypeType,
     ReferenceLineValueLabelRelativePositionType,
+    RefreshFailureAlertStatusType,
     RefreshIntervalType,
     RelativeDateTypeType,
     RelativeFontSizeType,
@@ -229,6 +232,7 @@ from .literals import (
     TopicSortDirectionType,
     TopicTimeGranularityType,
     TopicUserExperienceVersionType,
+    TransposedColumnTypeType,
     UndefinedSpecifiedValueTypeType,
     URLTargetConfigurationType,
     UserRoleType,
@@ -237,6 +241,7 @@ from .literals import (
     VerticalTextAlignmentType,
     VisibilityType,
     VisualCustomActionTriggerType,
+    VisualHighlightTriggerType,
     VisualRoleType,
     VPCConnectionAvailabilityStatusType,
     VPCConnectionResourceStatusType,
@@ -273,6 +278,8 @@ __all__ = (
     "AggregationSortConfigurationTypeDef",
     "AmazonElasticsearchParametersTypeDef",
     "AmazonOpenSearchParametersTypeDef",
+    "AmazonQInQuickSightConsoleConfigurationsTypeDef",
+    "AmazonQInQuickSightDashboardConfigurationsTypeDef",
     "AnalysisDefaultsTypeDef",
     "AnalysisDefinitionOutputTypeDef",
     "AnalysisDefinitionTypeDef",
@@ -380,6 +387,7 @@ __all__ = (
     "AssetBundleResourceLinkSharingConfigurationTypeDef",
     "AssetBundleResourcePermissionsOutputTypeDef",
     "AssetBundleResourcePermissionsTypeDef",
+    "AssetOptionsOutputTypeDef",
     "AssetOptionsTypeDef",
     "AthenaParametersTypeDef",
     "AttributeAggregationFunctionTypeDef",
@@ -643,6 +651,8 @@ __all__ = (
     "DataPointDrillUpDownOptionTypeDef",
     "DataPointMenuLabelOptionTypeDef",
     "DataPointTooltipOptionTypeDef",
+    "DataQAEnabledOptionTypeDef",
+    "DataQnAConfigurationsTypeDef",
     "DataSetConfigurationOutputTypeDef",
     "DataSetConfigurationTypeDef",
     "DataSetIdentifierDeclarationTypeDef",
@@ -662,6 +672,7 @@ __all__ = (
     "DataSourceSearchFilterTypeDef",
     "DataSourceSummaryTypeDef",
     "DataSourceTypeDef",
+    "DataStoriesConfigurationsTypeDef",
     "DatabricksParametersTypeDef",
     "DatasetMetadataOutputTypeDef",
     "DatasetMetadataTypeDef",
@@ -905,6 +916,7 @@ __all__ = (
     "ErrorInfoTypeDef",
     "ExasolParametersTypeDef",
     "ExcludePeriodConfigurationTypeDef",
+    "ExecutiveSummaryConfigurationsTypeDef",
     "ExplicitHierarchyOutputTypeDef",
     "ExplicitHierarchyTypeDef",
     "ExportHiddenFieldsOptionTypeDef",
@@ -1024,6 +1036,7 @@ __all__ = (
     "GenerateEmbedUrlForRegisteredUserWithIdentityRequestTypeDef",
     "GenerateEmbedUrlForRegisteredUserWithIdentityResponseTypeDef",
     "GeneratedAnswerResultTypeDef",
+    "GenerativeAuthoringConfigurationsTypeDef",
     "GeoSpatialColumnGroupOutputTypeDef",
     "GeoSpatialColumnGroupTypeDef",
     "GeoSpatialColumnGroupUnionTypeDef",
@@ -1512,6 +1525,7 @@ __all__ = (
     "RangeConstantTypeDef",
     "RangeEndsLabelTypeTypeDef",
     "RdsParametersTypeDef",
+    "RecentSnapshotsConfigurationsTypeDef",
     "RedshiftIAMParametersOutputTypeDef",
     "RedshiftIAMParametersTypeDef",
     "RedshiftIAMParametersUnionTypeDef",
@@ -1527,6 +1541,8 @@ __all__ = (
     "ReferenceLineTypeDef",
     "ReferenceLineValueLabelConfigurationTypeDef",
     "RefreshConfigurationTypeDef",
+    "RefreshFailureConfigurationTypeDef",
+    "RefreshFailureEmailAlertTypeDef",
     "RefreshFrequencyTypeDef",
     "RefreshScheduleOutputTypeDef",
     "RefreshScheduleTypeDef",
@@ -1593,6 +1609,7 @@ __all__ = (
     "ScatterPlotVisualOutputTypeDef",
     "ScatterPlotVisualTypeDef",
     "ScheduleRefreshOnEntityTypeDef",
+    "SchedulesConfigurationsTypeDef",
     "ScrollBarOptionsTypeDef",
     "SearchAnalysesRequestPaginateTypeDef",
     "SearchAnalysesRequestTypeDef",
@@ -1803,6 +1820,7 @@ __all__ = (
     "ThemeVersionSummaryTypeDef",
     "ThemeVersionTypeDef",
     "ThousandSeparatorOptionsTypeDef",
+    "ThresholdAlertsConfigurationsTypeDef",
     "TileLayoutStyleTypeDef",
     "TileStyleTypeDef",
     "TimeBasedForecastPropertiesTypeDef",
@@ -1884,6 +1902,7 @@ __all__ = (
     "TransformOperationOutputTypeDef",
     "TransformOperationTypeDef",
     "TransformOperationUnionTypeDef",
+    "TransposedTableOptionTypeDef",
     "TreeMapAggregatedFieldWellsOutputTypeDef",
     "TreeMapAggregatedFieldWellsTypeDef",
     "TreeMapConfigurationOutputTypeDef",
@@ -2004,10 +2023,12 @@ __all__ = (
     "ValidationStrategyTypeDef",
     "VisibleRangeOptionsTypeDef",
     "VisualAxisSortOptionTypeDef",
+    "VisualCustomActionDefaultsTypeDef",
     "VisualCustomActionOperationOutputTypeDef",
     "VisualCustomActionOperationTypeDef",
     "VisualCustomActionOutputTypeDef",
     "VisualCustomActionTypeDef",
+    "VisualHighlightOperationTypeDef",
     "VisualInteractionOptionsTypeDef",
     "VisualMenuOptionTypeDef",
     "VisualOptionsTypeDef",
@@ -2106,9 +2127,17 @@ class AmazonElasticsearchParametersTypeDef(TypedDict):
 class AmazonOpenSearchParametersTypeDef(TypedDict):
     Domain: str
 
-class AssetOptionsTypeDef(TypedDict):
-    Timezone: NotRequired[str]
-    WeekStart: NotRequired[DayOfTheWeekType]
+class DataQnAConfigurationsTypeDef(TypedDict):
+    Enabled: bool
+
+class DataStoriesConfigurationsTypeDef(TypedDict):
+    Enabled: bool
+
+class ExecutiveSummaryConfigurationsTypeDef(TypedDict):
+    Enabled: bool
+
+class GenerativeAuthoringConfigurationsTypeDef(TypedDict):
+    Enabled: bool
 
 class CalculatedFieldTypeDef(TypedDict):
     DataSetIdentifier: str
@@ -2186,7 +2215,7 @@ class AssetBundleExportJobDashboardOverridePropertiesOutputTypeDef(TypedDict):
 
 class AssetBundleExportJobDataSetOverridePropertiesOutputTypeDef(TypedDict):
     Arn: str
-    Properties: List[Literal["Name"]]
+    Properties: List[AssetBundleExportJobDataSetPropertyToOverrideType]
 
 class AssetBundleExportJobDataSourceOverridePropertiesOutputTypeDef(TypedDict):
     Arn: str
@@ -2221,7 +2250,7 @@ class AssetBundleExportJobDashboardOverridePropertiesTypeDef(TypedDict):
 
 class AssetBundleExportJobDataSetOverridePropertiesTypeDef(TypedDict):
     Arn: str
-    Properties: Sequence[Literal["Name"]]
+    Properties: Sequence[AssetBundleExportJobDataSetPropertyToOverrideType]
 
 class AssetBundleExportJobDataSourceOverridePropertiesTypeDef(TypedDict):
     Arn: str
@@ -2287,10 +2316,6 @@ class TagTypeDef(TypedDict):
 
 class AssetBundleImportJobDashboardOverrideParametersTypeDef(TypedDict):
     DashboardId: str
-    Name: NotRequired[str]
-
-class AssetBundleImportJobDataSetOverrideParametersTypeDef(TypedDict):
-    DataSetId: str
     Name: NotRequired[str]
 
 class AssetBundleImportJobDataSourceCredentialPairTypeDef(TypedDict):
@@ -2782,6 +2807,9 @@ class DataPointMenuLabelOptionTypeDef(TypedDict):
 class DataPointTooltipOptionTypeDef(TypedDict):
     AvailabilityStatus: NotRequired[DashboardBehaviorType]
 
+class DataQAEnabledOptionTypeDef(TypedDict):
+    AvailabilityStatus: NotRequired[DashboardBehaviorType]
+
 class ExportToCSVOptionTypeDef(TypedDict):
     AvailabilityStatus: NotRequired[DashboardBehaviorType]
 
@@ -2927,6 +2955,7 @@ class OracleParametersTypeDef(TypedDict):
     Host: str
     Port: int
     Database: str
+    UseServiceName: NotRequired[bool]
 
 class PostgreSqlParametersTypeDef(TypedDict):
     Host: str
@@ -4147,6 +4176,9 @@ class RangeConstantTypeDef(TypedDict):
     Minimum: NotRequired[str]
     Maximum: NotRequired[str]
 
+class RecentSnapshotsConfigurationsTypeDef(TypedDict):
+    Enabled: bool
+
 class RedshiftIAMParametersOutputTypeDef(TypedDict):
     RoleArn: str
     DatabaseUser: NotRequired[str]
@@ -4173,11 +4205,20 @@ ReferenceLineStyleConfigurationTypeDef = TypedDict(
     },
 )
 
+class RefreshFailureEmailAlertTypeDef(TypedDict):
+    AlertStatus: NotRequired[RefreshFailureAlertStatusType]
+
 class ScheduleRefreshOnEntityTypeDef(TypedDict):
     DayOfWeek: NotRequired[DayOfWeekType]
     DayOfMonth: NotRequired[str]
 
+class SchedulesConfigurationsTypeDef(TypedDict):
+    Enabled: bool
+
 class StatePersistenceConfigurationsTypeDef(TypedDict):
+    Enabled: bool
+
+class ThresholdAlertsConfigurationsTypeDef(TypedDict):
     Enabled: bool
 
 class RegisteredUserGenerativeQnAEmbeddingConfigurationTypeDef(TypedDict):
@@ -4352,6 +4393,11 @@ class TableFieldCustomIconContentTypeDef(TypedDict):
 
 class TablePinnedFieldOptionsOutputTypeDef(TypedDict):
     PinnedLeftFields: NotRequired[List[str]]
+
+class TransposedTableOptionTypeDef(TypedDict):
+    ColumnType: TransposedColumnTypeType
+    ColumnIndex: NotRequired[int]
+    ColumnWidth: NotRequired[str]
 
 class TablePinnedFieldOptionsTypeDef(TypedDict):
     PinnedLeftFields: NotRequired[Sequence[str]]
@@ -4558,6 +4604,9 @@ class UpdateVPCConnectionRequestTypeDef(TypedDict):
     RoleArn: str
     DnsResolvers: NotRequired[Sequence[str]]
 
+class VisualHighlightOperationTypeDef(TypedDict):
+    Trigger: VisualHighlightTriggerType
+
 class WaterfallChartGroupColorConfigurationTypeDef(TypedDict):
     PositiveBarColor: NotRequired[str]
     NegativeBarColor: NotRequired[str]
@@ -4637,6 +4686,15 @@ class TimeRangeDrillDownFilterOutputTypeDef(TypedDict):
     RangeMinimum: datetime
     RangeMaximum: datetime
     TimeGranularity: TimeGranularityType
+
+class AmazonQInQuickSightDashboardConfigurationsTypeDef(TypedDict):
+    ExecutiveSummary: NotRequired[ExecutiveSummaryConfigurationsTypeDef]
+
+class AmazonQInQuickSightConsoleConfigurationsTypeDef(TypedDict):
+    DataQnA: NotRequired[DataQnAConfigurationsTypeDef]
+    GenerativeAuthoring: NotRequired[GenerativeAuthoringConfigurationsTypeDef]
+    ExecutiveSummary: NotRequired[ExecutiveSummaryConfigurationsTypeDef]
+    DataStories: NotRequired[DataStoriesConfigurationsTypeDef]
 
 AnalysisErrorTypeDef = TypedDict(
     "AnalysisErrorTypeDef",
@@ -5894,6 +5952,7 @@ class DataSetSummaryTypeDef(TypedDict):
     RowLevelPermissionDataSet: NotRequired[RowLevelPermissionDataSetTypeDef]
     RowLevelPermissionTagConfigurationApplied: NotRequired[bool]
     ColumnLevelPermissionRulesApplied: NotRequired[bool]
+    UseAs: NotRequired[Literal["RLS_RULES"]]
 
 class CreateFolderMembershipResponseTypeDef(TypedDict):
     Status: int
@@ -6858,20 +6917,14 @@ RedshiftIAMParametersUnionTypeDef = Union[
     RedshiftIAMParametersTypeDef, RedshiftIAMParametersOutputTypeDef
 ]
 
+class RefreshFailureConfigurationTypeDef(TypedDict):
+    EmailAlert: NotRequired[RefreshFailureEmailAlertTypeDef]
+
 class RefreshFrequencyTypeDef(TypedDict):
     Interval: RefreshIntervalType
     RefreshOnDay: NotRequired[ScheduleRefreshOnEntityTypeDef]
     Timezone: NotRequired[str]
     TimeOfTheDay: NotRequired[str]
-
-class RegisteredUserConsoleFeatureConfigurationsTypeDef(TypedDict):
-    StatePersistence: NotRequired[StatePersistenceConfigurationsTypeDef]
-    SharedView: NotRequired[SharedViewConfigurationsTypeDef]
-
-class RegisteredUserDashboardFeatureConfigurationsTypeDef(TypedDict):
-    StatePersistence: NotRequired[StatePersistenceConfigurationsTypeDef]
-    SharedView: NotRequired[SharedViewConfigurationsTypeDef]
-    Bookmarks: NotRequired[BookmarksConfigurationsTypeDef]
 
 class RowLevelPermissionTagConfigurationOutputTypeDef(TypedDict):
     TagRules: List[RowLevelPermissionTagRuleTypeDef]
@@ -7001,6 +7054,9 @@ UntagColumnOperationUnionTypeDef = Union[
     UntagColumnOperationTypeDef, UntagColumnOperationOutputTypeDef
 ]
 
+class VisualCustomActionDefaultsTypeDef(TypedDict):
+    highlightOperation: NotRequired[VisualHighlightOperationTypeDef]
+
 class WaterfallChartColorConfigurationTypeDef(TypedDict):
     GroupColorConfiguration: NotRequired[WaterfallChartGroupColorConfigurationTypeDef]
 
@@ -7048,6 +7104,23 @@ class DrillDownFilterOutputTypeDef(TypedDict):
     NumericEqualityFilter: NotRequired[NumericEqualityDrillDownFilterTypeDef]
     CategoryFilter: NotRequired[CategoryDrillDownFilterOutputTypeDef]
     TimeRangeFilter: NotRequired[TimeRangeDrillDownFilterOutputTypeDef]
+
+class RegisteredUserDashboardFeatureConfigurationsTypeDef(TypedDict):
+    StatePersistence: NotRequired[StatePersistenceConfigurationsTypeDef]
+    SharedView: NotRequired[SharedViewConfigurationsTypeDef]
+    Bookmarks: NotRequired[BookmarksConfigurationsTypeDef]
+    AmazonQInQuickSight: NotRequired[AmazonQInQuickSightDashboardConfigurationsTypeDef]
+    Schedules: NotRequired[SchedulesConfigurationsTypeDef]
+    RecentSnapshots: NotRequired[RecentSnapshotsConfigurationsTypeDef]
+    ThresholdAlerts: NotRequired[ThresholdAlertsConfigurationsTypeDef]
+
+class RegisteredUserConsoleFeatureConfigurationsTypeDef(TypedDict):
+    StatePersistence: NotRequired[StatePersistenceConfigurationsTypeDef]
+    SharedView: NotRequired[SharedViewConfigurationsTypeDef]
+    AmazonQInQuickSight: NotRequired[AmazonQInQuickSightConsoleConfigurationsTypeDef]
+    Schedules: NotRequired[SchedulesConfigurationsTypeDef]
+    RecentSnapshots: NotRequired[RecentSnapshotsConfigurationsTypeDef]
+    ThresholdAlerts: NotRequired[ThresholdAlertsConfigurationsTypeDef]
 
 class AnalysisSourceEntityTypeDef(TypedDict):
     SourceTemplate: NotRequired[AnalysisSourceTemplateTypeDef]
@@ -7277,6 +7350,7 @@ class DashboardPublishOptionsTypeDef(TypedDict):
     DataPointDrillUpDownOption: NotRequired[DataPointDrillUpDownOptionTypeDef]
     DataPointMenuLabelOption: NotRequired[DataPointMenuLabelOptionTypeDef]
     DataPointTooltipOption: NotRequired[DataPointTooltipOptionTypeDef]
+    DataQAEnabledOption: NotRequired[DataQAEnabledOptionTypeDef]
 
 class DataPathColorTypeDef(TypedDict):
     Element: DataPathValueTypeDef
@@ -7752,14 +7826,6 @@ class RefreshScheduleTypeDef(TypedDict):
     StartAfterDateTime: NotRequired[TimestampTypeDef]
     Arn: NotRequired[str]
 
-class RegisteredUserQuickSightConsoleEmbeddingConfigurationTypeDef(TypedDict):
-    InitialPath: NotRequired[str]
-    FeatureConfigurations: NotRequired[RegisteredUserConsoleFeatureConfigurationsTypeDef]
-
-class RegisteredUserDashboardEmbeddingConfigurationTypeDef(TypedDict):
-    InitialDashboardId: str
-    FeatureConfigurations: NotRequired[RegisteredUserDashboardFeatureConfigurationsTypeDef]
-
 RowLevelPermissionTagConfigurationUnionTypeDef = Union[
     RowLevelPermissionTagConfigurationTypeDef, RowLevelPermissionTagConfigurationOutputTypeDef
 ]
@@ -7849,6 +7915,20 @@ class StringDatasetParameterTypeDef(TypedDict):
     ValueType: DatasetParameterValueTypeType
     DefaultValues: NotRequired[StringDatasetParameterDefaultValuesUnionTypeDef]
 
+class AssetOptionsOutputTypeDef(TypedDict):
+    Timezone: NotRequired[str]
+    WeekStart: NotRequired[DayOfTheWeekType]
+    QBusinessInsightsStatus: NotRequired[QBusinessInsightsStatusType]
+    ExcludedDataSetArns: NotRequired[List[str]]
+    CustomActionDefaults: NotRequired[VisualCustomActionDefaultsTypeDef]
+
+class AssetOptionsTypeDef(TypedDict):
+    Timezone: NotRequired[str]
+    WeekStart: NotRequired[DayOfTheWeekType]
+    QBusinessInsightsStatus: NotRequired[QBusinessInsightsStatusType]
+    ExcludedDataSetArns: NotRequired[Sequence[str]]
+    CustomActionDefaults: NotRequired[VisualCustomActionDefaultsTypeDef]
+
 class FilterCrossSheetControlOutputTypeDef(TypedDict):
     FilterControlId: str
     SourceFilterId: str
@@ -7928,6 +8008,14 @@ class PredefinedHierarchyOutputTypeDef(TypedDict):
     HierarchyId: str
     Columns: List[ColumnIdentifierTypeDef]
     DrillDownFilters: NotRequired[List[DrillDownFilterOutputTypeDef]]
+
+class RegisteredUserDashboardEmbeddingConfigurationTypeDef(TypedDict):
+    InitialDashboardId: str
+    FeatureConfigurations: NotRequired[RegisteredUserDashboardFeatureConfigurationsTypeDef]
+
+class RegisteredUserQuickSightConsoleEmbeddingConfigurationTypeDef(TypedDict):
+    InitialPath: NotRequired[str]
+    FeatureConfigurations: NotRequired[RegisteredUserConsoleFeatureConfigurationsTypeDef]
 
 class AnonymousUserEmbeddingExperienceConfigurationTypeDef(TypedDict):
     Dashboard: NotRequired[AnonymousUserDashboardEmbeddingConfigurationTypeDef]
@@ -8333,7 +8421,8 @@ class LogoSetTypeDef(TypedDict):
     Favicon: NotRequired[ImageSetTypeDef]
 
 class DataSetRefreshPropertiesTypeDef(TypedDict):
-    RefreshConfiguration: RefreshConfigurationTypeDef
+    RefreshConfiguration: NotRequired[RefreshConfigurationTypeDef]
+    FailureConfiguration: NotRequired[RefreshFailureConfigurationTypeDef]
 
 IntegerDatasetParameterUnionTypeDef = Union[
     IntegerDatasetParameterTypeDef, IntegerDatasetParameterOutputTypeDef
@@ -8429,13 +8518,6 @@ class ListRefreshSchedulesResponseTypeDef(TypedDict):
 
 RefreshScheduleUnionTypeDef = Union[RefreshScheduleTypeDef, RefreshScheduleOutputTypeDef]
 
-class RegisteredUserEmbeddingExperienceConfigurationTypeDef(TypedDict):
-    Dashboard: NotRequired[RegisteredUserDashboardEmbeddingConfigurationTypeDef]
-    QuickSightConsole: NotRequired[RegisteredUserQuickSightConsoleEmbeddingConfigurationTypeDef]
-    QSearchBar: NotRequired[RegisteredUserQSearchBarEmbeddingConfigurationTypeDef]
-    DashboardVisual: NotRequired[RegisteredUserDashboardVisualEmbeddingConfigurationTypeDef]
-    GenerativeQnA: NotRequired[RegisteredUserGenerativeQnAEmbeddingConfigurationTypeDef]
-
 class SnapshotJobResultFileGroupTypeDef(TypedDict):
     Files: NotRequired[List[SnapshotFileOutputTypeDef]]
     S3Results: NotRequired[List[SnapshotJobS3ResultTypeDef]]
@@ -8496,6 +8578,13 @@ class ColumnHierarchyOutputTypeDef(TypedDict):
     ExplicitHierarchy: NotRequired[ExplicitHierarchyOutputTypeDef]
     DateTimeHierarchy: NotRequired[DateTimeHierarchyOutputTypeDef]
     PredefinedHierarchy: NotRequired[PredefinedHierarchyOutputTypeDef]
+
+class RegisteredUserEmbeddingExperienceConfigurationTypeDef(TypedDict):
+    Dashboard: NotRequired[RegisteredUserDashboardEmbeddingConfigurationTypeDef]
+    QuickSightConsole: NotRequired[RegisteredUserQuickSightConsoleEmbeddingConfigurationTypeDef]
+    QSearchBar: NotRequired[RegisteredUserQSearchBarEmbeddingConfigurationTypeDef]
+    DashboardVisual: NotRequired[RegisteredUserDashboardVisualEmbeddingConfigurationTypeDef]
+    GenerativeQnA: NotRequired[RegisteredUserGenerativeQnAEmbeddingConfigurationTypeDef]
 
 class GenerateEmbedUrlForAnonymousUserRequestTypeDef(TypedDict):
     AwsAccountId: str
@@ -9057,6 +9146,11 @@ class LogoTypeDef(TypedDict):
     AltText: str
     LogoSet: LogoSetTypeDef
 
+class AssetBundleImportJobDataSetOverrideParametersTypeDef(TypedDict):
+    DataSetId: str
+    Name: NotRequired[str]
+    DataSetRefreshProperties: NotRequired[DataSetRefreshPropertiesTypeDef]
+
 class DescribeDataSetRefreshPropertiesResponseTypeDef(TypedDict):
     RequestId: str
     Status: int
@@ -9202,19 +9296,6 @@ class UpdateRefreshScheduleRequestTypeDef(TypedDict):
     AwsAccountId: str
     Schedule: RefreshScheduleUnionTypeDef
 
-class GenerateEmbedUrlForRegisteredUserRequestTypeDef(TypedDict):
-    AwsAccountId: str
-    UserArn: str
-    ExperienceConfiguration: RegisteredUserEmbeddingExperienceConfigurationTypeDef
-    SessionLifetimeInMinutes: NotRequired[int]
-    AllowedDomains: NotRequired[Sequence[str]]
-
-class GenerateEmbedUrlForRegisteredUserWithIdentityRequestTypeDef(TypedDict):
-    AwsAccountId: str
-    ExperienceConfiguration: RegisteredUserEmbeddingExperienceConfigurationTypeDef
-    SessionLifetimeInMinutes: NotRequired[int]
-    AllowedDomains: NotRequired[Sequence[str]]
-
 class AnonymousUserSnapshotJobResultTypeDef(TypedDict):
     FileGroups: NotRequired[List[SnapshotJobResultFileGroupTypeDef]]
 
@@ -9247,22 +9328,18 @@ SnapshotConfigurationUnionTypeDef = Union[
     SnapshotConfigurationTypeDef, SnapshotConfigurationOutputTypeDef
 ]
 
-class AssetBundleImportJobOverrideParametersOutputTypeDef(TypedDict):
-    ResourceIdOverrideConfiguration: NotRequired[
-        AssetBundleImportJobResourceIdOverrideConfigurationTypeDef
-    ]
-    VPCConnections: NotRequired[
-        List[AssetBundleImportJobVPCConnectionOverrideParametersOutputTypeDef]
-    ]
-    RefreshSchedules: NotRequired[
-        List[AssetBundleImportJobRefreshScheduleOverrideParametersOutputTypeDef]
-    ]
-    DataSources: NotRequired[List[AssetBundleImportJobDataSourceOverrideParametersOutputTypeDef]]
-    DataSets: NotRequired[List[AssetBundleImportJobDataSetOverrideParametersTypeDef]]
-    Themes: NotRequired[List[AssetBundleImportJobThemeOverrideParametersTypeDef]]
-    Analyses: NotRequired[List[AssetBundleImportJobAnalysisOverrideParametersTypeDef]]
-    Dashboards: NotRequired[List[AssetBundleImportJobDashboardOverrideParametersTypeDef]]
-    Folders: NotRequired[List[AssetBundleImportJobFolderOverrideParametersTypeDef]]
+class GenerateEmbedUrlForRegisteredUserRequestTypeDef(TypedDict):
+    AwsAccountId: str
+    UserArn: str
+    ExperienceConfiguration: RegisteredUserEmbeddingExperienceConfigurationTypeDef
+    SessionLifetimeInMinutes: NotRequired[int]
+    AllowedDomains: NotRequired[Sequence[str]]
+
+class GenerateEmbedUrlForRegisteredUserWithIdentityRequestTypeDef(TypedDict):
+    AwsAccountId: str
+    ExperienceConfiguration: RegisteredUserEmbeddingExperienceConfigurationTypeDef
+    SessionLifetimeInMinutes: NotRequired[int]
+    AllowedDomains: NotRequired[Sequence[str]]
 
 class DescribeDataSourceResponseTypeDef(TypedDict):
     DataSource: DataSourceTypeDef
@@ -9319,6 +9396,7 @@ class DataSetTypeDef(TypedDict):
     DataSetUsageConfiguration: NotRequired[DataSetUsageConfigurationTypeDef]
     DatasetParameters: NotRequired[List[DatasetParameterOutputTypeDef]]
     PerformanceConfiguration: NotRequired[PerformanceConfigurationOutputTypeDef]
+    UseAs: NotRequired[Literal["RLS_RULES"]]
 
 class ImageCustomActionOperationOutputTypeDef(TypedDict):
     NavigationOperation: NotRequired[CustomActionNavigationOperationTypeDef]
@@ -9518,6 +9596,23 @@ class BrandDetailTypeDef(TypedDict):
     VersionStatus: NotRequired[BrandVersionStatusType]
     Errors: NotRequired[List[str]]
     Logo: NotRequired[LogoTypeDef]
+
+class AssetBundleImportJobOverrideParametersOutputTypeDef(TypedDict):
+    ResourceIdOverrideConfiguration: NotRequired[
+        AssetBundleImportJobResourceIdOverrideConfigurationTypeDef
+    ]
+    VPCConnections: NotRequired[
+        List[AssetBundleImportJobVPCConnectionOverrideParametersOutputTypeDef]
+    ]
+    RefreshSchedules: NotRequired[
+        List[AssetBundleImportJobRefreshScheduleOverrideParametersOutputTypeDef]
+    ]
+    DataSources: NotRequired[List[AssetBundleImportJobDataSourceOverrideParametersOutputTypeDef]]
+    DataSets: NotRequired[List[AssetBundleImportJobDataSetOverrideParametersTypeDef]]
+    Themes: NotRequired[List[AssetBundleImportJobThemeOverrideParametersTypeDef]]
+    Analyses: NotRequired[List[AssetBundleImportJobAnalysisOverrideParametersTypeDef]]
+    Dashboards: NotRequired[List[AssetBundleImportJobDashboardOverrideParametersTypeDef]]
+    Folders: NotRequired[List[AssetBundleImportJobFolderOverrideParametersTypeDef]]
 
 ThemeTypeDef = TypedDict(
     "ThemeTypeDef",
@@ -9865,25 +9960,6 @@ class StartDashboardSnapshotJobRequestTypeDef(TypedDict):
     UserConfiguration: SnapshotUserConfigurationTypeDef
     SnapshotConfiguration: SnapshotConfigurationUnionTypeDef
 
-class DescribeAssetBundleImportJobResponseTypeDef(TypedDict):
-    JobStatus: AssetBundleImportJobStatusType
-    Errors: List[AssetBundleImportJobErrorTypeDef]
-    RollbackErrors: List[AssetBundleImportJobErrorTypeDef]
-    Arn: str
-    CreatedTime: datetime
-    AssetBundleImportJobId: str
-    AwsAccountId: str
-    AssetBundleImportSource: AssetBundleImportSourceDescriptionTypeDef
-    OverrideParameters: AssetBundleImportJobOverrideParametersOutputTypeDef
-    FailureAction: AssetBundleImportFailureActionType
-    RequestId: str
-    Status: int
-    OverridePermissions: AssetBundleImportJobOverridePermissionsOutputTypeDef
-    OverrideTags: AssetBundleImportJobOverrideTagsOutputTypeDef
-    OverrideValidationStrategy: AssetBundleImportJobOverrideValidationStrategyTypeDef
-    Warnings: List[AssetBundleImportJobWarningTypeDef]
-    ResponseMetadata: ResponseMetadataTypeDef
-
 class ImageCustomActionOperationTypeDef(TypedDict):
     NavigationOperation: NotRequired[CustomActionNavigationOperationTypeDef]
     URLOperation: NotRequired[CustomActionURLOperationTypeDef]
@@ -10042,6 +10118,25 @@ class UpdateBrandResponseTypeDef(TypedDict):
     RequestId: str
     BrandDetail: BrandDetailTypeDef
     BrandDefinition: BrandDefinitionTypeDef
+    ResponseMetadata: ResponseMetadataTypeDef
+
+class DescribeAssetBundleImportJobResponseTypeDef(TypedDict):
+    JobStatus: AssetBundleImportJobStatusType
+    Errors: List[AssetBundleImportJobErrorTypeDef]
+    RollbackErrors: List[AssetBundleImportJobErrorTypeDef]
+    Arn: str
+    CreatedTime: datetime
+    AssetBundleImportJobId: str
+    AwsAccountId: str
+    AssetBundleImportSource: AssetBundleImportSourceDescriptionTypeDef
+    OverrideParameters: AssetBundleImportJobOverrideParametersOutputTypeDef
+    FailureAction: AssetBundleImportFailureActionType
+    RequestId: str
+    Status: int
+    OverridePermissions: AssetBundleImportJobOverridePermissionsOutputTypeDef
+    OverrideTags: AssetBundleImportJobOverrideTagsOutputTypeDef
+    OverrideValidationStrategy: AssetBundleImportJobOverrideValidationStrategyTypeDef
+    Warnings: List[AssetBundleImportJobWarningTypeDef]
     ResponseMetadata: ResponseMetadataTypeDef
 
 class DescribeThemeResponseTypeDef(TypedDict):
@@ -10384,11 +10479,13 @@ class TableFieldOptionsOutputTypeDef(TypedDict):
     SelectedFieldOptions: NotRequired[List[TableFieldOptionTypeDef]]
     Order: NotRequired[List[str]]
     PinnedFieldOptions: NotRequired[TablePinnedFieldOptionsOutputTypeDef]
+    TransposedTableOptions: NotRequired[List[TransposedTableOptionTypeDef]]
 
 class TableFieldOptionsTypeDef(TypedDict):
     SelectedFieldOptions: NotRequired[Sequence[TableFieldOptionTypeDef]]
     Order: NotRequired[Sequence[str]]
     PinnedFieldOptions: NotRequired[TablePinnedFieldOptionsTypeDef]
+    TransposedTableOptions: NotRequired[Sequence[TransposedTableOptionTypeDef]]
 
 class GeospatialLayerDefinitionOutputTypeDef(TypedDict):
     PointLayer: NotRequired[GeospatialPointLayerOutputTypeDef]
@@ -11069,6 +11166,7 @@ class CreateDataSetRequestTypeDef(TypedDict):
     DatasetParameters: NotRequired[Sequence[DatasetParameterUnionTypeDef]]
     FolderArns: NotRequired[Sequence[str]]
     PerformanceConfiguration: NotRequired[PerformanceConfigurationUnionTypeDef]
+    UseAs: NotRequired[Literal["RLS_RULES"]]
 
 class UpdateDataSetRequestTypeDef(TypedDict):
     AwsAccountId: str
@@ -12235,6 +12333,7 @@ class SheetDefinitionOutputTypeDef(TypedDict):
     Layouts: NotRequired[List[LayoutOutputTypeDef]]
     SheetControlLayouts: NotRequired[List[SheetControlLayoutOutputTypeDef]]
     ContentType: NotRequired[SheetContentTypeType]
+    CustomActionDefaults: NotRequired[VisualCustomActionDefaultsTypeDef]
 
 class SheetDefinitionTypeDef(TypedDict):
     SheetId: str
@@ -12249,6 +12348,7 @@ class SheetDefinitionTypeDef(TypedDict):
     Layouts: NotRequired[Sequence[LayoutTypeDef]]
     SheetControlLayouts: NotRequired[Sequence[SheetControlLayoutTypeDef]]
     ContentType: NotRequired[SheetContentTypeType]
+    CustomActionDefaults: NotRequired[VisualCustomActionDefaultsTypeDef]
 
 class BatchCreateTopicReviewedAnswerRequestTypeDef(TypedDict):
     AwsAccountId: str
@@ -12263,7 +12363,7 @@ class AnalysisDefinitionOutputTypeDef(TypedDict):
     FilterGroups: NotRequired[List[FilterGroupOutputTypeDef]]
     ColumnConfigurations: NotRequired[List[ColumnConfigurationOutputTypeDef]]
     AnalysisDefaults: NotRequired[AnalysisDefaultsTypeDef]
-    Options: NotRequired[AssetOptionsTypeDef]
+    Options: NotRequired[AssetOptionsOutputTypeDef]
     QueryExecutionOptions: NotRequired[QueryExecutionOptionsTypeDef]
     StaticFiles: NotRequired[List[StaticFileTypeDef]]
 
@@ -12275,7 +12375,7 @@ class DashboardVersionDefinitionOutputTypeDef(TypedDict):
     FilterGroups: NotRequired[List[FilterGroupOutputTypeDef]]
     ColumnConfigurations: NotRequired[List[ColumnConfigurationOutputTypeDef]]
     AnalysisDefaults: NotRequired[AnalysisDefaultsTypeDef]
-    Options: NotRequired[AssetOptionsTypeDef]
+    Options: NotRequired[AssetOptionsOutputTypeDef]
     StaticFiles: NotRequired[List[StaticFileTypeDef]]
 
 class TemplateVersionDefinitionOutputTypeDef(TypedDict):
@@ -12286,7 +12386,7 @@ class TemplateVersionDefinitionOutputTypeDef(TypedDict):
     FilterGroups: NotRequired[List[FilterGroupOutputTypeDef]]
     ColumnConfigurations: NotRequired[List[ColumnConfigurationOutputTypeDef]]
     AnalysisDefaults: NotRequired[AnalysisDefaultsTypeDef]
-    Options: NotRequired[AssetOptionsTypeDef]
+    Options: NotRequired[AssetOptionsOutputTypeDef]
     QueryExecutionOptions: NotRequired[QueryExecutionOptionsTypeDef]
     StaticFiles: NotRequired[List[StaticFileTypeDef]]
 

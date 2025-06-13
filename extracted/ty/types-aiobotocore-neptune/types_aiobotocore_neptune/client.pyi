@@ -176,6 +176,8 @@ from .type_defs import (
     StartDBClusterResultTypeDef,
     StopDBClusterMessageTypeDef,
     StopDBClusterResultTypeDef,
+    SwitchoverGlobalClusterMessageTypeDef,
+    SwitchoverGlobalClusterResultTypeDef,
     TagListMessageTypeDef,
 )
 from .waiter import DBInstanceAvailableWaiter, DBInstanceDeletedWaiter
@@ -998,6 +1000,17 @@ class NeptuneClient(AioBaseClient):
 
         [Show boto3 documentation](https://boto3.amazonaws.com/v1/documentation/api/latest/reference/services/neptune/client/stop_db_cluster.html)
         [Show types-aiobotocore documentation](https://youtype.github.io/types_aiobotocore_docs/types_aiobotocore_neptune/client/#stop_db_cluster)
+        """
+
+    async def switchover_global_cluster(
+        self, **kwargs: Unpack[SwitchoverGlobalClusterMessageTypeDef]
+    ) -> SwitchoverGlobalClusterResultTypeDef:
+        """
+        Switches over the specified secondary DB cluster to be the new primary DB
+        cluster in the global database cluster.
+
+        [Show boto3 documentation](https://boto3.amazonaws.com/v1/documentation/api/latest/reference/services/neptune/client/switchover_global_cluster.html)
+        [Show types-aiobotocore documentation](https://youtype.github.io/types_aiobotocore_docs/types_aiobotocore_neptune/client/#switchover_global_cluster)
         """
 
     @overload  # type: ignore[override]

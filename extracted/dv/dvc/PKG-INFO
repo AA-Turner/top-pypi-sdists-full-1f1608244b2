@@ -1,6 +1,6 @@
 Metadata-Version: 2.4
 Name: dvc
-Version: 3.60.0
+Version: 3.60.1
 Summary: Git for data scientists - manage your code and data together
 Author-email: Dmitry Petrov <dmitry@dvc.org>
 Maintainer-email: Iterative <support@dvc.org>
@@ -87,7 +87,7 @@ Requires-Dist: typing-extensions; extra == "lint"
 Provides-Extra: oss
 Requires-Dist: dvc-oss<4,>=3; extra == "oss"
 Provides-Extra: s3
-Requires-Dist: dvc-s3<4,>=3.2.0; extra == "s3"
+Requires-Dist: dvc-s3<4,>=3.2.1; extra == "s3"
 Provides-Extra: ssh
 Requires-Dist: dvc-ssh<5,>=4; extra == "ssh"
 Provides-Extra: ssh-gssapi

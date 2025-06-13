@@ -13,23 +13,25 @@ from typing import Literal
 from typing_extensions import NotRequired, TypedDict
 
 from .group_0003 import SimpleUserType
-from .group_0419 import EnterpriseWebhooksType
-from .group_0420 import SimpleInstallationType
-from .group_0421 import OrganizationSimpleWebhooksType
-from .group_0422 import RepositoryWebhooksType
-from .group_0616 import WebhookIssuesReopenedPropIssueType
+from .group_0424 import EnterpriseWebhooksType
+from .group_0425 import SimpleInstallationType
+from .group_0426 import OrganizationSimpleWebhooksType
+from .group_0427 import RepositoryWebhooksType
+from .group_0616 import WebhookIssuesOpenedPropChangesType
+from .group_0618 import WebhookIssuesOpenedPropIssueType
 
 
-class WebhookIssuesReopenedType(TypedDict):
-    """issues reopened event"""
+class WebhookIssuesOpenedType(TypedDict):
+    """issues opened event"""
 
-    action: Literal["reopened"]
+    action: Literal["opened"]
+    changes: NotRequired[WebhookIssuesOpenedPropChangesType]
     enterprise: NotRequired[EnterpriseWebhooksType]
     installation: NotRequired[SimpleInstallationType]
-    issue: WebhookIssuesReopenedPropIssueType
+    issue: WebhookIssuesOpenedPropIssueType
     organization: NotRequired[OrganizationSimpleWebhooksType]
     repository: RepositoryWebhooksType
     sender: SimpleUserType
 
 
-__all__ = ("WebhookIssuesReopenedType",)
+__all__ = ("WebhookIssuesOpenedType",)

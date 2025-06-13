@@ -355,13 +355,17 @@ async def start_client(
 
 # Helper functions
 async def create_chat(
-    api_key: str, base_api_url: str, base_ws_url: str, chat_source: ChatSource
+    api_key: str,
+    base_api_url: str,
+    base_ws_url: str,
+    chat_source: ChatSource,
+    database_config_name: Optional[str] = None,
 ) -> Optional[str]:
     try:
         async with RemoteExecutionClient.session(
             api_key, base_api_url, base_ws_url, os.getcwd()
         ) as client:
-            chat = await client.create_chat(chat_source)
+            chat = await client.create_chat(chat_source, database_config_name)
             return chat.chat_uuid
     except (httpx.ConnectError, ExponentError) as e:
         click.secho(f"Error: {e}", fg="red")

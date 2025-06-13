@@ -9,43 +9,44 @@ See https://github.com/github/rest-api-description for more information.
 
 from __future__ import annotations
 
-from typing import Literal
+from datetime import datetime
+from typing import Literal, Union
 from typing_extensions import NotRequired, TypedDict
 
+from .group_0003 import SimpleUserType
+from .group_0067 import TeamType
 
-class CopilotOrganizationDetailsType(TypedDict):
-    """Copilot Organization Details
 
-    Information about the seat breakdown and policies set for an organization with a
-    Copilot Business or Copilot Enterprise subscription.
+class CampaignSummaryType(TypedDict):
+    """Campaign summary
+
+    The campaign metadata and alert stats.
     """
 
-    seat_breakdown: CopilotOrganizationSeatBreakdownType
-    public_code_suggestions: Literal["allow", "block", "unconfigured"]
-    ide_chat: NotRequired[Literal["enabled", "disabled", "unconfigured"]]
-    platform_chat: NotRequired[Literal["enabled", "disabled", "unconfigured"]]
-    cli: NotRequired[Literal["enabled", "disabled", "unconfigured"]]
-    seat_management_setting: Literal[
-        "assign_all", "assign_selected", "disabled", "unconfigured"
-    ]
-    plan_type: NotRequired[Literal["business", "enterprise"]]
+    number: int
+    created_at: datetime
+    updated_at: datetime
+    name: NotRequired[str]
+    description: str
+    managers: list[SimpleUserType]
+    team_managers: NotRequired[list[TeamType]]
+    published_at: NotRequired[datetime]
+    ends_at: datetime
+    closed_at: NotRequired[Union[datetime, None]]
+    state: Literal["open", "closed"]
+    contact_link: Union[str, None]
+    alert_stats: NotRequired[CampaignSummaryPropAlertStatsType]
 
 
-class CopilotOrganizationSeatBreakdownType(TypedDict):
-    """Copilot Seat Breakdown
+class CampaignSummaryPropAlertStatsType(TypedDict):
+    """CampaignSummaryPropAlertStats"""
 
-    The breakdown of Copilot Business seats for the organization.
-    """
-
-    total: NotRequired[int]
-    added_this_cycle: NotRequired[int]
-    pending_cancellation: NotRequired[int]
-    pending_invitation: NotRequired[int]
-    active_this_cycle: NotRequired[int]
-    inactive_this_cycle: NotRequired[int]
+    open_count: int
+    closed_count: int
+    in_progress_count: int
 
 
 __all__ = (
-    "CopilotOrganizationDetailsType",
-    "CopilotOrganizationSeatBreakdownType",
+    "CampaignSummaryPropAlertStatsType",
+    "CampaignSummaryType",
 )

@@ -13,25 +13,25 @@ from typing import Literal, Union
 from typing_extensions import NotRequired, TypedDict
 
 from .group_0003 import SimpleUserType
-from .group_0150 import IssueTypeType
-from .group_0474 import EnterpriseWebhooksType
-from .group_0475 import SimpleInstallationType
-from .group_0476 import OrganizationSimpleWebhooksType
-from .group_0477 import RepositoryWebhooksType
-from .group_0496 import WebhooksIssueType
+from .group_0479 import EnterpriseWebhooksType
+from .group_0480 import SimpleInstallationType
+from .group_0481 import OrganizationSimpleWebhooksType
+from .group_0482 import RepositoryWebhooksType
+from .group_0501 import WebhooksIssueType
+from .group_0504 import WebhooksUserMannequinType
 
 
-class WebhookIssuesUntypedType(TypedDict):
-    """issues untyped event"""
+class WebhookIssuesUnassignedType(TypedDict):
+    """issues unassigned event"""
 
-    action: Literal["untyped"]
+    action: Literal["unassigned"]
+    assignee: NotRequired[Union[WebhooksUserMannequinType, None]]
     enterprise: NotRequired[EnterpriseWebhooksType]
     installation: NotRequired[SimpleInstallationType]
     issue: WebhooksIssueType
-    type: Union[IssueTypeType, None]
     organization: NotRequired[OrganizationSimpleWebhooksType]
     repository: RepositoryWebhooksType
     sender: SimpleUserType
 
 
-__all__ = ("WebhookIssuesUntypedType",)
+__all__ = ("WebhookIssuesUnassignedType",)

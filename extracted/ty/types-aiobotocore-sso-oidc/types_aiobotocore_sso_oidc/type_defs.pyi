@@ -8,9 +8,9 @@ Copyright 2025 Vlad Emelianov
 Usage::
 
     ```python
-    from types_aiobotocore_sso_oidc.type_defs import CreateTokenRequestTypeDef
+    from types_aiobotocore_sso_oidc.type_defs import AwsAdditionalDetailsTypeDef
 
-    data: CreateTokenRequestTypeDef = ...
+    data: AwsAdditionalDetailsTypeDef = ...
     ```
 """
 
@@ -30,6 +30,7 @@ else:
     from typing_extensions import NotRequired, TypedDict
 
 __all__ = (
+    "AwsAdditionalDetailsTypeDef",
     "CreateTokenRequestTypeDef",
     "CreateTokenResponseTypeDef",
     "CreateTokenWithIAMRequestTypeDef",
@@ -40,6 +41,9 @@ __all__ = (
     "StartDeviceAuthorizationRequestTypeDef",
     "StartDeviceAuthorizationResponseTypeDef",
 )
+
+class AwsAdditionalDetailsTypeDef(TypedDict):
+    identityContext: NotRequired[str]
 
 class CreateTokenRequestTypeDef(TypedDict):
     clientId: str
@@ -102,6 +106,7 @@ class CreateTokenWithIAMResponseTypeDef(TypedDict):
     idToken: str
     issuedTokenType: str
     scope: List[str]
+    awsAdditionalDetails: AwsAdditionalDetailsTypeDef
     ResponseMetadata: ResponseMetadataTypeDef
 
 class RegisterClientResponseTypeDef(TypedDict):

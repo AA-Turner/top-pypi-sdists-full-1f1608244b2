@@ -33,10 +33,12 @@ from .literals import (
     InsightsMetricDataTypeType,
     InsightTypeType,
     LookupAttributeKeyType,
+    MaxEventSizeType,
     QueryStatusType,
     ReadWriteTypeType,
     RefreshScheduleFrequencyUnitType,
     RefreshScheduleStatusType,
+    TypeType,
 )
 
 if sys.version_info >= (3, 9):
@@ -62,6 +64,9 @@ __all__ = (
     "CancelQueryRequestTypeDef",
     "CancelQueryResponseTypeDef",
     "ChannelTypeDef",
+    "ContextKeySelectorOutputTypeDef",
+    "ContextKeySelectorTypeDef",
+    "ContextKeySelectorUnionTypeDef",
     "CreateChannelRequestTypeDef",
     "CreateChannelResponseTypeDef",
     "CreateDashboardRequestTypeDef",
@@ -100,6 +105,8 @@ __all__ = (
     "GetChannelResponseTypeDef",
     "GetDashboardRequestTypeDef",
     "GetDashboardResponseTypeDef",
+    "GetEventConfigurationRequestTypeDef",
+    "GetEventConfigurationResponseTypeDef",
     "GetEventDataStoreRequestTypeDef",
     "GetEventDataStoreResponseTypeDef",
     "GetEventSelectorsRequestTypeDef",
@@ -154,6 +161,8 @@ __all__ = (
     "PaginatorConfigTypeDef",
     "PartitionKeyTypeDef",
     "PublicKeyTypeDef",
+    "PutEventConfigurationRequestTypeDef",
+    "PutEventConfigurationResponseTypeDef",
     "PutEventSelectorsRequestTypeDef",
     "PutEventSelectorsResponseTypeDef",
     "PutInsightSelectorsRequestTypeDef",
@@ -250,6 +259,20 @@ class ChannelTypeDef(TypedDict):
     Name: NotRequired[str]
 
 
+ContextKeySelectorOutputTypeDef = TypedDict(
+    "ContextKeySelectorOutputTypeDef",
+    {
+        "Type": TypeType,
+        "Equals": List[str],
+    },
+)
+ContextKeySelectorTypeDef = TypedDict(
+    "ContextKeySelectorTypeDef",
+    {
+        "Type": TypeType,
+        "Equals": Sequence[str],
+    },
+)
 DestinationTypeDef = TypedDict(
     "DestinationTypeDef",
     {
@@ -392,6 +415,10 @@ class IngestionStatusTypeDef(TypedDict):
 
 class GetDashboardRequestTypeDef(TypedDict):
     DashboardId: str
+
+
+class GetEventConfigurationRequestTypeDef(TypedDict):
+    EventDataStore: NotRequired[str]
 
 
 class GetEventDataStoreRequestTypeDef(TypedDict):
@@ -798,6 +825,23 @@ class ListChannelsResponseTypeDef(TypedDict):
     NextToken: NotRequired[str]
 
 
+class GetEventConfigurationResponseTypeDef(TypedDict):
+    EventDataStoreArn: str
+    MaxEventSize: MaxEventSizeType
+    ContextKeySelectors: List[ContextKeySelectorOutputTypeDef]
+    ResponseMetadata: ResponseMetadataTypeDef
+
+
+class PutEventConfigurationResponseTypeDef(TypedDict):
+    EventDataStoreArn: str
+    MaxEventSize: MaxEventSizeType
+    ContextKeySelectors: List[ContextKeySelectorOutputTypeDef]
+    ResponseMetadata: ResponseMetadataTypeDef
+
+
+ContextKeySelectorUnionTypeDef = Union[ContextKeySelectorTypeDef, ContextKeySelectorOutputTypeDef]
+
+
 class CreateChannelRequestTypeDef(TypedDict):
     Name: str
     Source: str
@@ -1129,6 +1173,12 @@ class UpdateEventDataStoreResponseTypeDef(TypedDict):
 class AdvancedEventSelectorTypeDef(TypedDict):
     FieldSelectors: Sequence[AdvancedFieldSelectorUnionTypeDef]
     Name: NotRequired[str]
+
+
+class PutEventConfigurationRequestTypeDef(TypedDict):
+    MaxEventSize: MaxEventSizeType
+    ContextKeySelectors: Sequence[ContextKeySelectorUnionTypeDef]
+    EventDataStore: NotRequired[str]
 
 
 class GetEventSelectorsResponseTypeDef(TypedDict):

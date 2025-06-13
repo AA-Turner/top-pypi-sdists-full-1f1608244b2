@@ -23,7 +23,9 @@ else:
 
 __all__ = (
     "BatchGetPolicyErrorCodeType",
+    "CedarVersionType",
     "DecisionType",
+    "DeletionProtectionType",
     "ListIdentitySourcesPaginatorName",
     "ListPoliciesPaginatorName",
     "ListPolicyStoresPaginatorName",
@@ -40,7 +42,9 @@ __all__ = (
 )
 
 BatchGetPolicyErrorCodeType = Literal["POLICY_NOT_FOUND", "POLICY_STORE_NOT_FOUND"]
+CedarVersionType = Literal["CEDAR_2", "CEDAR_4"]
 DecisionType = Literal["ALLOW", "DENY"]
+DeletionProtectionType = Literal["DISABLED", "ENABLED"]
 ListIdentitySourcesPaginatorName = Literal["list_identity_sources"]
 ListPoliciesPaginatorName = Literal["list_policies"]
 ListPolicyStoresPaginatorName = Literal["list_policy_stores"]
@@ -206,6 +210,7 @@ ServiceName = Literal[
     "freetier",
     "fsx",
     "gamelift",
+    "gameliftstreams",
     "geo-maps",
     "geo-places",
     "geo-routes",
@@ -231,6 +236,7 @@ ServiceName = Literal[
     "iot",
     "iot-data",
     "iot-jobs-data",
+    "iot-managed-integrations",
     "iotanalytics",
     "iotdeviceadvisor",
     "iotevents",
@@ -345,7 +351,6 @@ ServiceName = Literal[
     "pipes",
     "polly",
     "pricing",
-    "privatenetworks",
     "proton",
     "qapps",
     "qbusiness",
@@ -406,7 +411,6 @@ ServiceName = Literal[
     "signer",
     "simspaceweaver",
     "sms",
-    "sms-voice",
     "snow-device-management",
     "snowball",
     "sns",
@@ -414,6 +418,7 @@ ServiceName = Literal[
     "sqs",
     "ssm",
     "ssm-contacts",
+    "ssm-guiconnect",
     "ssm-incidents",
     "ssm-quicksetup",
     "ssm-sap",

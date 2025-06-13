@@ -26,6 +26,7 @@ from aiobotocore.response import StreamingBody
 from .literals import (
     ActionGroupSignatureType,
     ActionInvocationTypeType,
+    AgentCollaborationType,
     AttributeTypeType,
     ConfirmationStateType,
     ConversationRoleType,
@@ -35,6 +36,9 @@ from .literals import (
     FileSourceTypeType,
     FileUseCaseType,
     FlowCompletionReasonType,
+    FlowErrorCodeType,
+    FlowExecutionEventTypeType,
+    FlowExecutionStatusType,
     GuadrailActionType,
     GuardrailActionType,
     GuardrailContentFilterConfidenceType,
@@ -42,13 +46,17 @@ from .literals import (
     GuardrailPiiEntityTypeType,
     GuardrailSensitiveInformationPolicyActionType,
     ImageFormatType,
+    ImageInputFormatType,
     InvocationTypeType,
+    NodeErrorCodeType,
     NodeTypeType,
+    OrchestrationTypeType,
     ParameterTypeType,
     PayloadTypeType,
     PerformanceConfigLatencyType,
     PromptStateType,
     PromptTypeType,
+    RelayConversationHistoryType,
     RequireConfirmationType,
     RerankDocumentTypeType,
     RerankingMetadataSelectionModeType,
@@ -107,9 +115,14 @@ __all__ = (
     "CitationTypeDef",
     "CodeInterpreterInvocationInputTypeDef",
     "CodeInterpreterInvocationOutputTypeDef",
+    "CollaboratorConfigurationTypeDef",
+    "CollaboratorTypeDef",
+    "ConditionResultEventTypeDef",
     "ConflictExceptionTypeDef",
     "ContentBlockTypeDef",
+    "ContentBodyOutputTypeDef",
     "ContentBodyTypeDef",
+    "ContentBodyUnionTypeDef",
     "ConversationHistoryTypeDef",
     "CreateInvocationRequestTypeDef",
     "CreateInvocationResponseTypeDef",
@@ -117,6 +130,7 @@ __all__ = (
     "CreateSessionResponseTypeDef",
     "CustomOrchestrationTraceEventTypeDef",
     "CustomOrchestrationTraceTypeDef",
+    "CustomOrchestrationTypeDef",
     "DeleteAgentMemoryRequestTypeDef",
     "DeleteSessionRequestTypeDef",
     "DependencyFailedExceptionTypeDef",
@@ -132,16 +146,26 @@ __all__ = (
     "FilterAttributeTypeDef",
     "FinalResponseTypeDef",
     "FlowCompletionEventTypeDef",
+    "FlowExecutionContentTypeDef",
+    "FlowExecutionErrorTypeDef",
+    "FlowExecutionEventTypeDef",
+    "FlowExecutionInputEventTypeDef",
+    "FlowExecutionOutputEventTypeDef",
+    "FlowExecutionSummaryTypeDef",
+    "FlowFailureEventTypeDef",
     "FlowInputContentTypeDef",
+    "FlowInputFieldTypeDef",
     "FlowInputTypeDef",
     "FlowMultiTurnInputContentTypeDef",
     "FlowMultiTurnInputRequestEventTypeDef",
     "FlowOutputContentTypeDef",
     "FlowOutputEventTypeDef",
+    "FlowOutputFieldTypeDef",
     "FlowResponseStreamTypeDef",
     "FlowTraceConditionNodeResultEventTypeDef",
     "FlowTraceConditionTypeDef",
     "FlowTraceEventTypeDef",
+    "FlowTraceNodeActionEventTypeDef",
     "FlowTraceNodeInputContentTypeDef",
     "FlowTraceNodeInputEventTypeDef",
     "FlowTraceNodeInputFieldTypeDef",
@@ -164,6 +188,10 @@ __all__ = (
     "GetAgentMemoryRequestPaginateTypeDef",
     "GetAgentMemoryRequestTypeDef",
     "GetAgentMemoryResponseTypeDef",
+    "GetExecutionFlowSnapshotRequestTypeDef",
+    "GetExecutionFlowSnapshotResponseTypeDef",
+    "GetFlowExecutionRequestTypeDef",
+    "GetFlowExecutionResponseTypeDef",
     "GetInvocationStepRequestTypeDef",
     "GetInvocationStepResponseTypeDef",
     "GetSessionRequestTypeDef",
@@ -185,6 +213,12 @@ __all__ = (
     "GuardrailWordPolicyAssessmentTypeDef",
     "ImageBlockOutputTypeDef",
     "ImageBlockTypeDef",
+    "ImageInputOutputTypeDef",
+    "ImageInputSourceOutputTypeDef",
+    "ImageInputSourceTypeDef",
+    "ImageInputSourceUnionTypeDef",
+    "ImageInputTypeDef",
+    "ImageInputUnionTypeDef",
     "ImageSourceOutputTypeDef",
     "ImageSourceTypeDef",
     "ImplicitFilterConfigurationTypeDef",
@@ -230,6 +264,12 @@ __all__ = (
     "KnowledgeBaseTypeDef",
     "KnowledgeBaseVectorSearchConfigurationPaginatorTypeDef",
     "KnowledgeBaseVectorSearchConfigurationTypeDef",
+    "ListFlowExecutionEventsRequestPaginateTypeDef",
+    "ListFlowExecutionEventsRequestTypeDef",
+    "ListFlowExecutionEventsResponseTypeDef",
+    "ListFlowExecutionsRequestPaginateTypeDef",
+    "ListFlowExecutionsRequestTypeDef",
+    "ListFlowExecutionsResponseTypeDef",
     "ListInvocationStepsRequestPaginateTypeDef",
     "ListInvocationStepsRequestTypeDef",
     "ListInvocationStepsResponseTypeDef",
@@ -250,6 +290,12 @@ __all__ = (
     "ModelInvocationInputTypeDef",
     "ModelNotReadyExceptionTypeDef",
     "ModelPerformanceConfigurationTypeDef",
+    "NodeExecutionContentTypeDef",
+    "NodeFailureEventTypeDef",
+    "NodeInputEventTypeDef",
+    "NodeInputFieldTypeDef",
+    "NodeOutputEventTypeDef",
+    "NodeOutputFieldTypeDef",
     "ObservationTypeDef",
     "OptimizePromptRequestTypeDef",
     "OptimizePromptResponseTypeDef",
@@ -257,6 +303,7 @@ __all__ = (
     "OptimizedPromptStreamTypeDef",
     "OptimizedPromptTypeDef",
     "OrchestrationConfigurationTypeDef",
+    "OrchestrationExecutorTypeDef",
     "OrchestrationModelInvocationOutputTypeDef",
     "OrchestrationTraceTypeDef",
     "OutputFileTypeDef",
@@ -335,10 +382,15 @@ __all__ = (
     "S3LocationTypeDef",
     "S3ObjectDocTypeDef",
     "S3ObjectFileTypeDef",
+    "SatisfiedConditionTypeDef",
     "ServiceQuotaExceededExceptionTypeDef",
     "SessionStateTypeDef",
     "SessionSummaryTypeDef",
     "SpanTypeDef",
+    "StartFlowExecutionRequestTypeDef",
+    "StartFlowExecutionResponseTypeDef",
+    "StopFlowExecutionRequestTypeDef",
+    "StopFlowExecutionResponseTypeDef",
     "StreamingConfigurationsTypeDef",
     "TagResourceRequestTypeDef",
     "TextInferenceConfigTypeDef",
@@ -384,9 +436,6 @@ ParameterTypeDef = TypedDict(
     },
 )
 
-class ActionGroupInvocationOutputTypeDef(TypedDict):
-    text: NotRequired[str]
-
 class AnalyzePromptEventTypeDef(TypedDict):
     message: NotRequired[str]
 
@@ -398,9 +447,6 @@ ApiParameterTypeDef = TypedDict(
         "value": NotRequired[str],
     },
 )
-
-class ContentBodyTypeDef(TypedDict):
-    body: NotRequired[str]
 
 class BadGatewayExceptionTypeDef(TypedDict):
     message: NotRequired[str]
@@ -422,11 +468,18 @@ class CodeInterpreterInvocationInputTypeDef(TypedDict):
     code: NotRequired[str]
     files: NotRequired[List[str]]
 
-class CodeInterpreterInvocationOutputTypeDef(TypedDict):
-    executionError: NotRequired[str]
-    executionOutput: NotRequired[str]
-    executionTimeout: NotRequired[bool]
-    files: NotRequired[List[str]]
+class CollaboratorConfigurationTypeDef(TypedDict):
+    collaboratorInstruction: str
+    collaboratorName: str
+    agentAliasArn: NotRequired[str]
+    relayConversationHistory: NotRequired[RelayConversationHistoryType]
+
+class GuardrailConfigurationWithArnTypeDef(TypedDict):
+    guardrailIdentifier: str
+    guardrailVersion: str
+
+class SatisfiedConditionTypeDef(TypedDict):
+    conditionName: str
 
 class ConflictExceptionTypeDef(TypedDict):
     message: NotRequired[str]
@@ -454,6 +507,13 @@ class CreateSessionRequestTypeDef(TypedDict):
 class CustomOrchestrationTraceEventTypeDef(TypedDict):
     text: NotRequired[str]
 
+OrchestrationExecutorTypeDef = TypedDict(
+    "OrchestrationExecutorTypeDef",
+    {
+        "lambda": NotRequired[str],
+    },
+)
+
 class DeleteAgentMemoryRequestTypeDef(TypedDict):
     agentAliasId: str
     agentId: str
@@ -480,10 +540,6 @@ class GuardrailConfigurationTypeDef(TypedDict):
 class PromptTemplateTypeDef(TypedDict):
     textPromptTemplate: NotRequired[str]
 
-class FailureTraceTypeDef(TypedDict):
-    failureReason: NotRequired[str]
-    traceId: NotRequired[str]
-
 class FieldForRerankingTypeDef(TypedDict):
     fieldName: str
 
@@ -503,11 +559,36 @@ class FilterAttributeTypeDef(TypedDict):
     key: str
     value: Mapping[str, Any]
 
-class FinalResponseTypeDef(TypedDict):
-    text: NotRequired[str]
-
 class FlowCompletionEventTypeDef(TypedDict):
     completionReason: FlowCompletionReasonType
+
+class FlowExecutionContentTypeDef(TypedDict):
+    document: NotRequired[Dict[str, Any]]
+
+class FlowExecutionErrorTypeDef(TypedDict):
+    error: NotRequired[Literal["ExecutionTimedOut"]]
+    message: NotRequired[str]
+    nodeName: NotRequired[str]
+
+class FlowFailureEventTypeDef(TypedDict):
+    errorCode: FlowErrorCodeType
+    errorMessage: str
+    timestamp: datetime
+
+class NodeFailureEventTypeDef(TypedDict):
+    errorCode: NodeErrorCodeType
+    errorMessage: str
+    nodeName: str
+    timestamp: datetime
+
+class FlowExecutionSummaryTypeDef(TypedDict):
+    createdAt: datetime
+    executionArn: str
+    flowAliasIdentifier: str
+    flowIdentifier: str
+    flowVersion: str
+    status: FlowExecutionStatusType
+    endedAt: NotRequired[datetime]
 
 class FlowInputContentTypeDef(TypedDict):
     document: NotRequired[Mapping[str, Any]]
@@ -536,6 +617,13 @@ class ValidationExceptionTypeDef(TypedDict):
 
 class FlowTraceConditionTypeDef(TypedDict):
     conditionName: str
+
+class FlowTraceNodeActionEventTypeDef(TypedDict):
+    nodeName: str
+    operationName: str
+    requestId: str
+    serviceName: str
+    timestamp: datetime
 
 class FlowTraceNodeInputContentTypeDef(TypedDict):
     document: NotRequired[Dict[str, Any]]
@@ -587,6 +675,16 @@ class GetAgentMemoryRequestTypeDef(TypedDict):
     maxItems: NotRequired[int]
     nextToken: NotRequired[str]
 
+class GetExecutionFlowSnapshotRequestTypeDef(TypedDict):
+    executionIdentifier: str
+    flowAliasIdentifier: str
+    flowIdentifier: str
+
+class GetFlowExecutionRequestTypeDef(TypedDict):
+    executionIdentifier: str
+    flowAliasIdentifier: str
+    flowIdentifier: str
+
 class GetInvocationStepRequestTypeDef(TypedDict):
     invocationIdentifier: str
     invocationStepId: str
@@ -594,10 +692,6 @@ class GetInvocationStepRequestTypeDef(TypedDict):
 
 class GetSessionRequestTypeDef(TypedDict):
     sessionIdentifier: str
-
-class GuardrailConfigurationWithArnTypeDef(TypedDict):
-    guardrailIdentifier: str
-    guardrailVersion: str
 
 GuardrailContentFilterTypeDef = TypedDict(
     "GuardrailContentFilterTypeDef",
@@ -644,6 +738,12 @@ GuardrailTopicTypeDef = TypedDict(
         "action": NotRequired[Literal["BLOCKED"]],
         "name": NotRequired[str],
         "type": NotRequired[Literal["DENY"]],
+    },
+)
+ImageInputSourceOutputTypeDef = TypedDict(
+    "ImageInputSourceOutputTypeDef",
+    {
+        "bytes": NotRequired[bytes],
     },
 )
 
@@ -704,6 +804,20 @@ class StreamingConfigurationsTypeDef(TypedDict):
 class KnowledgeBaseQueryTypeDef(TypedDict):
     text: str
 
+class ListFlowExecutionEventsRequestTypeDef(TypedDict):
+    eventType: FlowExecutionEventTypeType
+    executionIdentifier: str
+    flowAliasIdentifier: str
+    flowIdentifier: str
+    maxResults: NotRequired[int]
+    nextToken: NotRequired[str]
+
+class ListFlowExecutionsRequestTypeDef(TypedDict):
+    flowIdentifier: str
+    flowAliasIdentifier: NotRequired[str]
+    maxResults: NotRequired[int]
+    nextToken: NotRequired[str]
+
 class ListInvocationStepsRequestTypeDef(TypedDict):
     sessionIdentifier: str
     invocationIdentifier: NotRequired[str]
@@ -742,6 +856,9 @@ class UsageTypeDef(TypedDict):
 
 class ModelNotReadyExceptionTypeDef(TypedDict):
     message: NotRequired[str]
+
+class NodeExecutionContentTypeDef(TypedDict):
+    document: NotRequired[Dict[str, Any]]
 
 class RepromptResponseTypeDef(TypedDict):
     source: NotRequired[SourceType]
@@ -829,6 +946,11 @@ class SpanTypeDef(TypedDict):
     end: NotRequired[int]
     start: NotRequired[int]
 
+class StopFlowExecutionRequestTypeDef(TypedDict):
+    executionIdentifier: str
+    flowAliasIdentifier: str
+    flowIdentifier: str
+
 class TagResourceRequestTypeDef(TypedDict):
     resourceArn: str
     tags: Mapping[str, str]
@@ -858,42 +980,6 @@ class PropertyParametersTypeDef(TypedDict):
 class RequestBodyTypeDef(TypedDict):
     content: NotRequired[Dict[str, List[ParameterTypeDef]]]
 
-class ApiResultOutputTypeDef(TypedDict):
-    actionGroup: str
-    agentId: NotRequired[str]
-    apiPath: NotRequired[str]
-    confirmationState: NotRequired[ConfirmationStateType]
-    httpMethod: NotRequired[str]
-    httpStatusCode: NotRequired[int]
-    responseBody: NotRequired[Dict[str, ContentBodyTypeDef]]
-    responseState: NotRequired[ResponseStateType]
-
-class ApiResultTypeDef(TypedDict):
-    actionGroup: str
-    agentId: NotRequired[str]
-    apiPath: NotRequired[str]
-    confirmationState: NotRequired[ConfirmationStateType]
-    httpMethod: NotRequired[str]
-    httpStatusCode: NotRequired[int]
-    responseBody: NotRequired[Mapping[str, ContentBodyTypeDef]]
-    responseState: NotRequired[ResponseStateType]
-
-class FunctionResultOutputTypeDef(TypedDict):
-    actionGroup: str
-    agentId: NotRequired[str]
-    confirmationState: NotRequired[ConfirmationStateType]
-    function: NotRequired[str]
-    responseBody: NotRequired[Dict[str, ContentBodyTypeDef]]
-    responseState: NotRequired[ResponseStateType]
-
-class FunctionResultTypeDef(TypedDict):
-    actionGroup: str
-    agentId: NotRequired[str]
-    confirmationState: NotRequired[ConfirmationStateType]
-    function: NotRequired[str]
-    responseBody: NotRequired[Mapping[str, ContentBodyTypeDef]]
-    responseState: NotRequired[ResponseStateType]
-
 class BedrockModelConfigurationsTypeDef(TypedDict):
     performanceConfig: NotRequired[PerformanceConfigurationTypeDef]
 
@@ -915,6 +1001,18 @@ class ByteContentDocTypeDef(TypedDict):
 class ByteContentFileTypeDef(TypedDict):
     data: BlobTypeDef
     mediaType: str
+
+ImageInputSourceTypeDef = TypedDict(
+    "ImageInputSourceTypeDef",
+    {
+        "bytes": NotRequired[BlobTypeDef],
+    },
+)
+
+class ConditionResultEventTypeDef(TypedDict):
+    nodeName: str
+    satisfiedConditions: List[SatisfiedConditionTypeDef]
+    timestamp: datetime
 
 class MessageTypeDef(TypedDict):
     content: Sequence[ContentBlockTypeDef]
@@ -939,6 +1037,15 @@ class EndSessionResponseTypeDef(TypedDict):
     sessionStatus: SessionStatusType
     ResponseMetadata: ResponseMetadataTypeDef
 
+class GetExecutionFlowSnapshotResponseTypeDef(TypedDict):
+    customerEncryptionKeyArn: str
+    definition: str
+    executionRoleArn: str
+    flowAliasIdentifier: str
+    flowIdentifier: str
+    flowVersion: str
+    ResponseMetadata: ResponseMetadataTypeDef
+
 class GetSessionResponseTypeDef(TypedDict):
     createdAt: datetime
     encryptionKeyArn: str
@@ -957,6 +1064,15 @@ class PutInvocationStepResponseTypeDef(TypedDict):
     invocationStepId: str
     ResponseMetadata: ResponseMetadataTypeDef
 
+class StartFlowExecutionResponseTypeDef(TypedDict):
+    executionArn: str
+    ResponseMetadata: ResponseMetadataTypeDef
+
+class StopFlowExecutionResponseTypeDef(TypedDict):
+    executionArn: str
+    status: FlowExecutionStatusType
+    ResponseMetadata: ResponseMetadataTypeDef
+
 class UpdateSessionResponseTypeDef(TypedDict):
     createdAt: datetime
     lastUpdatedAt: datetime
@@ -968,6 +1084,9 @@ class UpdateSessionResponseTypeDef(TypedDict):
 class CustomOrchestrationTraceTypeDef(TypedDict):
     event: NotRequired[CustomOrchestrationTraceEventTypeDef]
     traceId: NotRequired[str]
+
+class CustomOrchestrationTypeDef(TypedDict):
+    executor: NotRequired[OrchestrationExecutorTypeDef]
 
 class RerankingMetadataSelectiveModeConfigurationTypeDef(TypedDict):
     fieldsToExclude: NotRequired[Sequence[FieldForRerankingTypeDef]]
@@ -1015,6 +1134,30 @@ RetrievalFilterTypeDef = TypedDict(
         "stringContains": NotRequired[FilterAttributeTypeDef],
     },
 )
+
+class FlowInputFieldTypeDef(TypedDict):
+    content: FlowExecutionContentTypeDef
+    name: str
+
+class FlowOutputFieldTypeDef(TypedDict):
+    content: FlowExecutionContentTypeDef
+    name: str
+
+class GetFlowExecutionResponseTypeDef(TypedDict):
+    endedAt: datetime
+    errors: List[FlowExecutionErrorTypeDef]
+    executionArn: str
+    flowAliasIdentifier: str
+    flowIdentifier: str
+    flowVersion: str
+    startedAt: datetime
+    status: FlowExecutionStatusType
+    ResponseMetadata: ResponseMetadataTypeDef
+
+class ListFlowExecutionsResponseTypeDef(TypedDict):
+    flowExecutionSummaries: List[FlowExecutionSummaryTypeDef]
+    ResponseMetadata: ResponseMetadataTypeDef
+    nextToken: NotRequired[str]
 
 class FlowInputTypeDef(TypedDict):
     content: FlowInputContentTypeDef
@@ -1070,6 +1213,18 @@ class GetAgentMemoryRequestPaginateTypeDef(TypedDict):
     memoryType: Literal["SESSION_SUMMARY"]
     PaginationConfig: NotRequired[PaginatorConfigTypeDef]
 
+class ListFlowExecutionEventsRequestPaginateTypeDef(TypedDict):
+    eventType: FlowExecutionEventTypeType
+    executionIdentifier: str
+    flowAliasIdentifier: str
+    flowIdentifier: str
+    PaginationConfig: NotRequired[PaginatorConfigTypeDef]
+
+class ListFlowExecutionsRequestPaginateTypeDef(TypedDict):
+    flowIdentifier: str
+    flowAliasIdentifier: NotRequired[str]
+    PaginationConfig: NotRequired[PaginatorConfigTypeDef]
+
 class ListInvocationStepsRequestPaginateTypeDef(TypedDict):
     sessionIdentifier: str
     invocationIdentifier: NotRequired[str]
@@ -1096,6 +1251,13 @@ class GuardrailSensitiveInformationPolicyAssessmentTypeDef(TypedDict):
 class GuardrailTopicPolicyAssessmentTypeDef(TypedDict):
     topics: NotRequired[List[GuardrailTopicTypeDef]]
 
+ImageInputOutputTypeDef = TypedDict(
+    "ImageInputOutputTypeDef",
+    {
+        "format": ImageInputFormatType,
+        "source": ImageInputSourceOutputTypeDef,
+    },
+)
 ImageSourceOutputTypeDef = TypedDict(
     "ImageSourceOutputTypeDef",
     {
@@ -1160,7 +1322,20 @@ class MemoryTypeDef(TypedDict):
     sessionSummary: NotRequired[MemorySessionSummaryTypeDef]
 
 class MetadataTypeDef(TypedDict):
+    clientRequestId: NotRequired[str]
+    endTime: NotRequired[datetime]
+    operationTotalTimeMs: NotRequired[int]
+    startTime: NotRequired[datetime]
+    totalTimeMs: NotRequired[int]
     usage: NotRequired[UsageTypeDef]
+
+class NodeInputFieldTypeDef(TypedDict):
+    content: NodeExecutionContentTypeDef
+    name: str
+
+class NodeOutputFieldTypeDef(TypedDict):
+    content: NodeExecutionContentTypeDef
+    name: str
 
 class ReasoningContentBlockTypeDef(TypedDict):
     reasoningText: NotRequired[ReasoningTextBlockTypeDef]
@@ -1238,13 +1413,6 @@ class ActionGroupInvocationInputTypeDef(TypedDict):
     requestBody: NotRequired[RequestBodyTypeDef]
     verb: NotRequired[str]
 
-ApiResultUnionTypeDef = Union[ApiResultTypeDef, ApiResultOutputTypeDef]
-
-class InvocationResultMemberOutputTypeDef(TypedDict):
-    apiResult: NotRequired[ApiResultOutputTypeDef]
-    functionResult: NotRequired[FunctionResultOutputTypeDef]
-
-FunctionResultUnionTypeDef = Union[FunctionResultTypeDef, FunctionResultOutputTypeDef]
 RerankingConfigurationTypeDef = TypedDict(
     "RerankingConfigurationTypeDef",
     {
@@ -1263,6 +1431,8 @@ class FileSourceTypeDef(TypedDict):
     byteContent: NotRequired[ByteContentFileTypeDef]
     s3Location: NotRequired[S3ObjectFileTypeDef]
 
+ImageInputSourceUnionTypeDef = Union[ImageInputSourceTypeDef, ImageInputSourceOutputTypeDef]
+
 class ConversationHistoryTypeDef(TypedDict):
     messages: NotRequired[Sequence[MessageTypeDef]]
 
@@ -1270,12 +1440,29 @@ class MetadataConfigurationForRerankingTypeDef(TypedDict):
     selectionMode: RerankingMetadataSelectionModeType
     selectiveModeConfiguration: NotRequired[RerankingMetadataSelectiveModeConfigurationTypeDef]
 
+class FlowExecutionInputEventTypeDef(TypedDict):
+    fields: List[FlowInputFieldTypeDef]
+    nodeName: str
+    timestamp: datetime
+
+class FlowExecutionOutputEventTypeDef(TypedDict):
+    fields: List[FlowOutputFieldTypeDef]
+    nodeName: str
+    timestamp: datetime
+
 class InvokeFlowRequestTypeDef(TypedDict):
     flowAliasIdentifier: str
     flowIdentifier: str
     inputs: Sequence[FlowInputTypeDef]
     enableTrace: NotRequired[bool]
     executionId: NotRequired[str]
+    modelPerformanceConfiguration: NotRequired[ModelPerformanceConfigurationTypeDef]
+
+class StartFlowExecutionRequestTypeDef(TypedDict):
+    flowAliasIdentifier: str
+    flowIdentifier: str
+    inputs: Sequence[FlowInputTypeDef]
+    flowExecutionName: NotRequired[str]
     modelPerformanceConfiguration: NotRequired[ModelPerformanceConfigurationTypeDef]
 
 class FlowTraceNodeInputEventTypeDef(TypedDict):
@@ -1296,6 +1483,10 @@ class GuardrailAssessmentTypeDef(TypedDict):
     sensitiveInformationPolicy: NotRequired[GuardrailSensitiveInformationPolicyAssessmentTypeDef]
     topicPolicy: NotRequired[GuardrailTopicPolicyAssessmentTypeDef]
     wordPolicy: NotRequired[GuardrailWordPolicyAssessmentTypeDef]
+
+class ContentBodyOutputTypeDef(TypedDict):
+    body: NotRequired[str]
+    images: NotRequired[List[ImageInputOutputTypeDef]]
 
 ImageBlockOutputTypeDef = TypedDict(
     "ImageBlockOutputTypeDef",
@@ -1336,6 +1527,7 @@ class OrchestrationConfigurationTypeDef(TypedDict):
 class PromptConfigurationTypeDef(TypedDict):
     additionalModelRequestFields: NotRequired[Mapping[str, Any]]
     basePromptTemplate: NotRequired[str]
+    foundationModel: NotRequired[str]
     inferenceConfiguration: NotRequired[InferenceConfigurationUnionTypeDef]
     parserMode: NotRequired[CreationModeType]
     promptCreationMode: NotRequired[CreationModeType]
@@ -1358,10 +1550,41 @@ class GetAgentMemoryResponseTypeDef(TypedDict):
     ResponseMetadata: ResponseMetadataTypeDef
     nextToken: NotRequired[str]
 
+class ActionGroupInvocationOutputTypeDef(TypedDict):
+    metadata: NotRequired[MetadataTypeDef]
+    text: NotRequired[str]
+
+class CodeInterpreterInvocationOutputTypeDef(TypedDict):
+    executionError: NotRequired[str]
+    executionOutput: NotRequired[str]
+    executionTimeout: NotRequired[bool]
+    files: NotRequired[List[str]]
+    metadata: NotRequired[MetadataTypeDef]
+
+class FailureTraceTypeDef(TypedDict):
+    failureCode: NotRequired[int]
+    failureReason: NotRequired[str]
+    metadata: NotRequired[MetadataTypeDef]
+    traceId: NotRequired[str]
+
+class FinalResponseTypeDef(TypedDict):
+    metadata: NotRequired[MetadataTypeDef]
+    text: NotRequired[str]
+
 class RoutingClassifierModelInvocationOutputTypeDef(TypedDict):
     metadata: NotRequired[MetadataTypeDef]
     rawResponse: NotRequired[RawResponseTypeDef]
     traceId: NotRequired[str]
+
+class NodeInputEventTypeDef(TypedDict):
+    fields: List[NodeInputFieldTypeDef]
+    nodeName: str
+    timestamp: datetime
+
+class NodeOutputEventTypeDef(TypedDict):
+    fields: List[NodeOutputFieldTypeDef]
+    nodeName: str
+    timestamp: datetime
 
 class OrchestrationModelInvocationOutputTypeDef(TypedDict):
     metadata: NotRequired[MetadataTypeDef]
@@ -1418,18 +1641,18 @@ class ApiInvocationInputTypeDef(TypedDict):
     parameters: NotRequired[List[ApiParameterTypeDef]]
     requestBody: NotRequired[ApiRequestBodyTypeDef]
 
-class ReturnControlResultsTypeDef(TypedDict):
-    invocationId: NotRequired[str]
-    returnControlInvocationResults: NotRequired[List[InvocationResultMemberOutputTypeDef]]
-
-class InvocationResultMemberTypeDef(TypedDict):
-    apiResult: NotRequired[ApiResultUnionTypeDef]
-    functionResult: NotRequired[FunctionResultUnionTypeDef]
-
 class InputFileTypeDef(TypedDict):
     name: str
     source: FileSourceTypeDef
     useCase: FileUseCaseType
+
+ImageInputTypeDef = TypedDict(
+    "ImageInputTypeDef",
+    {
+        "format": ImageInputFormatType,
+        "source": ImageInputSourceUnionTypeDef,
+    },
+)
 
 class VectorSearchBedrockRerankingConfigurationTypeDef(TypedDict):
     modelConfiguration: VectorSearchBedrockRerankingModelConfigurationTypeDef
@@ -1438,6 +1661,7 @@ class VectorSearchBedrockRerankingConfigurationTypeDef(TypedDict):
 
 class FlowTraceTypeDef(TypedDict):
     conditionNodeResultTrace: NotRequired[FlowTraceConditionNodeResultEventTypeDef]
+    nodeActionTrace: NotRequired[FlowTraceNodeActionEventTypeDef]
     nodeInputTrace: NotRequired[FlowTraceNodeInputEventTypeDef]
     nodeOutputTrace: NotRequired[FlowTraceNodeOutputEventTypeDef]
 
@@ -1448,12 +1672,32 @@ class AgentActionGroupTypeDef(TypedDict):
     description: NotRequired[str]
     functionSchema: NotRequired[FunctionSchemaTypeDef]
     parentActionGroupSignature: NotRequired[ActionGroupSignatureType]
+    parentActionGroupSignatureParams: NotRequired[Mapping[str, str]]
 
 class GuardrailTraceTypeDef(TypedDict):
     action: NotRequired[GuardrailActionType]
     inputAssessments: NotRequired[List[GuardrailAssessmentTypeDef]]
+    metadata: NotRequired[MetadataTypeDef]
     outputAssessments: NotRequired[List[GuardrailAssessmentTypeDef]]
     traceId: NotRequired[str]
+
+class ApiResultOutputTypeDef(TypedDict):
+    actionGroup: str
+    agentId: NotRequired[str]
+    apiPath: NotRequired[str]
+    confirmationState: NotRequired[ConfirmationStateType]
+    httpMethod: NotRequired[str]
+    httpStatusCode: NotRequired[int]
+    responseBody: NotRequired[Dict[str, ContentBodyOutputTypeDef]]
+    responseState: NotRequired[ResponseStateType]
+
+class FunctionResultOutputTypeDef(TypedDict):
+    actionGroup: str
+    agentId: NotRequired[str]
+    confirmationState: NotRequired[ConfirmationStateType]
+    function: NotRequired[str]
+    responseBody: NotRequired[Dict[str, ContentBodyOutputTypeDef]]
+    responseState: NotRequired[ResponseStateType]
 
 class BedrockSessionContentBlockOutputTypeDef(TypedDict):
     image: NotRequired[ImageBlockOutputTypeDef]
@@ -1481,6 +1725,15 @@ class OptimizedPromptStreamTypeDef(TypedDict):
     optimizedPromptEvent: NotRequired[OptimizedPromptEventTypeDef]
     throttlingException: NotRequired[ThrottlingExceptionTypeDef]
     validationException: NotRequired[ValidationExceptionTypeDef]
+
+class FlowExecutionEventTypeDef(TypedDict):
+    conditionResultEvent: NotRequired[ConditionResultEventTypeDef]
+    flowFailureEvent: NotRequired[FlowFailureEventTypeDef]
+    flowInputEvent: NotRequired[FlowExecutionInputEventTypeDef]
+    flowOutputEvent: NotRequired[FlowExecutionOutputEventTypeDef]
+    nodeFailureEvent: NotRequired[NodeFailureEventTypeDef]
+    nodeInputEvent: NotRequired[NodeInputEventTypeDef]
+    nodeOutputEvent: NotRequired[NodeOutputEventTypeDef]
 
 class PostProcessingTraceTypeDef(TypedDict):
     modelInvocationInput: NotRequired[ModelInvocationInputTypeDef]
@@ -1510,6 +1763,7 @@ class RetrieveResponseTypeDef(TypedDict):
     nextToken: NotRequired[str]
 
 class KnowledgeBaseLookupOutputTypeDef(TypedDict):
+    metadata: NotRequired[MetadataTypeDef]
     retrievedReferences: NotRequired[List[RetrievedReferenceTypeDef]]
 
 class CitationTypeDef(TypedDict):
@@ -1524,17 +1778,7 @@ class InvocationInputMemberTypeDef(TypedDict):
     apiInvocationInput: NotRequired[ApiInvocationInputTypeDef]
     functionInvocationInput: NotRequired[FunctionInvocationInputTypeDef]
 
-AgentCollaboratorInputPayloadTypeDef = TypedDict(
-    "AgentCollaboratorInputPayloadTypeDef",
-    {
-        "returnControlResults": NotRequired[ReturnControlResultsTypeDef],
-        "text": NotRequired[str],
-        "type": NotRequired[PayloadTypeType],
-    },
-)
-InvocationResultMemberUnionTypeDef = Union[
-    InvocationResultMemberTypeDef, InvocationResultMemberOutputTypeDef
-]
+ImageInputUnionTypeDef = Union[ImageInputTypeDef, ImageInputOutputTypeDef]
 VectorSearchRerankingConfigurationTypeDef = TypedDict(
     "VectorSearchRerankingConfigurationTypeDef",
     {
@@ -1548,6 +1792,10 @@ VectorSearchRerankingConfigurationTypeDef = TypedDict(
 class FlowTraceEventTypeDef(TypedDict):
     trace: FlowTraceTypeDef
 
+class InvocationResultMemberOutputTypeDef(TypedDict):
+    apiResult: NotRequired[ApiResultOutputTypeDef]
+    functionResult: NotRequired[FunctionResultOutputTypeDef]
+
 class InvocationStepPayloadOutputTypeDef(TypedDict):
     contentBlocks: NotRequired[List[BedrockSessionContentBlockOutputTypeDef]]
 
@@ -1557,6 +1805,11 @@ class InvocationStepPayloadTypeDef(TypedDict):
 class OptimizePromptResponseTypeDef(TypedDict):
     optimizedPrompt: AioEventStream[OptimizedPromptStreamTypeDef]
     ResponseMetadata: ResponseMetadataTypeDef
+
+class ListFlowExecutionEventsResponseTypeDef(TypedDict):
+    flowExecutionEvents: List[FlowExecutionEventTypeDef]
+    ResponseMetadata: ResponseMetadataTypeDef
+    nextToken: NotRequired[str]
 
 class RerankRequestPaginateTypeDef(TypedDict):
     queries: Sequence[RerankQueryTypeDef]
@@ -1593,21 +1846,9 @@ class ReturnControlPayloadTypeDef(TypedDict):
     invocationId: NotRequired[str]
     invocationInputs: NotRequired[List[InvocationInputMemberTypeDef]]
 
-AgentCollaboratorInvocationInputTypeDef = TypedDict(
-    "AgentCollaboratorInvocationInputTypeDef",
-    {
-        "agentCollaboratorAliasArn": NotRequired[str],
-        "agentCollaboratorName": NotRequired[str],
-        "input": NotRequired[AgentCollaboratorInputPayloadTypeDef],
-    },
-)
-
-class InlineSessionStateTypeDef(TypedDict):
-    files: NotRequired[Sequence[InputFileTypeDef]]
-    invocationId: NotRequired[str]
-    promptSessionAttributes: NotRequired[Mapping[str, str]]
-    returnControlInvocationResults: NotRequired[Sequence[InvocationResultMemberUnionTypeDef]]
-    sessionAttributes: NotRequired[Mapping[str, str]]
+class ContentBodyTypeDef(TypedDict):
+    body: NotRequired[str]
+    images: NotRequired[Sequence[ImageInputUnionTypeDef]]
 
 KnowledgeBaseVectorSearchConfigurationPaginatorTypeDef = TypedDict(
     "KnowledgeBaseVectorSearchConfigurationPaginatorTypeDef",
@@ -1644,6 +1885,10 @@ class FlowResponseStreamTypeDef(TypedDict):
     serviceQuotaExceededException: NotRequired[ServiceQuotaExceededExceptionTypeDef]
     throttlingException: NotRequired[ThrottlingExceptionTypeDef]
     validationException: NotRequired[ValidationExceptionTypeDef]
+
+class ReturnControlResultsTypeDef(TypedDict):
+    invocationId: NotRequired[str]
+    returnControlInvocationResults: NotRequired[List[InvocationResultMemberOutputTypeDef]]
 
 class InvocationStepTypeDef(TypedDict):
     invocationId: str
@@ -1692,14 +1937,7 @@ AgentCollaboratorOutputPayloadTypeDef = TypedDict(
         "type": NotRequired[PayloadTypeType],
     },
 )
-
-class InvocationInputTypeDef(TypedDict):
-    actionGroupInvocationInput: NotRequired[ActionGroupInvocationInputTypeDef]
-    agentCollaboratorInvocationInput: NotRequired[AgentCollaboratorInvocationInputTypeDef]
-    codeInterpreterInvocationInput: NotRequired[CodeInterpreterInvocationInputTypeDef]
-    invocationType: NotRequired[InvocationTypeType]
-    knowledgeBaseLookupInput: NotRequired[KnowledgeBaseLookupInputTypeDef]
-    traceId: NotRequired[str]
+ContentBodyUnionTypeDef = Union[ContentBodyTypeDef, ContentBodyOutputTypeDef]
 
 class KnowledgeBaseRetrievalConfigurationPaginatorTypeDef(TypedDict):
     vectorSearchConfiguration: KnowledgeBaseVectorSearchConfigurationPaginatorTypeDef
@@ -1711,6 +1949,15 @@ class InvokeFlowResponseTypeDef(TypedDict):
     executionId: str
     responseStream: AioEventStream[FlowResponseStreamTypeDef]
     ResponseMetadata: ResponseMetadataTypeDef
+
+AgentCollaboratorInputPayloadTypeDef = TypedDict(
+    "AgentCollaboratorInputPayloadTypeDef",
+    {
+        "returnControlResults": NotRequired[ReturnControlResultsTypeDef],
+        "text": NotRequired[str],
+        "type": NotRequired[PayloadTypeType],
+    },
+)
 
 class GetInvocationStepResponseTypeDef(TypedDict):
     invocationStep: InvocationStepTypeDef
@@ -1731,7 +1978,26 @@ class RetrieveAndGenerateStreamResponseTypeDef(TypedDict):
 class AgentCollaboratorInvocationOutputTypeDef(TypedDict):
     agentCollaboratorAliasArn: NotRequired[str]
     agentCollaboratorName: NotRequired[str]
+    metadata: NotRequired[MetadataTypeDef]
     output: NotRequired[AgentCollaboratorOutputPayloadTypeDef]
+
+class ApiResultTypeDef(TypedDict):
+    actionGroup: str
+    agentId: NotRequired[str]
+    apiPath: NotRequired[str]
+    confirmationState: NotRequired[ConfirmationStateType]
+    httpMethod: NotRequired[str]
+    httpStatusCode: NotRequired[int]
+    responseBody: NotRequired[Mapping[str, ContentBodyUnionTypeDef]]
+    responseState: NotRequired[ResponseStateType]
+
+class FunctionResultTypeDef(TypedDict):
+    actionGroup: str
+    agentId: NotRequired[str]
+    confirmationState: NotRequired[ConfirmationStateType]
+    function: NotRequired[str]
+    responseBody: NotRequired[Mapping[str, ContentBodyUnionTypeDef]]
+    responseState: NotRequired[ResponseStateType]
 
 class RetrieveRequestPaginateTypeDef(TypedDict):
     knowledgeBaseId: str
@@ -1763,6 +2029,14 @@ class RetrieveRequestTypeDef(TypedDict):
     nextToken: NotRequired[str]
     retrievalConfiguration: NotRequired[KnowledgeBaseRetrievalConfigurationTypeDef]
 
+AgentCollaboratorInvocationInputTypeDef = TypedDict(
+    "AgentCollaboratorInvocationInputTypeDef",
+    {
+        "agentCollaboratorAliasArn": NotRequired[str],
+        "agentCollaboratorName": NotRequired[str],
+        "input": NotRequired[AgentCollaboratorInputPayloadTypeDef],
+    },
+)
 ObservationTypeDef = TypedDict(
     "ObservationTypeDef",
     {
@@ -1776,16 +2050,8 @@ ObservationTypeDef = TypedDict(
         "type": NotRequired[TypeType],
     },
 )
-
-class SessionStateTypeDef(TypedDict):
-    conversationHistory: NotRequired[ConversationHistoryTypeDef]
-    files: NotRequired[Sequence[InputFileTypeDef]]
-    invocationId: NotRequired[str]
-    knowledgeBaseConfigurations: NotRequired[Sequence[KnowledgeBaseConfigurationTypeDef]]
-    promptSessionAttributes: NotRequired[Mapping[str, str]]
-    returnControlInvocationResults: NotRequired[Sequence[InvocationResultMemberUnionTypeDef]]
-    sessionAttributes: NotRequired[Mapping[str, str]]
-
+ApiResultUnionTypeDef = Union[ApiResultTypeDef, ApiResultOutputTypeDef]
+FunctionResultUnionTypeDef = Union[FunctionResultTypeDef, FunctionResultOutputTypeDef]
 RetrieveAndGenerateConfigurationTypeDef = TypedDict(
     "RetrieveAndGenerateConfigurationTypeDef",
     {
@@ -1799,48 +2065,30 @@ RetrieveAndGenerateConfigurationTypeDef = TypedDict(
     },
 )
 
-class InvokeInlineAgentRequestTypeDef(TypedDict):
+class CollaboratorTypeDef(TypedDict):
     foundationModel: str
     instruction: str
-    sessionId: str
     actionGroups: NotRequired[Sequence[AgentActionGroupTypeDef]]
-    bedrockModelConfigurations: NotRequired[InlineBedrockModelConfigurationsTypeDef]
+    agentCollaboration: NotRequired[AgentCollaborationType]
+    agentName: NotRequired[str]
+    collaboratorConfigurations: NotRequired[Sequence[CollaboratorConfigurationTypeDef]]
     customerEncryptionKeyArn: NotRequired[str]
-    enableTrace: NotRequired[bool]
-    endSession: NotRequired[bool]
     guardrailConfiguration: NotRequired[GuardrailConfigurationWithArnTypeDef]
     idleSessionTTLInSeconds: NotRequired[int]
-    inlineSessionState: NotRequired[InlineSessionStateTypeDef]
-    inputText: NotRequired[str]
     knowledgeBases: NotRequired[Sequence[KnowledgeBaseTypeDef]]
     promptOverrideConfiguration: NotRequired[PromptOverrideConfigurationTypeDef]
-    streamingConfigurations: NotRequired[StreamingConfigurationsTypeDef]
 
-class OrchestrationTraceTypeDef(TypedDict):
-    invocationInput: NotRequired[InvocationInputTypeDef]
-    modelInvocationInput: NotRequired[ModelInvocationInputTypeDef]
-    modelInvocationOutput: NotRequired[OrchestrationModelInvocationOutputTypeDef]
-    observation: NotRequired[ObservationTypeDef]
-    rationale: NotRequired[RationaleTypeDef]
+class InvocationInputTypeDef(TypedDict):
+    actionGroupInvocationInput: NotRequired[ActionGroupInvocationInputTypeDef]
+    agentCollaboratorInvocationInput: NotRequired[AgentCollaboratorInvocationInputTypeDef]
+    codeInterpreterInvocationInput: NotRequired[CodeInterpreterInvocationInputTypeDef]
+    invocationType: NotRequired[InvocationTypeType]
+    knowledgeBaseLookupInput: NotRequired[KnowledgeBaseLookupInputTypeDef]
+    traceId: NotRequired[str]
 
-class RoutingClassifierTraceTypeDef(TypedDict):
-    invocationInput: NotRequired[InvocationInputTypeDef]
-    modelInvocationInput: NotRequired[ModelInvocationInputTypeDef]
-    modelInvocationOutput: NotRequired[RoutingClassifierModelInvocationOutputTypeDef]
-    observation: NotRequired[ObservationTypeDef]
-
-class InvokeAgentRequestTypeDef(TypedDict):
-    agentAliasId: str
-    agentId: str
-    sessionId: str
-    bedrockModelConfigurations: NotRequired[BedrockModelConfigurationsTypeDef]
-    enableTrace: NotRequired[bool]
-    endSession: NotRequired[bool]
-    inputText: NotRequired[str]
-    memoryId: NotRequired[str]
-    sessionState: NotRequired[SessionStateTypeDef]
-    sourceArn: NotRequired[str]
-    streamingConfigurations: NotRequired[StreamingConfigurationsTypeDef]
+class InvocationResultMemberTypeDef(TypedDict):
+    apiResult: NotRequired[ApiResultUnionTypeDef]
+    functionResult: NotRequired[FunctionResultUnionTypeDef]
 
 RetrieveAndGenerateRequestTypeDef = TypedDict(
     "RetrieveAndGenerateRequestTypeDef",
@@ -1861,6 +2109,23 @@ RetrieveAndGenerateStreamRequestTypeDef = TypedDict(
     },
 )
 
+class OrchestrationTraceTypeDef(TypedDict):
+    invocationInput: NotRequired[InvocationInputTypeDef]
+    modelInvocationInput: NotRequired[ModelInvocationInputTypeDef]
+    modelInvocationOutput: NotRequired[OrchestrationModelInvocationOutputTypeDef]
+    observation: NotRequired[ObservationTypeDef]
+    rationale: NotRequired[RationaleTypeDef]
+
+class RoutingClassifierTraceTypeDef(TypedDict):
+    invocationInput: NotRequired[InvocationInputTypeDef]
+    modelInvocationInput: NotRequired[ModelInvocationInputTypeDef]
+    modelInvocationOutput: NotRequired[RoutingClassifierModelInvocationOutputTypeDef]
+    observation: NotRequired[ObservationTypeDef]
+
+InvocationResultMemberUnionTypeDef = Union[
+    InvocationResultMemberTypeDef, InvocationResultMemberOutputTypeDef
+]
+
 class TraceTypeDef(TypedDict):
     customOrchestrationTrace: NotRequired[CustomOrchestrationTraceTypeDef]
     failureTrace: NotRequired[FailureTraceTypeDef]
@@ -1870,7 +2135,27 @@ class TraceTypeDef(TypedDict):
     preProcessingTrace: NotRequired[PreProcessingTraceTypeDef]
     routingClassifierTrace: NotRequired[RoutingClassifierTraceTypeDef]
 
+class InlineSessionStateTypeDef(TypedDict):
+    conversationHistory: NotRequired[ConversationHistoryTypeDef]
+    files: NotRequired[Sequence[InputFileTypeDef]]
+    invocationId: NotRequired[str]
+    promptSessionAttributes: NotRequired[Mapping[str, str]]
+    returnControlInvocationResults: NotRequired[Sequence[InvocationResultMemberUnionTypeDef]]
+    sessionAttributes: NotRequired[Mapping[str, str]]
+
+class SessionStateTypeDef(TypedDict):
+    conversationHistory: NotRequired[ConversationHistoryTypeDef]
+    files: NotRequired[Sequence[InputFileTypeDef]]
+    invocationId: NotRequired[str]
+    knowledgeBaseConfigurations: NotRequired[Sequence[KnowledgeBaseConfigurationTypeDef]]
+    promptSessionAttributes: NotRequired[Mapping[str, str]]
+    returnControlInvocationResults: NotRequired[Sequence[InvocationResultMemberUnionTypeDef]]
+    sessionAttributes: NotRequired[Mapping[str, str]]
+
 class InlineAgentTracePartTypeDef(TypedDict):
+    callerChain: NotRequired[List[CallerTypeDef]]
+    collaboratorName: NotRequired[str]
+    eventTime: NotRequired[datetime]
     sessionId: NotRequired[str]
     trace: NotRequired[TraceTypeDef]
 
@@ -1880,8 +2165,45 @@ class TracePartTypeDef(TypedDict):
     agentVersion: NotRequired[str]
     callerChain: NotRequired[List[CallerTypeDef]]
     collaboratorName: NotRequired[str]
+    eventTime: NotRequired[datetime]
     sessionId: NotRequired[str]
     trace: NotRequired[TraceTypeDef]
+
+class InvokeInlineAgentRequestTypeDef(TypedDict):
+    foundationModel: str
+    instruction: str
+    sessionId: str
+    actionGroups: NotRequired[Sequence[AgentActionGroupTypeDef]]
+    agentCollaboration: NotRequired[AgentCollaborationType]
+    agentName: NotRequired[str]
+    bedrockModelConfigurations: NotRequired[InlineBedrockModelConfigurationsTypeDef]
+    collaboratorConfigurations: NotRequired[Sequence[CollaboratorConfigurationTypeDef]]
+    collaborators: NotRequired[Sequence[CollaboratorTypeDef]]
+    customOrchestration: NotRequired[CustomOrchestrationTypeDef]
+    customerEncryptionKeyArn: NotRequired[str]
+    enableTrace: NotRequired[bool]
+    endSession: NotRequired[bool]
+    guardrailConfiguration: NotRequired[GuardrailConfigurationWithArnTypeDef]
+    idleSessionTTLInSeconds: NotRequired[int]
+    inlineSessionState: NotRequired[InlineSessionStateTypeDef]
+    inputText: NotRequired[str]
+    knowledgeBases: NotRequired[Sequence[KnowledgeBaseTypeDef]]
+    orchestrationType: NotRequired[OrchestrationTypeType]
+    promptOverrideConfiguration: NotRequired[PromptOverrideConfigurationTypeDef]
+    streamingConfigurations: NotRequired[StreamingConfigurationsTypeDef]
+
+class InvokeAgentRequestTypeDef(TypedDict):
+    agentAliasId: str
+    agentId: str
+    sessionId: str
+    bedrockModelConfigurations: NotRequired[BedrockModelConfigurationsTypeDef]
+    enableTrace: NotRequired[bool]
+    endSession: NotRequired[bool]
+    inputText: NotRequired[str]
+    memoryId: NotRequired[str]
+    sessionState: NotRequired[SessionStateTypeDef]
+    sourceArn: NotRequired[str]
+    streamingConfigurations: NotRequired[StreamingConfigurationsTypeDef]
 
 class InlineAgentResponseStreamTypeDef(TypedDict):
     accessDeniedException: NotRequired[AccessDeniedExceptionTypeDef]

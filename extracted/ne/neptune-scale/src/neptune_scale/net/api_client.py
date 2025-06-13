@@ -32,16 +32,18 @@ from typing import (
 )
 
 import httpx
+from google.protobuf.message import DecodeError as ProtobufDecodeError
 from httpx import Timeout
 from neptune_api import (
     AuthenticatedClient,
     Client,
 )
 from neptune_api.api.backend import get_client_config
-from neptune_api.api.data_ingestion import (
-    check_request_status_bulk,
-    submit_operation,
+from neptune_api.api.ingestion import (
+    bulk_check_status,
+    ingest,
 )
+from neptune_api.api.storage import signed_url
 from neptune_api.auth_helpers import exchange_api_key
 from neptune_api.credentials import Credentials
 from neptune_api.errors import (
@@ -49,24 +51,23 @@ from neptune_api.errors import (
     InvalidApiTokenException,
     UnableToDeserializeApiKeyError,
     UnableToExchangeApiKeyError,
+    UnableToParseResponse,
     UnableToRefreshTokenError,
 )
-from neptune_api.models import ClientConfig
-from neptune_api.proto.neptune_pb.ingest.v1.pub.client_pb2 import (
-    BulkRequestStatus,
-    RequestId,
-    RequestIdList,
-    SubmitResponse,
-)
-from neptune_api.proto.neptune_pb.ingest.v1.pub.ingest_pb2 import RunOperation
-from neptune_api.types import Response
-from neptune_storage_api.api.storagebridge import signed_url
-from neptune_storage_api.models import (
+from neptune_api.models import (
+    ClientConfig,
     CreateSignedUrlsRequest,
     CreateSignedUrlsResponse,
     FileToSign,
     Permission,
 )
+from neptune_api.proto.neptune_pb.ingest.v1.pub.client_pb2 import (
+    RequestId,
+    RequestIdList,
+)
+from neptune_api.proto.neptune_pb.ingest.v1.pub.ingest_pb2 import RunOperation
+from neptune_api.types import File as BinaryContent
+from neptune_api.types import Response
 
 from neptune_scale.exceptions import (
     NeptuneConnectionLostError,
@@ -94,13 +95,16 @@ class TokenRefreshingURLs:
 
 
 def get_config_and_token_urls(
-    *, credentials: Credentials, verify_ssl: bool
+    *,
+    credentials: Credentials,
+    verify_ssl: bool,
 ) -> tuple[ClientConfig, TokenRefreshingURLs]:
     with Client(
         base_url=credentials.base_url,
         follow_redirects=True,
         verify_ssl=verify_ssl,
         timeout=Timeout(timeout=HTTP_CLIENT_NETWORKING_TIMEOUT),
+        headers={"User-Agent": _generate_user_agent()},
     ) as client:
         try:
             config_response = get_client_config.sync_detailed(client=client)
@@ -120,7 +124,11 @@ def get_config_and_token_urls(
 
 
 def create_auth_api_client(
-    *, credentials: Credentials, config: ClientConfig, token_refreshing_urls: TokenRefreshingURLs, verify_ssl: bool
+    *,
+    credentials: Credentials,
+    config: ClientConfig,
+    token_refreshing_urls: TokenRefreshingURLs,
+    verify_ssl: bool,
 ) -> AuthenticatedClient:
     return AuthenticatedClient(
         base_url=credentials.base_url,
@@ -131,15 +139,42 @@ def create_auth_api_client(
         follow_redirects=True,
         verify_ssl=verify_ssl,
         timeout=Timeout(timeout=HTTP_CLIENT_NETWORKING_TIMEOUT),
+        headers={"User-Agent": _generate_user_agent()},
     )
+
+
+_ILLEGAL_CHARS = str.maketrans({c: "_" for c in " ();/"})
+
+
+def _generate_user_agent() -> str:
+    import platform
+    from importlib.metadata import version
+
+    def sanitize(value: Callable[[], str]) -> str:
+        try:
+            result = value()
+            return result.translate(_ILLEGAL_CHARS)
+        except Exception:
+            return "unknown"
+
+    package_name = "neptune-scale"
+    package_version = sanitize(lambda: version(package_name))
+    additional_metadata = {
+        "neptune-api": sanitize(lambda: version("neptune-api")),
+        "python": sanitize(platform.python_version),
+        "os": sanitize(platform.system),
+    }
+
+    additional_metadata_str = "; ".join(f"{k}={v}" for k, v in additional_metadata.items())
+    return f"{package_name}/{package_version} ({additional_metadata_str})"
 
 
 class ApiClient(abc.ABC):
     @abc.abstractmethod
-    def submit(self, operation: RunOperation, family: str) -> Response[SubmitResponse]: ...
+    def submit(self, operation: RunOperation, family: str) -> Response[BinaryContent]: ...
 
     @abc.abstractmethod
-    def check_batch(self, request_ids: list[str], project: str) -> Response[BulkRequestStatus]: ...
+    def check_batch(self, request_ids: list[str], project: str) -> Response[BinaryContent]: ...
 
     def close(self) -> None: ...
 
@@ -161,18 +196,25 @@ class HostedApiClient(ApiClient):
         logger.debug("Trying to connect to Neptune API")
         config, token_urls = get_config_and_token_urls(credentials=credentials, verify_ssl=verify_ssl)
         self.backend = create_auth_api_client(
-            credentials=credentials, config=config, token_refreshing_urls=token_urls, verify_ssl=verify_ssl
+            credentials=credentials,
+            config=config,
+            token_refreshing_urls=token_urls,
+            verify_ssl=verify_ssl,
         )
         logger.debug("Connected to Neptune API")
 
-    def submit(self, operation: RunOperation, family: str) -> Response[SubmitResponse]:
-        return submit_operation.sync_detailed(client=self.backend, body=operation, family=family)
+    def submit(self, operation: RunOperation, family: str) -> Response[BinaryContent]:
+        return ingest.sync_detailed(client=self.backend, body=BinaryContent(payload=operation.SerializeToString()))
 
-    def check_batch(self, request_ids: list[str], project: str) -> Response[BulkRequestStatus]:
-        return check_request_status_bulk.sync_detailed(
+    def check_batch(self, request_ids: list[str], project: str) -> Response[BinaryContent]:
+        return bulk_check_status.sync_detailed(
             client=self.backend,
             project_identifier=project,
-            body=RequestIdList(ids=[RequestId(value=request_id) for request_id in request_ids]),
+            body=BinaryContent(
+                payload=RequestIdList(
+                    ids=[RequestId(value=request_id) for request_id in request_ids]
+                ).SerializeToString()
+            ),
         )
 
     def close(self) -> None:
@@ -212,7 +254,7 @@ def with_api_errors_handling(func: Callable[..., Any]) -> Callable[..., Any]:
             raise NeptuneUnableToAuthenticateError() from e
         except httpx.RequestError as e:
             raise NeptuneConnectionLostError() from e
-        except JSONDecodeError as e:
+        except (JSONDecodeError, ProtobufDecodeError, UnableToParseResponse) as e:
             raise NeptuneUnexpectedResponseError() from e
         except Exception as e:
             raise e

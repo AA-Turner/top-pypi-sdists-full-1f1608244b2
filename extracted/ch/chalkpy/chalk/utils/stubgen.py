@@ -183,6 +183,7 @@ class StubGenerator:
         self._add_import("typing.Iterator", "Iterator")
         self._add_import("chalk.features.feature_set.FeaturesMeta", "FeaturesMeta")
         self._add_import("chalk.features.Features", "Features")
+        self._add_import("chalk.features.TPrimitive", "TPrimitive")
         self._add_import("chalk.features.Feature", "Feature")
         self._add_import("chalk.features.primary.Primary", "Primary")
         self._add_import("chalk.utils.duration.Duration", "Duration")
@@ -291,7 +292,7 @@ class {feature_cls_name}Meta({metaclasses_bases}):"""
                 )
             lines.append(
                 f"""\
-    def __iter__(self) -> Iterator[Feature]: ...
+    def __iter__(self) -> Iterator[Feature[TPrimitive,Any]]: ...
 """
             )
 

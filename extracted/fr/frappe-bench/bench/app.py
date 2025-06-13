@@ -268,7 +268,10 @@ class App(AppMeta):
 
 	@step(title="Uninstalling App {repo}", success="App {repo} Uninstalled")
 	def uninstall(self):
-		self.bench.run(f"{self.bench.python} -m pip uninstall -y {self.name}")
+		if os.environ.get("BENCH_USE_UV"):
+			self.bench.run(f"uv pip uninstall {self.name} --python {self.bench.python}")
+		else:
+			self.bench.run(f"{self.bench.python} -m pip uninstall -y {self.name}")
 
 	def _get_dependencies(self):
 		from bench.utils.app import get_required_deps, required_apps_from_hooks
@@ -921,9 +924,14 @@ def install_app(
 				"PKG_CONFIG_PATH": get_mariadb_pkgconfig_path(),
 			}
 
-	bench.run(
-		f"{bench.python} -m pip install {quiet_flag} --upgrade -e {app_path} {cache_flag}", env=env
-	)
+	if os.environ.get("BENCH_USE_UV"):
+		bench.run(
+			f"uv pip install {quiet_flag} --upgrade -e {app_path} {cache_flag} --python {bench.python}", env=env
+		)
+	else:
+		bench.run(
+			f"{bench.python} -m pip install {quiet_flag} --upgrade -e {app_path} {cache_flag}", env=env
+		)
 
 	if conf.get("developer_mode"):
 		install_python_dev_dependencies(apps=app, bench_path=bench_path, verbose=verbose)

@@ -1,5 +1,5 @@
 #
-# Copyright (C) 2023 CERN.
+# Copyright (C) 2023-2025 CERN.
 # Copyright (C) 2024 KTH Royal Institute of Technology.
 #
 # Invenio-RDM-Records is free software; you can redistribute it and/or modify
@@ -17,6 +17,7 @@ Implements the following fields:
 - meeting.title
 - meeting.url
 """
+
 from functools import partial
 
 from invenio_i18n import lazy_gettext as _
@@ -119,9 +120,10 @@ MEETING_CUSTOM_FIELDS_UI = {
                     "placeholder": "",
                     "description": _("Location where the conference took place."),
                 },
-                "identifiers": {
-                    "label": _("Identifiers"),
-                    "description": _("URL of conference website or other identifier."),
+                "url": {
+                    "label": _("Website"),
+                    "placeholder": "",
+                    "description": "",
                 },
                 "session": {
                     "label": _("Session"),

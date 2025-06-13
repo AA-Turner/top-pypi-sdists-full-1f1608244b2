@@ -5,7 +5,7 @@ from __future__ import annotations
 
 from dataclasses import dataclass, field
 from typing import Optional, List, Any
-from enum import Enum
+from domolibrary.client.DomoEntity import DomoEnum, DomoEntity_w_Lineage
 
 import datetime as dt
 import pandas as pd
@@ -103,7 +103,7 @@ class DomoPublication_Subscription:
         return self.content
 
 # %% ../../nbs/classes/50_DomoPublish.ipynb 9
-class DomoPublication_Content_Enum(Enum):
+class DomoPublication_Content_Enum(DomoEnum):
     import domolibrary.classes.DomoDataset as dmdc
     import domolibrary.classes.DomoCard as dmac
     import domolibrary.classes.DomoPage as dmpg
@@ -116,10 +116,10 @@ class DomoPublication_Content_Enum(Enum):
 
 
 
-# %% ../../nbs/classes/50_DomoPublish.ipynb 11
+# %% ../../nbs/classes/50_DomoPublish.ipynb 10
 @dataclass
 class DomoPublication_Content:
-    auth : dmda.DomoAuth
+    auth: dmda.DomoAuth
 
     content_id: str
     entity_type: str
@@ -140,11 +140,11 @@ class DomoPublication_Content:
     """the publication content is the content from the publisher instance that is being distributed to subscribers"""
 
     @classmethod
-    def _from_json(cls, obj: dict, auth : dmda.DomoAuth, parent: Any = None):
+    def _from_json(cls, obj: dict, auth: dmda.DomoAuth, parent: Any = None):
 
         entity_type = obj.get("content").get("type")
         return cls(
-            auth = auth,
+            auth=auth,
             content_id=obj["id"],
             entity_id=obj.get("content").get("domoObjectId"),
             entity_domain=obj.get("content").get("domain"),
@@ -165,14 +165,18 @@ class DomoPublication_Content:
             entity=DomoPublication_Content_Enum[entity_type].value,
         )
 
-    async def _get_entity_lineage(self, debug_api: bool = False, session: httpx.AsyncClient = None):
-        if self.entity:
-            self.entity = await self.entity._get_by_id(
-                auth=self.auth, id=self.entity_id, debug_api=debug_api, session=session
-            )
+    async def get_entity(self, debug_api: bool = False, session: httpx.AsyncClient = None):
+        """get the entity from the publication content"""
+        if not self.entity:
+            self.entity=DomoPublication_Content_Enum[self.entity_type].value
 
-            return hasattr(self.entity, "Lineage") and await self.entity.Lineage.get()
-        
+        self.entity = await self.entity._get_entity_by_id(
+            auth=self.auth,
+            entity_id=self.entity_id,
+            debug_api=debug_api,
+            session = session
+        )
+
         return self.entity
 
     def to_api_json(self):
@@ -183,7 +187,7 @@ class DomoPublication_Content:
             "type": self.entity_type,
         }
 
-# %% ../../nbs/classes/50_DomoPublish.ipynb 13
+# %% ../../nbs/classes/50_DomoPublish.ipynb 12
 class DomoPublication_UnexpectedContentType(dmde.ClassError):
     def __init__(self, cls_instance, content_type):
         super().__init__(
@@ -193,10 +197,11 @@ class DomoPublication_UnexpectedContentType(dmde.ClassError):
 
 
 @dataclass
-class DomoPublication:
+class DomoPublication(DomoEntity_w_Lineage):
     auth: dmda.DomoAuth = field(repr=False)
-
     id: str
+    Lineage: dmdl.DomoLineage_Publication = field(repr=False)
+
     name: str
     description: str
     is_v2: bool
@@ -212,10 +217,9 @@ class DomoPublication:
     # content_dataset_id_ls: List[str] = field(default_factory=list)
     # content_data_app_id_ls: List[str] = field(default_factory=list)
 
-    Lineage: dmdl.DomoLineage_Publication = None
 
     def __post_init__(self):
-        self.Lineage = dmdl.DomoLineage_Publication.from_parent(parent=self, auth=self.auth)
+        self.Lineage = dmdl.DomoLineage_Publication._from_parent(parent=self, auth=self.auth)
 
     def _generate_subscription_authorizations(
         self, subscription_authorizations_ls, auth
@@ -268,6 +272,8 @@ class DomoPublication:
             ),
             is_v2=obj["isV2"],
             auth=auth,
+            raw = obj,
+            Lineage = None
         )
 
         if (
@@ -283,35 +289,41 @@ class DomoPublication:
             domo_pub._generate_content(obj["children"])
 
         return domo_pub
+    
+    @classmethod
+    async def get_by_id(
+        cls,
+        publication_id,
+        auth: dmda.DomoAuth = None,
+        return_raw: bool = False,
+        timeout=10,
+        debug_api: bool = False,
+        debug_num_stacks_to_drop=2,
+        session: httpx.AsyncClient = None,
+    ):
+        res = await publish_routes.get_publication_by_id(
+            auth=auth,
+            publication_id=publication_id,
+            timeout=timeout,
+            debug_api=debug_api,
+            debug_num_stacks_to_drop=debug_num_stacks_to_drop,
+            session=session,
+            parent_class=cls.__name__,
+        )
 
-# %% ../../nbs/classes/50_DomoPublish.ipynb 14
-@patch_to(DomoPublication, cls_method=True)
-async def get_by_id(
-    cls,
-    publication_id,
-    auth: dmda.DomoAuth = None,
-    return_raw: bool = False,
-    timeout=10,
-    debug_api: bool = False,
-    debug_num_stacks_to_drop=2,
-    session: httpx.AsyncClient = None,
-):
-    res = await publish_routes.get_publication_by_id(
-        auth=auth,
-        publication_id=publication_id,
-        timeout=timeout,
-        debug_api=debug_api,
-        debug_num_stacks_to_drop=debug_num_stacks_to_drop,
-        session=session,
-        parent_class=cls.__name__,
-    )
+        if return_raw:
+            return res
 
-    if return_raw:
-        return res
+        return cls._from_json(obj=res.response, auth=auth)
+    
+    @classmethod
+    async def _get_entity_by_id(cls, entity_id, **kwargs):
+        return await cls.get_by_id( publication_id = entity_id, **kwargs)
+    
+    def display_url(self):
+        return f"https://{self.auth.domo_instance}.domo.com/admin/domo-everywhere/publications/details?id={self.id}"
 
-    return cls._from_json(obj=res.response, auth=auth)
-
-# | export
+# %% ../../nbs/classes/50_DomoPublish.ipynb 13
 @patch_to(DomoPublication)
 async def get_content(
     self,
@@ -344,7 +356,7 @@ async def get_content(
     return self._generate_content(content)
 
 
-# %% ../../nbs/classes/50_DomoPublish.ipynb 22
+# %% ../../nbs/classes/50_DomoPublish.ipynb 21
 @dataclass
 class DomoPublications:
     auth: dmda.DomoAuth = field(repr = False)
@@ -407,7 +419,7 @@ class DomoPublications:
 
         return self.subscriptions
 
-# %% ../../nbs/classes/50_DomoPublish.ipynb 26
+# %% ../../nbs/classes/50_DomoPublish.ipynb 25
 @patch_to(DomoPublications)
 async def search_publications(
     self: DomoPublications,
@@ -428,7 +440,7 @@ async def search_publications(
 
     return res
 
-# %% ../../nbs/classes/50_DomoPublish.ipynb 28
+# %% ../../nbs/classes/50_DomoPublish.ipynb 27
 @patch_to(DomoPublication)
 async def report_content_as_dataframe(self, return_raw: bool = False):
 
@@ -473,7 +485,7 @@ def report_lineage_as_dataframe(self, return_raw: bool = False):
 
     return pd.DataFrame(output_ls)
 
-# %% ../../nbs/classes/50_DomoPublish.ipynb 30
+# %% ../../nbs/classes/50_DomoPublish.ipynb 29
 @patch_to(DomoPublication, cls_method=True)
 async def create_publication(
     cls,
@@ -528,7 +540,7 @@ async def create_publication(
 
     return cls._from_json(obj=res.response, auth=auth)
 
-# %% ../../nbs/classes/50_DomoPublish.ipynb 32
+# %% ../../nbs/classes/50_DomoPublish.ipynb 31
 @patch_to(DomoPublication)
 async def update_publication(
     self,
@@ -561,7 +573,7 @@ async def update_publication(
 
     return res
 
-# %% ../../nbs/classes/50_DomoPublish.ipynb 34
+# %% ../../nbs/classes/50_DomoPublish.ipynb 33
 @patch_to(DomoPublication, cls_method=True)
 async def get_subscription_invites_list(
     cls, auth: dmda.DomoAuth, debug_api: bool = False

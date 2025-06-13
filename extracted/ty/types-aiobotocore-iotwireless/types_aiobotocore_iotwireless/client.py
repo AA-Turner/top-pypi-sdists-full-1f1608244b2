@@ -476,7 +476,7 @@ class IoTWirelessClient(AioBaseClient):
         self, **kwargs: Unpack[DeleteMulticastGroupRequestTypeDef]
     ) -> Dict[str, Any]:
         """
-        Deletes a multicast group if it is not in use by a fuota task.
+        Deletes a multicast group if it is not in use by a FUOTA task.
 
         [Show boto3 documentation](https://boto3.amazonaws.com/v1/documentation/api/latest/reference/services/iotwireless/client/delete_multicast_group.html)
         [Show types-aiobotocore documentation](https://youtype.github.io/types_aiobotocore_docs/types_aiobotocore_iotwireless/client/#delete_multicast_group)
@@ -586,7 +586,7 @@ class IoTWirelessClient(AioBaseClient):
         self, **kwargs: Unpack[DisassociateMulticastGroupFromFuotaTaskRequestTypeDef]
     ) -> Dict[str, Any]:
         """
-        Disassociates a multicast group from a fuota task.
+        Disassociates a multicast group from a FUOTA task.
 
         [Show boto3 documentation](https://boto3.amazonaws.com/v1/documentation/api/latest/reference/services/iotwireless/client/disassociate_multicast_group_from_fuota_task.html)
         [Show types-aiobotocore documentation](https://youtype.github.io/types_aiobotocore_docs/types_aiobotocore_iotwireless/client/#disassociate_multicast_group_from_fuota_task)
@@ -792,8 +792,8 @@ class IoTWirelessClient(AioBaseClient):
         self, **kwargs: Unpack[GetResourceLogLevelRequestTypeDef]
     ) -> GetResourceLogLevelResponseTypeDef:
         """
-        Fetches the log-level override, if any, for a given resource-ID and
-        resource-type.
+        Fetches the log-level override, if any, for a given resource ID and resource
+        type..
 
         [Show boto3 documentation](https://boto3.amazonaws.com/v1/documentation/api/latest/reference/services/iotwireless/client/get_resource_log_level.html)
         [Show types-aiobotocore documentation](https://youtype.github.io/types_aiobotocore_docs/types_aiobotocore_iotwireless/client/#get_resource_log_level)
@@ -987,7 +987,7 @@ class IoTWirelessClient(AioBaseClient):
         self, **kwargs: Unpack[ListMulticastGroupsByFuotaTaskRequestTypeDef]
     ) -> ListMulticastGroupsByFuotaTaskResponseTypeDef:
         """
-        List all multicast groups associated with a fuota task.
+        List all multicast groups associated with a FUOTA task.
 
         [Show boto3 documentation](https://boto3.amazonaws.com/v1/documentation/api/latest/reference/services/iotwireless/client/list_multicast_groups_by_fuota_task.html)
         [Show types-aiobotocore documentation](https://youtype.github.io/types_aiobotocore_docs/types_aiobotocore_iotwireless/client/#list_multicast_groups_by_fuota_task)
@@ -1107,7 +1107,7 @@ class IoTWirelessClient(AioBaseClient):
         self, **kwargs: Unpack[PutResourceLogLevelRequestTypeDef]
     ) -> Dict[str, Any]:
         """
-        Sets the log-level override for a resource-ID and resource-type.
+        Sets the log-level override for a resource ID and resource type.
 
         [Show boto3 documentation](https://boto3.amazonaws.com/v1/documentation/api/latest/reference/services/iotwireless/client/put_resource_log_level.html)
         [Show types-aiobotocore documentation](https://youtype.github.io/types_aiobotocore_docs/types_aiobotocore_iotwireless/client/#put_resource_log_level)
@@ -1116,7 +1116,7 @@ class IoTWirelessClient(AioBaseClient):
     async def reset_all_resource_log_levels(self) -> Dict[str, Any]:
         """
         Removes the log-level overrides for all resources; wireless devices, wireless
-        gateways, and fuota tasks.
+        gateways, and FUOTA tasks.
 
         [Show boto3 documentation](https://boto3.amazonaws.com/v1/documentation/api/latest/reference/services/iotwireless/client/reset_all_resource_log_levels.html)
         [Show types-aiobotocore documentation](https://youtype.github.io/types_aiobotocore_docs/types_aiobotocore_iotwireless/client/#reset_all_resource_log_levels)
@@ -1126,8 +1126,8 @@ class IoTWirelessClient(AioBaseClient):
         self, **kwargs: Unpack[ResetResourceLogLevelRequestTypeDef]
     ) -> Dict[str, Any]:
         """
-        Removes the log-level override, if any, for a specific resource-ID and
-        resource-type.
+        Removes the log-level override, if any, for a specific resource ID and resource
+        type.
 
         [Show boto3 documentation](https://boto3.amazonaws.com/v1/documentation/api/latest/reference/services/iotwireless/client/reset_resource_log_level.html)
         [Show types-aiobotocore documentation](https://youtype.github.io/types_aiobotocore_docs/types_aiobotocore_iotwireless/client/#reset_resource_log_level)

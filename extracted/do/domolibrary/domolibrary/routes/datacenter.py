@@ -2,7 +2,9 @@
 
 # %% ../../nbs/routes/datacenter.ipynb 2
 from __future__ import annotations
-from enum import Enum
+
+from domolibrary.client.DomoEntity import DomoEnum
+
 from typing import Union,TypedDict, List, Dict, Optional
 import httpx
 
@@ -22,7 +24,7 @@ __all__ = ['Datacenter_Enum', 'Dataflow_Type_Filter_Enum', 'Datacenter_Filter_Fi
            'ShareResource_Enum', 'share_resource']
 
 # %% ../../nbs/routes/datacenter.ipynb 5
-class Datacenter_Enum(Enum):
+class Datacenter_Enum(DomoEnum):
     ACCOUNT = "ACCOUNT"
     CARD = "CARD"
     DATAFLOW = "DATAFLOW"
@@ -35,7 +37,7 @@ class Datacenter_Enum(Enum):
     DATA_APP = "DATA_APP"
 
 
-class Dataflow_Type_Filter_Enum(Enum):
+class Dataflow_Type_Filter_Enum(DomoEnum):
     ADR = {
         "filterType": "term",
         "field": "data_flow_type",
@@ -77,12 +79,12 @@ class Dataflow_Type_Filter_Enum(Enum):
     }
 
 # %% ../../nbs/routes/datacenter.ipynb 6
-class Datacenter_Filter_Field_Enum(Enum):
+class Datacenter_Filter_Field_Enum(DomoEnum):
     DATAPROVIDER = "dataprovidername_facet"
     CERTIFICATION = "certification.state"
 
 
-class Datacenter_Filter_Field_Certification_Enum(Enum):
+class Datacenter_Filter_Field_Certification_Enum(DomoEnum):
     CERTIFIED = "CERTIFIED"
     PENDING = "PENDING"
     REQUESTED = "REQUESTED"
@@ -347,7 +349,7 @@ class ShareResource_Error(de.DomoError):
             function_name=function_name,
         )
 
-class ShareResource_Enum(Enum):
+class ShareResource_Enum(DomoEnum):
     PAGE = "page"
     CARD = "badge"
 

@@ -80,7 +80,7 @@ CapacityDistributionStrategyType = Literal["balanced-best-effort", "balanced-onl
 CapacityReservationPreferenceType = Literal[
     "capacity-reservations-first", "capacity-reservations-only", "default", "none"
 ]
-CpuManufacturerType = Literal["amazon-web-services", "amd", "intel"]
+CpuManufacturerType = Literal["amazon-web-services", "amd", "apple", "intel"]
 DescribeAutoScalingGroupsPaginatorName = Literal["describe_auto_scaling_groups"]
 DescribeAutoScalingInstancesPaginatorName = Literal["describe_auto_scaling_instances"]
 DescribeLaunchConfigurationsPaginatorName = Literal["describe_launch_configurations"]
@@ -336,6 +336,7 @@ ServiceName = Literal[
     "freetier",
     "fsx",
     "gamelift",
+    "gameliftstreams",
     "geo-maps",
     "geo-places",
     "geo-routes",
@@ -361,6 +362,7 @@ ServiceName = Literal[
     "iot",
     "iot-data",
     "iot-jobs-data",
+    "iot-managed-integrations",
     "iotanalytics",
     "iotdeviceadvisor",
     "iotevents",
@@ -475,7 +477,6 @@ ServiceName = Literal[
     "pipes",
     "polly",
     "pricing",
-    "privatenetworks",
     "proton",
     "qapps",
     "qbusiness",
@@ -536,7 +537,6 @@ ServiceName = Literal[
     "signer",
     "simspaceweaver",
     "sms",
-    "sms-voice",
     "snow-device-management",
     "snowball",
     "sns",
@@ -544,6 +544,7 @@ ServiceName = Literal[
     "sqs",
     "ssm",
     "ssm-contacts",
+    "ssm-guiconnect",
     "ssm-incidents",
     "ssm-quicksetup",
     "ssm-sap",

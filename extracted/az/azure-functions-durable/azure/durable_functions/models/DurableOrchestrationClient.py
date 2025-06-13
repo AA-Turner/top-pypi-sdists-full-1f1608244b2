@@ -4,6 +4,7 @@ from typing import List, Any, Optional, Dict, Union
 from time import time
 from asyncio import sleep
 from urllib.parse import urlparse, quote
+from opentelemetry.trace.propagation.tracecontext import TraceContextTextMapPropagator
 
 import azure.functions as func
 
@@ -71,8 +72,13 @@ class DurableOrchestrationClient:
         request_url = self._get_start_new_url(
             instance_id=instance_id, orchestration_function_name=orchestration_function_name)
 
+        trace_parent, trace_state = DurableOrchestrationClient._get_current_activity_context()
+
         response: List[Any] = await self._post_async_request(
-            request_url, self._get_json_input(client_input))
+            request_url,
+            self._get_json_input(client_input),
+            trace_parent,
+            trace_state)
 
         status_code: int = response[0]
         if status_code <= 202 and response[1]:
@@ -545,9 +551,14 @@ class DurableOrchestrationClient:
                                        entity_Id=entityId)
 
         request_url = options.to_url(self._orchestration_bindings.rpc_base_url)
+
+        trace_parent, trace_state = DurableOrchestrationClient._get_current_activity_context()
+
         response = await self._post_async_request(
             request_url,
-            json.dumps(operation_input) if operation_input else None)
+            json.dumps(operation_input) if operation_input else None,
+            trace_parent,
+            trace_state)
 
         switch_statement = {
             202: lambda: None  # signal accepted
@@ -779,3 +790,23 @@ class DurableOrchestrationClient:
         error_message = has_error_message()
         if error_message:
             raise Exception(error_message)
+
+    """Gets the current trace activity traceparent and tracestate
+
+    Returns
+    -------
+    tuple[str, str]
+        A tuple containing the (traceparent, tracestate)
+    """
+    @staticmethod
+    def _get_current_activity_context() -> tuple[str, str]:
+        carrier = {}
+
+        # Inject the current trace context into the carrier
+        TraceContextTextMapPropagator().inject(carrier)
+
+        # Extract the traceparent and optionally the tracestate
+        trace_parent = carrier.get("traceparent")
+        trace_state = carrier.get("tracestate")
+
+        return trace_parent, trace_state

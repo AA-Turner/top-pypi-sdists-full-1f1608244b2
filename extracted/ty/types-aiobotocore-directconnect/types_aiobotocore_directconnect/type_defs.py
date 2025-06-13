@@ -308,20 +308,6 @@ class NewBGPPeerTypeDef(TypedDict):
     customerAddress: NotRequired[str]
 
 
-class CreateDirectConnectGatewayRequestTypeDef(TypedDict):
-    directConnectGatewayName: str
-    amazonSideAsn: NotRequired[int]
-
-
-class DirectConnectGatewayTypeDef(TypedDict):
-    directConnectGatewayId: NotRequired[str]
-    directConnectGatewayName: NotRequired[str]
-    amazonSideAsn: NotRequired[int]
-    ownerAccount: NotRequired[str]
-    directConnectGatewayState: NotRequired[DirectConnectGatewayStateType]
-    stateChangeError: NotRequired[str]
-
-
 class CustomerAgreementTypeDef(TypedDict):
     agreementName: NotRequired[str]
     status: NotRequired[str]
@@ -648,6 +634,12 @@ class CreateConnectionRequestTypeDef(TypedDict):
     requestMACSec: NotRequired[bool]
 
 
+class CreateDirectConnectGatewayRequestTypeDef(TypedDict):
+    directConnectGatewayName: str
+    tags: NotRequired[Sequence[TagTypeDef]]
+    amazonSideAsn: NotRequired[int]
+
+
 class CreateInterconnectRequestTypeDef(TypedDict):
     interconnectName: str
     bandwidth: str
@@ -667,6 +659,16 @@ class CreateLagRequestTypeDef(TypedDict):
     childConnectionTags: NotRequired[Sequence[TagTypeDef]]
     providerName: NotRequired[str]
     requestMACSec: NotRequired[bool]
+
+
+class DirectConnectGatewayTypeDef(TypedDict):
+    directConnectGatewayId: NotRequired[str]
+    directConnectGatewayName: NotRequired[str]
+    amazonSideAsn: NotRequired[int]
+    ownerAccount: NotRequired[str]
+    directConnectGatewayState: NotRequired[DirectConnectGatewayStateType]
+    stateChangeError: NotRequired[str]
+    tags: NotRequired[List[TagTypeDef]]
 
 
 class InterconnectResponseTypeDef(TypedDict):
@@ -944,27 +946,6 @@ class CreateBGPPeerRequestTypeDef(TypedDict):
     newBGPPeer: NotRequired[NewBGPPeerTypeDef]
 
 
-class CreateDirectConnectGatewayResultTypeDef(TypedDict):
-    directConnectGateway: DirectConnectGatewayTypeDef
-    ResponseMetadata: ResponseMetadataTypeDef
-
-
-class DeleteDirectConnectGatewayResultTypeDef(TypedDict):
-    directConnectGateway: DirectConnectGatewayTypeDef
-    ResponseMetadata: ResponseMetadataTypeDef
-
-
-class DescribeDirectConnectGatewaysResultTypeDef(TypedDict):
-    directConnectGateways: List[DirectConnectGatewayTypeDef]
-    ResponseMetadata: ResponseMetadataTypeDef
-    nextToken: NotRequired[str]
-
-
-class UpdateDirectConnectGatewayResponseTypeDef(TypedDict):
-    directConnectGateway: DirectConnectGatewayTypeDef
-    ResponseMetadata: ResponseMetadataTypeDef
-
-
 class DescribeCustomerMetadataResponseTypeDef(TypedDict):
     agreements: List[CustomerAgreementTypeDef]
     nniPartnerType: NniPartnerTypeType
@@ -1037,6 +1018,27 @@ class LocationsTypeDef(TypedDict):
 
 class VirtualGatewaysTypeDef(TypedDict):
     virtualGateways: List[VirtualGatewayTypeDef]
+    ResponseMetadata: ResponseMetadataTypeDef
+
+
+class CreateDirectConnectGatewayResultTypeDef(TypedDict):
+    directConnectGateway: DirectConnectGatewayTypeDef
+    ResponseMetadata: ResponseMetadataTypeDef
+
+
+class DeleteDirectConnectGatewayResultTypeDef(TypedDict):
+    directConnectGateway: DirectConnectGatewayTypeDef
+    ResponseMetadata: ResponseMetadataTypeDef
+
+
+class DescribeDirectConnectGatewaysResultTypeDef(TypedDict):
+    directConnectGateways: List[DirectConnectGatewayTypeDef]
+    ResponseMetadata: ResponseMetadataTypeDef
+    nextToken: NotRequired[str]
+
+
+class UpdateDirectConnectGatewayResponseTypeDef(TypedDict):
+    directConnectGateway: DirectConnectGatewayTypeDef
     ResponseMetadata: ResponseMetadataTypeDef
 
 

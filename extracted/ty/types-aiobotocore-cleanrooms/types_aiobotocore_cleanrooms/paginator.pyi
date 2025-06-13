@@ -28,6 +28,7 @@ Usage::
         ListMembershipsPaginator,
         ListPrivacyBudgetTemplatesPaginator,
         ListPrivacyBudgetsPaginator,
+        ListProtectedJobsPaginator,
         ListProtectedQueriesPaginator,
         ListSchemasPaginator,
     )
@@ -52,6 +53,7 @@ Usage::
         list_memberships_paginator: ListMembershipsPaginator = client.get_paginator("list_memberships")
         list_privacy_budget_templates_paginator: ListPrivacyBudgetTemplatesPaginator = client.get_paginator("list_privacy_budget_templates")
         list_privacy_budgets_paginator: ListPrivacyBudgetsPaginator = client.get_paginator("list_privacy_budgets")
+        list_protected_jobs_paginator: ListProtectedJobsPaginator = client.get_paginator("list_protected_jobs")
         list_protected_queries_paginator: ListProtectedQueriesPaginator = client.get_paginator("list_protected_queries")
         list_schemas_paginator: ListSchemasPaginator = client.get_paginator("list_schemas")
     ```
@@ -97,6 +99,8 @@ from .type_defs import (
     ListPrivacyBudgetsOutputTypeDef,
     ListPrivacyBudgetTemplatesInputPaginateTypeDef,
     ListPrivacyBudgetTemplatesOutputTypeDef,
+    ListProtectedJobsInputPaginateTypeDef,
+    ListProtectedJobsOutputTypeDef,
     ListProtectedQueriesInputPaginateTypeDef,
     ListProtectedQueriesOutputTypeDef,
     ListSchemasInputPaginateTypeDef,
@@ -125,6 +129,7 @@ __all__ = (
     "ListMembershipsPaginator",
     "ListPrivacyBudgetTemplatesPaginator",
     "ListPrivacyBudgetsPaginator",
+    "ListProtectedJobsPaginator",
     "ListProtectedQueriesPaginator",
     "ListSchemasPaginator",
 )
@@ -440,6 +445,24 @@ class ListPrivacyBudgetsPaginator(_ListPrivacyBudgetsPaginatorBase):
         """
         [Show boto3 documentation](https://boto3.amazonaws.com/v1/documentation/api/latest/reference/services/cleanrooms/paginator/ListPrivacyBudgets.html#CleanRoomsService.Paginator.ListPrivacyBudgets.paginate)
         [Show types-aiobotocore documentation](https://youtype.github.io/types_aiobotocore_docs/types_aiobotocore_cleanrooms/paginators/#listprivacybudgetspaginator)
+        """
+
+if TYPE_CHECKING:
+    _ListProtectedJobsPaginatorBase = AioPaginator[ListProtectedJobsOutputTypeDef]
+else:
+    _ListProtectedJobsPaginatorBase = AioPaginator  # type: ignore[assignment]
+
+class ListProtectedJobsPaginator(_ListProtectedJobsPaginatorBase):
+    """
+    [Show boto3 documentation](https://boto3.amazonaws.com/v1/documentation/api/latest/reference/services/cleanrooms/paginator/ListProtectedJobs.html#CleanRoomsService.Paginator.ListProtectedJobs)
+    [Show types-aiobotocore documentation](https://youtype.github.io/types_aiobotocore_docs/types_aiobotocore_cleanrooms/paginators/#listprotectedjobspaginator)
+    """
+    def paginate(  # type: ignore[override]
+        self, **kwargs: Unpack[ListProtectedJobsInputPaginateTypeDef]
+    ) -> AioPageIterator[ListProtectedJobsOutputTypeDef]:
+        """
+        [Show boto3 documentation](https://boto3.amazonaws.com/v1/documentation/api/latest/reference/services/cleanrooms/paginator/ListProtectedJobs.html#CleanRoomsService.Paginator.ListProtectedJobs.paginate)
+        [Show types-aiobotocore documentation](https://youtype.github.io/types_aiobotocore_docs/types_aiobotocore_cleanrooms/paginators/#listprotectedjobspaginator)
         """
 
 if TYPE_CHECKING:

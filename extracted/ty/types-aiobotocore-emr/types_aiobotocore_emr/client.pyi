@@ -50,6 +50,8 @@ from .type_defs import (
     AddTagsInputTypeDef,
     CancelStepsInputTypeDef,
     CancelStepsOutputTypeDef,
+    CreatePersistentAppUIInputTypeDef,
+    CreatePersistentAppUIOutputTypeDef,
     CreateSecurityConfigurationInputTypeDef,
     CreateSecurityConfigurationOutputTypeDef,
     CreateStudioInputTypeDef,
@@ -64,6 +66,8 @@ from .type_defs import (
     DescribeJobFlowsOutputTypeDef,
     DescribeNotebookExecutionInputTypeDef,
     DescribeNotebookExecutionOutputTypeDef,
+    DescribePersistentAppUIInputTypeDef,
+    DescribePersistentAppUIOutputTypeDef,
     DescribeReleaseLabelInputTypeDef,
     DescribeReleaseLabelOutputTypeDef,
     DescribeSecurityConfigurationInputTypeDef,
@@ -80,6 +84,10 @@ from .type_defs import (
     GetClusterSessionCredentialsOutputTypeDef,
     GetManagedScalingPolicyInputTypeDef,
     GetManagedScalingPolicyOutputTypeDef,
+    GetOnClusterAppUIPresignedURLInputTypeDef,
+    GetOnClusterAppUIPresignedURLOutputTypeDef,
+    GetPersistentAppUIPresignedURLInputTypeDef,
+    GetPersistentAppUIPresignedURLOutputTypeDef,
     GetStudioSessionMappingInputTypeDef,
     GetStudioSessionMappingOutputTypeDef,
     ListBootstrapActionsInputTypeDef,
@@ -236,6 +244,16 @@ class EMRClient(AioBaseClient):
         [Show types-aiobotocore documentation](https://youtype.github.io/types_aiobotocore_docs/types_aiobotocore_emr/client/#cancel_steps)
         """
 
+    async def create_persistent_app_ui(
+        self, **kwargs: Unpack[CreatePersistentAppUIInputTypeDef]
+    ) -> CreatePersistentAppUIOutputTypeDef:
+        """
+        Creates a persistent application user interface.
+
+        [Show boto3 documentation](https://boto3.amazonaws.com/v1/documentation/api/latest/reference/services/emr/client/create_persistent_app_ui.html)
+        [Show types-aiobotocore documentation](https://youtype.github.io/types_aiobotocore_docs/types_aiobotocore_emr/client/#create_persistent_app_ui)
+        """
+
     async def create_security_configuration(
         self, **kwargs: Unpack[CreateSecurityConfigurationInputTypeDef]
     ) -> CreateSecurityConfigurationOutputTypeDef:
@@ -330,6 +348,16 @@ class EMRClient(AioBaseClient):
         [Show types-aiobotocore documentation](https://youtype.github.io/types_aiobotocore_docs/types_aiobotocore_emr/client/#describe_notebook_execution)
         """
 
+    async def describe_persistent_app_ui(
+        self, **kwargs: Unpack[DescribePersistentAppUIInputTypeDef]
+    ) -> DescribePersistentAppUIOutputTypeDef:
+        """
+        Describes a persistent application user interface.
+
+        [Show boto3 documentation](https://boto3.amazonaws.com/v1/documentation/api/latest/reference/services/emr/client/describe_persistent_app_ui.html)
+        [Show types-aiobotocore documentation](https://youtype.github.io/types_aiobotocore_docs/types_aiobotocore_emr/client/#describe_persistent_app_ui)
+        """
+
     async def describe_release_label(
         self, **kwargs: Unpack[DescribeReleaseLabelInputTypeDef]
     ) -> DescribeReleaseLabelOutputTypeDef:
@@ -415,6 +443,26 @@ class EMRClient(AioBaseClient):
 
         [Show boto3 documentation](https://boto3.amazonaws.com/v1/documentation/api/latest/reference/services/emr/client/get_managed_scaling_policy.html)
         [Show types-aiobotocore documentation](https://youtype.github.io/types_aiobotocore_docs/types_aiobotocore_emr/client/#get_managed_scaling_policy)
+        """
+
+    async def get_on_cluster_app_ui_presigned_url(
+        self, **kwargs: Unpack[GetOnClusterAppUIPresignedURLInputTypeDef]
+    ) -> GetOnClusterAppUIPresignedURLOutputTypeDef:
+        """
+        The presigned URL properties for the cluster's application user interface.
+
+        [Show boto3 documentation](https://boto3.amazonaws.com/v1/documentation/api/latest/reference/services/emr/client/get_on_cluster_app_ui_presigned_url.html)
+        [Show types-aiobotocore documentation](https://youtype.github.io/types_aiobotocore_docs/types_aiobotocore_emr/client/#get_on_cluster_app_ui_presigned_url)
+        """
+
+    async def get_persistent_app_ui_presigned_url(
+        self, **kwargs: Unpack[GetPersistentAppUIPresignedURLInputTypeDef]
+    ) -> GetPersistentAppUIPresignedURLOutputTypeDef:
+        """
+        The presigned URL properties for the cluster's application user interface.
+
+        [Show boto3 documentation](https://boto3.amazonaws.com/v1/documentation/api/latest/reference/services/emr/client/get_persistent_app_ui_presigned_url.html)
+        [Show types-aiobotocore documentation](https://youtype.github.io/types_aiobotocore_docs/types_aiobotocore_emr/client/#get_persistent_app_ui_presigned_url)
         """
 
     async def get_studio_session_mapping(

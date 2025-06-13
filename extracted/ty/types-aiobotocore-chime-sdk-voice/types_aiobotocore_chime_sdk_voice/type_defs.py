@@ -1288,6 +1288,7 @@ class PhoneNumberOrderTypeDef(TypedDict):
     OrderedPhoneNumbers: NotRequired[List[OrderedPhoneNumberTypeDef]]
     CreatedTimestamp: NotRequired[datetime]
     UpdatedTimestamp: NotRequired[datetime]
+    FocDate: NotRequired[datetime]
 
 
 class OriginationOutputTypeDef(TypedDict):

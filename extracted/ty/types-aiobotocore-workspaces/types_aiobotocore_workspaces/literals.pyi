@@ -59,6 +59,7 @@ __all__ = (
     "DescribeWorkspacesPaginatorName",
     "DescribeWorkspacesPoolsFilterNameType",
     "DescribeWorkspacesPoolsFilterOperatorType",
+    "EndpointEncryptionModeType",
     "ImageAssociatedResourceTypeType",
     "ImageTypeType",
     "ListAccountLinksPaginatorName",
@@ -69,6 +70,7 @@ __all__ = (
     "OperatingSystemNameType",
     "OperatingSystemTypeType",
     "PaginatorName",
+    "PoolsRunningModeType",
     "ProtocolType",
     "ReconnectEnumType",
     "RegionName",
@@ -189,6 +191,7 @@ DescribeWorkspacesPoolsFilterNameType = Literal["PoolName"]
 DescribeWorkspacesPoolsFilterOperatorType = Literal[
     "CONTAINS", "EQUALS", "NOTCONTAINS", "NOTEQUALS"
 ]
+EndpointEncryptionModeType = Literal["FIPS_VALIDATED", "STANDARD_TLS"]
 ImageAssociatedResourceTypeType = Literal["APPLICATION"]
 ImageTypeType = Literal["OWNED", "SHARED"]
 ListAccountLinksPaginatorName = Literal["list_account_links"]
@@ -212,6 +215,7 @@ OperatingSystemNameType = Literal[
     "WINDOWS_SERVER_2022",
 ]
 OperatingSystemTypeType = Literal["LINUX", "WINDOWS"]
+PoolsRunningModeType = Literal["ALWAYS_ON", "AUTO_STOP"]
 ProtocolType = Literal["PCOIP", "WSP"]
 ReconnectEnumType = Literal["DISABLED", "ENABLED"]
 RunningModeType = Literal["ALWAYS_ON", "AUTO_STOP", "MANUAL"]
@@ -264,6 +268,7 @@ WorkspaceImageErrorDetailCodeType = Literal[
     "InsufficientDiskSpace",
     "InsufficientRearmCount",
     "InvalidIp",
+    "MemoryIntegrityIncompatibility",
     "MultipleBootPartition",
     "MultipleUserProfiles",
     "OSNotSupported",
@@ -271,10 +276,12 @@ WorkspaceImageErrorDetailCodeType = Literal[
     "OutdatedPowershellVersion",
     "PCoIPAgentInstalled",
     "PendingReboot",
+    "ProtocolOSIncompatibility",
     "RealTimeUniversalDisabled",
     "RemoteDesktopServicesDisabled",
     "Requires64BitOS",
     "ReservedStorageInUse",
+    "RestrictedDriveLetterInUse",
     "StagedAppxPackage",
     "SysPrepFileMissing",
     "UEFINotSupported",
@@ -524,6 +531,7 @@ ServiceName = Literal[
     "freetier",
     "fsx",
     "gamelift",
+    "gameliftstreams",
     "geo-maps",
     "geo-places",
     "geo-routes",
@@ -549,6 +557,7 @@ ServiceName = Literal[
     "iot",
     "iot-data",
     "iot-jobs-data",
+    "iot-managed-integrations",
     "iotanalytics",
     "iotdeviceadvisor",
     "iotevents",
@@ -663,7 +672,6 @@ ServiceName = Literal[
     "pipes",
     "polly",
     "pricing",
-    "privatenetworks",
     "proton",
     "qapps",
     "qbusiness",
@@ -724,7 +732,6 @@ ServiceName = Literal[
     "signer",
     "simspaceweaver",
     "sms",
-    "sms-voice",
     "snow-device-management",
     "snowball",
     "sns",
@@ -732,6 +739,7 @@ ServiceName = Literal[
     "sqs",
     "ssm",
     "ssm-contacts",
+    "ssm-guiconnect",
     "ssm-incidents",
     "ssm-quicksetup",
     "ssm-sap",
@@ -806,6 +814,7 @@ RegionName = Literal[
     "eu-central-1",
     "eu-west-1",
     "eu-west-2",
+    "eu-west-3",
     "il-central-1",
     "sa-east-1",
     "us-east-1",

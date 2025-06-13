@@ -8,7 +8,7 @@ import shlex
 
 import click
 import dask.config
-from dask.utils import format_time
+from dask.utils import format_time, parse_timedelta
 from rich.console import Console
 from rich.panel import Panel
 
@@ -340,6 +340,15 @@ def get_kwargs_from_header(f: dict, click_params: list):
     default=None,
     help="Path to local script which will be run on each VM prior to running any tasks.",
 )
+@click.option(
+    "--job-timeout",
+    default=None,
+    type=str,
+    help=(
+        "Timeout for batch job; timer starts when the job starts running (after VMs have been provisioned). "
+        "For example, you can specify '30 minutes' or '1 hour'. Default is no timeout."
+    ),
+)
 @click.argument("command", nargs=-1)
 def batch_run_cli(ctx, **kwargs):
     """
@@ -603,6 +612,7 @@ def _batch_run(default_kwargs, logger=None, from_cli=False, **kwargs) -> dict:
             # https://github.com/coiled/platform/pull/8655#pullrequestreview-2826448869
             "workdir": None if "flow-run-id" in tags else "/scratch/batch",
             "host_setup": host_setup_content,
+            "job_timeout_seconds": parse_timedelta(kwargs["job_timeout"]) if kwargs["job_timeout"] else None,
         }
 
         url = f"{cloud.server}/api/v2/jobs/"

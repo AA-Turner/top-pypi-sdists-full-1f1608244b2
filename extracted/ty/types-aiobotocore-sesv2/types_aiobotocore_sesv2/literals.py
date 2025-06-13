@@ -8,9 +8,9 @@ Copyright 2025 Vlad Emelianov
 Usage::
 
     ```python
-    from types_aiobotocore_sesv2.literals import BehaviorOnMxFailureType
+    from types_aiobotocore_sesv2.literals import AttachmentContentDispositionType
 
-    data: BehaviorOnMxFailureType = "REJECT_MESSAGE"
+    data: AttachmentContentDispositionType = "ATTACHMENT"
     ```
 """
 
@@ -23,6 +23,8 @@ else:
 
 
 __all__ = (
+    "AttachmentContentDispositionType",
+    "AttachmentContentTransferEncodingType",
     "BehaviorOnMxFailureType",
     "BounceTypeType",
     "BulkEmailStatusType",
@@ -74,6 +76,8 @@ __all__ = (
 )
 
 
+AttachmentContentDispositionType = Literal["ATTACHMENT", "INLINE"]
+AttachmentContentTransferEncodingType = Literal["BASE64", "QUOTED_PRINTABLE", "SEVEN_BIT"]
 BehaviorOnMxFailureType = Literal["REJECT_MESSAGE", "USE_DEFAULT_VALUE"]
 BounceTypeType = Literal["PERMANENT", "TRANSIENT", "UNDETERMINED"]
 BulkEmailStatusType = Literal[
@@ -349,6 +353,7 @@ ServiceName = Literal[
     "freetier",
     "fsx",
     "gamelift",
+    "gameliftstreams",
     "geo-maps",
     "geo-places",
     "geo-routes",
@@ -374,6 +379,7 @@ ServiceName = Literal[
     "iot",
     "iot-data",
     "iot-jobs-data",
+    "iot-managed-integrations",
     "iotanalytics",
     "iotdeviceadvisor",
     "iotevents",
@@ -488,7 +494,6 @@ ServiceName = Literal[
     "pipes",
     "polly",
     "pricing",
-    "privatenetworks",
     "proton",
     "qapps",
     "qbusiness",
@@ -549,7 +554,6 @@ ServiceName = Literal[
     "signer",
     "simspaceweaver",
     "sms",
-    "sms-voice",
     "snow-device-management",
     "snowball",
     "sns",
@@ -557,6 +561,7 @@ ServiceName = Literal[
     "sqs",
     "ssm",
     "ssm-contacts",
+    "ssm-guiconnect",
     "ssm-incidents",
     "ssm-quicksetup",
     "ssm-sap",

@@ -972,7 +972,7 @@ class QConnectClient(AioBaseClient):
         self, **kwargs: Unpack[RemoveAssistantAIAgentRequestTypeDef]
     ) -> Dict[str, Any]:
         """
-        Removes the AI Agent that is set for use by defafult on an Amazon Q in Connect
+        Removes the AI Agent that is set for use by default on an Amazon Q in Connect
         Assistant.
 
         [Show boto3 documentation](https://boto3.amazonaws.com/v1/documentation/api/latest/reference/services/qconnect/client/remove_assistant_ai_agent.html)
@@ -1123,7 +1123,7 @@ class QConnectClient(AioBaseClient):
         self, **kwargs: Unpack[UpdateAssistantAIAgentRequestTypeDef]
     ) -> UpdateAssistantAIAgentResponseTypeDef:
         """
-        Updates the AI Agent that is set for use by defafult on an Amazon Q in Connect
+        Updates the AI Agent that is set for use by default on an Amazon Q in Connect
         Assistant.
 
         [Show boto3 documentation](https://boto3.amazonaws.com/v1/documentation/api/latest/reference/services/qconnect/client/update_assistant_ai_agent.html)

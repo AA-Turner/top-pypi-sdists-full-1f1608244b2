@@ -269,6 +269,7 @@ __all__ = (
     "ResponseMetadataTypeDef",
     "RevokeCacheSecurityGroupIngressMessageTypeDef",
     "RevokeCacheSecurityGroupIngressResultTypeDef",
+    "ScaleConfigTypeDef",
     "SecurityGroupMembershipTypeDef",
     "ServerlessCacheConfigurationTypeDef",
     "ServerlessCacheSnapshotTypeDef",
@@ -649,6 +650,10 @@ class ListAllowedNodeTypeModificationsMessageTypeDef(TypedDict):
 
 class ListTagsForResourceMessageTypeDef(TypedDict):
     ResourceName: str
+
+class ScaleConfigTypeDef(TypedDict):
+    ScalePercentage: NotRequired[int]
+    ScaleIntervalMinutes: NotRequired[int]
 
 class ParameterNameValueTypeDef(TypedDict):
     ParameterName: NotRequired[str]
@@ -1650,6 +1655,7 @@ class ModifyCacheClusterMessageTypeDef(TypedDict):
     AuthTokenUpdateStrategy: NotRequired[AuthTokenUpdateStrategyTypeType]
     LogDeliveryConfigurations: NotRequired[Sequence[LogDeliveryConfigurationRequestTypeDef]]
     IpDiscovery: NotRequired[IpDiscoveryType]
+    ScaleConfig: NotRequired[ScaleConfigTypeDef]
 
 class ModifyReplicationGroupMessageTypeDef(TypedDict):
     ReplicationGroupId: str
@@ -1692,6 +1698,7 @@ class PendingModifiedValuesTypeDef(TypedDict):
     LogDeliveryConfigurations: NotRequired[List[PendingLogDeliveryConfigurationTypeDef]]
     TransitEncryptionEnabled: NotRequired[bool]
     TransitEncryptionMode: NotRequired[TransitEncryptionModeType]
+    ScaleConfig: NotRequired[ScaleConfigTypeDef]
 
 class ReplicationGroupPendingModifiedValuesTypeDef(TypedDict):
     PrimaryClusterId: NotRequired[str]

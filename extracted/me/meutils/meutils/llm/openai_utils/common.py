@@ -178,7 +178,7 @@ async def ppu_flow(
     else:  # 不计费
         yield
 
-
+# 按量计费
 def create_chat_completion(
         completion: Union[str, Iterable[str]],
         redirect_model: str = '',

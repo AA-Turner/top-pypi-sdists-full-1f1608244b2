@@ -27,9 +27,12 @@ __all__ = (
     "AdMarkerHlsType",
     "CmafEncryptionMethodType",
     "ContainerTypeType",
+    "DashCompactnessType",
     "DashDrmSignalingType",
     "DashPeriodTriggerType",
+    "DashProfileType",
     "DashSegmentTemplateFormatType",
+    "DashTtmlProfileType",
     "DashUtcTimingModeType",
     "DrmSystemType",
     "EndpointErrorConditionType",
@@ -57,11 +60,14 @@ AdMarkerDashType = Literal["BINARY", "XML"]
 AdMarkerHlsType = Literal["DATERANGE"]
 CmafEncryptionMethodType = Literal["CBCS", "CENC"]
 ContainerTypeType = Literal["CMAF", "TS"]
+DashCompactnessType = Literal["NONE", "STANDARD"]
 DashDrmSignalingType = Literal["INDIVIDUAL", "REFERENCED"]
 DashPeriodTriggerType = Literal[
     "AVAILS", "DRM_KEY_ROTATION", "NONE", "SOURCE_CHANGES", "SOURCE_DISRUPTIONS"
 ]
+DashProfileType = Literal["DVB_DASH"]
 DashSegmentTemplateFormatType = Literal["NUMBER_WITH_TIMELINE"]
+DashTtmlProfileType = Literal["EBU_TT_D_101", "IMSC_1"]
 DashUtcTimingModeType = Literal["HTTP_HEAD", "HTTP_ISO", "HTTP_XSDATE", "UTC_DIRECT"]
 DrmSystemType = Literal["CLEAR_KEY_AES_128", "FAIRPLAY", "IRDETO", "PLAYREADY", "WIDEVINE"]
 EndpointErrorConditionType = Literal[
@@ -258,6 +264,7 @@ ServiceName = Literal[
     "freetier",
     "fsx",
     "gamelift",
+    "gameliftstreams",
     "geo-maps",
     "geo-places",
     "geo-routes",
@@ -283,6 +290,7 @@ ServiceName = Literal[
     "iot",
     "iot-data",
     "iot-jobs-data",
+    "iot-managed-integrations",
     "iotanalytics",
     "iotdeviceadvisor",
     "iotevents",
@@ -397,7 +405,6 @@ ServiceName = Literal[
     "pipes",
     "polly",
     "pricing",
-    "privatenetworks",
     "proton",
     "qapps",
     "qbusiness",
@@ -458,7 +465,6 @@ ServiceName = Literal[
     "signer",
     "simspaceweaver",
     "sms",
-    "sms-voice",
     "snow-device-management",
     "snowball",
     "sns",
@@ -466,6 +472,7 @@ ServiceName = Literal[
     "sqs",
     "ssm",
     "ssm-contacts",
+    "ssm-guiconnect",
     "ssm-incidents",
     "ssm-quicksetup",
     "ssm-sap",

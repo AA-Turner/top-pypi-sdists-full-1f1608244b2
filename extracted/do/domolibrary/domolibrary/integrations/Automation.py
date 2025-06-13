@@ -5,7 +5,7 @@ __all__ = ['search_domo_groups_by_name', 'upsert_domo_group', 'search_or_upsert_
            'search_domo_account_by_name', 'share_domo_account_with_domo_group', 'remove_partition_by_x_days',
            'get_company_domains']
 
-# %% ../../nbs/integrations/Automation.ipynb 2
+# %% ../../nbs/integrations/Automation.ipynb 1
 from typing import List
 
 import domolibrary.client.DomoAuth as dmda
@@ -22,7 +22,7 @@ import pandas as pd
 
 import domolibrary.classes.DomoDataset as dmds
 
-# %% ../../nbs/integrations/Automation.ipynb 5
+# %% ../../nbs/integrations/Automation.ipynb 4
 async def search_domo_groups_by_name(
     auth: dmda.DomoAuth, group_names: List[str], is_hide_system_groups: bool = True
 ) -> List[dmdg.DomoGroup]:
@@ -92,7 +92,7 @@ async def search_or_upsert_domo_group(
             )
         raise e from e
 
-# %% ../../nbs/integrations/Automation.ipynb 7
+# %% ../../nbs/integrations/Automation.ipynb 6
 class DJW_NoAccount(dmde.ClassError):
     def __init__(self, account_name, domo_instance):
         super().__init__(
@@ -131,7 +131,7 @@ async def share_domo_account_with_domo_group(
     upsert_group_if_no_exist: bool = True,
     is_hide_system_groups: bool = True,
     debug_api: bool = False,
-    access_level=dmacc.ShareAccount_AccessLevel("default"),
+    access_level=dmacc.ShareAccount_AccessLevel.default,
 ) -> str:
 
     share_domo_group = await search_or_upsert_domo_group(
@@ -149,10 +149,10 @@ async def share_domo_account_with_domo_group(
     return await domo_account.Access.share(
         group_id=share_domo_group.id,
         debug_api=debug_api,
-        access_level=access_level,
+        relation_type=access_level,
     )
 
-# %% ../../nbs/integrations/Automation.ipynb 9
+# %% ../../nbs/integrations/Automation.ipynb 8
 async def remove_partition_by_x_days(
     auth: dmda.DomoAuth,
     dataset_id: str,
@@ -190,7 +190,7 @@ async def remove_partition_by_x_days(
                 dataset_partition_id=i["partitionId"], dataset_id=dataset_id, auth=auth
             )
 
-# %% ../../nbs/integrations/Automation.ipynb 10
+# %% ../../nbs/integrations/Automation.ipynb 9
 async def get_company_domains(
     auth: dmda.DomoAuth,
     dataset_id: str,
@@ -209,7 +209,6 @@ async def get_company_domains(
     print(f"⚙️ SQL = {sql}")
 
     df = await ds.query_dataset_private(
-        auth=auth,
         dataset_id=dataset_id,
         sql=sql,
         loop_until_end=True,

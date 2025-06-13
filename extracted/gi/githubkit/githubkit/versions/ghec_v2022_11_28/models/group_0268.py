@@ -9,45 +9,23 @@ See https://github.com/github/rest-api-description for more information.
 
 from __future__ import annotations
 
+from typing import Union
+
 from pydantic import Field
 
 from githubkit.compat import GitHubModel, model_rebuild
-from githubkit.typing import Missing
-from githubkit.utils import UNSET
-
-from .group_0261 import BranchProtection
-from .group_0266 import Commit
 
 
-class BranchWithProtection(GitHubModel):
-    """Branch With Protection
+class Verification(GitHubModel):
+    """Verification"""
 
-    Branch With Protection
-    """
-
-    name: str = Field()
-    commit: Commit = Field(title="Commit", description="Commit")
-    links: BranchWithProtectionPropLinks = Field(alias="_links")
-    protected: bool = Field()
-    protection: BranchProtection = Field(
-        title="Branch Protection", description="Branch Protection"
-    )
-    protection_url: str = Field()
-    pattern: Missing[str] = Field(default=UNSET)
-    required_approving_review_count: Missing[int] = Field(default=UNSET)
+    verified: bool = Field()
+    reason: str = Field()
+    payload: Union[str, None] = Field()
+    signature: Union[str, None] = Field()
+    verified_at: Union[str, None] = Field()
 
 
-class BranchWithProtectionPropLinks(GitHubModel):
-    """BranchWithProtectionPropLinks"""
+model_rebuild(Verification)
 
-    html: str = Field()
-    self_: str = Field(alias="self")
-
-
-model_rebuild(BranchWithProtection)
-model_rebuild(BranchWithProtectionPropLinks)
-
-__all__ = (
-    "BranchWithProtection",
-    "BranchWithProtectionPropLinks",
-)
+__all__ = ("Verification",)

@@ -126,6 +126,7 @@ setup(
         "Programming Language :: Python :: 3.11",
         "Programming Language :: Python :: 3.12",
         "Programming Language :: Python :: 3.13",
+        "Programming Language :: Python :: 3.14",
         "Topic :: Internet",
         "Topic :: Internet :: WWW/HTTP :: Browsers",
         "Topic :: Scientific/Engineering",
@@ -233,9 +234,9 @@ setup(
         # Usage: coverage run -m pytest; coverage html; coverage report
         "coverage": [
             'coverage>=7.6.1;python_version<"3.9"',
-            'coverage>=7.8.2;python_version>="3.9"',
+            'coverage>=7.9.0;python_version>="3.9"',
             'pytest-cov>=5.0.0;python_version<"3.9"',
-            'pytest-cov>=6.1.1;python_version>="3.9"',
+            'pytest-cov>=6.2.1;python_version>="3.9"',
         ],
         # pip install -e .[flake8]
         # Usage: flake8
@@ -266,7 +267,7 @@ setup(
             'pdfminer.six==20250324;python_version<"3.9"',
             'pdfminer.six==20250506;python_version>="3.9"',
             'cryptography==39.0.2;python_version<"3.9"',
-            'cryptography==45.0.3;python_version>="3.9"',
+            'cryptography==45.0.4;python_version>="3.9"',
             'cffi==1.17.1',
             "pycparser==2.22",
         ],

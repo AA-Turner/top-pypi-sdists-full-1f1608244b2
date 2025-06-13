@@ -48,6 +48,7 @@ from .literals import (
     EventSourceNameType,
     EventTypeType,
     ExplicitAuthFlowsTypeType,
+    FeatureTypeType,
     FeedbackValueTypeType,
     IdentityProviderTypeTypeType,
     LogLevelType,
@@ -227,6 +228,8 @@ __all__ = (
     "GetLogDeliveryConfigurationResponseTypeDef",
     "GetSigningCertificateRequestTypeDef",
     "GetSigningCertificateResponseTypeDef",
+    "GetTokensFromRefreshTokenRequestTypeDef",
+    "GetTokensFromRefreshTokenResponseTypeDef",
     "GetUICustomizationRequestTypeDef",
     "GetUICustomizationResponseTypeDef",
     "GetUserAttributeVerificationCodeRequestTypeDef",
@@ -288,6 +291,7 @@ __all__ = (
     "ProviderDescriptionTypeDef",
     "ProviderUserIdentifierTypeTypeDef",
     "RecoveryOptionTypeTypeDef",
+    "RefreshTokenRotationTypeTypeDef",
     "ResendConfirmationCodeRequestTypeDef",
     "ResendConfirmationCodeResponseTypeDef",
     "ResourceServerScopeTypeTypeDef",
@@ -654,6 +658,10 @@ class UserImportJobTypeTypeDef(TypedDict):
     FailedUsers: NotRequired[int]
     CompletionMessage: NotRequired[str]
 
+class RefreshTokenRotationTypeTypeDef(TypedDict):
+    Feature: FeatureTypeType
+    RetryGracePeriodSeconds: NotRequired[int]
+
 class TokenValidityUnitsTypeTypeDef(TypedDict):
     AccessToken: NotRequired[TimeUnitsTypeType]
     IdToken: NotRequired[TimeUnitsTypeType]
@@ -802,6 +810,13 @@ class GetLogDeliveryConfigurationRequestTypeDef(TypedDict):
 
 class GetSigningCertificateRequestTypeDef(TypedDict):
     UserPoolId: str
+
+class GetTokensFromRefreshTokenRequestTypeDef(TypedDict):
+    RefreshToken: str
+    ClientId: str
+    ClientSecret: NotRequired[str]
+    DeviceKey: NotRequired[str]
+    ClientMetadata: NotRequired[Mapping[str, str]]
 
 class GetUICustomizationRequestTypeDef(TypedDict):
     UserPoolId: str
@@ -1478,6 +1493,7 @@ class CreateUserPoolClientRequestTypeDef(TypedDict):
     EnableTokenRevocation: NotRequired[bool]
     EnablePropagateAdditionalUserContextData: NotRequired[bool]
     AuthSessionValidity: NotRequired[int]
+    RefreshTokenRotation: NotRequired[RefreshTokenRotationTypeTypeDef]
 
 class UpdateUserPoolClientRequestTypeDef(TypedDict):
     UserPoolId: str
@@ -1502,6 +1518,7 @@ class UpdateUserPoolClientRequestTypeDef(TypedDict):
     EnableTokenRevocation: NotRequired[bool]
     EnablePropagateAdditionalUserContextData: NotRequired[bool]
     AuthSessionValidity: NotRequired[int]
+    RefreshTokenRotation: NotRequired[RefreshTokenRotationTypeTypeDef]
 
 class UserPoolClientTypeTypeDef(TypedDict):
     UserPoolId: NotRequired[str]
@@ -1529,6 +1546,7 @@ class UserPoolClientTypeTypeDef(TypedDict):
     EnableTokenRevocation: NotRequired[bool]
     EnablePropagateAdditionalUserContextData: NotRequired[bool]
     AuthSessionValidity: NotRequired[int]
+    RefreshTokenRotation: NotRequired[RefreshTokenRotationTypeTypeDef]
 
 class CreateUserPoolDomainRequestTypeDef(TypedDict):
     Domain: str
@@ -1702,12 +1720,17 @@ class AdminInitiateAuthResponseTypeDef(TypedDict):
     Session: str
     ChallengeParameters: Dict[str, str]
     AuthenticationResult: AuthenticationResultTypeTypeDef
+    AvailableChallenges: List[ChallengeNameTypeType]
     ResponseMetadata: ResponseMetadataTypeDef
 
 class AdminRespondToAuthChallengeResponseTypeDef(TypedDict):
     ChallengeName: ChallengeNameTypeType
     Session: str
     ChallengeParameters: Dict[str, str]
+    AuthenticationResult: AuthenticationResultTypeTypeDef
+    ResponseMetadata: ResponseMetadataTypeDef
+
+class GetTokensFromRefreshTokenResponseTypeDef(TypedDict):
     AuthenticationResult: AuthenticationResultTypeTypeDef
     ResponseMetadata: ResponseMetadataTypeDef
 

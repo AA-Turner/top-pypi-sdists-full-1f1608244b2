@@ -392,10 +392,15 @@ class RemoteExecutionClient:
         )
         return execution_end_response.execution_ended
 
-    async def create_chat(self, chat_source: ChatSource) -> CreateChatResponse:
+    async def create_chat(
+        self, chat_source: ChatSource, database_config_name: Optional[str] = None
+    ) -> CreateChatResponse:
         response = await self.api_client.post(
             "/api/remote_execution/create_chat",
-            params={"chat_source": chat_source.value},
+            params={
+                "chat_source": chat_source.value,
+                "database_config_name": database_config_name,
+            },
         )
         return await deserialize_api_response(response, CreateChatResponse)
 

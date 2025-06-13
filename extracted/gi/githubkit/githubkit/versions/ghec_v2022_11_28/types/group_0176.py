@@ -10,84 +10,105 @@ See https://github.com/github/rest-api-description for more information.
 from __future__ import annotations
 
 from datetime import datetime
-from typing import Literal, Union
+from typing import Union
 from typing_extensions import NotRequired, TypedDict
 
-from .group_0053 import BypassResponseType
 
+class OrganizationFullType(TypedDict):
+    """Organization Full
 
-class SecretScanningBypassRequestType(TypedDict):
-    """Secret scanning bypass request
+    Prevents users in the organization from using insecure methods of two-factor
+    authentication to fulfill a two-factor requirement.
+    Removes non-compliant outside collaborators from the organization and its
+    repositories.
 
-    A bypass request made by a user asking to be exempted from push protection in
-    this repository.
+    GitHub currently defines SMS as an insecure method of two-factor authentication.
+
+    If your users are managed by the enterprise this policy will not affect them.
+    The first admin account of the enterprise will still be affected.
     """
 
-    id: NotRequired[int]
-    number: NotRequired[int]
-    repository: NotRequired[SecretScanningBypassRequestPropRepositoryType]
-    organization: NotRequired[SecretScanningBypassRequestPropOrganizationType]
-    requester: NotRequired[SecretScanningBypassRequestPropRequesterType]
-    request_type: NotRequired[str]
-    data: NotRequired[Union[list[SecretScanningBypassRequestPropDataItemsType], None]]
-    resource_identifier: NotRequired[str]
-    status: NotRequired[
-        Literal[
-            "pending", "denied", "approved", "cancelled", "completed", "expired", "open"
-        ]
-    ]
-    requester_comment: NotRequired[Union[str, None]]
-    expires_at: NotRequired[datetime]
-    created_at: NotRequired[datetime]
-    responses: NotRequired[Union[list[BypassResponseType], None]]
-    url: NotRequired[str]
-    html_url: NotRequired[str]
+    login: str
+    id: int
+    node_id: str
+    url: str
+    repos_url: str
+    events_url: str
+    hooks_url: str
+    issues_url: str
+    members_url: str
+    public_members_url: str
+    avatar_url: str
+    description: Union[str, None]
+    name: NotRequired[Union[str, None]]
+    company: NotRequired[Union[str, None]]
+    blog: NotRequired[Union[str, None]]
+    location: NotRequired[Union[str, None]]
+    email: NotRequired[Union[str, None]]
+    twitter_username: NotRequired[Union[str, None]]
+    is_verified: NotRequired[bool]
+    has_organization_projects: bool
+    has_repository_projects: bool
+    public_repos: int
+    public_gists: int
+    followers: int
+    following: int
+    html_url: str
+    type: str
+    total_private_repos: NotRequired[int]
+    owned_private_repos: NotRequired[int]
+    private_gists: NotRequired[Union[int, None]]
+    disk_usage: NotRequired[Union[int, None]]
+    collaborators: NotRequired[Union[int, None]]
+    billing_email: NotRequired[Union[str, None]]
+    plan: NotRequired[OrganizationFullPropPlanType]
+    default_repository_permission: NotRequired[Union[str, None]]
+    default_repository_branch: NotRequired[Union[str, None]]
+    members_can_create_repositories: NotRequired[Union[bool, None]]
+    two_factor_requirement_enabled: NotRequired[Union[bool, None]]
+    members_allowed_repository_creation_type: NotRequired[str]
+    members_can_create_public_repositories: NotRequired[bool]
+    members_can_create_private_repositories: NotRequired[bool]
+    members_can_create_internal_repositories: NotRequired[bool]
+    members_can_create_pages: NotRequired[bool]
+    members_can_create_public_pages: NotRequired[bool]
+    members_can_create_private_pages: NotRequired[bool]
+    members_can_delete_repositories: NotRequired[bool]
+    members_can_change_repo_visibility: NotRequired[bool]
+    members_can_invite_outside_collaborators: NotRequired[bool]
+    members_can_delete_issues: NotRequired[bool]
+    display_commenter_full_name_setting_enabled: NotRequired[bool]
+    readers_can_create_discussions: NotRequired[bool]
+    members_can_create_teams: NotRequired[bool]
+    members_can_view_dependency_insights: NotRequired[bool]
+    members_can_fork_private_repositories: NotRequired[Union[bool, None]]
+    web_commit_signoff_required: NotRequired[bool]
+    advanced_security_enabled_for_new_repositories: NotRequired[bool]
+    dependabot_alerts_enabled_for_new_repositories: NotRequired[bool]
+    dependabot_security_updates_enabled_for_new_repositories: NotRequired[bool]
+    dependency_graph_enabled_for_new_repositories: NotRequired[bool]
+    secret_scanning_enabled_for_new_repositories: NotRequired[bool]
+    secret_scanning_push_protection_enabled_for_new_repositories: NotRequired[bool]
+    secret_scanning_push_protection_custom_link_enabled: NotRequired[bool]
+    secret_scanning_push_protection_custom_link: NotRequired[Union[str, None]]
+    secret_scanning_validity_checks_enabled: NotRequired[bool]
+    created_at: datetime
+    updated_at: datetime
+    archived_at: Union[datetime, None]
+    deploy_keys_enabled_for_repositories: NotRequired[bool]
 
 
-class SecretScanningBypassRequestPropRepositoryType(TypedDict):
-    """SecretScanningBypassRequestPropRepository
+class OrganizationFullPropPlanType(TypedDict):
+    """OrganizationFullPropPlan"""
 
-    The repository the bypass request is for.
-    """
-
-    id: NotRequired[int]
-    name: NotRequired[str]
-    full_name: NotRequired[str]
-
-
-class SecretScanningBypassRequestPropOrganizationType(TypedDict):
-    """SecretScanningBypassRequestPropOrganization
-
-    The organization associated with the repository the bypass request is for.
-    """
-
-    id: NotRequired[int]
-    name: NotRequired[str]
-
-
-class SecretScanningBypassRequestPropRequesterType(TypedDict):
-    """SecretScanningBypassRequestPropRequester
-
-    The user who requested the bypass.
-    """
-
-    actor_id: NotRequired[int]
-    actor_name: NotRequired[str]
-
-
-class SecretScanningBypassRequestPropDataItemsType(TypedDict):
-    """SecretScanningBypassRequestPropDataItems"""
-
-    secret_type: NotRequired[str]
-    bypass_reason: NotRequired[Literal["used_in_tests", "false_positive", "fix_later"]]
-    path: NotRequired[str]
-    branch: NotRequired[str]
+    name: str
+    space: int
+    private_repos: int
+    filled_seats: NotRequired[int]
+    seats: NotRequired[int]
 
 
 __all__ = (
-    "SecretScanningBypassRequestPropDataItemsType",
-    "SecretScanningBypassRequestPropOrganizationType",
-    "SecretScanningBypassRequestPropRepositoryType",
-    "SecretScanningBypassRequestPropRequesterType",
-    "SecretScanningBypassRequestType",
+    "OrganizationFullPropPlanType",
+    "OrganizationFullType",
 )

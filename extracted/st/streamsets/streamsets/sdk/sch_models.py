@@ -70,7 +70,7 @@ ModelCollectionResults = collections.namedtuple('ModelCollectionResults', ['resu
 CollectionModelResults = collections.namedtuple(
     'CollectionModelResults', ['results', 'kwargs', 'class_type', 'class_kwargs']
 )
-NameMap = namedtuple('NameMap', ['label', 'fieldName', 'name'])
+NameMap = namedtuple('NameMap', ['label', 'fieldName', 'name', 'sdk'])
 ChooseOption = namedtuple('ChooseOption', ['UI_VALUE', 'SDK_VALUE'])
 
 MILLIS_IN_HOUR = 3600000
@@ -2779,22 +2779,26 @@ class PipelineBuilder(SdcPipelineBuilder):
 
         # add simple field config
         for field_config in raw_stage.definition['configDefinitions']:
+            sdk_name, a = get_attribute(field_config)
             names.append(
                 NameMap(
                     label=field_config['label'],
                     fieldName=field_config['fieldName'],
                     name=field_config['name'],
+                    sdk=sdk_name,
                 )
             )
 
         # add services fields config (with full name <service_name>.<field_name>) - this name is probably invisible for the end user
         for service in raw_stage.definition['services']:
             for field_config in service_definitions[service['service']]['configDefinitions']:
+                sdk_name, a = get_attribute(field_config)
                 names.append(
                     NameMap(
                         label=field_config['label'],
                         fieldName=field_config['fieldName'],
                         name=field_config['name'],
+                        sdk=sdk_name,
                     )
                 )
 
@@ -2808,7 +2812,7 @@ class PipelineBuilder(SdcPipelineBuilder):
         Args:
             config_name (:obj:`str`): Name of the configuration field.
             stage_name (:obj:`str`): Name of the stage type (eg. com_streamsets_pipeline_stage_devtest_rawdata_RawDataDSource)
-            config_name_type (:obj:`str`): Type of config_name value. Available options: ['full_name', 'field_name', 'label']. Default ``label``.
+            config_name_type (:obj:`str`): Type of config_name value. Available options: ['full_name', 'field_name', 'label', 'sdk']. Default ``label``.
             stage_name_type (:obj:`str`): Type of stage_name value. Available options: ['label', 'name']. Default ``label``.
 
         Returns:
@@ -2818,7 +2822,7 @@ class PipelineBuilder(SdcPipelineBuilder):
             ValueError: If incorrect value of config_name_type.
             ValueError: If config_name value is not in configuration fields list for stage.
         """
-        ALLOWED_CONFIG_NAME_TYPES = {'full_name': 'name', 'field_name': 'fieldName', 'label': 'label'}
+        ALLOWED_CONFIG_NAME_TYPES = {'full_name': 'name', 'field_name': 'fieldName', 'label': 'label', 'sdk': 'sdk'}
 
         if not isinstance(config_name_type, str) or config_name_type not in ALLOWED_CONFIG_NAME_TYPES.keys():
             raise ValueError(
@@ -8937,7 +8941,7 @@ class Engines(CollectionModel):
                     kwargs_defaults['engine_type'] = response['executorType']
                 kwargs_instance = MutableKwargs(kwargs_defaults, kwargs)
                 response = [response]
-            except (requests.exceptions.HTTPError, requests.JSONDecodeError):
+            except (requests.exceptions.HTTPError, requests.exceptions.JSONDecodeError):
                 raise ValueError('Engine (id={}) not found'.format(id))
 
         else:

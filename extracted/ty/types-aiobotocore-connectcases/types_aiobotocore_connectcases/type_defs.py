@@ -27,6 +27,7 @@ from .literals import (
     FieldTypeType,
     OrderType,
     RelatedItemTypeType,
+    SlaStatusType,
     TemplateStatusType,
 )
 
@@ -178,6 +179,11 @@ __all__ = (
     "SearchRelatedItemsResponseTypeDef",
     "SectionOutputTypeDef",
     "SectionTypeDef",
+    "SlaConfigurationTypeDef",
+    "SlaContentTypeDef",
+    "SlaFilterTypeDef",
+    "SlaInputConfigurationTypeDef",
+    "SlaInputContentTypeDef",
     "SortTypeDef",
     "TagResourceRequestTypeDef",
     "TemplateRuleTypeDef",
@@ -201,6 +207,7 @@ class AuditEventFieldValueUnionTypeDef(TypedDict):
 
 
 class UserUnionTypeDef(TypedDict):
+    customEntity: NotRequired[str]
     userArn: NotRequired[str]
 
 
@@ -519,6 +526,11 @@ class TemplateSummaryTypeDef(TypedDict):
     templateId: str
 
 
+class SlaFilterTypeDef(TypedDict):
+    name: NotRequired[str]
+    status: NotRequired[SlaStatusType]
+
+
 class SortTypeDef(TypedDict):
     fieldId: str
     sortOrder: OrderType
@@ -752,25 +764,19 @@ FieldValueOutputTypeDef = TypedDict(
         "value": FieldValueUnionOutputTypeDef,
     },
 )
+SlaConfigurationTypeDef = TypedDict(
+    "SlaConfigurationTypeDef",
+    {
+        "name": str,
+        "status": SlaStatusType,
+        "targetTime": datetime,
+        "type": Literal["CaseField"],
+        "completionTime": NotRequired[datetime],
+        "fieldId": NotRequired[str],
+        "targetFieldValues": NotRequired[List[FieldValueUnionOutputTypeDef]],
+    },
+)
 FieldValueUnionUnionTypeDef = Union[FieldValueUnionTypeDef, FieldValueUnionOutputTypeDef]
-
-
-class RelatedItemContentTypeDef(TypedDict):
-    comment: NotRequired[CommentContentTypeDef]
-    contact: NotRequired[ContactContentTypeDef]
-    file: NotRequired[FileContentTypeDef]
-
-
-class RelatedItemInputContentTypeDef(TypedDict):
-    comment: NotRequired[CommentContentTypeDef]
-    contact: NotRequired[ContactTypeDef]
-    file: NotRequired[FileContentTypeDef]
-
-
-class RelatedItemTypeFilterTypeDef(TypedDict):
-    comment: NotRequired[Mapping[str, Any]]
-    contact: NotRequired[ContactFilterTypeDef]
-    file: NotRequired[FileFilterTypeDef]
 
 
 class ListLayoutsResponseTypeDef(TypedDict):
@@ -788,6 +794,13 @@ class ListTemplatesResponseTypeDef(TypedDict):
     templates: List[TemplateSummaryTypeDef]
     ResponseMetadata: ResponseMetadataTypeDef
     nextToken: NotRequired[str]
+
+
+class RelatedItemTypeFilterTypeDef(TypedDict):
+    comment: NotRequired[Mapping[str, Any]]
+    contact: NotRequired[ContactFilterTypeDef]
+    file: NotRequired[FileFilterTypeDef]
+    sla: NotRequired[SlaFilterTypeDef]
 
 
 AuditEventTypeDef = TypedDict(
@@ -846,6 +859,10 @@ class SearchCasesResponseItemTypeDef(TypedDict):
     tags: NotRequired[Dict[str, str]]
 
 
+class SlaContentTypeDef(TypedDict):
+    slaConfiguration: SlaConfigurationTypeDef
+
+
 FieldValueTypeDef = TypedDict(
     "FieldValueTypeDef",
     {
@@ -853,25 +870,14 @@ FieldValueTypeDef = TypedDict(
         "value": FieldValueUnionUnionTypeDef,
     },
 )
-SearchRelatedItemsResponseItemTypeDef = TypedDict(
-    "SearchRelatedItemsResponseItemTypeDef",
+SlaInputConfigurationTypeDef = TypedDict(
+    "SlaInputConfigurationTypeDef",
     {
-        "associationTime": datetime,
-        "content": RelatedItemContentTypeDef,
-        "relatedItemId": str,
-        "type": RelatedItemTypeType,
-        "performedBy": NotRequired[UserUnionTypeDef],
-        "tags": NotRequired[Dict[str, str]],
-    },
-)
-CreateRelatedItemRequestTypeDef = TypedDict(
-    "CreateRelatedItemRequestTypeDef",
-    {
-        "caseId": str,
-        "content": RelatedItemInputContentTypeDef,
-        "domainId": str,
-        "type": RelatedItemTypeType,
-        "performedBy": NotRequired[UserUnionTypeDef],
+        "name": str,
+        "targetSlaMinutes": int,
+        "type": Literal["CaseField"],
+        "fieldId": NotRequired[str],
+        "targetFieldValues": NotRequired[Sequence[FieldValueUnionUnionTypeDef]],
     },
 )
 
@@ -931,13 +937,18 @@ class SearchCasesResponseTypeDef(TypedDict):
     nextToken: NotRequired[str]
 
 
+class RelatedItemContentTypeDef(TypedDict):
+    comment: NotRequired[CommentContentTypeDef]
+    contact: NotRequired[ContactContentTypeDef]
+    file: NotRequired[FileContentTypeDef]
+    sla: NotRequired[SlaContentTypeDef]
+
+
 FieldValueUnionExtraTypeDef = Union[FieldValueTypeDef, FieldValueOutputTypeDef]
 
 
-class SearchRelatedItemsResponseTypeDef(TypedDict):
-    relatedItems: List[SearchRelatedItemsResponseItemTypeDef]
-    ResponseMetadata: ResponseMetadataTypeDef
-    nextToken: NotRequired[str]
+class SlaInputContentTypeDef(TypedDict):
+    slaInputConfiguration: NotRequired[SlaInputConfigurationTypeDef]
 
 
 class GetCaseEventConfigurationResponseTypeDef(TypedDict):
@@ -968,6 +979,19 @@ class BasicLayoutTypeDef(TypedDict):
     topPanel: NotRequired[LayoutSectionsTypeDef]
 
 
+SearchRelatedItemsResponseItemTypeDef = TypedDict(
+    "SearchRelatedItemsResponseItemTypeDef",
+    {
+        "associationTime": datetime,
+        "content": RelatedItemContentTypeDef,
+        "relatedItemId": str,
+        "type": RelatedItemTypeType,
+        "performedBy": NotRequired[UserUnionTypeDef],
+        "tags": NotRequired[Dict[str, str]],
+    },
+)
+
+
 class CreateCaseRequestTypeDef(TypedDict):
     domainId: str
     fields: Sequence[FieldValueUnionExtraTypeDef]
@@ -990,6 +1014,13 @@ class UpdateCaseRequestTypeDef(TypedDict):
     domainId: str
     fields: Sequence[FieldValueUnionExtraTypeDef]
     performedBy: NotRequired[UserUnionTypeDef]
+
+
+class RelatedItemInputContentTypeDef(TypedDict):
+    comment: NotRequired[CommentContentTypeDef]
+    contact: NotRequired[ContactTypeDef]
+    file: NotRequired[FileContentTypeDef]
+    sla: NotRequired[SlaInputContentTypeDef]
 
 
 class PutCaseEventConfigurationRequestTypeDef(TypedDict):
@@ -1020,6 +1051,12 @@ class LayoutContentTypeDef(TypedDict):
     basic: NotRequired[BasicLayoutTypeDef]
 
 
+class SearchRelatedItemsResponseTypeDef(TypedDict):
+    relatedItems: List[SearchRelatedItemsResponseItemTypeDef]
+    ResponseMetadata: ResponseMetadataTypeDef
+    nextToken: NotRequired[str]
+
+
 CaseFilterPaginatorTypeDef = TypedDict(
     "CaseFilterPaginatorTypeDef",
     {
@@ -1036,6 +1073,16 @@ CaseFilterTypeDef = TypedDict(
         "field": NotRequired[FieldFilterTypeDef],
         "not": NotRequired[Mapping[str, Any]],
         "orAll": NotRequired[Sequence[Mapping[str, Any]]],
+    },
+)
+CreateRelatedItemRequestTypeDef = TypedDict(
+    "CreateRelatedItemRequestTypeDef",
+    {
+        "caseId": str,
+        "content": RelatedItemInputContentTypeDef,
+        "domainId": str,
+        "type": RelatedItemTypeType,
+        "performedBy": NotRequired[UserUnionTypeDef],
     },
 )
 

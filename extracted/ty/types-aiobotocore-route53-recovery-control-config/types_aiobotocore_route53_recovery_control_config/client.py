@@ -72,6 +72,8 @@ from .type_defs import (
     ListTagsForResourceResponseTypeDef,
     TagResourceRequestTypeDef,
     UntagResourceRequestTypeDef,
+    UpdateClusterRequestTypeDef,
+    UpdateClusterResponseTypeDef,
     UpdateControlPanelRequestTypeDef,
     UpdateControlPanelResponseTypeDef,
     UpdateRoutingControlRequestTypeDef,
@@ -353,6 +355,16 @@ class Route53RecoveryControlConfigClient(AioBaseClient):
 
         [Show boto3 documentation](https://boto3.amazonaws.com/v1/documentation/api/latest/reference/services/route53-recovery-control-config/client/untag_resource.html)
         [Show types-aiobotocore documentation](https://youtype.github.io/types_aiobotocore_docs/types_aiobotocore_route53_recovery_control_config/client/#untag_resource)
+        """
+
+    async def update_cluster(
+        self, **kwargs: Unpack[UpdateClusterRequestTypeDef]
+    ) -> UpdateClusterResponseTypeDef:
+        """
+        Updates an existing cluster.
+
+        [Show boto3 documentation](https://boto3.amazonaws.com/v1/documentation/api/latest/reference/services/route53-recovery-control-config/client/update_cluster.html)
+        [Show types-aiobotocore documentation](https://youtype.github.io/types_aiobotocore_docs/types_aiobotocore_route53_recovery_control_config/client/#update_cluster)
         """
 
     async def update_control_panel(

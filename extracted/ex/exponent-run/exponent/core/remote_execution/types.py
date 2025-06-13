@@ -17,7 +17,7 @@ from typing import (
 from os import PathLike
 from anyio import Path as AsyncPath
 from exponent.core.remote_execution.error_info import SerializableErrorInfo
-from exponent.core.types.event_types import FileWriteStrategyName
+from exponent.core.types.command_data import FileWriteStrategyName
 from pydantic import BaseModel, Field
 from typing_extensions import TypeAlias
 

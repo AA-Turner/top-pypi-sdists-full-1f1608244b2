@@ -1,7 +1,7 @@
 r'''
-# CDKTF prebuilt bindings for hashicorp/aws provider version 5.99.1
+# CDKTF prebuilt bindings for hashicorp/aws provider version 5.100.0
 
-This repo builds and publishes the [Terraform aws provider](https://registry.terraform.io/providers/hashicorp/aws/5.99.1/docs) bindings for [CDK for Terraform](https://cdk.tf).
+This repo builds and publishes the [Terraform aws provider](https://registry.terraform.io/providers/hashicorp/aws/5.100.0/docs) bindings for [CDK for Terraform](https://cdk.tf).
 
 ## Available Packages
 
@@ -63,7 +63,7 @@ This project is explicitly not tracking the Terraform aws provider version 1:1. 
 These are the upstream dependencies:
 
 * [CDK for Terraform](https://cdk.tf)
-* [Terraform aws provider](https://registry.terraform.io/providers/hashicorp/aws/5.99.1)
+* [Terraform aws provider](https://registry.terraform.io/providers/hashicorp/aws/5.100.0)
 * [Terraform Engine](https://terraform.io)
 
 If there are breaking changes (backward incompatible) in any of the above, the major version of this project will be bumped.
@@ -1174,6 +1174,8 @@ __all__ = [
     "docdb_subnet_group",
     "docdbelastic_cluster",
     "drs_replication_configuration_template",
+    "dsql_cluster",
+    "dsql_cluster_peering",
     "dx_bgp_peer",
     "dx_connection",
     "dx_connection_association",
@@ -1757,6 +1759,7 @@ __all__ = [
     "prometheus_rule_group_namespace",
     "prometheus_scraper",
     "prometheus_workspace",
+    "prometheus_workspace_configuration",
     "provider",
     "proxy_protocol_policy",
     "qbusiness_application",
@@ -1920,6 +1923,7 @@ __all__ = [
     "s3_control_bucket",
     "s3_control_bucket_lifecycle_configuration",
     "s3_control_bucket_policy",
+    "s3_control_directory_bucket_access_point_scope",
     "s3_control_multi_region_access_point",
     "s3_control_multi_region_access_point_policy",
     "s3_control_object_lambda_access_point",
@@ -2182,6 +2186,11 @@ __all__ = [
     "vpc_peering_connection",
     "vpc_peering_connection_accepter",
     "vpc_peering_connection_options",
+    "vpc_route_server",
+    "vpc_route_server_endpoint",
+    "vpc_route_server_peer",
+    "vpc_route_server_propagation",
+    "vpc_route_server_vpc_association",
     "vpc_security_group_egress_rule",
     "vpc_security_group_ingress_rule",
     "vpc_security_group_vpc_association",
@@ -2243,7 +2252,10 @@ __all__ = [
     "workspaces_ip_group",
     "workspaces_workspace",
     "workspacesweb_browser_settings",
+    "workspacesweb_data_protection_settings",
+    "workspacesweb_ip_access_settings",
     "workspacesweb_network_settings",
+    "workspacesweb_user_access_logging_settings",
     "workspacesweb_user_settings",
     "xray_encryption_config",
     "xray_group",
@@ -3302,6 +3314,8 @@ from . import docdb_global_cluster
 from . import docdb_subnet_group
 from . import docdbelastic_cluster
 from . import drs_replication_configuration_template
+from . import dsql_cluster
+from . import dsql_cluster_peering
 from . import dx_bgp_peer
 from . import dx_connection
 from . import dx_connection_association
@@ -3885,6 +3899,7 @@ from . import prometheus_alert_manager_definition
 from . import prometheus_rule_group_namespace
 from . import prometheus_scraper
 from . import prometheus_workspace
+from . import prometheus_workspace_configuration
 from . import provider
 from . import proxy_protocol_policy
 from . import qbusiness_application
@@ -4048,6 +4063,7 @@ from . import s3_control_access_point_policy
 from . import s3_control_bucket
 from . import s3_control_bucket_lifecycle_configuration
 from . import s3_control_bucket_policy
+from . import s3_control_directory_bucket_access_point_scope
 from . import s3_control_multi_region_access_point
 from . import s3_control_multi_region_access_point_policy
 from . import s3_control_object_lambda_access_point
@@ -4310,6 +4326,11 @@ from . import vpc_network_performance_metric_subscription
 from . import vpc_peering_connection
 from . import vpc_peering_connection_accepter
 from . import vpc_peering_connection_options
+from . import vpc_route_server
+from . import vpc_route_server_endpoint
+from . import vpc_route_server_peer
+from . import vpc_route_server_propagation
+from . import vpc_route_server_vpc_association
 from . import vpc_security_group_egress_rule
 from . import vpc_security_group_ingress_rule
 from . import vpc_security_group_vpc_association
@@ -4371,7 +4392,10 @@ from . import workspaces_directory
 from . import workspaces_ip_group
 from . import workspaces_workspace
 from . import workspacesweb_browser_settings
+from . import workspacesweb_data_protection_settings
+from . import workspacesweb_ip_access_settings
 from . import workspacesweb_network_settings
+from . import workspacesweb_user_access_logging_settings
 from . import workspacesweb_user_settings
 from . import xray_encryption_config
 from . import xray_group

@@ -658,6 +658,7 @@ SecurityDetailsUnionTypeDef = Union[SecurityDetailsTypeDef, SecurityDetailsOutpu
 class RegisterAgentRequestTypeDef(TypedDict):
     agentDetails: AgentDetailsTypeDef
     discoveryData: DiscoveryDataTypeDef
+    tags: NotRequired[Mapping[str, str]]
 
 class ListContactsResponseTypeDef(TypedDict):
     contactList: List[ContactDataTypeDef]

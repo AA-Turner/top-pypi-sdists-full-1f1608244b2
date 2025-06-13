@@ -7,7 +7,7 @@ with open("README.rst", "r", encoding="utf-8") as fh:
     long_description = fh.read() 
   
 NAME = "aspose_cells" 
-VERSION = "25.5.0" 
+VERSION = "25.6.0" 
 # To install the library, run the following 
 # 
 # python setup.py install 
@@ -20,7 +20,7 @@ REQUIRES = ["JPype1 >= 1.2.1"]
 setup( 
     name=NAME, 
     version=VERSION, 
-    description="A powerful library for manipulating and converting Excel (XLS, XLSX, XLSB), ODS, CSV and HTML files.", 
+    description="Aspose.Cells for Python via Java is a high-performance library that unleashes the full potential of Excel in your Python projects. It can be used to efficiently manipulate and convert Excel and spreadsheet formats including XLS, XLSX, XLSB, ODS, CSV, and HTML - all from your Python code. Amazingly, it also offers free support.", 
     author="Aspose", 
     author_email="cells@aspose.com", 
     url="https://products.aspose.com/cells/python-java", 

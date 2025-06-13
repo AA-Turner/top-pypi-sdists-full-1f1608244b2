@@ -668,6 +668,9 @@ if TYPE_CHECKING:
         DependabotPublicKeyType as DependabotPublicKeyType,
     )
     from githubkit.versions.v2022_11_28.types import (
+        DependabotRepositoryAccessDetailsType as DependabotRepositoryAccessDetailsType,
+    )
+    from githubkit.versions.v2022_11_28.types import (
         DependabotSecretType as DependabotSecretType,
     )
     from githubkit.versions.v2022_11_28.types import (
@@ -1114,6 +1117,9 @@ if TYPE_CHECKING:
     )
     from githubkit.versions.v2022_11_28.types import MilestoneType as MilestoneType
     from githubkit.versions.v2022_11_28.types import (
+        MinimalRepositoryPropCustomPropertiesType as MinimalRepositoryPropCustomPropertiesType,
+    )
+    from githubkit.versions.v2022_11_28.types import (
         MinimalRepositoryPropLicenseType as MinimalRepositoryPropLicenseType,
     )
     from githubkit.versions.v2022_11_28.types import (
@@ -1211,6 +1217,12 @@ if TYPE_CHECKING:
     )
     from githubkit.versions.v2022_11_28.types import (
         OrganizationSimpleWebhooksType as OrganizationSimpleWebhooksType,
+    )
+    from githubkit.versions.v2022_11_28.types import (
+        OrganizationsOrgDependabotRepositoryAccessDefaultLevelPutBodyType as OrganizationsOrgDependabotRepositoryAccessDefaultLevelPutBodyType,
+    )
+    from githubkit.versions.v2022_11_28.types import (
+        OrganizationsOrgDependabotRepositoryAccessPatchBodyType as OrganizationsOrgDependabotRepositoryAccessPatchBodyType,
     )
     from githubkit.versions.v2022_11_28.types import (
         OrganizationUpdateIssueTypeType as OrganizationUpdateIssueTypeType,
@@ -1350,6 +1362,18 @@ if TYPE_CHECKING:
     )
     from githubkit.versions.v2022_11_28.types import (
         OrgsOrgActionsVariablesPostBodyType as OrgsOrgActionsVariablesPostBodyType,
+    )
+    from githubkit.versions.v2022_11_28.types import (
+        OrgsOrgAttestationsBulkListPostBodyType as OrgsOrgAttestationsBulkListPostBodyType,
+    )
+    from githubkit.versions.v2022_11_28.types import (
+        OrgsOrgAttestationsBulkListPostResponse200PropAttestationsSubjectDigestsType as OrgsOrgAttestationsBulkListPostResponse200PropAttestationsSubjectDigestsType,
+    )
+    from githubkit.versions.v2022_11_28.types import (
+        OrgsOrgAttestationsBulkListPostResponse200PropPageInfoType as OrgsOrgAttestationsBulkListPostResponse200PropPageInfoType,
+    )
+    from githubkit.versions.v2022_11_28.types import (
+        OrgsOrgAttestationsBulkListPostResponse200Type as OrgsOrgAttestationsBulkListPostResponse200Type,
     )
     from githubkit.versions.v2022_11_28.types import (
         OrgsOrgAttestationsSubjectDigestGetResponse200PropAttestationsItemsPropBundlePropDsseEnvelopeType as OrgsOrgAttestationsSubjectDigestGetResponse200PropAttestationsItemsPropBundlePropDsseEnvelopeType,
@@ -2059,6 +2083,9 @@ if TYPE_CHECKING:
     )
     from githubkit.versions.v2022_11_28.types import (
         RepositoryInvitationType as RepositoryInvitationType,
+    )
+    from githubkit.versions.v2022_11_28.types import (
+        RepositoryPropCodeSearchIndexStatusType as RepositoryPropCodeSearchIndexStatusType,
     )
     from githubkit.versions.v2022_11_28.types import (
         RepositoryPropPermissionsType as RepositoryPropPermissionsType,
@@ -3546,6 +3573,12 @@ if TYPE_CHECKING:
     )
     from githubkit.versions.v2022_11_28.types import (
         UserSshSigningKeysPostBodyType as UserSshSigningKeysPostBodyType,
+    )
+    from githubkit.versions.v2022_11_28.types import (
+        UsersUsernameAttestationsDeleteRequestPostBodyOneof0Type as UsersUsernameAttestationsDeleteRequestPostBodyOneof0Type,
+    )
+    from githubkit.versions.v2022_11_28.types import (
+        UsersUsernameAttestationsDeleteRequestPostBodyOneof1Type as UsersUsernameAttestationsDeleteRequestPostBodyOneof1Type,
     )
     from githubkit.versions.v2022_11_28.types import (
         UsersUsernameAttestationsSubjectDigestGetResponse200PropAttestationsItemsPropBundlePropDsseEnvelopeType as UsersUsernameAttestationsSubjectDigestGetResponse200PropAttestationsItemsPropBundlePropDsseEnvelopeType,
@@ -9951,6 +9984,7 @@ else:
             "LicenseSimpleType",
             "RepositoryType",
             "RepositoryPropPermissionsType",
+            "RepositoryPropCodeSearchIndexStatusType",
             "InstallationTokenType",
             "ScopedInstallationType",
             "AuthorizationType",
@@ -9983,6 +10017,19 @@ else:
             "DependabotAlertSecurityAdvisoryPropReferencesItemsType",
             "DependabotAlertWithRepositoryType",
             "DependabotAlertWithRepositoryPropDependencyType",
+            "SecretScanningLocationCommitType",
+            "SecretScanningLocationWikiCommitType",
+            "SecretScanningLocationIssueBodyType",
+            "SecretScanningLocationDiscussionTitleType",
+            "SecretScanningLocationDiscussionCommentType",
+            "SecretScanningLocationPullRequestBodyType",
+            "SecretScanningLocationPullRequestReviewType",
+            "SecretScanningLocationIssueTitleType",
+            "SecretScanningLocationIssueCommentType",
+            "SecretScanningLocationPullRequestTitleType",
+            "SecretScanningLocationPullRequestReviewCommentType",
+            "SecretScanningLocationDiscussionBodyType",
+            "SecretScanningLocationPullRequestCommentType",
             "OrganizationSecretScanningAlertType",
             "MilestoneType",
             "IssueTypeType",
@@ -10037,10 +10084,12 @@ else:
             "CodeOfConductType",
             "MinimalRepositoryPropPermissionsType",
             "MinimalRepositoryPropLicenseType",
+            "MinimalRepositoryPropCustomPropertiesType",
             "ThreadType",
             "ThreadPropSubjectType",
             "ThreadSubscriptionType",
             "OrganizationSimpleType",
+            "DependabotRepositoryAccessDetailsType",
             "BillingUsageReportType",
             "BillingUsageReportPropUsageItemsItemsType",
             "OrganizationFullType",
@@ -10584,6 +10633,7 @@ else:
             "RepositoryRuleDetailedOneof19Type",
             "RepositoryRuleDetailedOneof20Type",
             "SecretScanningAlertType",
+            "SecretScanningLocationType",
             "SecretScanningPushProtectionBypassType",
             "SecretScanningScanHistoryType",
             "SecretScanningScanType",
@@ -12642,20 +12692,6 @@ else:
             "WebhookRepositoryVulnerabilityAlertResolvePropAlertPropDismisserType",
             "WebhookSecretScanningAlertCreatedType",
             "WebhookSecretScanningAlertLocationCreatedType",
-            "SecretScanningLocationType",
-            "SecretScanningLocationCommitType",
-            "SecretScanningLocationWikiCommitType",
-            "SecretScanningLocationIssueTitleType",
-            "SecretScanningLocationIssueBodyType",
-            "SecretScanningLocationIssueCommentType",
-            "SecretScanningLocationDiscussionTitleType",
-            "SecretScanningLocationDiscussionBodyType",
-            "SecretScanningLocationDiscussionCommentType",
-            "SecretScanningLocationPullRequestTitleType",
-            "SecretScanningLocationPullRequestBodyType",
-            "SecretScanningLocationPullRequestCommentType",
-            "SecretScanningLocationPullRequestReviewType",
-            "SecretScanningLocationPullRequestReviewCommentType",
             "WebhookSecretScanningAlertLocationCreatedFormEncodedType",
             "WebhookSecretScanningAlertPubliclyLeakedType",
             "WebhookSecretScanningAlertReopenedType",
@@ -12853,6 +12889,8 @@ else:
             "NotificationsPutBodyType",
             "NotificationsPutResponse202Type",
             "NotificationsThreadsThreadIdSubscriptionPutBodyType",
+            "OrganizationsOrgDependabotRepositoryAccessPatchBodyType",
+            "OrganizationsOrgDependabotRepositoryAccessDefaultLevelPutBodyType",
             "OrgsOrgPatchBodyType",
             "OrgsOrgActionsCacheUsageByRepositoryGetResponse200Type",
             "ActionsCacheUsageByRepositoryType",
@@ -12894,6 +12932,10 @@ else:
             "OrgsOrgActionsVariablesNamePatchBodyType",
             "OrgsOrgActionsVariablesNameRepositoriesGetResponse200Type",
             "OrgsOrgActionsVariablesNameRepositoriesPutBodyType",
+            "OrgsOrgAttestationsBulkListPostBodyType",
+            "OrgsOrgAttestationsBulkListPostResponse200Type",
+            "OrgsOrgAttestationsBulkListPostResponse200PropAttestationsSubjectDigestsType",
+            "OrgsOrgAttestationsBulkListPostResponse200PropPageInfoType",
             "OrgsOrgAttestationsSubjectDigestGetResponse200Type",
             "OrgsOrgAttestationsSubjectDigestGetResponse200PropAttestationsItemsType",
             "OrgsOrgAttestationsSubjectDigestGetResponse200PropAttestationsItemsPropBundleType",
@@ -13278,6 +13320,8 @@ else:
             "UserSocialAccountsPostBodyType",
             "UserSocialAccountsDeleteBodyType",
             "UserSshSigningKeysPostBodyType",
+            "UsersUsernameAttestationsDeleteRequestPostBodyOneof0Type",
+            "UsersUsernameAttestationsDeleteRequestPostBodyOneof1Type",
             "UsersUsernameAttestationsSubjectDigestGetResponse200Type",
             "UsersUsernameAttestationsSubjectDigestGetResponse200PropAttestationsItemsType",
             "UsersUsernameAttestationsSubjectDigestGetResponse200PropAttestationsItemsPropBundleType",

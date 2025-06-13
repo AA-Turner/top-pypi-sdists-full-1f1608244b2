@@ -950,7 +950,8 @@ class CometExperiment(CommonExperiment):
             LOGGER.warning(EXPERIMENT_ON_END_CLEAN_FAILED_WARNING, e, exc_info=True)
         finally:
             self._finalize()
-            return cleaned_successfully
+
+        return cleaned_successfully
 
     def _finalize(self) -> None:
         # Mark the experiment as not alive anymore to avoid future new messages
@@ -4997,7 +4998,7 @@ class CometExperiment(CommonExperiment):
         ```
         """
         if not self.alive:
-            return None
+            return
 
         groups = list(self._embedding_groups.keys())
         for group in groups:

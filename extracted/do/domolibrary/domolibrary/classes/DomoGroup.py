@@ -22,6 +22,7 @@ from nbdev.showdoc import patch_to
 
 import domolibrary.client.DomoAuth as dmda
 import domolibrary.client.DomoError as dmde
+from domolibrary.client.DomoEntity import DomoEntity
 import domolibrary.utils.chunk_execution as dmce
 import domolibrary.utils.DictDot as util_dd
 
@@ -37,9 +38,10 @@ class Group_Class_Error(dmde.ClassError):
 
 
 @dataclass
-class DomoGroup:
-    auth: dmda.DomoAuth = field(repr=False, default=None)
-    id: str = None
+class DomoGroup(DomoEntity):
+    auth: dmda.DomoAuth = field(repr=False)
+    id: str
+    
     name: str = None
     type: str = None
 
@@ -57,9 +59,7 @@ class DomoGroup:
     Membership: dmgm.GroupMembership = field(repr=False, default=None)
 
     def __post_init__(self):
-        
-        
-        self.Membership = dmgm.GroupMembership(parent=self, auth=self.auth)
+        self.Membership = dmgm.GroupMembership._from_parent(parent=self)
 
         self.is_system = True if self.type == "system" else False
 
@@ -85,6 +85,7 @@ class DomoGroup:
             type=dd.type or dd.groupType,
             members_id_ls=dd.userIds,
             owner_ls=dd.owners,
+            raw = json_obj
         )
 
     @classmethod
@@ -117,37 +118,44 @@ class DomoGroup:
 
     def display_url(self):
         return f"https://{self.auth.domo_instance}.domo.com/admin/groups/{self.id}"
-
-# %% ../../nbs/classes/50_DomoGroup.ipynb 9
-@patch_to(DomoGroup, cls_method=True)
-async def get_by_id(
-    cls,
-    auth: dmda.DomoAuth,
-    group_id: str,
-    return_raw: bool = False,
-    debug_api: bool = False,
-    session: httpx.AsyncClient = None,
-    debug_num_stacks_to_drop: int = 2,
-):
-    res = await group_routes.get_group_by_id(
-        auth=auth,
-        group_id=group_id,
-        debug_api=debug_api,
-        session=session,
-        debug_num_stacks_to_drop=debug_num_stacks_to_drop,
-        parent_class=cls.__name__,
-    )
-    if return_raw:
-        return res
-
-    dg = cls._from_group_json(auth=auth, json_obj=res.response)
-
-    # await dg.Membership.get_owners()
-    # await dg.Membership.get_members() # disabled because causes recursion
     
-    return dg
+    @classmethod
+    async def get_by_id(
+        cls,
+        auth: dmda.DomoAuth,
+        group_id: str,
+        return_raw: bool = False,
+        debug_api: bool = False,
+        session: httpx.AsyncClient = None,
+        debug_num_stacks_to_drop: int = 2,
+    ):
+        res = await group_routes.get_group_by_id(
+            auth=auth,
+            group_id=group_id,
+            debug_api=debug_api,
+            session=session,
+            debug_num_stacks_to_drop=debug_num_stacks_to_drop,
+            parent_class=cls.__name__,
+        )
+        if return_raw:
+            return res
 
-# %% ../../nbs/classes/50_DomoGroup.ipynb 15
+        dg = cls._from_group_json(auth=auth, json_obj=res.response)
+
+        # await dg.Membership.get_owners()
+        # await dg.Membership.get_members() # disabled because causes recursion
+        
+        return dg
+    
+    @classmethod
+    async def _get_entity_by_id(cls, entity_id, **kwargs):
+        """
+        Internal method to get an entity by ID.
+        """
+        return await cls.get_by_id(auth=cls.auth, group_id=entity_id, **kwargs)
+                                
+
+# %% ../../nbs/classes/50_DomoGroup.ipynb 14
 @patch_to(DomoGroup, cls_method=True)
 async def create_from_name(
     cls: DomoGroup,
@@ -248,7 +256,7 @@ async def delete(
 
     return res
 
-# %% ../../nbs/classes/50_DomoGroup.ipynb 35
+# %% ../../nbs/classes/50_DomoGroup.ipynb 34
 @dataclass
 class DomoGroups:
     auth: dmda.DomoAuth = field(repr=False)
@@ -315,7 +323,7 @@ class DomoGroups:
 
         return self.is_hide_system_groups
 
-# %% ../../nbs/classes/50_DomoGroup.ipynb 37
+# %% ../../nbs/classes/50_DomoGroup.ipynb 36
 @patch_to(DomoGroups)
 async def get(
     self,
@@ -393,7 +401,7 @@ async def search_by_name(
     return filter_groups
 
 
-# %% ../../nbs/classes/50_DomoGroup.ipynb 43
+# %% ../../nbs/classes/50_DomoGroup.ipynb 42
 @patch_to(DomoGroups)
 async def upsert(
     self: DomoGroups,

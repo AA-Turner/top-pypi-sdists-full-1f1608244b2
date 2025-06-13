@@ -23,6 +23,8 @@ from typing import IO, Any, Union
 from aiobotocore.response import StreamingBody
 
 from .literals import (
+    AttachmentContentDispositionType,
+    AttachmentContentTransferEncodingType,
     BehaviorOnMxFailureType,
     BounceTypeType,
     BulkEmailStatusType,
@@ -80,6 +82,7 @@ else:
 __all__ = (
     "AccountDetailsTypeDef",
     "ArchivingOptionsTypeDef",
+    "AttachmentTypeDef",
     "BatchGetMetricDataQueryTypeDef",
     "BatchGetMetricDataRequestTypeDef",
     "BatchGetMetricDataResponseTypeDef",
@@ -349,6 +352,7 @@ class ReviewDetailsTypeDef(TypedDict):
 class ArchivingOptionsTypeDef(TypedDict):
     ArchiveArn: NotRequired[str]
 
+BlobTypeDef = Union[str, bytes, IO[Any], StreamingBody]
 TimestampTypeDef = Union[datetime, str]
 
 class MetricDataErrorTypeDef(TypedDict):
@@ -372,8 +376,6 @@ class BlacklistEntryTypeDef(TypedDict):
     RblName: NotRequired[str]
     ListingTime: NotRequired[datetime]
     Description: NotRequired[str]
-
-BlobTypeDef = Union[str, bytes, IO[Any], StreamingBody]
 
 class ContentTypeDef(TypedDict):
     Data: str
@@ -973,6 +975,18 @@ class AccountDetailsTypeDef(TypedDict):
     AdditionalContactEmailAddresses: NotRequired[List[str]]
     ReviewDetails: NotRequired[ReviewDetailsTypeDef]
 
+class AttachmentTypeDef(TypedDict):
+    RawContent: BlobTypeDef
+    FileName: str
+    ContentDisposition: NotRequired[AttachmentContentDispositionType]
+    ContentDescription: NotRequired[str]
+    ContentId: NotRequired[str]
+    ContentTransferEncoding: NotRequired[AttachmentContentTransferEncodingType]
+    ContentType: NotRequired[str]
+
+class RawMessageTypeDef(TypedDict):
+    Data: BlobTypeDef
+
 class BatchGetMetricDataQueryTypeDef(TypedDict):
     Id: str
     Namespace: Literal["VDM"]
@@ -1074,9 +1088,6 @@ class TestRenderEmailTemplateResponseTypeDef(TypedDict):
 class GetBlacklistReportsResponseTypeDef(TypedDict):
     BlacklistReport: Dict[str, List[BlacklistEntryTypeDef]]
     ResponseMetadata: ResponseMetadataTypeDef
-
-class RawMessageTypeDef(TypedDict):
-    Data: BlobTypeDef
 
 BodyTypeDef = TypedDict(
     "BodyTypeDef",
@@ -1195,13 +1206,6 @@ class GetEmailTemplateResponseTypeDef(TypedDict):
     TemplateName: str
     TemplateContent: EmailTemplateContentTypeDef
     ResponseMetadata: ResponseMetadataTypeDef
-
-class TemplateTypeDef(TypedDict):
-    TemplateName: NotRequired[str]
-    TemplateArn: NotRequired[str]
-    TemplateContent: NotRequired[EmailTemplateContentTypeDef]
-    TemplateData: NotRequired[str]
-    Headers: NotRequired[Sequence[MessageHeaderTypeDef]]
 
 class UpdateEmailTemplateRequestTypeDef(TypedDict):
     TemplateName: str
@@ -1369,6 +1373,14 @@ class SuppressedDestinationTypeDef(TypedDict):
 
 SuppressionOptionsUnionTypeDef = Union[SuppressionOptionsTypeDef, SuppressionOptionsOutputTypeDef]
 
+class TemplateTypeDef(TypedDict):
+    TemplateName: NotRequired[str]
+    TemplateArn: NotRequired[str]
+    TemplateContent: NotRequired[EmailTemplateContentTypeDef]
+    TemplateData: NotRequired[str]
+    Headers: NotRequired[Sequence[MessageHeaderTypeDef]]
+    Attachments: NotRequired[Sequence[AttachmentTypeDef]]
+
 class BatchGetMetricDataRequestTypeDef(TypedDict):
     Queries: Sequence[BatchGetMetricDataQueryTypeDef]
 
@@ -1378,6 +1390,7 @@ class MessageTypeDef(TypedDict):
     Subject: ContentTypeDef
     Body: BodyTypeDef
     Headers: NotRequired[Sequence[MessageHeaderTypeDef]]
+    Attachments: NotRequired[Sequence[AttachmentTypeDef]]
 
 class EventDestinationTypeDef(TypedDict):
     Name: str
@@ -1405,9 +1418,6 @@ class ListContactsResponseTypeDef(TypedDict):
     Contacts: List[ContactTypeDef]
     ResponseMetadata: ResponseMetadataTypeDef
     NextToken: NotRequired[str]
-
-class BulkEmailContentTypeDef(TypedDict):
-    Template: NotRequired[TemplateTypeDef]
 
 class GetDomainStatisticsReportResponseTypeDef(TypedDict):
     OverallVolume: OverallVolumeTypeDef
@@ -1530,6 +1540,9 @@ class GetEmailIdentityResponseTypeDef(TypedDict):
 class GetSuppressedDestinationResponseTypeDef(TypedDict):
     SuppressedDestination: SuppressedDestinationTypeDef
     ResponseMetadata: ResponseMetadataTypeDef
+
+class BulkEmailContentTypeDef(TypedDict):
+    Template: NotRequired[TemplateTypeDef]
 
 class CreateConfigurationSetRequestTypeDef(TypedDict):
     ConfigurationSetName: str

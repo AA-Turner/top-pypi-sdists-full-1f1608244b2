@@ -77,6 +77,7 @@ __all__ = (
     "TransferServiceName",
     "TransferTableStatusType",
     "WaiterName",
+    "WebAppEndpointPolicyType",
     "WorkflowStepTypeType",
 )
 
@@ -142,6 +143,7 @@ SigningAlgType = Literal["NONE", "SHA1", "SHA256", "SHA384", "SHA512"]
 StateType = Literal["OFFLINE", "ONLINE", "STARTING", "START_FAILED", "STOPPING", "STOP_FAILED"]
 TlsSessionResumptionModeType = Literal["DISABLED", "ENABLED", "ENFORCED"]
 TransferTableStatusType = Literal["COMPLETED", "FAILED", "IN_PROGRESS", "QUEUED"]
+WebAppEndpointPolicyType = Literal["FIPS", "STANDARD"]
 WorkflowStepTypeType = Literal["COPY", "CUSTOM", "DECRYPT", "DELETE", "TAG"]
 TransferServiceName = Literal["transfer"]
 ServiceName = Literal[
@@ -300,6 +302,7 @@ ServiceName = Literal[
     "freetier",
     "fsx",
     "gamelift",
+    "gameliftstreams",
     "geo-maps",
     "geo-places",
     "geo-routes",
@@ -325,6 +328,7 @@ ServiceName = Literal[
     "iot",
     "iot-data",
     "iot-jobs-data",
+    "iot-managed-integrations",
     "iotanalytics",
     "iotdeviceadvisor",
     "iotevents",
@@ -439,7 +443,6 @@ ServiceName = Literal[
     "pipes",
     "polly",
     "pricing",
-    "privatenetworks",
     "proton",
     "qapps",
     "qbusiness",
@@ -500,7 +503,6 @@ ServiceName = Literal[
     "signer",
     "simspaceweaver",
     "sms",
-    "sms-voice",
     "snow-device-management",
     "snowball",
     "sns",
@@ -508,6 +510,7 @@ ServiceName = Literal[
     "sqs",
     "ssm",
     "ssm-contacts",
+    "ssm-guiconnect",
     "ssm-incidents",
     "ssm-quicksetup",
     "ssm-sap",
@@ -602,6 +605,7 @@ RegionName = Literal[
     "il-central-1",
     "me-central-1",
     "me-south-1",
+    "mx-central-1",
     "sa-east-1",
     "us-east-1",
     "us-east-2",

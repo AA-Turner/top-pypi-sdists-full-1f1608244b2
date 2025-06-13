@@ -8,9 +8,9 @@ Copyright 2025 Vlad Emelianov
 Usage::
 
     ```python
-    from types_aiobotocore_ssm.literals import AssociationComplianceSeverityType
+    from types_aiobotocore_ssm.literals import AccessRequestStatusType
 
-    data: AssociationComplianceSeverityType = "CRITICAL"
+    data: AccessRequestStatusType = "Approved"
     ```
 """
 
@@ -23,6 +23,7 @@ else:
 
 
 __all__ = (
+    "AccessRequestStatusType",
     "AssociationComplianceSeverityType",
     "AssociationExecutionFilterKeyType",
     "AssociationExecutionTargetsFilterKeyType",
@@ -151,6 +152,7 @@ __all__ = (
     "PatchActionType",
     "PatchComplianceDataStateType",
     "PatchComplianceLevelType",
+    "PatchComplianceStatusType",
     "PatchDeploymentStatusType",
     "PatchFilterKeyType",
     "PatchOperationTypeType",
@@ -178,6 +180,7 @@ __all__ = (
 )
 
 
+AccessRequestStatusType = Literal["Approved", "Expired", "Pending", "Rejected", "Revoked"]
 AssociationComplianceSeverityType = Literal["CRITICAL", "HIGH", "LOW", "MEDIUM", "UNSPECIFIED"]
 AssociationExecutionFilterKeyType = Literal["CreatedTime", "ExecutionId", "Status"]
 AssociationExecutionTargetsFilterKeyType = Literal["ResourceId", "ResourceType", "Status"]
@@ -231,7 +234,7 @@ AutomationExecutionStatusType = Literal[
     "TimedOut",
     "Waiting",
 ]
-AutomationSubtypeType = Literal["ChangeRequest"]
+AutomationSubtypeType = Literal["AccessRequest", "ChangeRequest"]
 AutomationTypeType = Literal["CrossAccount", "Local"]
 CalendarStateType = Literal["CLOSED", "OPEN"]
 CommandExecutedWaiterName = Literal["command_executed"]
@@ -310,6 +313,7 @@ DocumentStatusType = Literal["Active", "Creating", "Deleting", "Failed", "Updati
 DocumentTypeType = Literal[
     "ApplicationConfiguration",
     "ApplicationConfigurationSchema",
+    "AutoApprovalPolicy",
     "Automation",
     "Automation.ChangeTemplate",
     "ChangeCalendar",
@@ -317,6 +321,7 @@ DocumentTypeType = Literal[
     "Command",
     "ConformancePackTemplate",
     "DeploymentStrategy",
+    "ManualApprovalPolicy",
     "Package",
     "Policy",
     "ProblemAnalysis",
@@ -445,6 +450,15 @@ OpsItemDataTypeType = Literal["SearchableString", "String"]
 OpsItemEventFilterKeyType = Literal["OpsItemId"]
 OpsItemEventFilterOperatorType = Literal["Equal"]
 OpsItemFilterKeyType = Literal[
+    "AccessRequestByApproverArn",
+    "AccessRequestByApproverId",
+    "AccessRequestByIsReplica",
+    "AccessRequestByRequesterArn",
+    "AccessRequestByRequesterId",
+    "AccessRequestBySourceAccountId",
+    "AccessRequestBySourceOpsItemId",
+    "AccessRequestBySourceRegion",
+    "AccessRequestByTargetResourceId",
     "AccountId",
     "ActualEndTime",
     "ActualStartTime",
@@ -494,6 +508,7 @@ OpsItemStatusType = Literal[
     "PendingChangeCalendarOverride",
     "Rejected",
     "Resolved",
+    "Revoked",
     "RunbookInProgress",
     "Scheduled",
     "TimedOut",
@@ -503,6 +518,7 @@ ParameterTypeType = Literal["SecureString", "String", "StringList"]
 ParametersFilterKeyType = Literal["KeyId", "Name", "Type"]
 PatchActionType = Literal["ALLOW_AS_DEPENDENCY", "BLOCK"]
 PatchComplianceDataStateType = Literal[
+    "AVAILABLE_SECURITY_UPDATE",
     "FAILED",
     "INSTALLED",
     "INSTALLED_OTHER",
@@ -514,6 +530,7 @@ PatchComplianceDataStateType = Literal[
 PatchComplianceLevelType = Literal[
     "CRITICAL", "HIGH", "INFORMATIONAL", "LOW", "MEDIUM", "UNSPECIFIED"
 ]
+PatchComplianceStatusType = Literal["COMPLIANT", "NON_COMPLIANT"]
 PatchDeploymentStatusType = Literal[
     "APPROVED", "EXPLICIT_APPROVED", "EXPLICIT_REJECTED", "PENDING_APPROVAL"
 ]
@@ -567,7 +584,7 @@ SessionStateType = Literal["Active", "History"]
 SessionStatusType = Literal[
     "Connected", "Connecting", "Disconnected", "Failed", "Terminated", "Terminating"
 ]
-SignalTypeType = Literal["Approve", "Reject", "Resume", "StartStep", "StopStep"]
+SignalTypeType = Literal["Approve", "Reject", "Resume", "Revoke", "StartStep", "StopStep"]
 SourceTypeType = Literal["AWS::EC2::Instance", "AWS::IoT::Thing", "AWS::SSM::ManagedInstance"]
 StepExecutionFilterKeyType = Literal[
     "Action",
@@ -738,6 +755,7 @@ ServiceName = Literal[
     "freetier",
     "fsx",
     "gamelift",
+    "gameliftstreams",
     "geo-maps",
     "geo-places",
     "geo-routes",
@@ -763,6 +781,7 @@ ServiceName = Literal[
     "iot",
     "iot-data",
     "iot-jobs-data",
+    "iot-managed-integrations",
     "iotanalytics",
     "iotdeviceadvisor",
     "iotevents",
@@ -877,7 +896,6 @@ ServiceName = Literal[
     "pipes",
     "polly",
     "pricing",
-    "privatenetworks",
     "proton",
     "qapps",
     "qbusiness",
@@ -938,7 +956,6 @@ ServiceName = Literal[
     "signer",
     "simspaceweaver",
     "sms",
-    "sms-voice",
     "snow-device-management",
     "snowball",
     "sns",
@@ -946,6 +963,7 @@ ServiceName = Literal[
     "sqs",
     "ssm",
     "ssm-contacts",
+    "ssm-guiconnect",
     "ssm-incidents",
     "ssm-quicksetup",
     "ssm-sap",

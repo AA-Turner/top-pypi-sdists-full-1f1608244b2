@@ -34,6 +34,8 @@ from .paginator import (
     ListManagedWorkgroupsPaginator,
     ListNamespacesPaginator,
     ListRecoveryPointsPaginator,
+    ListReservationOfferingsPaginator,
+    ListReservationsPaginator,
     ListScheduledActionsPaginator,
     ListSnapshotCopyConfigurationsPaginator,
     ListSnapshotsPaginator,
@@ -51,6 +53,8 @@ from .type_defs import (
     CreateEndpointAccessResponseTypeDef,
     CreateNamespaceRequestTypeDef,
     CreateNamespaceResponseTypeDef,
+    CreateReservationRequestTypeDef,
+    CreateReservationResponseTypeDef,
     CreateScheduledActionRequestTypeDef,
     CreateScheduledActionResponseTypeDef,
     CreateSnapshotCopyConfigurationRequestTypeDef,
@@ -87,6 +91,10 @@ from .type_defs import (
     GetNamespaceResponseTypeDef,
     GetRecoveryPointRequestTypeDef,
     GetRecoveryPointResponseTypeDef,
+    GetReservationOfferingRequestTypeDef,
+    GetReservationOfferingResponseTypeDef,
+    GetReservationRequestTypeDef,
+    GetReservationResponseTypeDef,
     GetResourcePolicyRequestTypeDef,
     GetResourcePolicyResponseTypeDef,
     GetScheduledActionRequestTypeDef,
@@ -111,6 +119,10 @@ from .type_defs import (
     ListNamespacesResponseTypeDef,
     ListRecoveryPointsRequestTypeDef,
     ListRecoveryPointsResponseTypeDef,
+    ListReservationOfferingsRequestTypeDef,
+    ListReservationOfferingsResponseTypeDef,
+    ListReservationsRequestTypeDef,
+    ListReservationsResponseTypeDef,
     ListScheduledActionsRequestTypeDef,
     ListScheduledActionsResponseTypeDef,
     ListSnapshotCopyConfigurationsRequestTypeDef,
@@ -260,6 +272,18 @@ class RedshiftServerlessClient(AioBaseClient):
 
         [Show boto3 documentation](https://boto3.amazonaws.com/v1/documentation/api/latest/reference/services/redshift-serverless/client/create_namespace.html)
         [Show types-aiobotocore documentation](https://youtype.github.io/types_aiobotocore_docs/types_aiobotocore_redshift_serverless/client/#create_namespace)
+        """
+
+    async def create_reservation(
+        self, **kwargs: Unpack[CreateReservationRequestTypeDef]
+    ) -> CreateReservationResponseTypeDef:
+        """
+        Creates an Amazon Redshift Serverless reservation, which gives you the option
+        to commit to a specified number of Redshift Processing Units (RPUs) for a year
+        at a discount from Serverless on-demand (OD) rates.
+
+        [Show boto3 documentation](https://boto3.amazonaws.com/v1/documentation/api/latest/reference/services/redshift-serverless/client/create_reservation.html)
+        [Show types-aiobotocore documentation](https://youtype.github.io/types_aiobotocore_docs/types_aiobotocore_redshift_serverless/client/#create_reservation)
         """
 
     async def create_scheduled_action(
@@ -454,6 +478,26 @@ class RedshiftServerlessClient(AioBaseClient):
         [Show types-aiobotocore documentation](https://youtype.github.io/types_aiobotocore_docs/types_aiobotocore_redshift_serverless/client/#get_recovery_point)
         """
 
+    async def get_reservation(
+        self, **kwargs: Unpack[GetReservationRequestTypeDef]
+    ) -> GetReservationResponseTypeDef:
+        """
+        Gets an Amazon Redshift Serverless reservation.
+
+        [Show boto3 documentation](https://boto3.amazonaws.com/v1/documentation/api/latest/reference/services/redshift-serverless/client/get_reservation.html)
+        [Show types-aiobotocore documentation](https://youtype.github.io/types_aiobotocore_docs/types_aiobotocore_redshift_serverless/client/#get_reservation)
+        """
+
+    async def get_reservation_offering(
+        self, **kwargs: Unpack[GetReservationOfferingRequestTypeDef]
+    ) -> GetReservationOfferingResponseTypeDef:
+        """
+        Returns the reservation offering.
+
+        [Show boto3 documentation](https://boto3.amazonaws.com/v1/documentation/api/latest/reference/services/redshift-serverless/client/get_reservation_offering.html)
+        [Show types-aiobotocore documentation](https://youtype.github.io/types_aiobotocore_docs/types_aiobotocore_redshift_serverless/client/#get_reservation_offering)
+        """
+
     async def get_resource_policy(
         self, **kwargs: Unpack[GetResourcePolicyRequestTypeDef]
     ) -> GetResourcePolicyResponseTypeDef:
@@ -572,6 +616,26 @@ class RedshiftServerlessClient(AioBaseClient):
 
         [Show boto3 documentation](https://boto3.amazonaws.com/v1/documentation/api/latest/reference/services/redshift-serverless/client/list_recovery_points.html)
         [Show types-aiobotocore documentation](https://youtype.github.io/types_aiobotocore_docs/types_aiobotocore_redshift_serverless/client/#list_recovery_points)
+        """
+
+    async def list_reservation_offerings(
+        self, **kwargs: Unpack[ListReservationOfferingsRequestTypeDef]
+    ) -> ListReservationOfferingsResponseTypeDef:
+        """
+        Returns the current reservation offerings in your account.
+
+        [Show boto3 documentation](https://boto3.amazonaws.com/v1/documentation/api/latest/reference/services/redshift-serverless/client/list_reservation_offerings.html)
+        [Show types-aiobotocore documentation](https://youtype.github.io/types_aiobotocore_docs/types_aiobotocore_redshift_serverless/client/#list_reservation_offerings)
+        """
+
+    async def list_reservations(
+        self, **kwargs: Unpack[ListReservationsRequestTypeDef]
+    ) -> ListReservationsResponseTypeDef:
+        """
+        Returns a list of Reservation objects.
+
+        [Show boto3 documentation](https://boto3.amazonaws.com/v1/documentation/api/latest/reference/services/redshift-serverless/client/list_reservations.html)
+        [Show types-aiobotocore documentation](https://youtype.github.io/types_aiobotocore_docs/types_aiobotocore_redshift_serverless/client/#list_reservations)
         """
 
     async def list_scheduled_actions(
@@ -850,6 +914,28 @@ class RedshiftServerlessClient(AioBaseClient):
     def get_paginator(  # type: ignore[override]
         self, operation_name: Literal["list_recovery_points"]
     ) -> ListRecoveryPointsPaginator:
+        """
+        Create a paginator for an operation.
+
+        [Show boto3 documentation](https://boto3.amazonaws.com/v1/documentation/api/latest/reference/services/redshift-serverless/client/get_paginator.html)
+        [Show types-aiobotocore documentation](https://youtype.github.io/types_aiobotocore_docs/types_aiobotocore_redshift_serverless/client/#get_paginator)
+        """
+
+    @overload  # type: ignore[override]
+    def get_paginator(  # type: ignore[override]
+        self, operation_name: Literal["list_reservation_offerings"]
+    ) -> ListReservationOfferingsPaginator:
+        """
+        Create a paginator for an operation.
+
+        [Show boto3 documentation](https://boto3.amazonaws.com/v1/documentation/api/latest/reference/services/redshift-serverless/client/get_paginator.html)
+        [Show types-aiobotocore documentation](https://youtype.github.io/types_aiobotocore_docs/types_aiobotocore_redshift_serverless/client/#get_paginator)
+        """
+
+    @overload  # type: ignore[override]
+    def get_paginator(  # type: ignore[override]
+        self, operation_name: Literal["list_reservations"]
+    ) -> ListReservationsPaginator:
         """
         Create a paginator for an operation.
 

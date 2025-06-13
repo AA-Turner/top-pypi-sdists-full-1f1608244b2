@@ -40,6 +40,8 @@ from flwr.proto.heartbeat_pb2 import (  # pylint: disable=E0611
     SendNodeHeartbeatResponse,
 )
 from flwr.proto.message_pb2 import (  # pylint: disable=E0611
+    ConfirmMessageReceivedRequest,
+    ConfirmMessageReceivedResponse,
     PullObjectRequest,
     PullObjectResponse,
     PushObjectRequest,
@@ -151,6 +153,7 @@ class FleetServicer(fleet_pb2_grpc.FleetServicer):
             res = message_handler.get_run(
                 request=request,
                 state=self.state_factory.state(),
+                store=self.objectstore_factory.store(),
             )
         except InvalidRunStatusException as e:
             abort_grpc_context(e.message, context)
@@ -167,6 +170,7 @@ class FleetServicer(fleet_pb2_grpc.FleetServicer):
                 request=request,
                 ffs=self.ffs_factory.ffs(),
                 state=self.state_factory.state(),
+                store=self.objectstore_factory.store(),
             )
         except InvalidRunStatusException as e:
             abort_grpc_context(e.message, context)
@@ -211,6 +215,27 @@ class FleetServicer(fleet_pb2_grpc.FleetServicer):
         try:
             # Fetch from store
             res = message_handler.pull_object(
+                request=request,
+                state=self.state_factory.state(),
+                store=self.objectstore_factory.store(),
+            )
+        except InvalidRunStatusException as e:
+            abort_grpc_context(e.message, context)
+
+        return res
+
+    def ConfirmMessageReceived(
+        self, request: ConfirmMessageReceivedRequest, context: grpc.ServicerContext
+    ) -> ConfirmMessageReceivedResponse:
+        """Confirm message received."""
+        log(
+            DEBUG,
+            "[Fleet.ConfirmMessageReceived] Message with ID '%s' has been received",
+            request.message_object_id,
+        )
+
+        try:
+            res = message_handler.confirm_message_received(
                 request=request,
                 state=self.state_factory.state(),
                 store=self.objectstore_factory.store(),

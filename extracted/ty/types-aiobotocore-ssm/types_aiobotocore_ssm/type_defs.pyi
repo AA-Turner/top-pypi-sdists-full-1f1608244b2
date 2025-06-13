@@ -23,6 +23,7 @@ from typing import IO, Any, Union
 from aiobotocore.response import StreamingBody
 
 from .literals import (
+    AccessRequestStatusType,
     AssociationComplianceSeverityType,
     AssociationExecutionFilterKeyType,
     AssociationExecutionTargetsFilterKeyType,
@@ -33,6 +34,7 @@ from .literals import (
     AttachmentsSourceKeyType,
     AutomationExecutionFilterKeyType,
     AutomationExecutionStatusType,
+    AutomationSubtypeType,
     AutomationTypeType,
     CalendarStateType,
     CommandFilterKeyType,
@@ -89,6 +91,7 @@ from .literals import (
     PatchActionType,
     PatchComplianceDataStateType,
     PatchComplianceLevelType,
+    PatchComplianceStatusType,
     PatchDeploymentStatusType,
     PatchFilterKeyType,
     PatchOperationTypeType,
@@ -189,6 +192,7 @@ __all__ = (
     "CreatePatchBaselineRequestTypeDef",
     "CreatePatchBaselineResultTypeDef",
     "CreateResourceDataSyncRequestTypeDef",
+    "CredentialsTypeDef",
     "DeleteActivationRequestTypeDef",
     "DeleteAssociationRequestTypeDef",
     "DeleteDocumentRequestTypeDef",
@@ -326,6 +330,8 @@ __all__ = (
     "ExecutionPreviewTypeDef",
     "FailedCreateAssociationTypeDef",
     "FailureDetailsTypeDef",
+    "GetAccessTokenRequestTypeDef",
+    "GetAccessTokenResponseTypeDef",
     "GetAutomationExecutionRequestTypeDef",
     "GetAutomationExecutionResultTypeDef",
     "GetCalendarStateRequestTypeDef",
@@ -598,6 +604,8 @@ __all__ = (
     "SessionManagerOutputUrlTypeDef",
     "SessionTypeDef",
     "SeveritySummaryTypeDef",
+    "StartAccessRequestRequestTypeDef",
+    "StartAccessRequestResponseTypeDef",
     "StartAssociationsOnceRequestTypeDef",
     "StartAutomationExecutionRequestTypeDef",
     "StartAutomationExecutionResultTypeDef",
@@ -841,6 +849,12 @@ class RelatedOpsItemTypeDef(TypedDict):
 class MetadataValueTypeDef(TypedDict):
     Value: NotRequired[str]
 
+class CredentialsTypeDef(TypedDict):
+    AccessKeyId: str
+    SecretAccessKey: str
+    SessionToken: str
+    ExpirationTime: datetime
+
 class DeleteActivationRequestTypeDef(TypedDict):
     ActivationId: str
 
@@ -1019,6 +1033,7 @@ class InstancePatchStateTypeDef(TypedDict):
     FailedCount: NotRequired[int]
     UnreportedNotApplicableCount: NotRequired[int]
     NotApplicableCount: NotRequired[int]
+    AvailableSecurityUpdateCount: NotRequired[int]
     LastNoRebootInstallOperationTime: NotRequired[datetime]
     RebootOption: NotRequired[RebootOptionType]
     CriticalNonCompliantCount: NotRequired[int]
@@ -1198,6 +1213,9 @@ class FailureDetailsTypeDef(TypedDict):
     FailureStage: NotRequired[str]
     FailureType: NotRequired[str]
     Details: NotRequired[Dict[str, List[str]]]
+
+class GetAccessTokenRequestTypeDef(TypedDict):
+    AccessRequestId: str
 
 class GetAutomationExecutionRequestTypeDef(TypedDict):
     AutomationExecutionId: str
@@ -1777,6 +1795,7 @@ class DescribePatchGroupStateResultTypeDef(TypedDict):
     InstancesWithCriticalNonCompliantPatches: int
     InstancesWithSecurityNonCompliantPatches: int
     InstancesWithOtherNonCompliantPatches: int
+    InstancesWithAvailableSecurityUpdates: int
     ResponseMetadata: ResponseMetadataTypeDef
 
 class DescribePatchPropertiesResultTypeDef(TypedDict):
@@ -1913,6 +1932,10 @@ class ResumeSessionResponseTypeDef(TypedDict):
     SessionId: str
     TokenValue: str
     StreamUrl: str
+    ResponseMetadata: ResponseMetadataTypeDef
+
+class StartAccessRequestResponseTypeDef(TypedDict):
+    AccessRequestId: str
     ResponseMetadata: ResponseMetadataTypeDef
 
 class StartAutomationExecutionResultTypeDef(TypedDict):
@@ -2310,6 +2333,11 @@ class UpdateOpsMetadataRequestTypeDef(TypedDict):
     OpsMetadataArn: str
     MetadataToUpdate: NotRequired[Mapping[str, MetadataValueTypeDef]]
     KeysToDelete: NotRequired[Sequence[str]]
+
+class GetAccessTokenResponseTypeDef(TypedDict):
+    Credentials: CredentialsTypeDef
+    AccessRequestStatus: AccessRequestStatusType
+    ResponseMetadata: ResponseMetadataTypeDef
 
 class DescribeActivationsRequestTypeDef(TypedDict):
     Filters: NotRequired[Sequence[DescribeActivationsFilterTypeDef]]
@@ -3450,6 +3478,11 @@ class RegisterTargetWithMaintenanceWindowRequestTypeDef(TypedDict):
     Description: NotRequired[str]
     ClientToken: NotRequired[str]
 
+class StartAccessRequestRequestTypeDef(TypedDict):
+    Reason: str
+    Targets: Sequence[TargetUnionTypeDef]
+    Tags: NotRequired[Sequence[TagTypeDef]]
+
 class UpdateMaintenanceWindowTargetRequestTypeDef(TypedDict):
     WindowId: str
     WindowTargetId: str
@@ -3814,7 +3847,7 @@ class AutomationExecutionMetadataTypeDef(TypedDict):
     AlarmConfiguration: NotRequired[AlarmConfigurationOutputTypeDef]
     TriggeredAlarms: NotRequired[List[AlarmStateInformationTypeDef]]
     TargetLocationsURL: NotRequired[str]
-    AutomationSubtype: NotRequired[Literal["ChangeRequest"]]
+    AutomationSubtype: NotRequired[AutomationSubtypeType]
     ScheduledTime: NotRequired[datetime]
     Runbooks: NotRequired[List[RunbookOutputTypeDef]]
     OpsItemId: NotRequired[str]
@@ -3850,7 +3883,7 @@ class AutomationExecutionTypeDef(TypedDict):
     AlarmConfiguration: NotRequired[AlarmConfigurationOutputTypeDef]
     TriggeredAlarms: NotRequired[List[AlarmStateInformationTypeDef]]
     TargetLocationsURL: NotRequired[str]
-    AutomationSubtype: NotRequired[Literal["ChangeRequest"]]
+    AutomationSubtype: NotRequired[AutomationSubtypeType]
     ScheduledTime: NotRequired[datetime]
     Runbooks: NotRequired[List[RunbookOutputTypeDef]]
     OpsItemId: NotRequired[str]
@@ -3921,6 +3954,7 @@ class GetPatchBaselineResultTypeDef(TypedDict):
     ModifiedDate: datetime
     Description: str
     Sources: List[PatchSourceOutputTypeDef]
+    AvailableSecurityUpdatesComplianceStatus: PatchComplianceStatusType
     ResponseMetadata: ResponseMetadataTypeDef
 
 class UpdatePatchBaselineResultTypeDef(TypedDict):
@@ -3938,6 +3972,7 @@ class UpdatePatchBaselineResultTypeDef(TypedDict):
     ModifiedDate: datetime
     Description: str
     Sources: List[PatchSourceOutputTypeDef]
+    AvailableSecurityUpdatesComplianceStatus: PatchComplianceStatusType
     ResponseMetadata: ResponseMetadataTypeDef
 
 class PatchRuleTypeDef(TypedDict):
@@ -4126,6 +4161,7 @@ class BaselineOverrideTypeDef(TypedDict):
     RejectedPatchesAction: NotRequired[PatchActionType]
     ApprovedPatchesEnableNonSecurity: NotRequired[bool]
     Sources: NotRequired[Sequence[PatchSourceUnionTypeDef]]
+    AvailableSecurityUpdatesComplianceStatus: NotRequired[PatchComplianceStatusType]
 
 class CreatePatchBaselineRequestTypeDef(TypedDict):
     Name: str
@@ -4139,6 +4175,7 @@ class CreatePatchBaselineRequestTypeDef(TypedDict):
     RejectedPatchesAction: NotRequired[PatchActionType]
     Description: NotRequired[str]
     Sources: NotRequired[Sequence[PatchSourceUnionTypeDef]]
+    AvailableSecurityUpdatesComplianceStatus: NotRequired[PatchComplianceStatusType]
     ClientToken: NotRequired[str]
     Tags: NotRequired[Sequence[TagTypeDef]]
 
@@ -4154,6 +4191,7 @@ class UpdatePatchBaselineRequestTypeDef(TypedDict):
     RejectedPatchesAction: NotRequired[PatchActionType]
     Description: NotRequired[str]
     Sources: NotRequired[Sequence[PatchSourceUnionTypeDef]]
+    AvailableSecurityUpdatesComplianceStatus: NotRequired[PatchComplianceStatusType]
     Replace: NotRequired[bool]
 
 class GetDeployablePatchSnapshotForInstanceRequestTypeDef(TypedDict):

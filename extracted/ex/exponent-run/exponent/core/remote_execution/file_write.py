@@ -8,10 +8,12 @@ from textwrap import dedent, indent
 from typing import Optional
 
 from diff_match_patch import diff_match_patch
-from exponent.core.types.event_types import (
+from exponent.core.types.command_data import (
     WRITE_STRATEGY_FULL_FILE_REWRITE,
     WRITE_STRATEGY_NATURAL_EDIT,
     WRITE_STRATEGY_SEARCH_REPLACE,
+)
+from exponent.core.types.command_data import (
     WRITE_STRATEGY_UDIFF,
 )
 from pydantic import BaseModel

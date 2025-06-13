@@ -22,6 +22,8 @@ AUDIO = "https://open.feishu.cn/open-apis/bot/v2/hook/80c2a700-adfa-4b9b-8e3f-00
 FILES = "https://open.feishu.cn/open-apis/bot/v2/hook/075fb2fa-a559-4a7e-89ac-3ab9934ff15c"
 KLING = "https://open.feishu.cn/open-apis/bot/v2/hook/e9a850c2-d171-4637-b976-ee93f7654c40"
 
+VOLC = "https://open.feishu.cn/open-apis/bot/v2/hook/d487ce4f-3c2b-44db-a5b4-7ee4c5e03b4f"
+
 
 @background_task
 def send_message(
@@ -119,13 +121,15 @@ send_message_for_http = partial(send_message, url=http_feishu_url)
 try_catch_feishu_url = "https://open.feishu.cn/open-apis/bot/v2/hook/887fe4d3-8bcd-4cfb-bac9-62f776091ca2"
 send_message_for_try_catch = partial(send_message, url=try_catch_feishu_url)
 
+send_message_for_volc = partial(send_message, url=VOLC)
+
 if __name__ == '__main__':
     # send_message("xxx", title=None)
     send_message(None, title=None)
 
     # send_message_for_images("xxxxxxxx", title=None)
 
-    send_message_for_try_catch("xxxxxxxx")
+    send_message_for_volc("xxxxxxxx")
     # @catch(task_name='这是一个任务名')
     # def f():
     #     time.sleep(3)

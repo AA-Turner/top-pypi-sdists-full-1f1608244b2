@@ -35,10 +35,13 @@ from .paginator import (
     ListBuildBatchesPaginator,
     ListBuildsForProjectPaginator,
     ListBuildsPaginator,
+    ListCommandExecutionsForSandboxPaginator,
     ListProjectsPaginator,
     ListReportGroupsPaginator,
     ListReportsForReportGroupPaginator,
     ListReportsPaginator,
+    ListSandboxesForProjectPaginator,
+    ListSandboxesPaginator,
     ListSharedProjectsPaginator,
     ListSharedReportGroupsPaginator,
 )
@@ -49,6 +52,8 @@ from .type_defs import (
     BatchGetBuildBatchesOutputTypeDef,
     BatchGetBuildsInputTypeDef,
     BatchGetBuildsOutputTypeDef,
+    BatchGetCommandExecutionsInputTypeDef,
+    BatchGetCommandExecutionsOutputTypeDef,
     BatchGetFleetsInputTypeDef,
     BatchGetFleetsOutputTypeDef,
     BatchGetProjectsInputTypeDef,
@@ -57,6 +62,8 @@ from .type_defs import (
     BatchGetReportGroupsOutputTypeDef,
     BatchGetReportsInputTypeDef,
     BatchGetReportsOutputTypeDef,
+    BatchGetSandboxesInputTypeDef,
+    BatchGetSandboxesOutputTypeDef,
     CreateFleetInputTypeDef,
     CreateFleetOutputTypeDef,
     CreateProjectInputTypeDef,
@@ -94,6 +101,8 @@ from .type_defs import (
     ListBuildsForProjectOutputTypeDef,
     ListBuildsInputTypeDef,
     ListBuildsOutputTypeDef,
+    ListCommandExecutionsForSandboxInputTypeDef,
+    ListCommandExecutionsForSandboxOutputTypeDef,
     ListCuratedEnvironmentImagesOutputTypeDef,
     ListFleetsInputTypeDef,
     ListFleetsOutputTypeDef,
@@ -105,6 +114,10 @@ from .type_defs import (
     ListReportsForReportGroupOutputTypeDef,
     ListReportsInputTypeDef,
     ListReportsOutputTypeDef,
+    ListSandboxesForProjectInputTypeDef,
+    ListSandboxesForProjectOutputTypeDef,
+    ListSandboxesInputTypeDef,
+    ListSandboxesOutputTypeDef,
     ListSharedProjectsInputTypeDef,
     ListSharedProjectsOutputTypeDef,
     ListSharedReportGroupsInputTypeDef,
@@ -120,10 +133,18 @@ from .type_defs import (
     StartBuildBatchOutputTypeDef,
     StartBuildInputTypeDef,
     StartBuildOutputTypeDef,
+    StartCommandExecutionInputTypeDef,
+    StartCommandExecutionOutputTypeDef,
+    StartSandboxConnectionInputTypeDef,
+    StartSandboxConnectionOutputTypeDef,
+    StartSandboxInputTypeDef,
+    StartSandboxOutputTypeDef,
     StopBuildBatchInputTypeDef,
     StopBuildBatchOutputTypeDef,
     StopBuildInputTypeDef,
     StopBuildOutputTypeDef,
+    StopSandboxInputTypeDef,
+    StopSandboxOutputTypeDef,
     UpdateFleetInputTypeDef,
     UpdateFleetOutputTypeDef,
     UpdateProjectInputTypeDef,
@@ -153,6 +174,7 @@ __all__ = ("CodeBuildClient",)
 
 class Exceptions(BaseClientExceptions):
     AccountLimitExceededException: Type[BotocoreClientError]
+    AccountSuspendedException: Type[BotocoreClientError]
     ClientError: Type[BotocoreClientError]
     InvalidInputException: Type[BotocoreClientError]
     OAuthProviderException: Type[BotocoreClientError]
@@ -225,6 +247,16 @@ class CodeBuildClient(AioBaseClient):
         [Show types-aiobotocore documentation](https://youtype.github.io/types_aiobotocore_docs/types_aiobotocore_codebuild/client/#batch_get_builds)
         """
 
+    async def batch_get_command_executions(
+        self, **kwargs: Unpack[BatchGetCommandExecutionsInputTypeDef]
+    ) -> BatchGetCommandExecutionsOutputTypeDef:
+        """
+        Gets information about the command executions.
+
+        [Show boto3 documentation](https://boto3.amazonaws.com/v1/documentation/api/latest/reference/services/codebuild/client/batch_get_command_executions.html)
+        [Show types-aiobotocore documentation](https://youtype.github.io/types_aiobotocore_docs/types_aiobotocore_codebuild/client/#batch_get_command_executions)
+        """
+
     async def batch_get_fleets(
         self, **kwargs: Unpack[BatchGetFleetsInputTypeDef]
     ) -> BatchGetFleetsOutputTypeDef:
@@ -263,6 +295,16 @@ class CodeBuildClient(AioBaseClient):
 
         [Show boto3 documentation](https://boto3.amazonaws.com/v1/documentation/api/latest/reference/services/codebuild/client/batch_get_reports.html)
         [Show types-aiobotocore documentation](https://youtype.github.io/types_aiobotocore_docs/types_aiobotocore_codebuild/client/#batch_get_reports)
+        """
+
+    async def batch_get_sandboxes(
+        self, **kwargs: Unpack[BatchGetSandboxesInputTypeDef]
+    ) -> BatchGetSandboxesOutputTypeDef:
+        """
+        Gets information about the sandbox status.
+
+        [Show boto3 documentation](https://boto3.amazonaws.com/v1/documentation/api/latest/reference/services/codebuild/client/batch_get_sandboxes.html)
+        [Show types-aiobotocore documentation](https://youtype.github.io/types_aiobotocore_docs/types_aiobotocore_codebuild/client/#batch_get_sandboxes)
         """
 
     async def create_fleet(
@@ -484,6 +526,16 @@ class CodeBuildClient(AioBaseClient):
         [Show types-aiobotocore documentation](https://youtype.github.io/types_aiobotocore_docs/types_aiobotocore_codebuild/client/#list_builds_for_project)
         """
 
+    async def list_command_executions_for_sandbox(
+        self, **kwargs: Unpack[ListCommandExecutionsForSandboxInputTypeDef]
+    ) -> ListCommandExecutionsForSandboxOutputTypeDef:
+        """
+        Gets a list of command executions for a sandbox.
+
+        [Show boto3 documentation](https://boto3.amazonaws.com/v1/documentation/api/latest/reference/services/codebuild/client/list_command_executions_for_sandbox.html)
+        [Show types-aiobotocore documentation](https://youtype.github.io/types_aiobotocore_docs/types_aiobotocore_codebuild/client/#list_command_executions_for_sandbox)
+        """
+
     async def list_curated_environment_images(self) -> ListCuratedEnvironmentImagesOutputTypeDef:
         """
         Gets information about Docker images that are managed by CodeBuild.
@@ -545,6 +597,26 @@ class CodeBuildClient(AioBaseClient):
 
         [Show boto3 documentation](https://boto3.amazonaws.com/v1/documentation/api/latest/reference/services/codebuild/client/list_reports_for_report_group.html)
         [Show types-aiobotocore documentation](https://youtype.github.io/types_aiobotocore_docs/types_aiobotocore_codebuild/client/#list_reports_for_report_group)
+        """
+
+    async def list_sandboxes(
+        self, **kwargs: Unpack[ListSandboxesInputTypeDef]
+    ) -> ListSandboxesOutputTypeDef:
+        """
+        Gets a list of sandboxes.
+
+        [Show boto3 documentation](https://boto3.amazonaws.com/v1/documentation/api/latest/reference/services/codebuild/client/list_sandboxes.html)
+        [Show types-aiobotocore documentation](https://youtype.github.io/types_aiobotocore_docs/types_aiobotocore_codebuild/client/#list_sandboxes)
+        """
+
+    async def list_sandboxes_for_project(
+        self, **kwargs: Unpack[ListSandboxesForProjectInputTypeDef]
+    ) -> ListSandboxesForProjectOutputTypeDef:
+        """
+        Gets a list of sandboxes for a given project.
+
+        [Show boto3 documentation](https://boto3.amazonaws.com/v1/documentation/api/latest/reference/services/codebuild/client/list_sandboxes_for_project.html)
+        [Show types-aiobotocore documentation](https://youtype.github.io/types_aiobotocore_docs/types_aiobotocore_codebuild/client/#list_sandboxes_for_project)
         """
 
     async def list_shared_projects(
@@ -628,6 +700,36 @@ class CodeBuildClient(AioBaseClient):
         [Show types-aiobotocore documentation](https://youtype.github.io/types_aiobotocore_docs/types_aiobotocore_codebuild/client/#start_build_batch)
         """
 
+    async def start_command_execution(
+        self, **kwargs: Unpack[StartCommandExecutionInputTypeDef]
+    ) -> StartCommandExecutionOutputTypeDef:
+        """
+        Starts a command execution.
+
+        [Show boto3 documentation](https://boto3.amazonaws.com/v1/documentation/api/latest/reference/services/codebuild/client/start_command_execution.html)
+        [Show types-aiobotocore documentation](https://youtype.github.io/types_aiobotocore_docs/types_aiobotocore_codebuild/client/#start_command_execution)
+        """
+
+    async def start_sandbox(
+        self, **kwargs: Unpack[StartSandboxInputTypeDef]
+    ) -> StartSandboxOutputTypeDef:
+        """
+        Starts a sandbox.
+
+        [Show boto3 documentation](https://boto3.amazonaws.com/v1/documentation/api/latest/reference/services/codebuild/client/start_sandbox.html)
+        [Show types-aiobotocore documentation](https://youtype.github.io/types_aiobotocore_docs/types_aiobotocore_codebuild/client/#start_sandbox)
+        """
+
+    async def start_sandbox_connection(
+        self, **kwargs: Unpack[StartSandboxConnectionInputTypeDef]
+    ) -> StartSandboxConnectionOutputTypeDef:
+        """
+        Starts a sandbox connection.
+
+        [Show boto3 documentation](https://boto3.amazonaws.com/v1/documentation/api/latest/reference/services/codebuild/client/start_sandbox_connection.html)
+        [Show types-aiobotocore documentation](https://youtype.github.io/types_aiobotocore_docs/types_aiobotocore_codebuild/client/#start_sandbox_connection)
+        """
+
     async def stop_build(self, **kwargs: Unpack[StopBuildInputTypeDef]) -> StopBuildOutputTypeDef:
         """
         Attempts to stop running a build.
@@ -644,6 +746,16 @@ class CodeBuildClient(AioBaseClient):
 
         [Show boto3 documentation](https://boto3.amazonaws.com/v1/documentation/api/latest/reference/services/codebuild/client/stop_build_batch.html)
         [Show types-aiobotocore documentation](https://youtype.github.io/types_aiobotocore_docs/types_aiobotocore_codebuild/client/#stop_build_batch)
+        """
+
+    async def stop_sandbox(
+        self, **kwargs: Unpack[StopSandboxInputTypeDef]
+    ) -> StopSandboxOutputTypeDef:
+        """
+        Stops a sandbox.
+
+        [Show boto3 documentation](https://boto3.amazonaws.com/v1/documentation/api/latest/reference/services/codebuild/client/stop_sandbox.html)
+        [Show types-aiobotocore documentation](https://youtype.github.io/types_aiobotocore_docs/types_aiobotocore_codebuild/client/#stop_sandbox)
         """
 
     async def update_fleet(
@@ -764,6 +876,17 @@ class CodeBuildClient(AioBaseClient):
 
     @overload  # type: ignore[override]
     def get_paginator(  # type: ignore[override]
+        self, operation_name: Literal["list_command_executions_for_sandbox"]
+    ) -> ListCommandExecutionsForSandboxPaginator:
+        """
+        Create a paginator for an operation.
+
+        [Show boto3 documentation](https://boto3.amazonaws.com/v1/documentation/api/latest/reference/services/codebuild/client/get_paginator.html)
+        [Show types-aiobotocore documentation](https://youtype.github.io/types_aiobotocore_docs/types_aiobotocore_codebuild/client/#get_paginator)
+        """
+
+    @overload  # type: ignore[override]
+    def get_paginator(  # type: ignore[override]
         self, operation_name: Literal["list_projects"]
     ) -> ListProjectsPaginator:
         """
@@ -799,6 +922,28 @@ class CodeBuildClient(AioBaseClient):
     def get_paginator(  # type: ignore[override]
         self, operation_name: Literal["list_reports"]
     ) -> ListReportsPaginator:
+        """
+        Create a paginator for an operation.
+
+        [Show boto3 documentation](https://boto3.amazonaws.com/v1/documentation/api/latest/reference/services/codebuild/client/get_paginator.html)
+        [Show types-aiobotocore documentation](https://youtype.github.io/types_aiobotocore_docs/types_aiobotocore_codebuild/client/#get_paginator)
+        """
+
+    @overload  # type: ignore[override]
+    def get_paginator(  # type: ignore[override]
+        self, operation_name: Literal["list_sandboxes_for_project"]
+    ) -> ListSandboxesForProjectPaginator:
+        """
+        Create a paginator for an operation.
+
+        [Show boto3 documentation](https://boto3.amazonaws.com/v1/documentation/api/latest/reference/services/codebuild/client/get_paginator.html)
+        [Show types-aiobotocore documentation](https://youtype.github.io/types_aiobotocore_docs/types_aiobotocore_codebuild/client/#get_paginator)
+        """
+
+    @overload  # type: ignore[override]
+    def get_paginator(  # type: ignore[override]
+        self, operation_name: Literal["list_sandboxes"]
+    ) -> ListSandboxesPaginator:
         """
         Create a paginator for an operation.
 

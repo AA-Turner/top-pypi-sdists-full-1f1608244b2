@@ -5520,6 +5520,10 @@ class AWSManagedPolicies(enum.Enum):
     '''
     :stability: experimental
     '''
+    AWSSERVICE_ROLE_POLICY_FOR_WORKSPACES_INSTANCES = "AWSSERVICE_ROLE_POLICY_FOR_WORKSPACES_INSTANCES"
+    '''
+    :stability: experimental
+    '''
 
 
 class LambdaArmFunction(

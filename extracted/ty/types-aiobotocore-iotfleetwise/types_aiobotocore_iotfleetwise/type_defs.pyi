@@ -38,6 +38,7 @@ from .literals import (
     ROS2PrimitiveTypeType,
     SignalDecoderTypeType,
     SignalNodeTypeType,
+    SignalValueTypeType,
     SpoolingModeType,
     StorageCompressionFormatType,
     StorageMaximumSizeUnitType,
@@ -414,6 +415,7 @@ class CanSignalTypeDef(TypedDict):
     factor: float
     length: int
     name: NotRequired[str]
+    signalValueType: NotRequired[SignalValueTypeType]
 
 class CloudWatchLogDeliveryOptionsTypeDef(TypedDict):
     logType: LogTypeType
@@ -756,6 +758,8 @@ class ObdSignalTypeDef(TypedDict):
     byteLength: int
     bitRightShift: NotRequired[int]
     bitMaskLength: NotRequired[int]
+    isSigned: NotRequired[bool]
+    signalValueType: NotRequired[SignalValueTypeType]
 
 class TimePeriodTypeDef(TypedDict):
     unit: TimeUnitType
@@ -1573,6 +1577,7 @@ class UpdateVehicleRequestItemTypeDef(TypedDict):
     attributeUpdateMode: NotRequired[UpdateModeType]
     stateTemplatesToAdd: NotRequired[Sequence[StateTemplateAssociationUnionTypeDef]]
     stateTemplatesToRemove: NotRequired[Sequence[str]]
+    stateTemplatesToUpdate: NotRequired[Sequence[StateTemplateAssociationTypeDef]]
 
 class UpdateVehicleRequestTypeDef(TypedDict):
     vehicleName: str
@@ -1582,6 +1587,7 @@ class UpdateVehicleRequestTypeDef(TypedDict):
     attributeUpdateMode: NotRequired[UpdateModeType]
     stateTemplatesToAdd: NotRequired[Sequence[StateTemplateAssociationUnionTypeDef]]
     stateTemplatesToRemove: NotRequired[Sequence[str]]
+    stateTemplatesToUpdate: NotRequired[Sequence[StateTemplateAssociationUnionTypeDef]]
 
 SignalDecoderTypeDef = TypedDict(
     "SignalDecoderTypeDef",

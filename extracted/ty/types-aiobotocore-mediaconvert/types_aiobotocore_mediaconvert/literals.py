@@ -89,6 +89,7 @@ __all__ = (
     "CaptionSourceByteRateLimitType",
     "CaptionSourceConvertPaintOnToPopOnType",
     "CaptionSourceTypeType",
+    "CaptionSourceUpconvertSTLToTeletextType",
     "ChromaPositionModeType",
     "CmafClientCacheType",
     "CmafCodecSpecificationType",
@@ -120,7 +121,9 @@ __all__ = (
     "CmfcScte35SourceType",
     "CmfcTimedMetadataBoxVersionType",
     "CmfcTimedMetadataType",
+    "CodecType",
     "ColorMetadataType",
+    "ColorPrimariesType",
     "ColorSpaceConversionType",
     "ColorSpaceType",
     "ColorSpaceUsageType",
@@ -193,6 +196,8 @@ __all__ = (
     "FileSourceConvert608To708Type",
     "FileSourceTimeDeltaUnitsType",
     "FontScriptType",
+    "FormatType",
+    "FrameMetricTypeType",
     "GifFramerateControlType",
     "GifFramerateConversionAlgorithmType",
     "H264AdaptiveQuantizationType",
@@ -318,6 +323,7 @@ __all__ = (
     "M3u8NielsenId3Type",
     "M3u8PcrControlType",
     "M3u8Scte35SourceType",
+    "MatrixCoefficientsType",
     "MediaConvertServiceName",
     "MotionImageInsertionModeType",
     "MotionImagePlaybackType",
@@ -414,6 +420,8 @@ __all__ = (
     "TimecodeSourceType",
     "TimecodeTrackType",
     "TimedMetadataType",
+    "TrackTypeType",
+    "TransferCharacteristicsType",
     "TsPtsOffsetType",
     "TtmlStylePassthroughType",
     "TypeType",
@@ -567,7 +575,7 @@ AudioNormalizationAlgorithmType = Literal[
 ]
 AudioNormalizationLoudnessLoggingType = Literal["DONT_LOG", "LOG"]
 AudioNormalizationPeakCalculationType = Literal["NONE", "TRUE_PEAK"]
-AudioSelectorTypeType = Literal["HLS_RENDITION_GROUP", "LANGUAGE_CODE", "PID", "TRACK"]
+AudioSelectorTypeType = Literal["ALL_PCM", "HLS_RENDITION_GROUP", "LANGUAGE_CODE", "PID", "TRACK"]
 AudioTypeControlType = Literal["FOLLOW_INPUT", "USE_CONFIGURED"]
 Av1AdaptiveQuantizationType = Literal["HIGH", "HIGHER", "LOW", "MAX", "MEDIUM", "OFF"]
 Av1BitDepthType = Literal["BIT_10", "BIT_8"]
@@ -642,6 +650,7 @@ CaptionSourceTypeType = Literal[
     "TTML",
     "WEBVTT",
 ]
+CaptionSourceUpconvertSTLToTeletextType = Literal["DISABLED", "UPCONVERT"]
 ChromaPositionModeType = Literal["AUTO", "FORCE_CENTER", "FORCE_TOP_LEFT"]
 CmafClientCacheType = Literal["DISABLED", "ENABLED"]
 CmafCodecSpecificationType = Literal["RFC_4281", "RFC_6381"]
@@ -656,7 +665,7 @@ CmafMpdManifestBandwidthTypeType = Literal["AVERAGE", "MAX"]
 CmafMpdProfileType = Literal["MAIN_PROFILE", "ON_DEMAND_PROFILE"]
 CmafPtsOffsetHandlingForBFramesType = Literal["MATCH_INITIAL_PTS", "ZERO_BASED"]
 CmafSegmentControlType = Literal["SEGMENTED_FILES", "SINGLE_FILE"]
-CmafSegmentLengthControlType = Literal["EXACT", "GOP_MULTIPLE"]
+CmafSegmentLengthControlType = Literal["EXACT", "GOP_MULTIPLE", "MATCH"]
 CmafStreamInfResolutionType = Literal["EXCLUDE", "INCLUDE"]
 CmafTargetDurationCompatibilityModeType = Literal["LEGACY", "SPEC_COMPLIANT"]
 CmafVideoCompositionOffsetsType = Literal["SIGNED", "UNSIGNED"]
@@ -678,7 +687,49 @@ CmfcScte35EsamType = Literal["INSERT", "NONE"]
 CmfcScte35SourceType = Literal["NONE", "PASSTHROUGH"]
 CmfcTimedMetadataBoxVersionType = Literal["VERSION_0", "VERSION_1"]
 CmfcTimedMetadataType = Literal["NONE", "PASSTHROUGH"]
+CodecType = Literal[
+    "AAC",
+    "AC3",
+    "AV1",
+    "AVC",
+    "C608",
+    "C708",
+    "EAC3",
+    "FLAC",
+    "HEVC",
+    "MJPEG",
+    "MP3",
+    "MP4V",
+    "MPEG2",
+    "OPUS",
+    "PCM",
+    "PRORES",
+    "THEORA",
+    "UNKNOWN",
+    "VORBIS",
+    "VP8",
+    "VP9",
+    "WEBVTT",
+]
 ColorMetadataType = Literal["IGNORE", "INSERT"]
+ColorPrimariesType = Literal[
+    "EBU_3213_E",
+    "GENERIC_FILM",
+    "IPT",
+    "ITU_2020",
+    "ITU_470BG",
+    "ITU_470M",
+    "ITU_709",
+    "LAST",
+    "RESERVED",
+    "SMPTE_170M",
+    "SMPTE_2067XYZ",
+    "SMPTE_240M",
+    "SMPTE_428_1",
+    "SMPTE_431_2",
+    "SMPTE_EG_432_1",
+    "UNSPECIFIED",
+]
 ColorSpaceConversionType = Literal[
     "FORCE_601",
     "FORCE_709",
@@ -722,7 +773,7 @@ DashIsoMpdProfileType = Literal["MAIN_PROFILE", "ON_DEMAND_PROFILE"]
 DashIsoPlaybackDeviceCompatibilityType = Literal["CENC_V1", "UNENCRYPTED_SEI"]
 DashIsoPtsOffsetHandlingForBFramesType = Literal["MATCH_INITIAL_PTS", "ZERO_BASED"]
 DashIsoSegmentControlType = Literal["SEGMENTED_FILES", "SINGLE_FILE"]
-DashIsoSegmentLengthControlType = Literal["EXACT", "GOP_MULTIPLE"]
+DashIsoSegmentLengthControlType = Literal["EXACT", "GOP_MULTIPLE", "MATCH"]
 DashIsoVideoCompositionOffsetsType = Literal["SIGNED", "UNSIGNED"]
 DashIsoWriteSegmentTimelineInRepresentationType = Literal["DISABLED", "ENABLED"]
 DashManifestStyleType = Literal["BASIC", "COMPACT", "DISTINCT"]
@@ -803,6 +854,8 @@ F4vMoovPlacementType = Literal["NORMAL", "PROGRESSIVE_DOWNLOAD"]
 FileSourceConvert608To708Type = Literal["DISABLED", "UPCONVERT"]
 FileSourceTimeDeltaUnitsType = Literal["MILLISECONDS", "SECONDS"]
 FontScriptType = Literal["AUTOMATIC", "HANS", "HANT"]
+FormatType = Literal["matroska", "mp4", "quicktime", "webm"]
+FrameMetricTypeType = Literal["MS_SSIM", "PSNR", "PSNR_HVS", "QVBR", "SSIM", "VMAF"]
 GifFramerateControlType = Literal["INITIALIZE_FROM_SOURCE", "SPECIFIED"]
 GifFramerateConversionAlgorithmType = Literal["DUPLICATE_DROP", "INTERPOLATE"]
 H264AdaptiveQuantizationType = Literal["AUTO", "HIGH", "HIGHER", "LOW", "MAX", "MEDIUM", "OFF"]
@@ -940,7 +993,7 @@ HlsOutputSelectionType = Literal["MANIFESTS_AND_SEGMENTS", "SEGMENTS_ONLY"]
 HlsProgramDateTimeType = Literal["EXCLUDE", "INCLUDE"]
 HlsProgressiveWriteHlsManifestType = Literal["DISABLED", "ENABLED"]
 HlsSegmentControlType = Literal["SEGMENTED_FILES", "SINGLE_FILE"]
-HlsSegmentLengthControlType = Literal["EXACT", "GOP_MULTIPLE"]
+HlsSegmentLengthControlType = Literal["EXACT", "GOP_MULTIPLE", "MATCH"]
 HlsStreamInfResolutionType = Literal["EXCLUDE", "INCLUDE"]
 HlsTargetDurationCompatibilityModeType = Literal["LEGACY", "SPEC_COMPLIANT"]
 HlsTimedMetadataId3FrameType = Literal["NONE", "PRIV", "TDRL"]
@@ -1180,6 +1233,26 @@ M3u8DataPtsControlType = Literal["ALIGN_TO_VIDEO", "AUTO"]
 M3u8NielsenId3Type = Literal["INSERT", "NONE"]
 M3u8PcrControlType = Literal["CONFIGURED_PCR_PERIOD", "PCR_EVERY_PES_PACKET"]
 M3u8Scte35SourceType = Literal["NONE", "PASSTHROUGH"]
+MatrixCoefficientsType = Literal[
+    "CD_CL",
+    "CD_NCL",
+    "EBU3213",
+    "FCC",
+    "IPT",
+    "ITU_2020_CL",
+    "ITU_2020_NCL",
+    "ITU_2100ICtCp",
+    "ITU_470BG",
+    "ITU_709",
+    "LAST",
+    "RESERVED",
+    "RGB",
+    "SMPTE_170M",
+    "SMPTE_2085",
+    "SMPTE_240M",
+    "UNSPECIFIED",
+    "YCgCo",
+]
 MotionImageInsertionModeType = Literal["MOV", "PNG"]
 MotionImagePlaybackType = Literal["ONCE", "REPEAT"]
 MovClapAtomType = Literal["EXCLUDE", "INCLUDE"]
@@ -1368,7 +1441,29 @@ TimecodeBurninPositionType = Literal[
 TimecodeSourceType = Literal["EMBEDDED", "SPECIFIEDSTART", "ZEROBASED"]
 TimecodeTrackType = Literal["DISABLED", "ENABLED"]
 TimedMetadataType = Literal["NONE", "PASSTHROUGH"]
-TsPtsOffsetType = Literal["AUTO", "SECONDS"]
+TrackTypeType = Literal["audio", "data", "video"]
+TransferCharacteristicsType = Literal[
+    "ARIB_B67",
+    "IEC_61966_2_1",
+    "IEC_61966_2_4",
+    "ITU_1361",
+    "ITU_2020_10bit",
+    "ITU_2020_12bit",
+    "ITU_470BG",
+    "ITU_470M",
+    "ITU_709",
+    "LAST",
+    "LINEAR",
+    "LOC10_2_5",
+    "LOG10_2",
+    "RESERVED",
+    "SMPTE_170M",
+    "SMPTE_2084",
+    "SMPTE_240M",
+    "SMPTE_428_1",
+    "UNSPECIFIED",
+]
+TsPtsOffsetType = Literal["AUTO", "MILLISECONDS", "SECONDS"]
 TtmlStylePassthroughType = Literal["DISABLED", "ENABLED"]
 TypeType = Literal["CUSTOM", "SYSTEM"]
 UncompressedFourccType = Literal["I420", "I422", "I444"]
@@ -1612,6 +1707,7 @@ ServiceName = Literal[
     "freetier",
     "fsx",
     "gamelift",
+    "gameliftstreams",
     "geo-maps",
     "geo-places",
     "geo-routes",
@@ -1637,6 +1733,7 @@ ServiceName = Literal[
     "iot",
     "iot-data",
     "iot-jobs-data",
+    "iot-managed-integrations",
     "iotanalytics",
     "iotdeviceadvisor",
     "iotevents",
@@ -1751,7 +1848,6 @@ ServiceName = Literal[
     "pipes",
     "polly",
     "pricing",
-    "privatenetworks",
     "proton",
     "qapps",
     "qbusiness",
@@ -1812,7 +1908,6 @@ ServiceName = Literal[
     "signer",
     "simspaceweaver",
     "sms",
-    "sms-voice",
     "snow-device-management",
     "snowball",
     "sns",
@@ -1820,6 +1915,7 @@ ServiceName = Literal[
     "sqs",
     "ssm",
     "ssm-contacts",
+    "ssm-guiconnect",
     "ssm-incidents",
     "ssm-quicksetup",
     "ssm-sap",

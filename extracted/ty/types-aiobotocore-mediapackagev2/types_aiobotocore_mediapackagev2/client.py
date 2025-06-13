@@ -74,6 +74,10 @@ from .type_defs import (
     ListTagsForResourceResponseTypeDef,
     PutChannelPolicyRequestTypeDef,
     PutOriginEndpointPolicyRequestTypeDef,
+    ResetChannelStateRequestTypeDef,
+    ResetChannelStateResponseTypeDef,
+    ResetOriginEndpointStateRequestTypeDef,
+    ResetOriginEndpointStateResponseTypeDef,
     TagResourceRequestTypeDef,
     UntagResourceRequestTypeDef,
     UpdateChannelGroupRequestTypeDef,
@@ -318,8 +322,7 @@ class Mediapackagev2Client(AioBaseClient):
         self, **kwargs: Unpack[ListChannelGroupsRequestTypeDef]
     ) -> ListChannelGroupsResponseTypeDef:
         """
-        Retrieves all channel groups that are configured in AWS Elemental MediaPackage,
-        including the channels and origin endpoints that are associated with it.
+        Retrieves all channel groups that are configured in Elemental MediaPackage.
 
         [Show boto3 documentation](https://boto3.amazonaws.com/v1/documentation/api/latest/reference/services/mediapackagev2/client/list_channel_groups.html)
         [Show types-aiobotocore documentation](https://youtype.github.io/types_aiobotocore_docs/types_aiobotocore_mediapackagev2/client/#list_channel_groups)
@@ -386,6 +389,28 @@ class Mediapackagev2Client(AioBaseClient):
 
         [Show boto3 documentation](https://boto3.amazonaws.com/v1/documentation/api/latest/reference/services/mediapackagev2/client/put_origin_endpoint_policy.html)
         [Show types-aiobotocore documentation](https://youtype.github.io/types_aiobotocore_docs/types_aiobotocore_mediapackagev2/client/#put_origin_endpoint_policy)
+        """
+
+    async def reset_channel_state(
+        self, **kwargs: Unpack[ResetChannelStateRequestTypeDef]
+    ) -> ResetChannelStateResponseTypeDef:
+        """
+        Resetting the channel can help to clear errors from misconfigurations in the
+        encoder.
+
+        [Show boto3 documentation](https://boto3.amazonaws.com/v1/documentation/api/latest/reference/services/mediapackagev2/client/reset_channel_state.html)
+        [Show types-aiobotocore documentation](https://youtype.github.io/types_aiobotocore_docs/types_aiobotocore_mediapackagev2/client/#reset_channel_state)
+        """
+
+    async def reset_origin_endpoint_state(
+        self, **kwargs: Unpack[ResetOriginEndpointStateRequestTypeDef]
+    ) -> ResetOriginEndpointStateResponseTypeDef:
+        """
+        Resetting the origin endpoint can help to resolve unexpected behavior and other
+        content packaging issues.
+
+        [Show boto3 documentation](https://boto3.amazonaws.com/v1/documentation/api/latest/reference/services/mediapackagev2/client/reset_origin_endpoint_state.html)
+        [Show types-aiobotocore documentation](https://youtype.github.io/types_aiobotocore_docs/types_aiobotocore_mediapackagev2/client/#reset_origin_endpoint_state)
         """
 
     async def tag_resource(

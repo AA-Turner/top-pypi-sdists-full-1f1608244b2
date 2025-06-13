@@ -10,7 +10,7 @@ __all__ = ['JupyterAPI_Error', 'JupyterAPI_WorkspaceStarted', 'get_jupyter_works
            'get_content', 'update_jupyter_workspace_config']
 
 # %% ../../nbs/routes/jupyter.ipynb 2
-from enum import Enum
+from domolibrary.client.DomoEntity import DomoEnum
 
 import os
 import httpx
@@ -279,17 +279,11 @@ def generate_update_jupyter_body__directory(content_path, body):
     return body
 
 # %% ../../nbs/routes/jupyter.ipynb 23
-class generate_update_jupyter_body_factory(Enum):
+class generate_update_jupyter_body_factory(DomoEnum):
     IPYNB = partial(generate_update_jupyter_body__ipynb)
     DIRECTORY = partial(generate_update_jupyter_body__directory)
     TEXT = partial(generate_update_jupyter_body__text)
-
-    @classmethod
-    def from_text(cls, value):
-        try:
-            return cls[value.upper()].value
-        except:
-            return cls.TEXT.value
+    default = partial(generate_update_jupyter_body__text)
 
 
 def generate_update_jupyter_body(
@@ -312,7 +306,7 @@ def generate_update_jupyter_body(
         "content": new_content,
         "path": content_path,
     }
-    return generate_update_jupyter_body_factory.from_text(content_type)(
+    return generate_update_jupyter_body_factory.get(content_type).value(
         body=body, content_path=content_path
     )
 

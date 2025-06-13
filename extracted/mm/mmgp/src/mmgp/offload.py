@@ -1,4 +1,4 @@
-# ------------------ Memory Management 3.4.8 for the GPU Poor by DeepBeepMeep (mmgp)------------------
+# ------------------ Memory Management 3.4.9 for the GPU Poor by DeepBeepMeep (mmgp)------------------
 #
 # This module contains multiples optimisations so that models such as Flux (and derived), Mochi, CogView, HunyuanVideo, ...  can run smoothly on a 24 GB GPU limited card. 
 # This a replacement for the accelerate library that should in theory manage offloading, but doesn't work properly with models that are loaded / unloaded several
@@ -658,7 +658,7 @@ def _welcome():
     if welcome_displayed:
          return 
     welcome_displayed = True
-    print(f"{BOLD}{HEADER}************ Memory Management for the GPU Poor (mmgp 3.4.8) by DeepBeepMeep ************{ENDC}{UNBOLD}")
+    print(f"{BOLD}{HEADER}************ Memory Management for the GPU Poor (mmgp 3.4.9) by DeepBeepMeep ************{ENDC}{UNBOLD}")
 
 def change_dtype(model, new_dtype, exclude_buffers = False):
     for submodule_name, submodule in model.named_modules():  
@@ -1275,7 +1275,7 @@ def move_loras_to_device(model, device="cpu" ):
         if ".lora_" in k:
             m.to(device)
 
-def fast_load_transformers_model(model_path: str, do_quantize = False, quantizationType =  qint8, pinToMemory = False, partialPinning = False, forcedConfigPath = None, modelClass=None, modelPrefix = None, writable_tensors = True, verboseLevel = -1, configKwargs ={}):
+def fast_load_transformers_model(model_path: str, do_quantize = False, quantizationType =  qint8, pinToMemory = False, partialPinning = False, forcedConfigPath = None, defaultConfigPath = None, modelClass=None, modelPrefix = None, writable_tensors = True, verboseLevel = -1, configKwargs ={}):
     """
     quick version of .LoadfromPretrained of  the transformers library
     used to build a model and load the corresponding weights (quantized or not)
@@ -1308,7 +1308,7 @@ def fast_load_transformers_model(model_path: str, do_quantize = False, quantizat
         if forcedConfigPath != None:
             config_fullpath = forcedConfigPath
         else:
-            config_fullpath =  os.path.join(os.path.dirname(model_path[-1]), "config.json")
+            config_fullpath =  os.path.join(os.path.dirname(model_path[-1]), "config.json") if defaultConfigPath == None else defaultConfigPath
 
         if not os.path.isfile(config_fullpath):
             raise Exception("a 'config.json' that describes the model is required in the directory of the model or inside the safetensor file")
@@ -1500,11 +1500,11 @@ def load_model_data(model, file_path: str, do_quantize = False, quantizationType
 
     if do_quantize:
         if quantization_map != None and len(quantization_map) > 0 :
-            if _quantize(model, quantizationType, verboseLevel=verboseLevel, model_id=file_path):
-                quantization_map = model._quanto_map  
-        else:
             if verboseLevel >=1:
                 print("Model already quantized")
+        else:
+            if _quantize(model, quantizationType, verboseLevel=verboseLevel, model_id=file_path):
+                quantization_map = model._quanto_map  
 
     if pinToMemory:
         _pin_to_memory(model, file_path, partialPinning = partialPinning, verboseLevel = verboseLevel)

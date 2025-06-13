@@ -38,6 +38,8 @@ from .type_defs import (
     CreateUserRequestTypeDef,
     DeleteBrokerRequestTypeDef,
     DeleteBrokerResponseTypeDef,
+    DeleteConfigurationRequestTypeDef,
+    DeleteConfigurationResponseTypeDef,
     DeleteTagsRequestTypeDef,
     DeleteUserRequestTypeDef,
     DescribeBrokerEngineTypesRequestTypeDef,
@@ -179,6 +181,16 @@ class MQClient(AioBaseClient):
 
         [Show boto3 documentation](https://boto3.amazonaws.com/v1/documentation/api/latest/reference/services/mq/client/delete_broker.html)
         [Show types-aiobotocore documentation](https://youtype.github.io/types_aiobotocore_docs/types_aiobotocore_mq/client/#delete_broker)
+        """
+
+    async def delete_configuration(
+        self, **kwargs: Unpack[DeleteConfigurationRequestTypeDef]
+    ) -> DeleteConfigurationResponseTypeDef:
+        """
+        Deletes the specified configuration.
+
+        [Show boto3 documentation](https://boto3.amazonaws.com/v1/documentation/api/latest/reference/services/mq/client/delete_configuration.html)
+        [Show types-aiobotocore documentation](https://youtype.github.io/types_aiobotocore_docs/types_aiobotocore_mq/client/#delete_configuration)
         """
 
     async def delete_tags(

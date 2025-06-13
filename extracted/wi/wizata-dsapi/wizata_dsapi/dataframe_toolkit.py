@@ -260,7 +260,8 @@ def generate_epoch(formatted_string: str, now=None):
     else:
         timestamp = now
 
-    epoch = datetime.utcfromtimestamp(0)
+    epoch = datetime(1970, 1, 1, tzinfo=timezone.utc)  # aware
+    timestamp = timestamp.astimezone(timezone.utc)
     timestamp_ms = int((timestamp - epoch).total_seconds() * 1000)
     return timestamp_ms
 

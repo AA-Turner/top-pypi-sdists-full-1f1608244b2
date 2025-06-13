@@ -38,51 +38,63 @@ class ModelInfo(BaseModel):
 
 
 class ChannelInfo(BaseModel):
-    tag: str = ''
-
-    id: Optional[int] = None
+    id: Optional[int] = None  # 不存在就新建
     type: int = 1  # 枚举值 openai
-    key: Optional[str] = None
+
+    name: str = ''
+    tag: str = ''
+    group: str = 'default'
+
+    base_url: str = ''
+    key: str
+    models: str = 'MODEL'
+
     access_token: str = ''
     openai_organization: str = ''
     test_model: str = ''
-    status: int = '1'
-    name: str = 'fal-flux'
-    weight: int = '0'
-    created_time: int = '1749175121'
-    test_time: int = '0'
-    response_time: int = '0'
-    base_url: Optional[str] = None
+    status: int = 1
+    weight: int = 0
+    created_time: int = Field(default_factory=lambda: int(time.time()))
+    test_time: int = 0
+    response_time: int = 0
     other: str = ''
-    balance: int = '0'
-    balance_updated_time: int = '0'
+    balance: int = 0
+    balance_updated_time: int = 0
 
-    models: str
-    group: str = 'default'
+    used_quota: int = 0
+    upstream_user_quota: int = 0
 
-    used_quota: Optional[int] = None
-    upstream_user_quota: int = '0'
-
-    model_mapping: Optional[str] = None  # json
+    model_mapping: Union[str, dict] = ""  # json
 
     headers: str = ''  # json
     status_code_mapping: str = ''
-    priority: int = '1'
-    auto_ban: int = '1'
-    empty_response_retry: int = '0'
-    not_use_key: int = '0'
+    priority: int = 0
+    auto_ban: int = 1
+    empty_response_retry: int = 0
+    not_use_key: int = 0
     remark: str = ''
-    mj_relax_limit: int = '99'
-    mj_fast_limit: int = '99'
-    mj_turbo_limit: int = '99'
+    mj_relax_limit: int = 99
+    mj_fast_limit: int = 99
+    mj_turbo_limit: int = 99
     other_info: str = ''
-    channel_ratio: int = '1'
-    error_return_429: int = '0'
+    channel_ratio: int = 1
+    error_return_429: int = 0
     setting: str = ''
 
     """参数覆盖"""
     param_override: str = ''  # json
     is_tools: bool = False
+
+    def __init__(self, /, **data: Any):
+        super().__init__(**data)
+        self.name = self.name or self.base_url or "NAME"
+        self.tag = self.tag or self.base_url or "TAG"
+
+        if self.base_url:
+            self.type = 8
+
+        if isinstance(self.model_mapping, dict):
+            self.model_mapping = json.dumps(self.model_mapping)
 
 
 # https://oss.ffire.cc/images/qw.jpeg?x-oss-process=image/format,jpg/resize,w_512

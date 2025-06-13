@@ -5,12 +5,11 @@ import logging
 import numbers
 from collections.abc import Callable, Sequence
 from random import SystemRandom
-from typing import Any, Dict, Union
+from typing import Any, Union
 
 from defusedxml.minidom import parseString
 
 # Create a safe random number generator
-safe_random = SystemRandom()
 
 # Set up logging
 LOG = logging.getLogger("dicttoxml")
@@ -28,6 +27,7 @@ def make_id(element: str, start: int = 100000, end: int = 999999) -> str:
     Returns:
         str: The generated ID.
     """
+    safe_random = SystemRandom()
     return f"{element}_{safe_random.randint(start, end)}"
 
 
@@ -59,7 +59,7 @@ ELEMENT = Union[
     float,
     bool,
     numbers.Number,
-    Sequence[str],
+    Sequence[Any],
     datetime.datetime,
     datetime.date,
     None,
@@ -97,7 +97,7 @@ def get_xml_type(val: ELEMENT) -> str:
     return type(val).__name__
 
 
-def escape_xml(s: str | numbers.Number) -> str:
+def escape_xml(s: str | int | float | numbers.Number) -> str:
     """
     Escape a string for use in XML.
 
@@ -127,7 +127,7 @@ def make_attrstring(attr: dict[str, Any]) -> str:
     Returns:
         str: The string of XML attributes.
     """
-    attrstring = " ".join([f'{k}="{v}"' for k, v in attr.items()])
+    attrstring = " ".join([f'{k}="{escape_xml(v)}"' for k, v in attr.items()])
     return f'{" " if attrstring != "" else ""}{attrstring}'
 
 
@@ -178,7 +178,7 @@ def make_valid_xml_name(key: str, attr: dict[str, Any]) -> tuple[str, dict[str, 
     return key, attr
 
 
-def wrap_cdata(s: str | numbers.Number) -> str:
+def wrap_cdata(s: str | int | float | numbers.Number) -> str:
     """Wraps a string into CDATA sections"""
     s = str(s).replace("]]>", "]]]]><![CDATA[>")
     return "<![CDATA[" + s + "]]>"
@@ -263,16 +263,17 @@ def dict2xml_str(
     """
     ids: list[str] = []  # initialize list of unique ids
     ", ".join(str(key) for key in item)
+    subtree = ""  # Initialize subtree with default empty string
 
     if attr_type:
         attr["type"] = get_xml_type(item)
     val_attr: dict[str, str] = item.pop("@attrs", attr)  # update attr with custom @attr if exists
     rawitem = item["@val"] if "@val" in item else item
     if is_primitive_type(rawitem):
+        if isinstance(rawitem, dict):
+            subtree = escape_xml(str(rawitem))
         if isinstance(rawitem, str):
             subtree = escape_xml(rawitem)
-        else:
-            subtree = rawitem
     else:
         # we can not use convert_dict, because rawitem could be non-dict
         subtree = convert(
@@ -306,6 +307,7 @@ def list2xml_str(
     if attr_type:
         attr["type"] = get_xml_type(item)
     flat = False
+    subtree = ""  # Initialize subtree with default empty string
     if item_name.endswith("@flat"):
         item_name = item_name[0:-5]
         flat = True
@@ -503,13 +505,19 @@ def convert_list(
 
 def convert_kv(
     key: str,
-    val: str | numbers.Number,
+    val: str | int | float | numbers.Number | datetime.datetime | datetime.date,
     attr_type: bool,
-    attr: dict[str, Any] = {},
+    attr: dict[str, Any] | None = None,
     cdata: bool = False,
 ) -> str:
-    """Converts a number or string into an XML element"""
+    """Converts a number, string, or datetime into an XML element"""
+    if attr is None:
+        attr = {}
     key, attr = make_valid_xml_name(key, attr)
+
+    # Convert datetime to isoformat string
+    if hasattr(val, "isoformat") and isinstance(val, (datetime.datetime, datetime.date)):
+        val = val.isoformat()
 
     if attr_type:
         attr["type"] = get_xml_type(val)
@@ -518,9 +526,11 @@ def convert_kv(
 
 
 def convert_bool(
-    key: str, val: bool, attr_type: bool, attr: dict[str, Any] = {}, cdata: bool = False
+    key: str, val: bool, attr_type: bool, attr: dict[str, Any] | None = None, cdata: bool = False
 ) -> str:
     """Converts a boolean into an XML element"""
+    if attr is None:
+        attr = {}
     key, attr = make_valid_xml_name(key, attr)
 
     if attr_type:
@@ -530,9 +540,11 @@ def convert_bool(
 
 
 def convert_none(
-    key: str, attr_type: bool, attr: dict[str, Any] = {}, cdata: bool = False
+    key: str, attr_type: bool, attr: dict[str, Any] | None = None, cdata: bool = False
 ) -> str:
     """Converts a null value into an XML element"""
+    if attr is None:
+        attr = {}
     key, attr = make_valid_xml_name(key, attr)
 
     if attr_type:
@@ -542,7 +554,7 @@ def convert_none(
 
 
 def dicttoxml(
-    obj: dict[str, Any],
+    obj: ELEMENT,
     root: bool = True,
     custom_root: str = "root",
     ids: list[int] | None = None,

@@ -1,7 +1,7 @@
 # Version managed by git-versioner
-version = "v4.0"
-version_short = "v4.0"
-git_hash = "1544d35"
-on_tag = "v4.0"
+version = "v5.0"
+version_short = "v5.0"
+git_hash = "84243af"
+on_tag = 'v5.0'
 dirty = False
 SUPPORT_PATCH = False

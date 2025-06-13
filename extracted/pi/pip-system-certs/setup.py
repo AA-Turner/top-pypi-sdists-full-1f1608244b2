@@ -1,70 +1,28 @@
-import os
-import sys
-import distutils.sysconfig
+"""
+Minimal setup.py to handle .pth file installation in site-packages root.
+
+This is required because pyproject.toml alone cannot install .pth files
+to the site-packages root directory where they need to be for Python
+to process them during startup.
+"""
+
 from setuptools import setup
-from setuptools.command.install import install
-from setuptools.command.develop import develop
 from setuptools.command.build_py import build_py
+import os
+import shutil
 
 
-with open(os.path.join(os.path.dirname(__file__), 'README.rst')) as readme:
-    long_description = readme.read()
-
-
-def check_pth(site_packages):
-    pthfile = os.path.join(site_packages, "pip_system_certs.pth")
-    if not os.path.exists(pthfile):
-        sys.stderr.write("WARNING: pip_system_certs.pth not installed correctly, will try to correct.\n")
-        sys.stderr.write("Please report an issue at https://gitlab.com/alelec/pip-system-certs with your\n")
-        sys.stderr.write("python and pip versions included in the description\n")
-        import shutil
-        shutil.copyfile("pip_system_certs.pth", pthfile)
-
-
-class InstallCheck(install):
+class BuildWithPth(build_py):
+    """Custom build command that includes .pth file in site-packages root"""
+    
     def run(self):
-        install.run(self)
-        check_pth(self.install_purelib)
+        super().run()
+        # Copy .pth file to build directory root so it gets installed to site-packages
+        pth_file = "pip_system_certs.pth"
+        if os.path.exists(pth_file):
+            dest = os.path.join(self.build_lib, pth_file)
+            shutil.copy2(pth_file, dest)
 
 
-class DevelopCheck(develop):
-    def run(self):
-        develop.run(self)
-        check_pth(self.install_dir)
-
-
-class BuildIncludePth(build_py):
-     """Include the .pth file for this project in the generated wheel."""
-
-     def run(self):
-         super().run()
-
-         pth_file = "pip_system_certs.pth"
-
-         outfile = os.path.join(self.build_lib, pth_file)
-         self.copy_file(pth_file, outfile, preserve_mode=0)
-
-
-site_packages = distutils.sysconfig.get_python_lib()
-
-
-setup(
-    name='pip_system_certs',
-    use_git_versioner="gitlab:desc:snapshot",
-    setup_requires=["git-versioner"],
-    description='Live patches pip to use system certs by default',
-    long_description=long_description,
-    author='Andrew Leech',
-    author_email='andrew@alelec.net',
-    license='BSD',
-    url='https://gitlab.com/alelec/pip-system-certs',
-    packages=['pip_system_certs'],
-    install_requires=['wrapt>=1.10.4'],
-    zip_safe=False,
-    cmdclass={
-        "build_py": BuildIncludePth,
-        "install": InstallCheck,
-        "develop": DevelopCheck,
-    },
-    python_requires='>=2.7.9, !=3.0.*, !=3.1.*, !=3.2.*, !=3.3.*',
-)
+if __name__ == "__main__":
+    setup(cmdclass={'build_py': BuildWithPth})

@@ -40,6 +40,8 @@ from .type_defs import (
     GetAsyncInvokeResponseTypeDef,
     InvokeModelRequestTypeDef,
     InvokeModelResponseTypeDef,
+    InvokeModelWithBidirectionalStreamRequestTypeDef,
+    InvokeModelWithBidirectionalStreamResponseTypeDef,
     InvokeModelWithResponseStreamRequestTypeDef,
     InvokeModelWithResponseStreamResponseTypeDef,
     ListAsyncInvokesRequestTypeDef,
@@ -161,6 +163,17 @@ class BedrockRuntimeClient(AioBaseClient):
 
         [Show boto3 documentation](https://boto3.amazonaws.com/v1/documentation/api/latest/reference/services/bedrock-runtime/client/invoke_model.html)
         [Show types-aiobotocore documentation](https://youtype.github.io/types_aiobotocore_docs/types_aiobotocore_bedrock_runtime/client/#invoke_model)
+        """
+
+    async def invoke_model_with_bidirectional_stream(
+        self, **kwargs: Unpack[InvokeModelWithBidirectionalStreamRequestTypeDef]
+    ) -> InvokeModelWithBidirectionalStreamResponseTypeDef:
+        """
+        Invoke the specified Amazon Bedrock model to run inference using the
+        bidirectional stream.
+
+        [Show boto3 documentation](https://boto3.amazonaws.com/v1/documentation/api/latest/reference/services/bedrock-runtime/client/invoke_model_with_bidirectional_stream.html)
+        [Show types-aiobotocore documentation](https://youtype.github.io/types_aiobotocore_docs/types_aiobotocore_bedrock_runtime/client/#invoke_model_with_bidirectional_stream)
         """
 
     async def invoke_model_with_response_stream(

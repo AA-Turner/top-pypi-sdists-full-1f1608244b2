@@ -9,16 +9,33 @@ See https://github.com/github/rest-api-description for more information.
 
 from __future__ import annotations
 
-from typing_extensions import TypedDict
+from datetime import datetime
+from typing import Literal, Union
+from typing_extensions import NotRequired, TypedDict
 
-from .group_0076 import NetworkConfigurationType
 
-
-class OrgsOrgSettingsNetworkConfigurationsGetResponse200Type(TypedDict):
-    """OrgsOrgSettingsNetworkConfigurationsGetResponse200"""
+class OrgsOrgPrivateRegistriesGetResponse200Type(TypedDict):
+    """OrgsOrgPrivateRegistriesGetResponse200"""
 
     total_count: int
-    network_configurations: list[NetworkConfigurationType]
+    configurations: list[OrgPrivateRegistryConfigurationType]
 
 
-__all__ = ("OrgsOrgSettingsNetworkConfigurationsGetResponse200Type",)
+class OrgPrivateRegistryConfigurationType(TypedDict):
+    """Organization private registry
+
+    Private registry configuration for an organization
+    """
+
+    name: str
+    registry_type: Literal["maven_repository", "nuget_feed", "goproxy_server"]
+    username: NotRequired[Union[str, None]]
+    visibility: Literal["all", "private", "selected"]
+    created_at: datetime
+    updated_at: datetime
+
+
+__all__ = (
+    "OrgPrivateRegistryConfigurationType",
+    "OrgsOrgPrivateRegistriesGetResponse200Type",
+)

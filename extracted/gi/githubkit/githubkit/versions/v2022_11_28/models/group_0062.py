@@ -9,55 +9,47 @@ See https://github.com/github/rest-api-description for more information.
 
 from __future__ import annotations
 
+from typing import Union
+
 from pydantic import Field
 
 from githubkit.compat import GitHubModel, model_rebuild
-from githubkit.typing import Missing
-from githubkit.utils import UNSET
+
+from .group_0061 import MinimalRepository
 
 
-class BillingUsageReport(GitHubModel):
-    """BillingUsageReport"""
+class Thread(GitHubModel):
+    """Thread
 
-    usage_items: Missing[list[BillingUsageReportPropUsageItemsItems]] = Field(
-        default=UNSET, alias="usageItems"
-    )
+    Thread
+    """
 
-
-class BillingUsageReportPropUsageItemsItems(GitHubModel):
-    """BillingUsageReportPropUsageItemsItems"""
-
-    date: str = Field(description="Date of the usage line item.")
-    product: str = Field(description="Product name.")
-    sku: str = Field(description="SKU name.")
-    quantity: int = Field(description="Quantity of the usage line item.")
-    unit_type: str = Field(
-        alias="unitType", description="Unit type of the usage line item."
+    id: str = Field()
+    repository: MinimalRepository = Field(
+        title="Minimal Repository", description="Minimal Repository"
     )
-    price_per_unit: float = Field(
-        alias="pricePerUnit", description="Price per unit of the usage line item."
-    )
-    gross_amount: float = Field(
-        alias="grossAmount", description="Gross amount of the usage line item."
-    )
-    discount_amount: float = Field(
-        alias="discountAmount", description="Discount amount of the usage line item."
-    )
-    net_amount: float = Field(
-        alias="netAmount", description="Net amount of the usage line item."
-    )
-    organization_name: str = Field(
-        alias="organizationName", description="Name of the organization."
-    )
-    repository_name: Missing[str] = Field(
-        default=UNSET, alias="repositoryName", description="Name of the repository."
-    )
+    subject: ThreadPropSubject = Field()
+    reason: str = Field()
+    unread: bool = Field()
+    updated_at: str = Field()
+    last_read_at: Union[str, None] = Field()
+    url: str = Field()
+    subscription_url: str = Field()
 
 
-model_rebuild(BillingUsageReport)
-model_rebuild(BillingUsageReportPropUsageItemsItems)
+class ThreadPropSubject(GitHubModel):
+    """ThreadPropSubject"""
+
+    title: str = Field()
+    url: str = Field()
+    latest_comment_url: str = Field()
+    type: str = Field()
+
+
+model_rebuild(Thread)
+model_rebuild(ThreadPropSubject)
 
 __all__ = (
-    "BillingUsageReport",
-    "BillingUsageReportPropUsageItemsItems",
+    "Thread",
+    "ThreadPropSubject",
 )

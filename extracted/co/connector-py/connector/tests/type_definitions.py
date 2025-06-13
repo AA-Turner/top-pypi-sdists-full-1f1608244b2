@@ -11,7 +11,8 @@ class MockedResponse:
     headers: dict[str, str] | None = None
     request_json_body: dict[
         str, t.Any
-    ] | None = None  # for cases where we want to match the request body
+    ] | None = None  # for cases where we want to match JSON request body
+    request_bytes_body: bytes | None = None  # for cases where we want to match bytes request body
     request_path: str | None = None  # for cases match the request body and request path
 
 

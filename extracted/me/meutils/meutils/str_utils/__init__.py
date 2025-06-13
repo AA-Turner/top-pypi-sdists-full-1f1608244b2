@@ -6,8 +6,10 @@
 # @Author       : yuanjie
 # @WeChat       : meutils
 # @Software     : PyCharm
-# @Description  : 
+# @Description  :
+import re
 
+import httpx
 
 from meutils.pipe import *
 # from meutils.str_utils.translater import translater
@@ -231,13 +233,13 @@ def validate_url(url):
             'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36'
         }
 
-        response = requests.head(url, timeout=5, allow_redirects=True, headers=headers)
+        # response = requests.head(url, timeout=5, allow_redirects=False, headers=headers)
+        response = requests.head(url, timeout=5, headers=headers)
         if response.status_code >= 400:
             logger.error(f"URL 返回错误状态码: {response.status_code}")
 
             return False
 
-        logger.error("URL 有效")
         return True
     except requests.exceptions.RequestException as e:
         logger.error(f"连接错误: {str(e)}")
@@ -277,4 +279,15 @@ if __name__ == '__main__':
 
     url = 'https://fal.ai/models/fal-ai/flux-pro/kontext/requests/de5f28be-2ca8-4bd4-8c42-c7fc32969801?output=0'
     url = "https://5b0988e595225.cdn.sohucs.com/images/20190814/5ebb727f502545718c4a06f199cd848b.jpeg"
-    print(validate_url([url] * 3))
+    # url = "https://filesystem.site/cdn/20250609/1XPdqIyhHiOJ8SC68W4ZQGBrf7XRZD.png"
+
+    # url = "https://filesystem.site/cdn/20250609/1QUKzDHRQedraO15CXnUc22aBjvqEN.png"
+
+    # url = "https://photog.art/api/oss/R2yh8N"
+
+    url = "https://p3-bot-workflow-sign.byteimg.com/tos-cn-i-mdko3gqilj/1fe07cca46224208bfbed8c0f3c50ed8.png~tplv-mdko3gqilj-image.image?rk3s=81d4c505&x-expires=1780112531&x-signature=e7q1NOMjqCHvMz%2FC3dVAEVisAh4%3D&x-wf-file_name=9748f6214970f744fe7fd7a3699cfa2.png"
+
+    # print(validate_url([url] * 3))
+    print(validate_url(url))
+
+    print(re.findall("http", url*2))

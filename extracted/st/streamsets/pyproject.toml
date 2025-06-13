@@ -4,7 +4,7 @@ authors = [
     {name = "StreamSets Inc"}
 ]
 description = "A Python SDK for StreamSets"
-readme = {file = "README.txt", content-type = "text/x-rst"}
+readme = {file = "README.rst", content-type = "text/x-rst"}
 requires-python = ">=3.4"
 classifiers=[
     'Development Status :: 5 - Production/Stable',

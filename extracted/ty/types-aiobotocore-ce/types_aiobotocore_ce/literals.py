@@ -45,6 +45,11 @@ __all__ = (
     "ErrorCodeType",
     "FindingReasonCodeType",
     "GenerationStatusType",
+    "GetAnomaliesPaginatorName",
+    "GetAnomalyMonitorsPaginatorName",
+    "GetAnomalySubscriptionsPaginatorName",
+    "GetCostAndUsageComparisonsPaginatorName",
+    "GetCostComparisonDriversPaginatorName",
     "GranularityType",
     "GroupDefinitionTypeType",
     "LookbackPeriodInDaysType",
@@ -54,6 +59,7 @@ __all__ = (
     "MonitorTypeType",
     "NumericOperatorType",
     "OfferingClassType",
+    "PaginatorName",
     "PaymentOptionType",
     "PlatformDifferenceType",
     "RecommendationTargetType",
@@ -148,6 +154,11 @@ FindingReasonCodeType = Literal[
     "NETWORK_PPS_UNDER_PROVISIONED",
 ]
 GenerationStatusType = Literal["FAILED", "PROCESSING", "SUCCEEDED"]
+GetAnomaliesPaginatorName = Literal["get_anomalies"]
+GetAnomalyMonitorsPaginatorName = Literal["get_anomaly_monitors"]
+GetAnomalySubscriptionsPaginatorName = Literal["get_anomaly_subscriptions"]
+GetCostAndUsageComparisonsPaginatorName = Literal["get_cost_and_usage_comparisons"]
+GetCostComparisonDriversPaginatorName = Literal["get_cost_comparison_drivers"]
 GranularityType = Literal["DAILY", "HOURLY", "MONTHLY"]
 GroupDefinitionTypeType = Literal["COST_CATEGORY", "DIMENSION", "TAG"]
 LookbackPeriodInDaysType = Literal["SEVEN_DAYS", "SIXTY_DAYS", "THIRTY_DAYS"]
@@ -356,6 +367,7 @@ ServiceName = Literal[
     "freetier",
     "fsx",
     "gamelift",
+    "gameliftstreams",
     "geo-maps",
     "geo-places",
     "geo-routes",
@@ -381,6 +393,7 @@ ServiceName = Literal[
     "iot",
     "iot-data",
     "iot-jobs-data",
+    "iot-managed-integrations",
     "iotanalytics",
     "iotdeviceadvisor",
     "iotevents",
@@ -495,7 +508,6 @@ ServiceName = Literal[
     "pipes",
     "polly",
     "pricing",
-    "privatenetworks",
     "proton",
     "qapps",
     "qbusiness",
@@ -556,7 +568,6 @@ ServiceName = Literal[
     "signer",
     "simspaceweaver",
     "sms",
-    "sms-voice",
     "snow-device-management",
     "snowball",
     "sns",
@@ -564,6 +575,7 @@ ServiceName = Literal[
     "sqs",
     "ssm",
     "ssm-contacts",
+    "ssm-guiconnect",
     "ssm-incidents",
     "ssm-quicksetup",
     "ssm-sap",
@@ -615,4 +627,11 @@ ResourceServiceName = Literal[
     "s3",
     "sns",
     "sqs",
+]
+PaginatorName = Literal[
+    "get_anomalies",
+    "get_anomaly_monitors",
+    "get_anomaly_subscriptions",
+    "get_cost_and_usage_comparisons",
+    "get_cost_comparison_drivers",
 ]

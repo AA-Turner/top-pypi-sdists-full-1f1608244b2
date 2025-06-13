@@ -4777,7 +4777,7 @@ class Cells:
     def setColumnWidth(self, column : int, width : int) -> None:
         '''Sets the width of the specified column in normal view.
         :param column: Column index.
-        :param width: Width of column.Column width must be between 0 and 255.'''
+        :param width: Width of column in unit of characters.Column width must be between 0 and 255.'''
         raise NotImplementedError()
 
     def getRows(self) -> RowCollection:
@@ -10861,6 +10861,16 @@ class CustomPropertyCollection:
         raise NotImplementedError()
 
 
+class CustomRenderSettings:
+    '''Represents custom settings during rendering.'''
+
+    def getCellBorderWidth(self, borderType : int) -> float:
+        '''Get cell border width according to border type.
+        :param borderType: :class:`CellBorderType`. cell border type
+        :returns: cell border width'''
+        raise NotImplementedError()
+
+
 class CustomXmlPart:
     '''Represents a Custom XML Data Storage Part (custom XML data within a package).'''
 
@@ -12594,12 +12604,20 @@ class DocxSaveOptions:
     '''Represents options of saving .docx file.'''
 
     def getSaveAsEditableShaps(self) -> bool:
-        '''Save all drawing objecgts as editable shapes in word file.So you can edit them in Word.'''
+        ''':deprecated: Use SaveFormat.SaveAsEditableShapes instead.'''
+        raise NotImplementedError()
+
+    def setSaveAsEditableShapes(self, value : bool) -> None:
+        '''Save all drawing objects as editable shapes in the word file, so you can edit them in Word.
+        :param value: '''
+        raise NotImplementedError()
+
+    def getSaveAsEditableShapes(self) -> bool:
+        '''Save all drawing objects as editable shapes in the word file, so you can edit them in Word.'''
         raise NotImplementedError()
 
     def setSaveAsEditableShaps(self, value : bool) -> None:
-        '''Save all drawing objecgts as editable shapes in word file.So you can edit them in Word.
-        :param value: '''
+        ''':deprecated: Use SaveFormat.SaveAsEditableShapes instead.'''
         raise NotImplementedError()
 
 
@@ -19204,6 +19222,10 @@ class ImageFormat:
 class ImageOrPrintOptions:
     '''Allows to specify options when rendering worksheet to images, printing worksheet or rendering chart to image.'''
 
+    def getCustomRenderSettings(self) -> CustomRenderSettings:
+        '''Gets custom settings during rendering.'''
+        raise NotImplementedError()
+
     def setSvgCssPrefix(self, value : str) -> None:
         ''':deprecated: Use SvgImageOptions.CssPrefix property instead.'''
         raise NotImplementedError()
@@ -19517,6 +19539,11 @@ class ImageOrPrintOptions:
 
     def getGridlineColor(self) -> Color:
         '''Gets gridline colr.'''
+        raise NotImplementedError()
+
+    def setCustomRenderSettings(self, value : CustomRenderSettings) -> None:
+        '''Sets custom settings during rendering.
+        :param value: '''
         raise NotImplementedError()
 
     def getEmbededImageNameInSvg(self) -> str:
@@ -20224,6 +20251,10 @@ class JsonSaveOptions:
         :param value: '''
         raise NotImplementedError()
 
+    def getExportStylePool(self) -> bool:
+        '''Exporting style pool when converting to json struct.'''
+        raise NotImplementedError()
+
     def setExportEmptyCells(self, value : bool) -> None:
         '''Indicates whether exporting empty cells as null.
         :param value: '''
@@ -20259,6 +20290,11 @@ class JsonSaveOptions:
 
     def setExportAsString(self, value : bool) -> None:
         '''Exports the string value of the cells to json.
+        :param value: '''
+        raise NotImplementedError()
+
+    def setExportStylePool(self, value : bool) -> None:
+        '''Exporting style pool when converting to json struct.
         :param value: '''
         raise NotImplementedError()
 
@@ -22054,7 +22090,7 @@ class LoadOptions:
         raise NotImplementedError()
 
     def getLocale(self) -> Locale:
-        '''Gets the Locale used for workbook at the time the file was loaded.'''
+        '''Gets the regional settings used for the Workbook that will be loaded.'''
         raise NotImplementedError()
 
     def setMemorySetting(self, value : int) -> None:
@@ -22082,7 +22118,7 @@ class LoadOptions:
         raise NotImplementedError()
 
     def setLocale(self, value : Locale) -> None:
-        '''Sets the Locale used for workbook at the time the file was loaded.
+        '''Sets the regional settings used for the Workbook that will be loaded.
         :param value: '''
         raise NotImplementedError()
 
@@ -22139,7 +22175,7 @@ class LoadOptions:
         raise NotImplementedError()
 
     def getRegion(self) -> int:
-        '''Gets the system regional settings based on CountryCode at the time the file was loaded.
+        '''Gets the regional settings used for the Workbook that will be loaded.
         See :class:`CountryCode`'''
         raise NotImplementedError()
 
@@ -22190,7 +22226,7 @@ class LoadOptions:
         raise NotImplementedError()
 
     def setRegion(self, value : int) -> None:
-        '''Sets the system regional settings based on CountryCode at the time the file was loaded.
+        '''Sets the regional settings used for the Workbook that will be loaded.
         See :class:`CountryCode`
         :param value: '''
         raise NotImplementedError()
@@ -23015,15 +23051,13 @@ class MemoryFontSource:
 
 
 class MemorySetting:
-    '''Memory usage options.'''
+    '''Memory usage modes for cells data model.'''
 
     NORMAL : MemorySetting
-    '''Default option for cells model.'''
+    '''Default mode for cells model.'''
 
     MEMORY_PREFERENCE : MemorySetting
-    '''Memory performance preferrable.
-    With this option the data will be held in compact format so for common scenarios it may give lower memory cost.
-    However, this option also may degrade R/W performance a bit in some special cases.'''
+    '''Memory performance preferrable.'''
 
 
 class MergedCellsShrinkType:
@@ -25785,7 +25819,7 @@ class PaginatedSaveOptions:
         raise NotImplementedError()
 
     def getGridlineColor(self) -> Color:
-        '''Gets gridline colr.'''
+        '''Gets gridline color.'''
         raise NotImplementedError()
 
     def setCheckFontCompatibility(self, value : bool) -> None:
@@ -25912,7 +25946,7 @@ class PaginatedSaveOptions:
         raise NotImplementedError()
 
     def setGridlineColor(self, value : Color) -> None:
-        '''Sets gridline colr.
+        '''Sets gridline color.
         :param value: '''
         raise NotImplementedError()
 
@@ -25949,6 +25983,10 @@ class PaginatedSaveOptions:
         will still take effect.'''
         raise NotImplementedError()
 
+    def getCustomRenderSettings(self) -> CustomRenderSettings:
+        '''Gets custom settings during rendering.'''
+        raise NotImplementedError()
+
     def setFontSubstitutionCharGranularity(self, value : bool) -> None:
         '''Indicates whether to only substitute the font of character when the cell font is not compatibility for it.
         :param value: '''
@@ -25965,6 +26003,11 @@ class PaginatedSaveOptions:
     def getIgnoreError(self) -> bool:
         '''Indicates if you need to hide the error while rendering.
         The error can be error in shape, image, chart rendering, etc.'''
+        raise NotImplementedError()
+
+    def setCustomRenderSettings(self, value : CustomRenderSettings) -> None:
+        '''Sets custom settings during rendering.
+        :param value: '''
         raise NotImplementedError()
 
     def setOutputBlankPageWhenNothingToPrint(self, value : bool) -> None:
@@ -26598,10 +26641,19 @@ class PatternFill:
 class PclSaveOptions:
     '''Represents the options for saving Pcl file.'''
 
+    def getEmbedFont(self) -> bool:
+        '''Indicates whether to embed font into the output Pcl file.'''
+        raise NotImplementedError()
+
     def addPrinterFont(self, fontFullName : str, fontPclName : str) -> None:
         '''Adds information about font that is already added to the printer by manufacturer.
         :param fontFullName: Full name of the font (e.g. "Times New Roman Bold Italic") used in the source file.
         :param fontPclName: Name of the font that will be used in the output Pcl document.'''
+        raise NotImplementedError()
+
+    def setEmbedFont(self, value : bool) -> None:
+        '''Indicates whether to embed font into the output Pcl file.
+        :param value: '''
         raise NotImplementedError()
 
 
@@ -29045,6 +29097,10 @@ class PivotGlobalizationSettings:
 
     def getTextOfHours(self) -> str:
         '''Gets the local text of "Hours".'''
+        raise NotImplementedError()
+
+    def getTextOfAllPeriods(self) -> str:
+        '''Gets the local text of "All Periods"'''
         raise NotImplementedError()
 
     def getShortTextOf12Months(self) -> list[str]:
@@ -34065,7 +34121,7 @@ class SaveOptions:
         raise NotImplementedError()
 
     def getCachedFileFolder(self) -> str:
-        '''The cached file folder is used to store some large data.'''
+        '''The folder for temporary files that may be used as data cache.'''
         raise NotImplementedError()
 
     def getWarningCallback(self) -> IWarningCallback:
@@ -34095,7 +34151,7 @@ class SaveOptions:
         raise NotImplementedError()
 
     def setCachedFileFolder(self, value : str) -> None:
-        '''The cached file folder is used to store some large data.
+        '''The folder for temporary files that may be used as data cache.
         :param value: '''
         raise NotImplementedError()
 
@@ -37765,7 +37821,7 @@ class Slicer:
         raise NotImplementedError()
 
     def getWidthPixel(self) -> int:
-        '''Returns or sets the width of the specified slicer, in pixels.'''
+        ''':deprecated: Use Shape.Width property instead.'''
         raise NotImplementedError()
 
     def getRowHeight(self) -> int:
@@ -37786,7 +37842,7 @@ class Slicer:
         raise NotImplementedError()
 
     def getTopPixel(self) -> int:
-        '''Returns or sets the vertical offset of slicer shape from its top row, in pixels.'''
+        ''':deprecated: Use Shape.Top property instead.'''
         raise NotImplementedError()
 
     def setLocked(self, value : bool) -> None:
@@ -37800,7 +37856,11 @@ class Slicer:
         raise NotImplementedError()
 
     def getLeftPixel(self) -> int:
-        '''Returns or sets the horizontal offset of slicer shape from its left column, in pixels.'''
+        ''':deprecated: Use Shape.Left property instead.'''
+        raise NotImplementedError()
+
+    def getShape(self) -> SlicerShape:
+        '''Returns the Shape object associated with the specified slicer. Read-only.'''
         raise NotImplementedError()
 
     def getLockedPosition(self) -> bool:
@@ -37839,8 +37899,7 @@ class Slicer:
         raise NotImplementedError()
 
     def setWidthPixel(self, value : int) -> None:
-        '''Returns or sets the width of the specified slicer, in pixels.
-        :param value: '''
+        ''':deprecated: Use Shape.Width property instead.'''
         raise NotImplementedError()
 
     def setTitle(self, value : str) -> None:
@@ -37849,8 +37908,7 @@ class Slicer:
         raise NotImplementedError()
 
     def setTopPixel(self, value : int) -> None:
-        '''Returns or sets the vertical offset of slicer shape from its top row, in pixels.
-        :param value: '''
+        ''':deprecated: Use Shape.Top property instead.'''
         raise NotImplementedError()
 
     def getTitle(self) -> str:
@@ -37878,7 +37936,7 @@ class Slicer:
         raise NotImplementedError()
 
     def getHeight(self) -> int:
-        '''Returns or sets the height of the specified slicer, in points.'''
+        ''':deprecated: Use Shape.HeightPt property instead.'''
         raise NotImplementedError()
 
     def setCaption(self, value : str) -> None:
@@ -37896,7 +37954,7 @@ class Slicer:
         raise NotImplementedError()
 
     def setColumnWidthPixel(self, value : int) -> None:
-        '''Sets the width in unit of聽pixels for聽each column of聽the slicer.聽
+        '''Sets the width of聽each column in聽the slicer, in unit of聽pixels.聽
         :param value: '''
         raise NotImplementedError()
 
@@ -37910,17 +37968,15 @@ class Slicer:
         raise NotImplementedError()
 
     def getColumnWidthPixel(self) -> int:
-        '''Gets the width in unit of聽pixels for聽each column of聽the slicer.聽'''
+        '''Gets the width of聽each column in聽the slicer, in unit of聽pixels.聽'''
         raise NotImplementedError()
 
     def setHeightPixel(self, value : int) -> None:
-        '''Returns or sets the height of the specified slicer, in pixels.
-        :param value: '''
+        ''':deprecated: Use Shape.Height property instead.'''
         raise NotImplementedError()
 
     def setHeight(self, value : int) -> None:
-        '''Returns or sets the height of the specified slicer, in points.
-        :param value: '''
+        ''':deprecated: Use Shape.HeightPt property instead.'''
         raise NotImplementedError()
 
     def getName(self) -> str:
@@ -37928,8 +37984,7 @@ class Slicer:
         raise NotImplementedError()
 
     def setLeftPixel(self, value : int) -> None:
-        '''Returns or sets the horizontal offset of slicer shape from its left column, in pixels.
-        :param value: '''
+        ''':deprecated: Use Shape.Left property instead.'''
         raise NotImplementedError()
 
     def setLockedPosition(self, value : bool) -> None:
@@ -37960,8 +38015,7 @@ class Slicer:
         raise NotImplementedError()
 
     def setWidth(self, value : int) -> None:
-        '''Returns or sets the width of the specified slicer, in points.
-        :param value: '''
+        ''':deprecated: Use Shape.WidthPt property instead.'''
         raise NotImplementedError()
 
     def setRowHeightPixel(self, value : int) -> None:
@@ -37970,7 +38024,7 @@ class Slicer:
         raise NotImplementedError()
 
     def getWidth(self) -> int:
-        '''Returns or sets the width of the specified slicer, in points.'''
+        ''':deprecated: Use Shape.WidthPt property instead.'''
         raise NotImplementedError()
 
     def refresh(self) -> None:
@@ -37978,7 +38032,7 @@ class Slicer:
         raise NotImplementedError()
 
     def getHeightPixel(self) -> int:
-        '''Returns or sets the height of the specified slicer, in pixels.'''
+        ''':deprecated: Use Shape.Height property instead.'''
         raise NotImplementedError()
 
     def removePivotConnection(self, pivot : PivotTable) -> None:
@@ -38199,6 +38253,10 @@ class SlicerCollection:
         :param column: Column index of the cell in the upper-left corner of the Slicer range.
         :returns: The new add Slicer index'''
         raise NotImplementedError()
+
+
+class SlicerShape:
+    '''Represents the slicer shape.'''
 
 
 class SlicerStyleType:
@@ -43041,11 +43099,15 @@ class Timeline:
         raise NotImplementedError()
 
     def getTopPixel(self) -> int:
-        '''Returns or sets the vertical offset of timeline shape from its top row, in pixels.'''
+        ''':deprecated: Use Shape.Top property instead.'''
+        raise NotImplementedError()
+
+    def getShape(self) -> TimelineShape:
+        '''Returns the :class:`TimelineShape` object associated with this Timeline. Read-only.'''
         raise NotImplementedError()
 
     def getHeightPixel(self) -> int:
-        '''Returns or sets the height of the specified timeline, in pixels.'''
+        ''':deprecated: Use Shape.Height property instead.'''
         raise NotImplementedError()
 
     def setName(self, value : str) -> None:
@@ -43054,8 +43116,7 @@ class Timeline:
         raise NotImplementedError()
 
     def setLeftPixel(self, value : int) -> None:
-        '''Returns or sets the horizontal offset of timeline shape from its left column, in pixels.
-        :param value: '''
+        ''':deprecated: Use Shape.Left property instead.'''
         raise NotImplementedError()
 
     def setCaption(self, value : str) -> None:
@@ -43068,26 +43129,23 @@ class Timeline:
         raise NotImplementedError()
 
     def getWidthPixel(self) -> int:
-        '''Returns or sets the width of the specified timeline, in pixels.'''
+        ''':deprecated: Use Shape.Width property instead.'''
         raise NotImplementedError()
 
     def setHeightPixel(self, value : int) -> None:
-        '''Returns or sets the height of the specified timeline, in pixels.
-        :param value: '''
+        ''':deprecated: Use Shape.Height property instead.'''
         raise NotImplementedError()
 
     def setWidthPixel(self, value : int) -> None:
-        '''Returns or sets the width of the specified timeline, in pixels.
-        :param value: '''
+        ''':deprecated: Use Shape.Width property instead.'''
         raise NotImplementedError()
 
     def getLeftPixel(self) -> int:
-        '''Returns or sets the horizontal offset of timeline shape from its left column, in pixels.'''
+        ''':deprecated: Use Shape.Left property instead.'''
         raise NotImplementedError()
 
     def setTopPixel(self, value : int) -> None:
-        '''Returns or sets the vertical offset of timeline shape from its top row, in pixels.
-        :param value: '''
+        ''':deprecated: Use Shape.Top property instead.'''
         raise NotImplementedError()
 
 
@@ -43163,6 +43221,10 @@ class TimelineCollection:
         :param baseField: The PivotField in PivotTable.BaseFields
         :returns: The new add Timeline index'''
         raise NotImplementedError()
+
+
+class TimelineShape:
+    '''Represents the Timeline msodrawing object.'''
 
 
 class TimePeriodType:
@@ -45779,6 +45841,11 @@ class Workbook:
         '''Sets the file format.
         See :class:`FileFormatType`
         :param value: '''
+        raise NotImplementedError()
+
+    def mergeNamedStyles(self, source : Workbook) -> None:
+        '''Merges named styles from the other Excel file.
+        :param source: The other file'''
         raise NotImplementedError()
 
     def setThemeColor(self, type : int, color : Color) -> None:

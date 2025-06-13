@@ -222,7 +222,7 @@ def create_offline_experiment(
     )
     if experiment_config.name is not None:
         offline_experiment.set_name(experiment_config.name)
-    if experiment_config.tags is not None:
+    if experiment_config.tags is not None and len(experiment_config.tags) > 0:
         offline_experiment.add_tags(experiment_config.tags)
 
     return offline_experiment
@@ -301,7 +301,7 @@ def _create_online_experiment(
 
     if experiment_config.name is not None:
         experiment.set_name(experiment_config.name)
-    if experiment_config.tags is not None and experiment_config.tags != []:
+    if experiment_config.tags is not None and len(experiment_config.tags) > 0:
         experiment.add_tags(experiment_config.tags)
 
     return experiment

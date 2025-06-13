@@ -54,12 +54,18 @@ __all__ = (
     "CancelBatchJobExecutionRequestTypeDef",
     "CreateApplicationRequestTypeDef",
     "CreateApplicationResponseTypeDef",
+    "CreateDataSetExportTaskRequestTypeDef",
+    "CreateDataSetExportTaskResponseTypeDef",
     "CreateDataSetImportTaskRequestTypeDef",
     "CreateDataSetImportTaskResponseTypeDef",
     "CreateDeploymentRequestTypeDef",
     "CreateDeploymentResponseTypeDef",
     "CreateEnvironmentRequestTypeDef",
     "CreateEnvironmentResponseTypeDef",
+    "DataSetExportConfigTypeDef",
+    "DataSetExportItemTypeDef",
+    "DataSetExportSummaryTypeDef",
+    "DataSetExportTaskTypeDef",
     "DataSetImportConfigTypeDef",
     "DataSetImportItemTypeDef",
     "DataSetImportSummaryTypeDef",
@@ -91,6 +97,8 @@ __all__ = (
     "GetBatchJobExecutionResponseTypeDef",
     "GetDataSetDetailsRequestTypeDef",
     "GetDataSetDetailsResponseTypeDef",
+    "GetDataSetExportTaskRequestTypeDef",
+    "GetDataSetExportTaskResponseTypeDef",
     "GetDataSetImportTaskRequestTypeDef",
     "GetDataSetImportTaskResponseTypeDef",
     "GetDeploymentRequestTypeDef",
@@ -116,6 +124,9 @@ __all__ = (
     "ListBatchJobExecutionsResponseTypeDef",
     "ListBatchJobRestartPointsRequestTypeDef",
     "ListBatchJobRestartPointsResponseTypeDef",
+    "ListDataSetExportHistoryRequestPaginateTypeDef",
+    "ListDataSetExportHistoryRequestTypeDef",
+    "ListDataSetExportHistoryResponseTypeDef",
     "ListDataSetImportHistoryRequestPaginateTypeDef",
     "ListDataSetImportHistoryRequestTypeDef",
     "ListDataSetImportHistoryResponseTypeDef",
@@ -232,6 +243,13 @@ class HighAvailabilityConfigTypeDef(TypedDict):
 
 class ExternalLocationTypeDef(TypedDict):
     s3Location: NotRequired[str]
+
+class DataSetExportSummaryTypeDef(TypedDict):
+    failed: int
+    inProgress: int
+    pending: int
+    succeeded: int
+    total: int
 
 class DataSetImportSummaryTypeDef(TypedDict):
     failed: int
@@ -363,12 +381,18 @@ class GetBatchJobExecutionRequestTypeDef(TypedDict):
 class JobStepRestartMarkerTypeDef(TypedDict):
     fromStep: str
     fromProcStep: NotRequired[str]
+    skip: NotRequired[bool]
+    stepCheckpoint: NotRequired[int]
     toProcStep: NotRequired[str]
     toStep: NotRequired[str]
 
 class GetDataSetDetailsRequestTypeDef(TypedDict):
     applicationId: str
     dataSetName: str
+
+class GetDataSetExportTaskRequestTypeDef(TypedDict):
+    applicationId: str
+    taskId: str
 
 class GetDataSetImportTaskRequestTypeDef(TypedDict):
     applicationId: str
@@ -388,6 +412,9 @@ class JobIdentifierTypeDef(TypedDict):
 class JobStepTypeDef(TypedDict):
     procStepName: NotRequired[str]
     procStepNumber: NotRequired[int]
+    stepCheckpoint: NotRequired[int]
+    stepCheckpointStatus: NotRequired[str]
+    stepCheckpointTime: NotRequired[datetime]
     stepCondCode: NotRequired[str]
     stepName: NotRequired[str]
     stepNumber: NotRequired[int]
@@ -421,6 +448,11 @@ class ListBatchJobRestartPointsRequestTypeDef(TypedDict):
     applicationId: str
     executionId: str
     authSecretsManagerArn: NotRequired[str]
+
+class ListDataSetExportHistoryRequestTypeDef(TypedDict):
+    applicationId: str
+    maxResults: NotRequired[int]
+    nextToken: NotRequired[str]
 
 class ListDataSetImportHistoryRequestTypeDef(TypedDict):
     applicationId: str
@@ -512,6 +544,10 @@ class CreateApplicationResponseTypeDef(TypedDict):
     applicationVersion: int
     ResponseMetadata: ResponseMetadataTypeDef
 
+class CreateDataSetExportTaskResponseTypeDef(TypedDict):
+    taskId: str
+    ResponseMetadata: ResponseMetadataTypeDef
+
 class CreateDataSetImportTaskResponseTypeDef(TypedDict):
     taskId: str
     ResponseMetadata: ResponseMetadataTypeDef
@@ -572,6 +608,24 @@ class UpdateApplicationResponseTypeDef(TypedDict):
 
 class UpdateEnvironmentResponseTypeDef(TypedDict):
     environmentId: str
+    ResponseMetadata: ResponseMetadataTypeDef
+
+class DataSetExportItemTypeDef(TypedDict):
+    datasetName: str
+    externalLocation: ExternalLocationTypeDef
+
+class DataSetExportTaskTypeDef(TypedDict):
+    status: DataSetTaskLifecycleType
+    summary: DataSetExportSummaryTypeDef
+    taskId: str
+    statusReason: NotRequired[str]
+
+class GetDataSetExportTaskResponseTypeDef(TypedDict):
+    kmsKeyArn: str
+    status: DataSetTaskLifecycleType
+    statusReason: str
+    summary: DataSetExportSummaryTypeDef
+    taskId: str
     ResponseMetadata: ResponseMetadataTypeDef
 
 class DataSetImportTaskTypeDef(TypedDict):
@@ -660,6 +714,10 @@ class ListBatchJobDefinitionsRequestPaginateTypeDef(TypedDict):
     prefix: NotRequired[str]
     PaginationConfig: NotRequired[PaginatorConfigTypeDef]
 
+class ListDataSetExportHistoryRequestPaginateTypeDef(TypedDict):
+    applicationId: str
+    PaginationConfig: NotRequired[PaginatorConfigTypeDef]
+
 class ListDataSetImportHistoryRequestPaginateTypeDef(TypedDict):
     applicationId: str
     PaginationConfig: NotRequired[PaginatorConfigTypeDef]
@@ -730,6 +788,15 @@ class ListBatchJobDefinitionsResponseTypeDef(TypedDict):
     ResponseMetadata: ResponseMetadataTypeDef
     nextToken: NotRequired[str]
 
+class DataSetExportConfigTypeDef(TypedDict):
+    dataSets: NotRequired[Sequence[DataSetExportItemTypeDef]]
+    s3Location: NotRequired[str]
+
+class ListDataSetExportHistoryResponseTypeDef(TypedDict):
+    dataSetExportTasks: List[DataSetExportTaskTypeDef]
+    ResponseMetadata: ResponseMetadataTypeDef
+    nextToken: NotRequired[str]
+
 class ListDataSetImportHistoryResponseTypeDef(TypedDict):
     dataSetImportTasks: List[DataSetImportTaskTypeDef]
     ResponseMetadata: ResponseMetadataTypeDef
@@ -795,6 +862,12 @@ class DatasetDetailOrgAttributesTypeDef(TypedDict):
     po: NotRequired[PoDetailAttributesTypeDef]
     ps: NotRequired[PsDetailAttributesTypeDef]
     vsam: NotRequired[VsamDetailAttributesTypeDef]
+
+class CreateDataSetExportTaskRequestTypeDef(TypedDict):
+    applicationId: str
+    exportConfig: DataSetExportConfigTypeDef
+    clientToken: NotRequired[str]
+    kmsKeyId: NotRequired[str]
 
 class BatchJobExecutionSummaryTypeDef(TypedDict):
     applicationId: str

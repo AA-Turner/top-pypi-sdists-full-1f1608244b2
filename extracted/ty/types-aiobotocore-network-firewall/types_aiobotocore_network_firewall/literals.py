@@ -28,6 +28,8 @@ __all__ = (
     "EnabledAnalysisTypeType",
     "EncryptionTypeType",
     "FirewallStatusValueType",
+    "FlowOperationStatusType",
+    "FlowOperationTypeType",
     "GeneratedRulesTypeType",
     "GetAnalysisReportResultsPaginatorName",
     "IPAddressTypeType",
@@ -35,9 +37,12 @@ __all__ = (
     "ListAnalysisReportsPaginatorName",
     "ListFirewallPoliciesPaginatorName",
     "ListFirewallsPaginatorName",
+    "ListFlowOperationResultsPaginatorName",
+    "ListFlowOperationsPaginatorName",
     "ListRuleGroupsPaginatorName",
     "ListTLSInspectionConfigurationsPaginatorName",
     "ListTagsForResourcePaginatorName",
+    "ListVpcEndpointAssociationsPaginatorName",
     "LogDestinationTypeType",
     "LogTypeType",
     "NetworkFirewallServiceName",
@@ -67,6 +72,8 @@ ConfigurationSyncStateType = Literal["CAPACITY_CONSTRAINED", "IN_SYNC", "PENDING
 EnabledAnalysisTypeType = Literal["HTTP_HOST", "TLS_SNI"]
 EncryptionTypeType = Literal["AWS_OWNED_KMS_KEY", "CUSTOMER_KMS"]
 FirewallStatusValueType = Literal["DELETING", "PROVISIONING", "READY"]
+FlowOperationStatusType = Literal["COMPLETED", "COMPLETED_WITH_ERRORS", "FAILED", "IN_PROGRESS"]
+FlowOperationTypeType = Literal["FLOW_CAPTURE", "FLOW_FLUSH"]
 GeneratedRulesTypeType = Literal["ALLOWLIST", "DENYLIST"]
 GetAnalysisReportResultsPaginatorName = Literal["get_analysis_report_results"]
 IPAddressTypeType = Literal["DUALSTACK", "IPV4", "IPV6"]
@@ -76,9 +83,12 @@ IdentifiedTypeType = Literal[
 ListAnalysisReportsPaginatorName = Literal["list_analysis_reports"]
 ListFirewallPoliciesPaginatorName = Literal["list_firewall_policies"]
 ListFirewallsPaginatorName = Literal["list_firewalls"]
+ListFlowOperationResultsPaginatorName = Literal["list_flow_operation_results"]
+ListFlowOperationsPaginatorName = Literal["list_flow_operations"]
 ListRuleGroupsPaginatorName = Literal["list_rule_groups"]
 ListTLSInspectionConfigurationsPaginatorName = Literal["list_tls_inspection_configurations"]
 ListTagsForResourcePaginatorName = Literal["list_tags_for_resource"]
+ListVpcEndpointAssociationsPaginatorName = Literal["list_vpc_endpoint_associations"]
 LogDestinationTypeType = Literal["CloudWatchLogs", "KinesisDataFirehose", "S3"]
 LogTypeType = Literal["ALERT", "FLOW", "TLS"]
 OverrideActionType = Literal["DROP_TO_ALERT"]
@@ -272,6 +282,7 @@ ServiceName = Literal[
     "freetier",
     "fsx",
     "gamelift",
+    "gameliftstreams",
     "geo-maps",
     "geo-places",
     "geo-routes",
@@ -297,6 +308,7 @@ ServiceName = Literal[
     "iot",
     "iot-data",
     "iot-jobs-data",
+    "iot-managed-integrations",
     "iotanalytics",
     "iotdeviceadvisor",
     "iotevents",
@@ -411,7 +423,6 @@ ServiceName = Literal[
     "pipes",
     "polly",
     "pricing",
-    "privatenetworks",
     "proton",
     "qapps",
     "qbusiness",
@@ -472,7 +483,6 @@ ServiceName = Literal[
     "signer",
     "simspaceweaver",
     "sms",
-    "sms-voice",
     "snow-device-management",
     "snowball",
     "sns",
@@ -480,6 +490,7 @@ ServiceName = Literal[
     "sqs",
     "ssm",
     "ssm-contacts",
+    "ssm-guiconnect",
     "ssm-incidents",
     "ssm-quicksetup",
     "ssm-sap",
@@ -537,9 +548,12 @@ PaginatorName = Literal[
     "list_analysis_reports",
     "list_firewall_policies",
     "list_firewalls",
+    "list_flow_operation_results",
+    "list_flow_operations",
     "list_rule_groups",
     "list_tags_for_resource",
     "list_tls_inspection_configurations",
+    "list_vpc_endpoint_associations",
 ]
 RegionName = Literal[
     "af-south-1",
@@ -554,6 +568,7 @@ RegionName = Literal[
     "ap-southeast-3",
     "ap-southeast-4",
     "ap-southeast-5",
+    "ap-southeast-7",
     "ca-central-1",
     "ca-west-1",
     "eu-central-1",
@@ -567,6 +582,7 @@ RegionName = Literal[
     "il-central-1",
     "me-central-1",
     "me-south-1",
+    "mx-central-1",
     "sa-east-1",
     "us-east-1",
     "us-east-2",

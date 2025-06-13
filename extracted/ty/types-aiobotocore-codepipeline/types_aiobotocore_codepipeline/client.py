@@ -31,6 +31,7 @@ from botocore.exceptions import ClientError as BotocoreClientError
 from .paginator import (
     ListActionExecutionsPaginator,
     ListActionTypesPaginator,
+    ListDeployActionExecutionTargetsPaginator,
     ListPipelineExecutionsPaginator,
     ListPipelinesPaginator,
     ListRuleExecutionsPaginator,
@@ -69,6 +70,8 @@ from .type_defs import (
     ListActionExecutionsOutputTypeDef,
     ListActionTypesInputTypeDef,
     ListActionTypesOutputTypeDef,
+    ListDeployActionExecutionTargetsInputTypeDef,
+    ListDeployActionExecutionTargetsOutputTypeDef,
     ListPipelineExecutionsInputTypeDef,
     ListPipelineExecutionsOutputTypeDef,
     ListPipelinesInputTypeDef,
@@ -128,6 +131,7 @@ __all__ = ("CodePipelineClient",)
 
 
 class Exceptions(BaseClientExceptions):
+    ActionExecutionNotFoundException: Type[BotocoreClientError]
     ActionNotFoundException: Type[BotocoreClientError]
     ActionTypeAlreadyExistsException: Type[BotocoreClientError]
     ActionTypeNotFoundException: Type[BotocoreClientError]
@@ -391,6 +395,16 @@ class CodePipelineClient(AioBaseClient):
 
         [Show boto3 documentation](https://boto3.amazonaws.com/v1/documentation/api/latest/reference/services/codepipeline/client/list_action_types.html)
         [Show types-aiobotocore documentation](https://youtype.github.io/types_aiobotocore_docs/types_aiobotocore_codepipeline/client/#list_action_types)
+        """
+
+    async def list_deploy_action_execution_targets(
+        self, **kwargs: Unpack[ListDeployActionExecutionTargetsInputTypeDef]
+    ) -> ListDeployActionExecutionTargetsOutputTypeDef:
+        """
+        Lists the targets for the deploy action.
+
+        [Show boto3 documentation](https://boto3.amazonaws.com/v1/documentation/api/latest/reference/services/codepipeline/client/list_deploy_action_execution_targets.html)
+        [Show types-aiobotocore documentation](https://youtype.github.io/types_aiobotocore_docs/types_aiobotocore_codepipeline/client/#list_deploy_action_execution_targets)
         """
 
     async def list_pipeline_executions(
@@ -661,6 +675,17 @@ class CodePipelineClient(AioBaseClient):
     def get_paginator(  # type: ignore[override]
         self, operation_name: Literal["list_action_types"]
     ) -> ListActionTypesPaginator:
+        """
+        Create a paginator for an operation.
+
+        [Show boto3 documentation](https://boto3.amazonaws.com/v1/documentation/api/latest/reference/services/codepipeline/client/get_paginator.html)
+        [Show types-aiobotocore documentation](https://youtype.github.io/types_aiobotocore_docs/types_aiobotocore_codepipeline/client/#get_paginator)
+        """
+
+    @overload  # type: ignore[override]
+    def get_paginator(  # type: ignore[override]
+        self, operation_name: Literal["list_deploy_action_execution_targets"]
+    ) -> ListDeployActionExecutionTargetsPaginator:
         """
         Create a paginator for an operation.
 

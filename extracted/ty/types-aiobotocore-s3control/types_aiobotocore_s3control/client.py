@@ -28,7 +28,11 @@ from botocore.client import ClientMeta
 from botocore.errorfactory import BaseClientExceptions
 from botocore.exceptions import ClientError as BotocoreClientError
 
-from .paginator import ListAccessPointsForObjectLambdaPaginator, ListCallerAccessGrantsPaginator
+from .paginator import (
+    ListAccessPointsForDirectoryBucketsPaginator,
+    ListAccessPointsForObjectLambdaPaginator,
+    ListCallerAccessGrantsPaginator,
+)
 from .type_defs import (
     AssociateAccessGrantsIdentityCenterRequestTypeDef,
     CreateAccessGrantRequestTypeDef,
@@ -56,6 +60,7 @@ from .type_defs import (
     DeleteAccessPointPolicyForObjectLambdaRequestTypeDef,
     DeleteAccessPointPolicyRequestTypeDef,
     DeleteAccessPointRequestTypeDef,
+    DeleteAccessPointScopeRequestTypeDef,
     DeleteBucketLifecycleConfigurationRequestTypeDef,
     DeleteBucketPolicyRequestTypeDef,
     DeleteBucketReplicationRequestTypeDef,
@@ -98,6 +103,8 @@ from .type_defs import (
     GetAccessPointPolicyStatusResultTypeDef,
     GetAccessPointRequestTypeDef,
     GetAccessPointResultTypeDef,
+    GetAccessPointScopeRequestTypeDef,
+    GetAccessPointScopeResultTypeDef,
     GetBucketLifecycleConfigurationRequestTypeDef,
     GetBucketLifecycleConfigurationResultTypeDef,
     GetBucketPolicyRequestTypeDef,
@@ -136,6 +143,8 @@ from .type_defs import (
     ListAccessGrantsLocationsResultTypeDef,
     ListAccessGrantsRequestTypeDef,
     ListAccessGrantsResultTypeDef,
+    ListAccessPointsForDirectoryBucketsRequestTypeDef,
+    ListAccessPointsForDirectoryBucketsResultTypeDef,
     ListAccessPointsForObjectLambdaRequestTypeDef,
     ListAccessPointsForObjectLambdaResultTypeDef,
     ListAccessPointsRequestTypeDef,
@@ -159,6 +168,7 @@ from .type_defs import (
     PutAccessPointConfigurationForObjectLambdaRequestTypeDef,
     PutAccessPointPolicyForObjectLambdaRequestTypeDef,
     PutAccessPointPolicyRequestTypeDef,
+    PutAccessPointScopeRequestTypeDef,
     PutBucketLifecycleConfigurationRequestTypeDef,
     PutBucketPolicyRequestTypeDef,
     PutBucketReplicationRequestTypeDef,
@@ -295,7 +305,7 @@ class S3ControlClient(AioBaseClient):
         self, **kwargs: Unpack[CreateAccessPointRequestTypeDef]
     ) -> CreateAccessPointResultTypeDef:
         """
-        This operation is not supported by directory buckets.
+        Creates an access point and associates it to a specified bucket.
 
         [Show boto3 documentation](https://boto3.amazonaws.com/v1/documentation/api/latest/reference/services/s3control/client/create_access_point.html)
         [Show types-aiobotocore documentation](https://youtype.github.io/types_aiobotocore_docs/types_aiobotocore_s3control/client/#create_access_point)
@@ -394,7 +404,7 @@ class S3ControlClient(AioBaseClient):
         self, **kwargs: Unpack[DeleteAccessPointRequestTypeDef]
     ) -> EmptyResponseMetadataTypeDef:
         """
-        This operation is not supported by directory buckets.
+        Deletes the specified access point.
 
         [Show boto3 documentation](https://boto3.amazonaws.com/v1/documentation/api/latest/reference/services/s3control/client/delete_access_point.html)
         [Show types-aiobotocore documentation](https://youtype.github.io/types_aiobotocore_docs/types_aiobotocore_s3control/client/#delete_access_point)
@@ -414,7 +424,7 @@ class S3ControlClient(AioBaseClient):
         self, **kwargs: Unpack[DeleteAccessPointPolicyRequestTypeDef]
     ) -> EmptyResponseMetadataTypeDef:
         """
-        This operation is not supported by directory buckets.
+        Deletes the access point policy for the specified access point.
 
         [Show boto3 documentation](https://boto3.amazonaws.com/v1/documentation/api/latest/reference/services/s3control/client/delete_access_point_policy.html)
         [Show types-aiobotocore documentation](https://youtype.github.io/types_aiobotocore_docs/types_aiobotocore_s3control/client/#delete_access_point_policy)
@@ -428,6 +438,16 @@ class S3ControlClient(AioBaseClient):
 
         [Show boto3 documentation](https://boto3.amazonaws.com/v1/documentation/api/latest/reference/services/s3control/client/delete_access_point_policy_for_object_lambda.html)
         [Show types-aiobotocore documentation](https://youtype.github.io/types_aiobotocore_docs/types_aiobotocore_s3control/client/#delete_access_point_policy_for_object_lambda)
+        """
+
+    async def delete_access_point_scope(
+        self, **kwargs: Unpack[DeleteAccessPointScopeRequestTypeDef]
+    ) -> EmptyResponseMetadataTypeDef:
+        """
+        Deletes an existing access point scope for a directory bucket.
+
+        [Show boto3 documentation](https://boto3.amazonaws.com/v1/documentation/api/latest/reference/services/s3control/client/delete_access_point_scope.html)
+        [Show types-aiobotocore documentation](https://youtype.github.io/types_aiobotocore_docs/types_aiobotocore_s3control/client/#delete_access_point_scope)
         """
 
     async def delete_bucket(
@@ -627,7 +647,7 @@ class S3ControlClient(AioBaseClient):
         self, **kwargs: Unpack[GetAccessPointRequestTypeDef]
     ) -> GetAccessPointResultTypeDef:
         """
-        This operation is not supported by directory buckets.
+        Returns configuration information about the specified access point.
 
         [Show boto3 documentation](https://boto3.amazonaws.com/v1/documentation/api/latest/reference/services/s3control/client/get_access_point.html)
         [Show types-aiobotocore documentation](https://youtype.github.io/types_aiobotocore_docs/types_aiobotocore_s3control/client/#get_access_point)
@@ -657,7 +677,7 @@ class S3ControlClient(AioBaseClient):
         self, **kwargs: Unpack[GetAccessPointPolicyRequestTypeDef]
     ) -> GetAccessPointPolicyResultTypeDef:
         """
-        This operation is not supported by directory buckets.
+        Returns the access point policy associated with the specified access point.
 
         [Show boto3 documentation](https://boto3.amazonaws.com/v1/documentation/api/latest/reference/services/s3control/client/get_access_point_policy.html)
         [Show types-aiobotocore documentation](https://youtype.github.io/types_aiobotocore_docs/types_aiobotocore_s3control/client/#get_access_point_policy)
@@ -691,6 +711,16 @@ class S3ControlClient(AioBaseClient):
 
         [Show boto3 documentation](https://boto3.amazonaws.com/v1/documentation/api/latest/reference/services/s3control/client/get_access_point_policy_status_for_object_lambda.html)
         [Show types-aiobotocore documentation](https://youtype.github.io/types_aiobotocore_docs/types_aiobotocore_s3control/client/#get_access_point_policy_status_for_object_lambda)
+        """
+
+    async def get_access_point_scope(
+        self, **kwargs: Unpack[GetAccessPointScopeRequestTypeDef]
+    ) -> GetAccessPointScopeResultTypeDef:
+        """
+        Returns the access point scope for a directory bucket.
+
+        [Show boto3 documentation](https://boto3.amazonaws.com/v1/documentation/api/latest/reference/services/s3control/client/get_access_point_scope.html)
+        [Show types-aiobotocore documentation](https://youtype.github.io/types_aiobotocore_docs/types_aiobotocore_s3control/client/#get_access_point_scope)
         """
 
     async def get_bucket(self, **kwargs: Unpack[GetBucketRequestTypeDef]) -> GetBucketResultTypeDef:
@@ -892,6 +922,17 @@ class S3ControlClient(AioBaseClient):
         [Show types-aiobotocore documentation](https://youtype.github.io/types_aiobotocore_docs/types_aiobotocore_s3control/client/#list_access_points)
         """
 
+    async def list_access_points_for_directory_buckets(
+        self, **kwargs: Unpack[ListAccessPointsForDirectoryBucketsRequestTypeDef]
+    ) -> ListAccessPointsForDirectoryBucketsResultTypeDef:
+        """
+        Returns a list of the access points that are owned by the Amazon Web Services
+        account and that are associated with the specified directory bucket.
+
+        [Show boto3 documentation](https://boto3.amazonaws.com/v1/documentation/api/latest/reference/services/s3control/client/list_access_points_for_directory_buckets.html)
+        [Show types-aiobotocore documentation](https://youtype.github.io/types_aiobotocore_docs/types_aiobotocore_s3control/client/#list_access_points_for_directory_buckets)
+        """
+
     async def list_access_points_for_object_lambda(
         self, **kwargs: Unpack[ListAccessPointsForObjectLambdaRequestTypeDef]
     ) -> ListAccessPointsForObjectLambdaResultTypeDef:
@@ -997,7 +1038,7 @@ class S3ControlClient(AioBaseClient):
         self, **kwargs: Unpack[PutAccessPointPolicyRequestTypeDef]
     ) -> EmptyResponseMetadataTypeDef:
         """
-        This operation is not supported by directory buckets.
+        Associates an access policy with the specified access point.
 
         [Show boto3 documentation](https://boto3.amazonaws.com/v1/documentation/api/latest/reference/services/s3control/client/put_access_point_policy.html)
         [Show types-aiobotocore documentation](https://youtype.github.io/types_aiobotocore_docs/types_aiobotocore_s3control/client/#put_access_point_policy)
@@ -1011,6 +1052,16 @@ class S3ControlClient(AioBaseClient):
 
         [Show boto3 documentation](https://boto3.amazonaws.com/v1/documentation/api/latest/reference/services/s3control/client/put_access_point_policy_for_object_lambda.html)
         [Show types-aiobotocore documentation](https://youtype.github.io/types_aiobotocore_docs/types_aiobotocore_s3control/client/#put_access_point_policy_for_object_lambda)
+        """
+
+    async def put_access_point_scope(
+        self, **kwargs: Unpack[PutAccessPointScopeRequestTypeDef]
+    ) -> EmptyResponseMetadataTypeDef:
+        """
+        Creates or replaces the access point scope for a directory bucket.
+
+        [Show boto3 documentation](https://boto3.amazonaws.com/v1/documentation/api/latest/reference/services/s3control/client/put_access_point_scope.html)
+        [Show types-aiobotocore documentation](https://youtype.github.io/types_aiobotocore_docs/types_aiobotocore_s3control/client/#put_access_point_scope)
         """
 
     async def put_bucket_lifecycle_configuration(
@@ -1179,6 +1230,17 @@ class S3ControlClient(AioBaseClient):
 
         [Show boto3 documentation](https://boto3.amazonaws.com/v1/documentation/api/latest/reference/services/s3control/client/update_storage_lens_group.html)
         [Show types-aiobotocore documentation](https://youtype.github.io/types_aiobotocore_docs/types_aiobotocore_s3control/client/#update_storage_lens_group)
+        """
+
+    @overload  # type: ignore[override]
+    def get_paginator(  # type: ignore[override]
+        self, operation_name: Literal["list_access_points_for_directory_buckets"]
+    ) -> ListAccessPointsForDirectoryBucketsPaginator:
+        """
+        Create a paginator for an operation.
+
+        [Show boto3 documentation](https://boto3.amazonaws.com/v1/documentation/api/latest/reference/services/s3control/client/get_paginator.html)
+        [Show types-aiobotocore documentation](https://youtype.github.io/types_aiobotocore_docs/types_aiobotocore_s3control/client/#get_paginator)
         """
 
     @overload  # type: ignore[override]

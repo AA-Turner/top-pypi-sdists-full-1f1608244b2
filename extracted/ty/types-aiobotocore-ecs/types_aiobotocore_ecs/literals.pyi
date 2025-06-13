@@ -92,6 +92,7 @@ __all__ = (
     "SettingTypeType",
     "SortOrderType",
     "StabilityStatusType",
+    "StopServiceDeploymentStopTypeType",
     "TargetTypeType",
     "TaskDefinitionFamilyStatusType",
     "TaskDefinitionFieldType",
@@ -193,6 +194,7 @@ ServiceDeploymentStatusType = Literal[
     "PENDING",
     "ROLLBACK_FAILED",
     "ROLLBACK_IN_PROGRESS",
+    "ROLLBACK_REQUESTED",
     "ROLLBACK_SUCCESSFUL",
     "STOPPED",
     "STOP_REQUESTED",
@@ -205,6 +207,7 @@ SettingNameType = Literal[
     "awsvpcTrunking",
     "containerInsights",
     "containerInstanceLongArnFormat",
+    "defaultLogDriverMode",
     "fargateFIPSMode",
     "fargateTaskRetirementWaitPeriod",
     "guardDutyActivate",
@@ -215,6 +218,7 @@ SettingNameType = Literal[
 SettingTypeType = Literal["aws_managed", "user"]
 SortOrderType = Literal["ASC", "DESC"]
 StabilityStatusType = Literal["STABILIZING", "STEADY_STATE"]
+StopServiceDeploymentStopTypeType = Literal["ABORT", "ROLLBACK"]
 TargetTypeType = Literal["container-instance"]
 TaskDefinitionFamilyStatusType = Literal["ACTIVE", "ALL", "INACTIVE"]
 TaskDefinitionFieldType = Literal["TAGS"]
@@ -409,6 +413,7 @@ ServiceName = Literal[
     "freetier",
     "fsx",
     "gamelift",
+    "gameliftstreams",
     "geo-maps",
     "geo-places",
     "geo-routes",
@@ -434,6 +439,7 @@ ServiceName = Literal[
     "iot",
     "iot-data",
     "iot-jobs-data",
+    "iot-managed-integrations",
     "iotanalytics",
     "iotdeviceadvisor",
     "iotevents",
@@ -548,7 +554,6 @@ ServiceName = Literal[
     "pipes",
     "polly",
     "pricing",
-    "privatenetworks",
     "proton",
     "qapps",
     "qbusiness",
@@ -609,7 +614,6 @@ ServiceName = Literal[
     "signer",
     "simspaceweaver",
     "sms",
-    "sms-voice",
     "snow-device-management",
     "snowball",
     "sns",
@@ -617,6 +621,7 @@ ServiceName = Literal[
     "sqs",
     "ssm",
     "ssm-contacts",
+    "ssm-guiconnect",
     "ssm-incidents",
     "ssm-quicksetup",
     "ssm-sap",

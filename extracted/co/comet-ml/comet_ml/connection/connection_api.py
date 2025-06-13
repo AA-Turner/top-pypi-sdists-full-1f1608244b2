@@ -4170,9 +4170,12 @@ class RestApiClient(BaseApiClient):
                 version_url, check_status_code=True
             )
             # Invalid version will raise exception:
+            response_body = response.json()
+            if "version" not in response_body:
+                raise ValueError("No version field in the backend response.")
             return SemanticVersion.parse(response.json()["version"])
-        except Exception:
-            LOGGER.warning(BACKEND_VERSION_CHECK_ERROR, version_url, exc_info=True)
+        except Exception as e:
+            LOGGER.warning(BACKEND_VERSION_CHECK_ERROR, version_url, e, exc_info=True)
             return None
 
     def get_api_backend_version(self) -> Optional[SemanticVersion]:

@@ -150,7 +150,7 @@ class ARCZonalShiftClient(AioBaseClient):
         self,
     ) -> GetAutoshiftObserverNotificationStatusResponseTypeDef:
         """
-        Returns the status of autoshift observer notification.
+        Returns the status of the autoshift observer notification.
 
         [Show boto3 documentation](https://boto3.amazonaws.com/v1/documentation/api/latest/reference/services/arc-zonal-shift/client/get_autoshift_observer_notification_status.html)
         [Show types-aiobotocore documentation](https://youtype.github.io/types_aiobotocore_docs/types_aiobotocore_arc_zonal_shift/client/#get_autoshift_observer_notification_status)
@@ -172,7 +172,7 @@ class ARCZonalShiftClient(AioBaseClient):
         self, **kwargs: Unpack[ListAutoshiftsRequestTypeDef]
     ) -> ListAutoshiftsResponseTypeDef:
         """
-        Returns a list of autoshifts for an Amazon Web Services Region.
+        Returns the autoshifts for an Amazon Web Services Region.
 
         [Show boto3 documentation](https://boto3.amazonaws.com/v1/documentation/api/latest/reference/services/arc-zonal-shift/client/list_autoshifts.html)
         [Show types-aiobotocore documentation](https://youtype.github.io/types_aiobotocore_docs/types_aiobotocore_arc_zonal_shift/client/#list_autoshifts)

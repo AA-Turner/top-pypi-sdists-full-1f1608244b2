@@ -1,6 +1,6 @@
 Metadata-Version: 2.4
 Name: logfire
-Version: 3.18.0
+Version: 3.19.0
 Summary: The best Python observability tool! 🪵🔥
 Project-URL: Homepage, https://logfire.pydantic.dev/
 Project-URL: Source, https://github.com/pydantic/logfire
@@ -43,6 +43,10 @@ Requires-Dist: tomli>=2.0.1; python_version < '3.11'
 Requires-Dist: typing-extensions>=4.1.0
 Provides-Extra: aiohttp
 Requires-Dist: opentelemetry-instrumentation-aiohttp-client>=0.42b0; extra == 'aiohttp'
+Provides-Extra: aiohttp-client
+Requires-Dist: opentelemetry-instrumentation-aiohttp-client>=0.42b0; extra == 'aiohttp-client'
+Provides-Extra: aiohttp-server
+Requires-Dist: opentelemetry-instrumentation-aiohttp-server>=0.55b0; extra == 'aiohttp-server'
 Provides-Extra: asgi
 Requires-Dist: opentelemetry-instrumentation-asgi>=0.42b0; extra == 'asgi'
 Provides-Extra: asyncpg

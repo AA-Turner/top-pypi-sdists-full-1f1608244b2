@@ -32,6 +32,7 @@ __all__ = (
     "ListControlPanelsPaginatorName",
     "ListRoutingControlsPaginatorName",
     "ListSafetyRulesPaginatorName",
+    "NetworkTypeType",
     "PaginatorName",
     "ResourceServiceName",
     "Route53RecoveryControlConfigServiceName",
@@ -53,6 +54,7 @@ ListClustersPaginatorName = Literal["list_clusters"]
 ListControlPanelsPaginatorName = Literal["list_control_panels"]
 ListRoutingControlsPaginatorName = Literal["list_routing_controls"]
 ListSafetyRulesPaginatorName = Literal["list_safety_rules"]
+NetworkTypeType = Literal["DUALSTACK", "IPV4"]
 RoutingControlCreatedWaiterName = Literal["routing_control_created"]
 RoutingControlDeletedWaiterName = Literal["routing_control_deleted"]
 RuleTypeType = Literal["AND", "ATLEAST", "OR"]
@@ -214,6 +216,7 @@ ServiceName = Literal[
     "freetier",
     "fsx",
     "gamelift",
+    "gameliftstreams",
     "geo-maps",
     "geo-places",
     "geo-routes",
@@ -239,6 +242,7 @@ ServiceName = Literal[
     "iot",
     "iot-data",
     "iot-jobs-data",
+    "iot-managed-integrations",
     "iotanalytics",
     "iotdeviceadvisor",
     "iotevents",
@@ -353,7 +357,6 @@ ServiceName = Literal[
     "pipes",
     "polly",
     "pricing",
-    "privatenetworks",
     "proton",
     "qapps",
     "qbusiness",
@@ -414,7 +417,6 @@ ServiceName = Literal[
     "signer",
     "simspaceweaver",
     "sms",
-    "sms-voice",
     "snow-device-management",
     "snowball",
     "sns",
@@ -422,6 +424,7 @@ ServiceName = Literal[
     "sqs",
     "ssm",
     "ssm-contacts",
+    "ssm-guiconnect",
     "ssm-incidents",
     "ssm-quicksetup",
     "ssm-sap",

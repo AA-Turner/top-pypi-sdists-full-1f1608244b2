@@ -1,6 +1,6 @@
-Metadata-Version: 2.2
+Metadata-Version: 2.4
 Name: ndcube
-Version: 2.3.1
+Version: 2.3.2
 Summary: A package for multi-dimensional contiguous and non-contiguous coordinate aware arrays.
 Author-email: The SunPy Community <sunpy@googlegroups.com>
 License: Copyright (c) 2024, The SunPy Community
@@ -71,6 +71,7 @@ Provides-Extra: all
 Requires-Dist: ndcube[plotting,reproject]; extra == "all"
 Provides-Extra: dev
 Requires-Dist: ndcube[docs,plotting,reproject,tests]; extra == "dev"
+Dynamic: license-file
 
 ******
 ndcube

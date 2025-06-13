@@ -1,6 +1,6 @@
-Metadata-Version: 2.1
+Metadata-Version: 2.4
 Name: zigpy-zigate
-Version: 0.13.2
+Version: 0.13.3
 Summary: A library which communicates with ZiGate radios for zigpy
 Author-email: Sébastien RAMAGE <sebatien.ramage@gmail.com>
 License: GPL-3.0
@@ -20,6 +20,7 @@ Requires-Dist: pytest-asyncio>=0.19.0; extra == "testing"
 Requires-Dist: pytest-timeout>=2.1.0; extra == "testing"
 Requires-Dist: pytest-mock>=3.8.2; extra == "testing"
 Requires-Dist: pytest-cov>=3.0.0; extra == "testing"
+Dynamic: license-file
 
 # zigpy-zigate
 

@@ -281,7 +281,7 @@ class PVCtrlMixin(PVMixin):
             if fg   is not None:
                 self.SetForegroundColour(fg)
             if bg   is not None:
-                self.SetBackgroundColour(fg)
+                self.SetBackgroundColour(bg)
         except:
             pass
         self._connect_bgcol = self.GetBackgroundColour()
@@ -1039,7 +1039,6 @@ class PVButton(wx.Button, PVCtrlMixin):
             enableValue = False
         if self.pv is not None and (self.pv.get() == self.pushValue):
             enableValue = False
-        wx.Button.Enable(self, enableValue)
 
     @DelayedEpicsCallback
     def _disableEvent(self, **kw):
@@ -1054,6 +1053,10 @@ class PVButton(wx.Button, PVCtrlMixin):
     def OnPress(self, event):
         "button press event handler"
         self.pv.put(self.pushValue)
+
+    @DelayedEpicsCallback
+    def OnEpicsConnect(self, pvname=None, conn=None, pv=None):
+        pass
 
 class PVBitmapButton(wx.BitmapButton, PVCtrlMixin):
     """ A Button linked to a PV. When the button is pressed, a certain value

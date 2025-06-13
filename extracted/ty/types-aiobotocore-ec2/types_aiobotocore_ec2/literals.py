@@ -162,6 +162,7 @@ __all__ = (
     "DescribeLocalGatewayVirtualInterfacesPaginatorName",
     "DescribeLocalGatewaysPaginatorName",
     "DescribeMacHostsPaginatorName",
+    "DescribeMacModificationTasksPaginatorName",
     "DescribeManagedPrefixListsPaginatorName",
     "DescribeMovingAddressesPaginatorName",
     "DescribeNatGatewaysPaginatorName",
@@ -178,6 +179,9 @@ __all__ = (
     "DescribeReplaceRootVolumeTasksPaginatorName",
     "DescribeReservedInstancesModificationsPaginatorName",
     "DescribeReservedInstancesOfferingsPaginatorName",
+    "DescribeRouteServerEndpointsPaginatorName",
+    "DescribeRouteServerPeersPaginatorName",
+    "DescribeRouteServersPaginatorName",
     "DescribeRouteTablesPaginatorName",
     "DescribeScheduledInstanceAvailabilityPaginatorName",
     "DescribeScheduledInstancesPaginatorName",
@@ -268,6 +272,7 @@ __all__ = (
     "FleetReplacementStrategyType",
     "FleetStateCodeType",
     "FleetTypeType",
+    "FlexibleEnaQueuesSupportType",
     "FlowLogsResourceTypeType",
     "FpgaImageAttributeNameType",
     "FpgaImageStateCodeType",
@@ -327,6 +332,7 @@ __all__ = (
     "InstanceMetadataOptionsStateType",
     "InstanceMetadataProtocolStateType",
     "InstanceMetadataTagsStateType",
+    "InstanceRebootMigrationStateType",
     "InstanceRunningWaiterName",
     "InstanceStateNameType",
     "InstanceStatusOkWaiterName",
@@ -348,6 +354,7 @@ __all__ = (
     "IpamDiscoveryFailureCodeType",
     "IpamExternalResourceVerificationTokenStateType",
     "IpamManagementStateType",
+    "IpamMeteredAccountType",
     "IpamNetworkInterfaceAttachmentStatusType",
     "IpamOverlapStatusType",
     "IpamPoolAllocationResourceTypeType",
@@ -387,12 +394,17 @@ __all__ = (
     "LocalGatewayRouteStateType",
     "LocalGatewayRouteTableModeType",
     "LocalGatewayRouteTypeType",
+    "LocalGatewayVirtualInterfaceConfigurationStateType",
+    "LocalGatewayVirtualInterfaceGroupConfigurationStateType",
     "LocalStorageType",
     "LocalStorageTypeType",
     "LocationTypeType",
     "LockModeType",
     "LockStateType",
     "LogDestinationTypeType",
+    "MacModificationTaskStateType",
+    "MacModificationTaskTypeType",
+    "MacSystemIntegrityProtectionSettingStatusType",
     "ManagedByType",
     "MarketTypeType",
     "MembershipTypeType",
@@ -435,7 +447,9 @@ __all__ = (
     "ProductCodeValuesType",
     "ProtocolType",
     "ProtocolValueType",
+    "PublicIpDnsOptionType",
     "RIProductDescriptionType",
+    "RebootMigrationSupportType",
     "RecurringChargeFrequencyType",
     "RegionName",
     "ReplaceRootVolumeTaskStateType",
@@ -451,6 +465,18 @@ __all__ = (
     "ResourceTypeType",
     "RootDeviceTypeType",
     "RouteOriginType",
+    "RouteServerAssociationStateType",
+    "RouteServerBfdStateType",
+    "RouteServerBgpStateType",
+    "RouteServerEndpointStateType",
+    "RouteServerPeerLivenessModeType",
+    "RouteServerPeerStateType",
+    "RouteServerPersistRoutesActionType",
+    "RouteServerPersistRoutesStateType",
+    "RouteServerPropagationStateType",
+    "RouteServerRouteInstallationStatusType",
+    "RouteServerRouteStatusType",
+    "RouteServerStateType",
     "RouteStateType",
     "RouteTableAssociationStateCodeType",
     "RuleActionType",
@@ -463,6 +489,8 @@ __all__ = (
     "SecurityGroupVpcAssociationStateType",
     "SelfServicePortalType",
     "ServiceConnectivityTypeType",
+    "ServiceLinkVirtualInterfaceConfigurationStateType",
+    "ServiceManagedType",
     "ServiceName",
     "ServiceStateType",
     "ServiceTypeType",
@@ -472,6 +500,7 @@ __all__ = (
     "SnapshotCompletedWaiterName",
     "SnapshotImportedWaiterName",
     "SnapshotLocationEnumType",
+    "SnapshotReturnCodesType",
     "SnapshotStateType",
     "SpotAllocationStrategyType",
     "SpotInstanceInterruptionBehaviorType",
@@ -554,6 +583,9 @@ __all__ = (
     "VpcBlockPublicAccessExclusionsAllowedType",
     "VpcBlockPublicAccessStateType",
     "VpcCidrBlockStateCodeType",
+    "VpcEncryptionControlExclusionStateType",
+    "VpcEncryptionControlModeType",
+    "VpcEncryptionControlStateType",
     "VpcEndpointTypeType",
     "VpcExistsWaiterName",
     "VpcPeeringConnectionDeletedWaiterName",
@@ -567,6 +599,7 @@ __all__ = (
     "VpnProtocolType",
     "VpnStateType",
     "VpnStaticRouteSourceType",
+    "VpnTunnelProvisioningStatusType",
     "WaiterName",
     "WeekDayType",
 )
@@ -854,6 +887,7 @@ DescribeLocalGatewayVirtualInterfacesPaginatorName = Literal[
 ]
 DescribeLocalGatewaysPaginatorName = Literal["describe_local_gateways"]
 DescribeMacHostsPaginatorName = Literal["describe_mac_hosts"]
+DescribeMacModificationTasksPaginatorName = Literal["describe_mac_modification_tasks"]
 DescribeManagedPrefixListsPaginatorName = Literal["describe_managed_prefix_lists"]
 DescribeMovingAddressesPaginatorName = Literal["describe_moving_addresses"]
 DescribeNatGatewaysPaginatorName = Literal["describe_nat_gateways"]
@@ -876,6 +910,9 @@ DescribeReservedInstancesModificationsPaginatorName = Literal[
     "describe_reserved_instances_modifications"
 ]
 DescribeReservedInstancesOfferingsPaginatorName = Literal["describe_reserved_instances_offerings"]
+DescribeRouteServerEndpointsPaginatorName = Literal["describe_route_server_endpoints"]
+DescribeRouteServerPeersPaginatorName = Literal["describe_route_server_peers"]
+DescribeRouteServersPaginatorName = Literal["describe_route_servers"]
 DescribeRouteTablesPaginatorName = Literal["describe_route_tables"]
 DescribeScheduledInstanceAvailabilityPaginatorName = Literal[
     "describe_scheduled_instance_availability"
@@ -1010,6 +1047,7 @@ FleetStateCodeType = Literal[
     "submitted",
 ]
 FleetTypeType = Literal["instant", "maintain", "request"]
+FlexibleEnaQueuesSupportType = Literal["supported", "unsupported"]
 FlowLogsResourceTypeType = Literal[
     "NetworkInterface", "Subnet", "TransitGateway", "TransitGatewayAttachment", "VPC"
 ]
@@ -1124,6 +1162,7 @@ InstanceMetadataEndpointStateType = Literal["disabled", "enabled"]
 InstanceMetadataOptionsStateType = Literal["applied", "pending"]
 InstanceMetadataProtocolStateType = Literal["disabled", "enabled"]
 InstanceMetadataTagsStateType = Literal["disabled", "enabled"]
+InstanceRebootMigrationStateType = Literal["default", "disabled"]
 InstanceRunningWaiterName = Literal["instance_running"]
 InstanceStateNameType = Literal[
     "pending", "running", "shutting-down", "stopped", "stopping", "terminated"
@@ -1299,6 +1338,8 @@ InstanceTypeType = Literal[
     "c7gn.medium",
     "c7gn.metal",
     "c7gn.xlarge",
+    "c7i-flex.12xlarge",
+    "c7i-flex.16xlarge",
     "c7i-flex.2xlarge",
     "c7i-flex.4xlarge",
     "c7i-flex.8xlarge",
@@ -1327,6 +1368,18 @@ InstanceTypeType = Literal[
     "c8g.metal-24xl",
     "c8g.metal-48xl",
     "c8g.xlarge",
+    "c8gd.12xlarge",
+    "c8gd.16xlarge",
+    "c8gd.24xlarge",
+    "c8gd.2xlarge",
+    "c8gd.48xlarge",
+    "c8gd.4xlarge",
+    "c8gd.8xlarge",
+    "c8gd.large",
+    "c8gd.medium",
+    "c8gd.metal-24xl",
+    "c8gd.metal-48xl",
+    "c8gd.xlarge",
     "cc1.4xlarge",
     "cc2.8xlarge",
     "cg1.4xlarge",
@@ -1452,6 +1505,17 @@ InstanceTypeType = Literal[
     "i4i.large",
     "i4i.metal",
     "i4i.xlarge",
+    "i7i.12xlarge",
+    "i7i.16xlarge",
+    "i7i.24xlarge",
+    "i7i.2xlarge",
+    "i7i.48xlarge",
+    "i7i.4xlarge",
+    "i7i.8xlarge",
+    "i7i.large",
+    "i7i.metal-24xl",
+    "i7i.metal-48xl",
+    "i7i.xlarge",
     "i7ie.12xlarge",
     "i7ie.18xlarge",
     "i7ie.24xlarge",
@@ -1460,11 +1524,14 @@ InstanceTypeType = Literal[
     "i7ie.48xlarge",
     "i7ie.6xlarge",
     "i7ie.large",
+    "i7ie.metal-24xl",
+    "i7ie.metal-48xl",
     "i7ie.xlarge",
     "i8g.12xlarge",
     "i8g.16xlarge",
     "i8g.24xlarge",
     "i8g.2xlarge",
+    "i8g.48xlarge",
     "i8g.4xlarge",
     "i8g.8xlarge",
     "i8g.large",
@@ -1665,6 +1732,8 @@ InstanceTypeType = Literal[
     "m7gd.medium",
     "m7gd.metal",
     "m7gd.xlarge",
+    "m7i-flex.12xlarge",
+    "m7i-flex.16xlarge",
     "m7i-flex.2xlarge",
     "m7i-flex.4xlarge",
     "m7i-flex.8xlarge",
@@ -1693,6 +1762,18 @@ InstanceTypeType = Literal[
     "m8g.metal-24xl",
     "m8g.metal-48xl",
     "m8g.xlarge",
+    "m8gd.12xlarge",
+    "m8gd.16xlarge",
+    "m8gd.24xlarge",
+    "m8gd.2xlarge",
+    "m8gd.48xlarge",
+    "m8gd.4xlarge",
+    "m8gd.8xlarge",
+    "m8gd.large",
+    "m8gd.medium",
+    "m8gd.metal-24xl",
+    "m8gd.metal-48xl",
+    "m8gd.xlarge",
     "mac1.metal",
     "mac2-m1ultra.metal",
     "mac2-m2.metal",
@@ -1710,6 +1791,7 @@ InstanceTypeType = Literal[
     "p5.48xlarge",
     "p5e.48xlarge",
     "p5en.48xlarge",
+    "p6-b200.48xlarge",
     "r3.2xlarge",
     "r3.4xlarge",
     "r3.8xlarge",
@@ -1914,6 +1996,18 @@ InstanceTypeType = Literal[
     "r8g.metal-24xl",
     "r8g.metal-48xl",
     "r8g.xlarge",
+    "r8gd.12xlarge",
+    "r8gd.16xlarge",
+    "r8gd.24xlarge",
+    "r8gd.2xlarge",
+    "r8gd.48xlarge",
+    "r8gd.4xlarge",
+    "r8gd.8xlarge",
+    "r8gd.large",
+    "r8gd.medium",
+    "r8gd.metal-24xl",
+    "r8gd.metal-48xl",
+    "r8gd.xlarge",
     "t1.micro",
     "t2.2xlarge",
     "t2.large",
@@ -2049,6 +2143,7 @@ IpamExternalResourceVerificationTokenStateType = Literal[
     "delete-in-progress",
 ]
 IpamManagementStateType = Literal["ignored", "managed", "unmanaged"]
+IpamMeteredAccountType = Literal["ipam-owner", "resource-owner"]
 IpamNetworkInterfaceAttachmentStatusType = Literal["available", "in-use"]
 IpamOverlapStatusType = Literal["ignored", "nonoverlapping", "overlapping"]
 IpamPoolAllocationResourceTypeType = Literal[
@@ -2185,12 +2280,21 @@ ListingStatusType = Literal["active", "cancelled", "closed", "pending"]
 LocalGatewayRouteStateType = Literal["active", "blackhole", "deleted", "deleting", "pending"]
 LocalGatewayRouteTableModeType = Literal["coip", "direct-vpc-routing"]
 LocalGatewayRouteTypeType = Literal["propagated", "static"]
+LocalGatewayVirtualInterfaceConfigurationStateType = Literal[
+    "available", "deleted", "deleting", "pending"
+]
+LocalGatewayVirtualInterfaceGroupConfigurationStateType = Literal[
+    "available", "deleted", "deleting", "incomplete", "pending"
+]
 LocalStorageType = Literal["excluded", "included", "required"]
 LocalStorageTypeType = Literal["hdd", "ssd"]
 LocationTypeType = Literal["availability-zone", "availability-zone-id", "outpost", "region"]
 LockModeType = Literal["compliance", "governance"]
 LockStateType = Literal["compliance", "compliance-cooloff", "expired", "governance"]
 LogDestinationTypeType = Literal["cloud-watch-logs", "kinesis-data-firehose", "s3"]
+MacModificationTaskStateType = Literal["failed", "in-progress", "pending", "successful"]
+MacModificationTaskTypeType = Literal["sip-modification", "volume-ownership-delegation"]
+MacSystemIntegrityProtectionSettingStatusType = Literal["disabled", "enabled"]
 ManagedByType = Literal["account", "declarative-policy"]
 MarketTypeType = Literal["capacity-block", "spot"]
 MembershipTypeType = Literal["igmp", "static"]
@@ -2277,9 +2381,13 @@ PrincipalTypeType = Literal["Account", "All", "OrganizationUnit", "Role", "Servi
 ProductCodeValuesType = Literal["devpay", "marketplace"]
 ProtocolType = Literal["tcp", "udp"]
 ProtocolValueType = Literal["gre"]
+PublicIpDnsOptionType = Literal[
+    "public-dual-stack-dns-name", "public-ipv4-dns-name", "public-ipv6-dns-name"
+]
 RIProductDescriptionType = Literal[
     "Linux/UNIX", "Linux/UNIX (Amazon VPC)", "Windows", "Windows (Amazon VPC)"
 ]
+RebootMigrationSupportType = Literal["supported", "unsupported"]
 RecurringChargeFrequencyType = Literal["Hourly"]
 ReplaceRootVolumeTaskStateType = Literal[
     "failed", "failed-detached", "failing", "in-progress", "pending", "succeeded"
@@ -2345,6 +2453,7 @@ ResourceTypeType = Literal[
     "local-gateway-route-table-vpc-association",
     "local-gateway-virtual-interface",
     "local-gateway-virtual-interface-group",
+    "mac-modification-task",
     "natgateway",
     "network-acl",
     "network-insights-access-scope",
@@ -2352,13 +2461,18 @@ ResourceTypeType = Literal[
     "network-insights-analysis",
     "network-insights-path",
     "network-interface",
+    "outpost-lag",
     "placement-group",
     "prefix-list",
     "replace-root-volume-task",
     "reserved-instances",
+    "route-server",
+    "route-server-endpoint",
+    "route-server-peer",
     "route-table",
     "security-group",
     "security-group-rule",
+    "service-link-virtual-interface",
     "snapshot",
     "spot-fleet-request",
     "spot-instances-request",
@@ -2397,6 +2511,24 @@ ResourceTypeType = Literal[
 ]
 RootDeviceTypeType = Literal["ebs", "instance-store"]
 RouteOriginType = Literal["CreateRoute", "CreateRouteTable", "EnableVgwRoutePropagation"]
+RouteServerAssociationStateType = Literal["associated", "associating", "disassociating"]
+RouteServerBfdStateType = Literal["down", "up"]
+RouteServerBgpStateType = Literal["down", "up"]
+RouteServerEndpointStateType = Literal[
+    "available", "delete-failed", "deleted", "deleting", "failed", "failing", "pending"
+]
+RouteServerPeerLivenessModeType = Literal["bfd", "bgp-keepalive"]
+RouteServerPeerStateType = Literal[
+    "available", "deleted", "deleting", "failed", "failing", "pending"
+]
+RouteServerPersistRoutesActionType = Literal["disable", "enable", "reset"]
+RouteServerPersistRoutesStateType = Literal[
+    "disabled", "disabling", "enabled", "enabling", "modifying", "resetting"
+]
+RouteServerPropagationStateType = Literal["available", "deleting", "pending"]
+RouteServerRouteInstallationStatusType = Literal["installed", "rejected"]
+RouteServerRouteStatusType = Literal["in-fib", "in-rib"]
+RouteServerStateType = Literal["available", "deleted", "deleting", "modifying", "pending"]
 RouteStateType = Literal["active", "blackhole"]
 RouteTableAssociationStateCodeType = Literal[
     "associated", "associating", "disassociated", "disassociating", "failed"
@@ -2420,6 +2552,10 @@ SecurityGroupVpcAssociationStateType = Literal[
 ]
 SelfServicePortalType = Literal["disabled", "enabled"]
 ServiceConnectivityTypeType = Literal["ipv4", "ipv6"]
+ServiceLinkVirtualInterfaceConfigurationStateType = Literal[
+    "available", "deleted", "deleting", "pending"
+]
+ServiceManagedType = Literal["alb", "nlb", "rnat"]
 ServiceStateType = Literal["Available", "Deleted", "Deleting", "Failed", "Pending"]
 ServiceTypeType = Literal["Gateway", "GatewayLoadBalancer", "Interface"]
 ShutdownBehaviorType = Literal["stop", "terminate"]
@@ -2428,6 +2564,9 @@ SnapshotBlockPublicAccessStateType = Literal["block-all-sharing", "block-new-sha
 SnapshotCompletedWaiterName = Literal["snapshot_completed"]
 SnapshotImportedWaiterName = Literal["snapshot_imported"]
 SnapshotLocationEnumType = Literal["local", "regional"]
+SnapshotReturnCodesType = Literal[
+    "client-error", "internal-error", "missing-permissions", "skipped", "success"
+]
 SnapshotStateType = Literal["completed", "error", "pending", "recoverable", "recovering"]
 SpotAllocationStrategyType = Literal[
     "capacity-optimized",
@@ -2594,6 +2733,19 @@ VpcBlockPublicAccessStateType = Literal["default-state", "update-complete", "upd
 VpcCidrBlockStateCodeType = Literal[
     "associated", "associating", "disassociated", "disassociating", "failed", "failing"
 ]
+VpcEncryptionControlExclusionStateType = Literal["disabled", "disabling", "enabled", "enabling"]
+VpcEncryptionControlModeType = Literal["enforce", "monitor"]
+VpcEncryptionControlStateType = Literal[
+    "available",
+    "creating",
+    "delete-failed",
+    "deleted",
+    "deleting",
+    "enforce-failed",
+    "enforce-in-progress",
+    "monitor-failed",
+    "monitor-in-progress",
+]
 VpcEndpointTypeType = Literal[
     "Gateway", "GatewayLoadBalancer", "Interface", "Resource", "ServiceNetwork"
 ]
@@ -2619,6 +2771,7 @@ VpnEcmpSupportValueType = Literal["disable", "enable"]
 VpnProtocolType = Literal["openvpn"]
 VpnStateType = Literal["available", "deleted", "deleting", "pending"]
 VpnStaticRouteSourceType = Literal["Static"]
+VpnTunnelProvisioningStatusType = Literal["available", "failed", "pending"]
 WeekDayType = Literal["friday", "monday", "saturday", "sunday", "thursday", "tuesday", "wednesday"]
 EC2ServiceName = Literal["ec2"]
 ServiceName = Literal[
@@ -2777,6 +2930,7 @@ ServiceName = Literal[
     "freetier",
     "fsx",
     "gamelift",
+    "gameliftstreams",
     "geo-maps",
     "geo-places",
     "geo-routes",
@@ -2802,6 +2956,7 @@ ServiceName = Literal[
     "iot",
     "iot-data",
     "iot-jobs-data",
+    "iot-managed-integrations",
     "iotanalytics",
     "iotdeviceadvisor",
     "iotevents",
@@ -2916,7 +3071,6 @@ ServiceName = Literal[
     "pipes",
     "polly",
     "pricing",
-    "privatenetworks",
     "proton",
     "qapps",
     "qbusiness",
@@ -2977,7 +3131,6 @@ ServiceName = Literal[
     "signer",
     "simspaceweaver",
     "sms",
-    "sms-voice",
     "snow-device-management",
     "snowball",
     "sns",
@@ -2985,6 +3138,7 @@ ServiceName = Literal[
     "sqs",
     "ssm",
     "ssm-contacts",
+    "ssm-guiconnect",
     "ssm-incidents",
     "ssm-quicksetup",
     "ssm-sap",
@@ -3096,6 +3250,7 @@ PaginatorName = Literal[
     "describe_local_gateway_virtual_interfaces",
     "describe_local_gateways",
     "describe_mac_hosts",
+    "describe_mac_modification_tasks",
     "describe_managed_prefix_lists",
     "describe_moving_addresses",
     "describe_nat_gateways",
@@ -3112,6 +3267,9 @@ PaginatorName = Literal[
     "describe_replace_root_volume_tasks",
     "describe_reserved_instances_modifications",
     "describe_reserved_instances_offerings",
+    "describe_route_server_endpoints",
+    "describe_route_server_peers",
+    "describe_route_servers",
     "describe_route_tables",
     "describe_scheduled_instance_availability",
     "describe_scheduled_instances",

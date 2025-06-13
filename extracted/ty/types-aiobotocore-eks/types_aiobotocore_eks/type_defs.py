@@ -196,6 +196,7 @@ __all__ = (
     "KubernetesNetworkConfigRequestTypeDef",
     "KubernetesNetworkConfigResponseTypeDef",
     "LaunchTemplateSpecificationTypeDef",
+    "LicenseTypeDef",
     "ListAccessEntriesRequestPaginateTypeDef",
     "ListAccessEntriesRequestTypeDef",
     "ListAccessEntriesResponseTypeDef",
@@ -729,6 +730,15 @@ class DisassociateAccessPolicyRequestTypeDef(TypedDict):
     policyArn: str
 
 
+LicenseTypeDef = TypedDict(
+    "LicenseTypeDef",
+    {
+        "id": NotRequired[str],
+        "token": NotRequired[str],
+    },
+)
+
+
 class ElasticLoadBalancingTypeDef(TypedDict):
     enabled: NotRequired[bool]
 
@@ -947,6 +957,7 @@ class UpdateClusterVersionRequestTypeDef(TypedDict):
     name: str
     version: str
     clientRequestToken: NotRequired[str]
+    force: NotRequired[bool]
 
 
 UpdateEksAnywhereSubscriptionRequestTypeDef = TypedDict(
@@ -1163,25 +1174,6 @@ class CreateEksAnywhereSubscriptionRequestTypeDef(TypedDict):
     tags: NotRequired[Mapping[str, str]]
 
 
-EksAnywhereSubscriptionTypeDef = TypedDict(
-    "EksAnywhereSubscriptionTypeDef",
-    {
-        "id": NotRequired[str],
-        "arn": NotRequired[str],
-        "createdAt": NotRequired[datetime],
-        "effectiveDate": NotRequired[datetime],
-        "expirationDate": NotRequired[datetime],
-        "licenseQuantity": NotRequired[int],
-        "licenseType": NotRequired[Literal["Cluster"]],
-        "term": NotRequired[EksAnywhereSubscriptionTermTypeDef],
-        "status": NotRequired[str],
-        "autoRenew": NotRequired[bool],
-        "licenseArns": NotRequired[List[str]],
-        "tags": NotRequired[Dict[str, str]],
-    },
-)
-
-
 class UpdateNodegroupVersionRequestTypeDef(TypedDict):
     clusterName: str
     nodegroupName: str
@@ -1363,6 +1355,26 @@ class ListIdentityProviderConfigsResponseTypeDef(TypedDict):
     nextToken: NotRequired[str]
 
 
+EksAnywhereSubscriptionTypeDef = TypedDict(
+    "EksAnywhereSubscriptionTypeDef",
+    {
+        "id": NotRequired[str],
+        "arn": NotRequired[str],
+        "createdAt": NotRequired[datetime],
+        "effectiveDate": NotRequired[datetime],
+        "expirationDate": NotRequired[datetime],
+        "licenseQuantity": NotRequired[int],
+        "licenseType": NotRequired[Literal["Cluster"]],
+        "term": NotRequired[EksAnywhereSubscriptionTermTypeDef],
+        "status": NotRequired[str],
+        "autoRenew": NotRequired[bool],
+        "licenseArns": NotRequired[List[str]],
+        "licenses": NotRequired[List[LicenseTypeDef]],
+        "tags": NotRequired[Dict[str, str]],
+    },
+)
+
+
 class KubernetesNetworkConfigRequestTypeDef(TypedDict):
     serviceIpv4Cidr: NotRequired[str]
     ipFamily: NotRequired[IpFamilyType]
@@ -1540,6 +1552,17 @@ class InsightCategorySpecificSummaryTypeDef(TypedDict):
     addonCompatibilityDetails: NotRequired[List[AddonCompatibilityDetailTypeDef]]
 
 
+class UpdateNodegroupConfigRequestTypeDef(TypedDict):
+    clusterName: str
+    nodegroupName: str
+    labels: NotRequired[UpdateLabelsPayloadTypeDef]
+    taints: NotRequired[UpdateTaintsPayloadTypeDef]
+    scalingConfig: NotRequired[NodegroupScalingConfigTypeDef]
+    updateConfig: NotRequired[NodegroupUpdateConfigTypeDef]
+    nodeRepairConfig: NotRequired[NodeRepairConfigTypeDef]
+    clientRequestToken: NotRequired[str]
+
+
 class CreateEksAnywhereSubscriptionResponseTypeDef(TypedDict):
     subscription: EksAnywhereSubscriptionTypeDef
     ResponseMetadata: ResponseMetadataTypeDef
@@ -1564,17 +1587,6 @@ class ListEksAnywhereSubscriptionsResponseTypeDef(TypedDict):
 class UpdateEksAnywhereSubscriptionResponseTypeDef(TypedDict):
     subscription: EksAnywhereSubscriptionTypeDef
     ResponseMetadata: ResponseMetadataTypeDef
-
-
-class UpdateNodegroupConfigRequestTypeDef(TypedDict):
-    clusterName: str
-    nodegroupName: str
-    labels: NotRequired[UpdateLabelsPayloadTypeDef]
-    taints: NotRequired[UpdateTaintsPayloadTypeDef]
-    scalingConfig: NotRequired[NodegroupScalingConfigTypeDef]
-    updateConfig: NotRequired[NodegroupUpdateConfigTypeDef]
-    nodeRepairConfig: NotRequired[NodeRepairConfigTypeDef]
-    clientRequestToken: NotRequired[str]
 
 
 EncryptionConfigUnionTypeDef = Union[EncryptionConfigTypeDef, EncryptionConfigOutputTypeDef]
@@ -1826,19 +1838,6 @@ class DescribeNodegroupResponseTypeDef(TypedDict):
     ResponseMetadata: ResponseMetadataTypeDef
 
 
-class UpdateClusterConfigRequestTypeDef(TypedDict):
-    name: str
-    resourcesVpcConfig: NotRequired[VpcConfigRequestTypeDef]
-    logging: NotRequired[LoggingUnionTypeDef]
-    clientRequestToken: NotRequired[str]
-    accessConfig: NotRequired[UpdateAccessConfigRequestTypeDef]
-    upgradePolicy: NotRequired[UpgradePolicyRequestTypeDef]
-    zonalShiftConfig: NotRequired[ZonalShiftConfigRequestTypeDef]
-    computeConfig: NotRequired[ComputeConfigRequestTypeDef]
-    kubernetesNetworkConfig: NotRequired[KubernetesNetworkConfigRequestTypeDef]
-    storageConfig: NotRequired[StorageConfigRequestTypeDef]
-
-
 class CreateClusterResponseTypeDef(TypedDict):
     cluster: ClusterTypeDef
     ResponseMetadata: ResponseMetadataTypeDef
@@ -1882,6 +1881,20 @@ class CreateClusterRequestTypeDef(TypedDict):
     remoteNetworkConfig: NotRequired[RemoteNetworkConfigRequestTypeDef]
     computeConfig: NotRequired[ComputeConfigRequestTypeDef]
     storageConfig: NotRequired[StorageConfigRequestTypeDef]
+
+
+class UpdateClusterConfigRequestTypeDef(TypedDict):
+    name: str
+    resourcesVpcConfig: NotRequired[VpcConfigRequestTypeDef]
+    logging: NotRequired[LoggingUnionTypeDef]
+    clientRequestToken: NotRequired[str]
+    accessConfig: NotRequired[UpdateAccessConfigRequestTypeDef]
+    upgradePolicy: NotRequired[UpgradePolicyRequestTypeDef]
+    zonalShiftConfig: NotRequired[ZonalShiftConfigRequestTypeDef]
+    computeConfig: NotRequired[ComputeConfigRequestTypeDef]
+    kubernetesNetworkConfig: NotRequired[KubernetesNetworkConfigRequestTypeDef]
+    storageConfig: NotRequired[StorageConfigRequestTypeDef]
+    remoteNetworkConfig: NotRequired[RemoteNetworkConfigRequestTypeDef]
 
 
 class DescribeInsightResponseTypeDef(TypedDict):

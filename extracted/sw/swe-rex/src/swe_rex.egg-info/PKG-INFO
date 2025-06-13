@@ -1,6 +1,6 @@
 Metadata-Version: 2.4
 Name: swe-rex
-Version: 1.2.2
+Version: 1.3.0
 Summary: Sandboxed code execution for AI agents, locally or on the cloud.
 Author-email: Kilian Lieret <kilian.lieret@posteo.de>, "Carlos E. Jimenez" <carlosej@princeton.edu>, John Yang <byjohnyang@gmail.com>
 Project-URL: Homepage, https://swe-rex.com

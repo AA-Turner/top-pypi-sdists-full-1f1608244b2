@@ -34,6 +34,7 @@ __all__ = (
     "ConditionExecutionStatusType",
     "ConditionTypeType",
     "EncryptionKeyTypeType",
+    "EnvironmentVariableTypeType",
     "ExecutionModeType",
     "ExecutionTypeType",
     "ExecutorTypeType",
@@ -42,6 +43,7 @@ __all__ = (
     "JobStatusType",
     "ListActionExecutionsPaginatorName",
     "ListActionTypesPaginatorName",
+    "ListDeployActionExecutionTargetsPaginatorName",
     "ListPipelineExecutionsPaginatorName",
     "ListPipelinesPaginatorName",
     "ListRuleExecutionsPaginatorName",
@@ -65,6 +67,7 @@ __all__ = (
     "StageRetryModeType",
     "StageTransitionTypeType",
     "StartTimeRangeType",
+    "TargetFilterNameType",
     "TriggerTypeType",
     "WebhookAuthenticationTypeType",
 )
@@ -82,6 +85,7 @@ ConditionExecutionStatusType = Literal[
 ]
 ConditionTypeType = Literal["BEFORE_ENTRY", "ON_SUCCESS"]
 EncryptionKeyTypeType = Literal["KMS"]
+EnvironmentVariableTypeType = Literal["PLAINTEXT", "SECRETS_MANAGER"]
 ExecutionModeType = Literal["PARALLEL", "QUEUED", "SUPERSEDED"]
 ExecutionTypeType = Literal["ROLLBACK", "STANDARD"]
 ExecutorTypeType = Literal["JobWorker", "Lambda"]
@@ -99,6 +103,7 @@ JobStatusType = Literal[
 ]
 ListActionExecutionsPaginatorName = Literal["list_action_executions"]
 ListActionTypesPaginatorName = Literal["list_action_types"]
+ListDeployActionExecutionTargetsPaginatorName = Literal["list_deploy_action_execution_targets"]
 ListPipelineExecutionsPaginatorName = Literal["list_pipeline_executions"]
 ListPipelinesPaginatorName = Literal["list_pipelines"]
 ListRuleExecutionsPaginatorName = Literal["list_rule_executions"]
@@ -124,6 +129,7 @@ StageExecutionStatusType = Literal[
 StageRetryModeType = Literal["ALL_ACTIONS", "FAILED_ACTIONS"]
 StageTransitionTypeType = Literal["Inbound", "Outbound"]
 StartTimeRangeType = Literal["All", "Latest"]
+TargetFilterNameType = Literal["TARGET_STATUS"]
 TriggerTypeType = Literal[
     "AutomatedRollback",
     "CloudWatchEvent",
@@ -293,6 +299,7 @@ ServiceName = Literal[
     "freetier",
     "fsx",
     "gamelift",
+    "gameliftstreams",
     "geo-maps",
     "geo-places",
     "geo-routes",
@@ -318,6 +325,7 @@ ServiceName = Literal[
     "iot",
     "iot-data",
     "iot-jobs-data",
+    "iot-managed-integrations",
     "iotanalytics",
     "iotdeviceadvisor",
     "iotevents",
@@ -432,7 +440,6 @@ ServiceName = Literal[
     "pipes",
     "polly",
     "pricing",
-    "privatenetworks",
     "proton",
     "qapps",
     "qbusiness",
@@ -493,7 +500,6 @@ ServiceName = Literal[
     "signer",
     "simspaceweaver",
     "sms",
-    "sms-voice",
     "snow-device-management",
     "snowball",
     "sns",
@@ -501,6 +507,7 @@ ServiceName = Literal[
     "sqs",
     "ssm",
     "ssm-contacts",
+    "ssm-guiconnect",
     "ssm-incidents",
     "ssm-quicksetup",
     "ssm-sap",
@@ -556,6 +563,7 @@ ResourceServiceName = Literal[
 PaginatorName = Literal[
     "list_action_executions",
     "list_action_types",
+    "list_deploy_action_execution_targets",
     "list_pipeline_executions",
     "list_pipelines",
     "list_rule_executions",
@@ -574,6 +582,7 @@ RegionName = Literal[
     "ap-southeast-2",
     "ap-southeast-3",
     "ap-southeast-4",
+    "ap-southeast-5",
     "ca-central-1",
     "eu-central-1",
     "eu-central-2",

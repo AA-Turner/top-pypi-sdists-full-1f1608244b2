@@ -63,6 +63,8 @@ from .type_defs import (
     CreateModelImportJobResponseTypeDef,
     CreateModelInvocationJobRequestTypeDef,
     CreateModelInvocationJobResponseTypeDef,
+    CreatePromptRouterRequestTypeDef,
+    CreatePromptRouterResponseTypeDef,
     CreateProvisionedModelThroughputRequestTypeDef,
     CreateProvisionedModelThroughputResponseTypeDef,
     DeleteCustomModelRequestTypeDef,
@@ -70,6 +72,7 @@ from .type_defs import (
     DeleteImportedModelRequestTypeDef,
     DeleteInferenceProfileRequestTypeDef,
     DeleteMarketplaceModelEndpointRequestTypeDef,
+    DeletePromptRouterRequestTypeDef,
     DeleteProvisionedModelThroughputRequestTypeDef,
     DeregisterMarketplaceModelEndpointRequestTypeDef,
     GetCustomModelRequestTypeDef,
@@ -305,6 +308,17 @@ class BedrockClient(AioBaseClient):
         [Show types-aiobotocore documentation](https://youtype.github.io/types_aiobotocore_docs/types_aiobotocore_bedrock/client/#create_model_invocation_job)
         """
 
+    async def create_prompt_router(
+        self, **kwargs: Unpack[CreatePromptRouterRequestTypeDef]
+    ) -> CreatePromptRouterResponseTypeDef:
+        """
+        Creates a prompt router that manages the routing of requests between multiple
+        foundation models based on the routing criteria.
+
+        [Show boto3 documentation](https://boto3.amazonaws.com/v1/documentation/api/latest/reference/services/bedrock/client/create_prompt_router.html)
+        [Show types-aiobotocore documentation](https://youtype.github.io/types_aiobotocore_docs/types_aiobotocore_bedrock/client/#create_prompt_router)
+        """
+
     async def create_provisioned_model_throughput(
         self, **kwargs: Unpack[CreateProvisionedModelThroughputRequestTypeDef]
     ) -> CreateProvisionedModelThroughputResponseTypeDef:
@@ -372,6 +386,16 @@ class BedrockClient(AioBaseClient):
 
         [Show boto3 documentation](https://boto3.amazonaws.com/v1/documentation/api/latest/reference/services/bedrock/client/delete_model_invocation_logging_configuration.html)
         [Show types-aiobotocore documentation](https://youtype.github.io/types_aiobotocore_docs/types_aiobotocore_bedrock/client/#delete_model_invocation_logging_configuration)
+        """
+
+    async def delete_prompt_router(
+        self, **kwargs: Unpack[DeletePromptRouterRequestTypeDef]
+    ) -> Dict[str, Any]:
+        """
+        Deletes a specified prompt router.
+
+        [Show boto3 documentation](https://boto3.amazonaws.com/v1/documentation/api/latest/reference/services/bedrock/client/delete_prompt_router.html)
+        [Show types-aiobotocore documentation](https://youtype.github.io/types_aiobotocore_docs/types_aiobotocore_bedrock/client/#delete_prompt_router)
         """
 
     async def delete_provisioned_model_throughput(

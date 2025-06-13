@@ -30,6 +30,7 @@ Usage::
         ListNodesPaginator,
         ListOfferingsPaginator,
         ListReservationsPaginator,
+        ListSdiSourcesPaginator,
         ListSignalMapsPaginator,
     )
 
@@ -55,6 +56,7 @@ Usage::
         list_nodes_paginator: ListNodesPaginator = client.get_paginator("list_nodes")
         list_offerings_paginator: ListOfferingsPaginator = client.get_paginator("list_offerings")
         list_reservations_paginator: ListReservationsPaginator = client.get_paginator("list_reservations")
+        list_sdi_sources_paginator: ListSdiSourcesPaginator = client.get_paginator("list_sdi_sources")
         list_signal_maps_paginator: ListSignalMapsPaginator = client.get_paginator("list_signal_maps")
     ```
 """
@@ -103,6 +105,8 @@ from .type_defs import (
     ListOfferingsResponseTypeDef,
     ListReservationsRequestPaginateTypeDef,
     ListReservationsResponseTypeDef,
+    ListSdiSourcesRequestPaginateTypeDef,
+    ListSdiSourcesResponseTypeDef,
     ListSignalMapsRequestPaginateTypeDef,
     ListSignalMapsResponseTypeDef,
 )
@@ -132,6 +136,7 @@ __all__ = (
     "ListNodesPaginator",
     "ListOfferingsPaginator",
     "ListReservationsPaginator",
+    "ListSdiSourcesPaginator",
     "ListSignalMapsPaginator",
 )
 
@@ -521,6 +526,27 @@ class ListReservationsPaginator(_ListReservationsPaginatorBase):
         """
         [Show boto3 documentation](https://boto3.amazonaws.com/v1/documentation/api/latest/reference/services/medialive/paginator/ListReservations.html#MediaLive.Paginator.ListReservations.paginate)
         [Show types-aiobotocore documentation](https://youtype.github.io/types_aiobotocore_docs/types_aiobotocore_medialive/paginators/#listreservationspaginator)
+        """
+
+
+if TYPE_CHECKING:
+    _ListSdiSourcesPaginatorBase = AioPaginator[ListSdiSourcesResponseTypeDef]
+else:
+    _ListSdiSourcesPaginatorBase = AioPaginator  # type: ignore[assignment]
+
+
+class ListSdiSourcesPaginator(_ListSdiSourcesPaginatorBase):
+    """
+    [Show boto3 documentation](https://boto3.amazonaws.com/v1/documentation/api/latest/reference/services/medialive/paginator/ListSdiSources.html#MediaLive.Paginator.ListSdiSources)
+    [Show types-aiobotocore documentation](https://youtype.github.io/types_aiobotocore_docs/types_aiobotocore_medialive/paginators/#listsdisourcespaginator)
+    """
+
+    def paginate(  # type: ignore[override]
+        self, **kwargs: Unpack[ListSdiSourcesRequestPaginateTypeDef]
+    ) -> AioPageIterator[ListSdiSourcesResponseTypeDef]:
+        """
+        [Show boto3 documentation](https://boto3.amazonaws.com/v1/documentation/api/latest/reference/services/medialive/paginator/ListSdiSources.html#MediaLive.Paginator.ListSdiSources.paginate)
+        [Show types-aiobotocore documentation](https://youtype.github.io/types_aiobotocore_docs/types_aiobotocore_medialive/paginators/#listsdisourcespaginator)
         """
 
 

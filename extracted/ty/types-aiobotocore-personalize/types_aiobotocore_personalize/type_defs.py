@@ -164,8 +164,11 @@ __all__ = (
     "DescribeSolutionVersionRequestTypeDef",
     "DescribeSolutionVersionResponseTypeDef",
     "EmptyResponseMetadataTypeDef",
+    "EventParametersTypeDef",
     "EventTrackerSummaryTypeDef",
     "EventTrackerTypeDef",
+    "EventsConfigOutputTypeDef",
+    "EventsConfigTypeDef",
     "FeatureTransformationTypeDef",
     "FieldsForThemeGenerationTypeDef",
     "FilterSummaryTypeDef",
@@ -252,7 +255,9 @@ __all__ = (
     "SolutionConfigUnionTypeDef",
     "SolutionSummaryTypeDef",
     "SolutionTypeDef",
+    "SolutionUpdateConfigOutputTypeDef",
     "SolutionUpdateConfigTypeDef",
+    "SolutionUpdateConfigUnionTypeDef",
     "SolutionUpdateSummaryTypeDef",
     "SolutionVersionSummaryTypeDef",
     "SolutionVersionTypeDef",
@@ -660,6 +665,12 @@ class DescribeSolutionVersionRequestTypeDef(TypedDict):
     solutionVersionArn: str
 
 
+class EventParametersTypeDef(TypedDict):
+    eventType: NotRequired[str]
+    eventValueThreshold: NotRequired[float]
+    weight: NotRequired[float]
+
+
 class EventTrackerSummaryTypeDef(TypedDict):
     name: NotRequired[str]
     eventTrackerArn: NotRequired[str]
@@ -892,10 +903,6 @@ class UntagResourceRequestTypeDef(TypedDict):
 class UpdateDatasetRequestTypeDef(TypedDict):
     datasetArn: str
     schemaArn: str
-
-
-class SolutionUpdateConfigTypeDef(TypedDict):
-    autoTrainingConfig: NotRequired[AutoTrainingConfigTypeDef]
 
 
 BatchInferenceJobConfigUnionTypeDef = Union[
@@ -1267,6 +1274,14 @@ class DescribeRecipeResponseTypeDef(TypedDict):
     ResponseMetadata: ResponseMetadataTypeDef
 
 
+class EventsConfigOutputTypeDef(TypedDict):
+    eventParametersList: NotRequired[List[EventParametersTypeDef]]
+
+
+class EventsConfigTypeDef(TypedDict):
+    eventParametersList: NotRequired[Sequence[EventParametersTypeDef]]
+
+
 class ListEventTrackersResponseTypeDef(TypedDict):
     eventTrackers: List[EventTrackerSummaryTypeDef]
     ResponseMetadata: ResponseMetadataTypeDef
@@ -1412,21 +1427,6 @@ class RecommenderConfigTypeDef(TypedDict):
     enableMetadataWithRecommendations: NotRequired[bool]
 
 
-class SolutionUpdateSummaryTypeDef(TypedDict):
-    solutionUpdateConfig: NotRequired[SolutionUpdateConfigTypeDef]
-    status: NotRequired[str]
-    performAutoTraining: NotRequired[bool]
-    creationDateTime: NotRequired[datetime]
-    lastUpdatedDateTime: NotRequired[datetime]
-    failureReason: NotRequired[str]
-
-
-class UpdateSolutionRequestTypeDef(TypedDict):
-    solutionArn: str
-    performAutoTraining: NotRequired[bool]
-    solutionUpdateConfig: NotRequired[SolutionUpdateConfigTypeDef]
-
-
 class BatchSegmentJobTypeDef(TypedDict):
     jobName: NotRequired[str]
     batchSegmentJobArn: NotRequired[str]
@@ -1556,6 +1556,16 @@ class AlgorithmTypeDef(TypedDict):
     lastUpdatedDateTime: NotRequired[datetime]
 
 
+class SolutionUpdateConfigOutputTypeDef(TypedDict):
+    autoTrainingConfig: NotRequired[AutoTrainingConfigTypeDef]
+    eventsConfig: NotRequired[EventsConfigOutputTypeDef]
+
+
+class SolutionUpdateConfigTypeDef(TypedDict):
+    autoTrainingConfig: NotRequired[AutoTrainingConfigTypeDef]
+    eventsConfig: NotRequired[EventsConfigTypeDef]
+
+
 class BatchInferenceJobTypeDef(TypedDict):
     jobName: NotRequired[str]
     batchInferenceJobArn: NotRequired[str]
@@ -1647,6 +1657,20 @@ class DescribeAlgorithmResponseTypeDef(TypedDict):
     ResponseMetadata: ResponseMetadataTypeDef
 
 
+class SolutionUpdateSummaryTypeDef(TypedDict):
+    solutionUpdateConfig: NotRequired[SolutionUpdateConfigOutputTypeDef]
+    status: NotRequired[str]
+    performAutoTraining: NotRequired[bool]
+    creationDateTime: NotRequired[datetime]
+    lastUpdatedDateTime: NotRequired[datetime]
+    failureReason: NotRequired[str]
+
+
+SolutionUpdateConfigUnionTypeDef = Union[
+    SolutionUpdateConfigTypeDef, SolutionUpdateConfigOutputTypeDef
+]
+
+
 class DescribeBatchInferenceJobResponseTypeDef(TypedDict):
     batchInferenceJob: BatchInferenceJobTypeDef
     ResponseMetadata: ResponseMetadataTypeDef
@@ -1658,6 +1682,7 @@ class SolutionConfigOutputTypeDef(TypedDict):
     algorithmHyperParameters: NotRequired[Dict[str, str]]
     featureTransformationParameters: NotRequired[Dict[str, str]]
     autoMLConfig: NotRequired[AutoMLConfigOutputTypeDef]
+    eventsConfig: NotRequired[EventsConfigOutputTypeDef]
     optimizationObjective: NotRequired[OptimizationObjectiveTypeDef]
     trainingDataConfig: NotRequired[TrainingDataConfigOutputTypeDef]
     autoTrainingConfig: NotRequired[AutoTrainingConfigTypeDef]
@@ -1669,6 +1694,7 @@ class SolutionConfigTypeDef(TypedDict):
     algorithmHyperParameters: NotRequired[Mapping[str, str]]
     featureTransformationParameters: NotRequired[Mapping[str, str]]
     autoMLConfig: NotRequired[AutoMLConfigTypeDef]
+    eventsConfig: NotRequired[EventsConfigTypeDef]
     optimizationObjective: NotRequired[OptimizationObjectiveTypeDef]
     trainingDataConfig: NotRequired[TrainingDataConfigTypeDef]
     autoTrainingConfig: NotRequired[AutoTrainingConfigTypeDef]
@@ -1705,6 +1731,12 @@ class CreateRecommenderRequestTypeDef(TypedDict):
 class UpdateRecommenderRequestTypeDef(TypedDict):
     recommenderArn: str
     recommenderConfig: RecommenderConfigUnionTypeDef
+
+
+class UpdateSolutionRequestTypeDef(TypedDict):
+    solutionArn: str
+    performAutoTraining: NotRequired[bool]
+    solutionUpdateConfig: NotRequired[SolutionUpdateConfigUnionTypeDef]
 
 
 class SolutionTypeDef(TypedDict):

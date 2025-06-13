@@ -320,7 +320,7 @@ class EntityResolutionClient(AioBaseClient):
     ) -> GetMatchIdOutputTypeDef:
         """
         Returns the corresponding Match ID of a customer record if the record has been
-        processed.
+        processed in a rule-based matching workflow or ML matching workflow.
 
         [Show boto3 documentation](https://boto3.amazonaws.com/v1/documentation/api/latest/reference/services/entityresolution/client/get_match_id.html)
         [Show types-aiobotocore documentation](https://youtype.github.io/types_aiobotocore_docs/types_aiobotocore_entityresolution/client/#get_match_id)

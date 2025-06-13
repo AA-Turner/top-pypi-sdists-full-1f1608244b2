@@ -22,7 +22,10 @@ async def stream_to_nostream(
 async def chat_for_image(
         generate: Callable,
         request: CompletionRequest,
+        api_key: Optional[str] = None,
 ):
+    generate = partial(generate, api_key=api_key)
+
     if not request.stream or request.last_user_content.startswith(  # 跳过nextchat
             (
                     "hi",

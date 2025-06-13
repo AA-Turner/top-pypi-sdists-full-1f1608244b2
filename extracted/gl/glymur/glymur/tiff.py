@@ -14,7 +14,7 @@ import numpy as np
 from glymur import Jp2k, set_option
 from glymur.core import SRGB
 from ._core_converter import _2JP2Converter
-from .lib import tiff as libtiff
+from .lib import _tiff as libtiff
 from . import jp2box
 
 # we need a lower case mapping from the tag name to the tag number
@@ -243,7 +243,7 @@ class Tiff2Jp2k(_2JP2Converter):
         temp_filename = str(self.jp2_path) + ".tmp"
         self.jp2.wrap(temp_filename, boxes=self.jp2.box)
         shutil.move(temp_filename, self.jp2_path)
-        self.jp2.parse()
+        self.jp2._parse()
 
     def append_extra_jp2_boxes(self):
         """Copy over the TIFF IFD.  Place it in a UUID box.  Append to the JPEG

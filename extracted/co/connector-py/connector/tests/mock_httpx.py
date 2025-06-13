@@ -25,51 +25,41 @@ def mock_requests(
         # httpx_mock which is HTTP 200, empty body
         return
 
-    for method, requests in response_body_map.items():
-        if isinstance(requests, dict):
-            for request_line, response in requests.items():
+    for method, responses in response_body_map.items():
+        if isinstance(responses, dict):
+            for request_line, response in responses.items():
                 if request_line.startswith("https://"):
                     url = request_line
                 else:
                     url = f"{host or ''}{request_line}"
 
-                if isinstance(response.response_body, str):
-                    httpx_mock.add_response(
-                        method=method,
-                        url=url,
-                        content=response.response_body.encode(),
-                        status_code=response.status_code,
-                    )
-                else:
-                    httpx_mock.add_response(
-                        method=method,
-                        url=url,
-                        json=response.response_body,
-                        status_code=response.status_code,
-                        headers=response.headers if response.headers else None,
-                        match_json=response.request_json_body
-                        if response.request_json_body
-                        else None,
-                    )
-        elif isinstance(requests, list):
-            for response in requests:
-                if isinstance(response.response_body, str):
-                    httpx_mock.add_response(
-                        method=method,
-                        url=host or "",
-                        content=response.response_body.encode(),
-                        status_code=response.status_code,
-                    )
-                else:
-                    httpx_mock.add_response(
-                        method=method,
-                        url=f"{host or ''}{response.request_path}"
+                httpx_mock.add_response(
+                    method=method,
+                    url=url,
+                    json=response.response_body,
+                    text=(
+                        response.response_body if isinstance(response.response_body, str) else None
+                    ),
+                    status_code=response.status_code,
+                    headers=response.headers if response.headers else None,
+                    match_json=response.request_json_body,
+                    match_content=response.request_bytes_body,
+                )
+        elif isinstance(responses, list):
+            for response in responses:
+                httpx_mock.add_response(
+                    method=method,
+                    url=(
+                        f"{host or ''}{response.request_path}"
                         if response.request_path
-                        else host or "",
-                        json=response.response_body,
-                        status_code=response.status_code,
-                        headers=response.headers if response.headers else None,
-                        match_json=response.request_json_body
-                        if response.request_json_body
-                        else None,
-                    )
+                        else host or ""
+                    ),
+                    json=response.response_body,
+                    text=(
+                        response.response_body if isinstance(response.response_body, str) else None
+                    ),
+                    status_code=response.status_code,
+                    headers=response.headers if response.headers else None,
+                    match_json=response.request_json_body,
+                    match_content=response.request_bytes_body,
+                )

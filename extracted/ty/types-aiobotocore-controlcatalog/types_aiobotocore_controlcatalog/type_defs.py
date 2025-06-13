@@ -19,7 +19,7 @@ from __future__ import annotations
 import sys
 from datetime import datetime
 
-from .literals import ControlBehaviorType, ControlScopeType
+from .literals import ControlBehaviorType, ControlScopeType, ControlSeverityType
 
 if sys.version_info >= (3, 9):
     from builtins import dict as Dict
@@ -45,6 +45,7 @@ __all__ = (
     "GetControlRequestTypeDef",
     "GetControlResponseTypeDef",
     "ImplementationDetailsTypeDef",
+    "ImplementationSummaryTypeDef",
     "ListCommonControlsRequestPaginateTypeDef",
     "ListCommonControlsRequestTypeDef",
     "ListCommonControlsResponseTypeDef",
@@ -84,10 +85,13 @@ class ControlParameterTypeDef(TypedDict):
     Name: str
 
 
-class ControlSummaryTypeDef(TypedDict):
-    Arn: str
-    Name: str
-    Description: str
+ImplementationSummaryTypeDef = TypedDict(
+    "ImplementationSummaryTypeDef",
+    {
+        "Type": str,
+        "Identifier": NotRequired[str],
+    },
+)
 
 
 class DomainResourceFilterTypeDef(TypedDict):
@@ -110,6 +114,7 @@ ImplementationDetailsTypeDef = TypedDict(
     "ImplementationDetailsTypeDef",
     {
         "Type": str,
+        "Identifier": NotRequired[str],
     },
 )
 
@@ -166,6 +171,16 @@ class CommonControlFilterTypeDef(TypedDict):
     Objectives: NotRequired[Sequence[ObjectiveResourceFilterTypeDef]]
 
 
+class ControlSummaryTypeDef(TypedDict):
+    Arn: str
+    Name: str
+    Description: str
+    Behavior: NotRequired[ControlBehaviorType]
+    Severity: NotRequired[ControlSeverityType]
+    Implementation: NotRequired[ImplementationSummaryTypeDef]
+    CreateTime: NotRequired[datetime]
+
+
 class ObjectiveFilterTypeDef(TypedDict):
     Domains: NotRequired[Sequence[DomainResourceFilterTypeDef]]
 
@@ -175,16 +190,12 @@ class GetControlResponseTypeDef(TypedDict):
     Name: str
     Description: str
     Behavior: ControlBehaviorType
+    Severity: ControlSeverityType
     RegionConfiguration: RegionConfigurationTypeDef
     Implementation: ImplementationDetailsTypeDef
     Parameters: List[ControlParameterTypeDef]
+    CreateTime: datetime
     ResponseMetadata: ResponseMetadataTypeDef
-
-
-class ListControlsResponseTypeDef(TypedDict):
-    Controls: List[ControlSummaryTypeDef]
-    ResponseMetadata: ResponseMetadataTypeDef
-    NextToken: NotRequired[str]
 
 
 class ListDomainsResponseTypeDef(TypedDict):
@@ -222,6 +233,12 @@ class ListCommonControlsRequestTypeDef(TypedDict):
     MaxResults: NotRequired[int]
     NextToken: NotRequired[str]
     CommonControlFilter: NotRequired[CommonControlFilterTypeDef]
+
+
+class ListControlsResponseTypeDef(TypedDict):
+    Controls: List[ControlSummaryTypeDef]
+    ResponseMetadata: ResponseMetadataTypeDef
+    NextToken: NotRequired[str]
 
 
 class ListObjectivesRequestPaginateTypeDef(TypedDict):

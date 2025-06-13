@@ -10,10 +10,10 @@ import httpx
 import domolibrary.client.get_data as gd
 import domolibrary.client.ResponseGetData as rgd
 import domolibrary.client.DomoAuth as dmda
-import domolibrary.client.DomoError as de
+import domolibrary.client.DomoError as dmde
 
 # %% ../../nbs/routes/instance_config_mfa.ipynb 7
-class MFA_UPDATE_Error(de.DomoError):
+class MFA_UPDATE_Error(dmde.DomoError):
     def __init__(
         self,
         res: rgd.ResponseGetData,
@@ -28,7 +28,7 @@ class MFA_UPDATE_Error(de.DomoError):
         )
 
 
-class MFA_UPDATE_Value_Error(de.DomoError):
+class MFA_UPDATE_Value_Error(dmde.DomoError):
     
     def __init__(
         self,
@@ -69,6 +69,10 @@ async def toggle_enable_mfa(
     )
 
     if not res.is_success:
+        if res.status == 403:
+            raise MFA_UPDATE_Value_Error(
+                message=f"this endpoint requires OTP elevation."
+            )
         raise MFA_UPDATE_Error(
             res=res,
             message=f"failed to toggle MFA in {auth.domo_instance}",
@@ -79,7 +83,7 @@ async def toggle_enable_mfa(
     return res
 
 # %% ../../nbs/routes/instance_config_mfa.ipynb 10
-class MFA_GET_Error(de.DomoError):
+class MFA_GET_Error(dmde.DomoError):
     def __init__(
         self,
         res : rgd.ResponseGetData,
@@ -205,6 +209,12 @@ async def set_mfa_max_code_attempts(
     )
     
     if not res.is_success:
+        if res.status == 403:
+                raise MFA_UPDATE_Error(
+            res=res,
+            message=f"MFA modification requires OTP elevation to update max code attempts in {auth.domo_instance}",
+        )
+
         raise MFA_UPDATE_Error(
             res=res,
             message=f"failed to update max number of code attempts for MFA in {auth.domo_instance}",

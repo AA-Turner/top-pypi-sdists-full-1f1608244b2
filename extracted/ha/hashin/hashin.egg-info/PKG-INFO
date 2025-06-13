@@ -1,6 +1,6 @@
 Metadata-Version: 2.4
 Name: hashin
-Version: 1.0.4
+Version: 1.0.5
 Summary: Edits your requirements.txt by hashing them in
 Home-page: https://github.com/peterbe/hashin
 Author: Peter Bengtsson
@@ -9,7 +9,6 @@ License: MIT
 Keywords: pip,repeatable,deploy,deployment,hash,install,installer
 Classifier: Intended Audience :: Developers
 Classifier: Intended Audience :: System Administrators
-Classifier: License :: OSI Approved :: MIT License
 Classifier: Programming Language :: Python :: 3
 Classifier: Programming Language :: Python :: 3.9
 Classifier: Programming Language :: Python :: 3.10
@@ -27,6 +26,8 @@ Requires-Dist: pip
 Provides-Extra: dev
 Requires-Dist: tox; extra == "dev"
 Requires-Dist: twine; extra == "dev"
+Provides-Extra: tests
+Requires-Dist: pytest; extra == "tests"
 Dynamic: author
 Dynamic: author-email
 Dynamic: classifier
@@ -311,6 +312,17 @@ put it directly into ``pip``.
 
 Version History
 ===============
+
+1.0.5
+  * Make ``setup.py sdist`` ship missing file ``tests/conftest.py``.
+    See https://github.com/peterbe/hashin/issues/217
+    and https://github.com/peterbe/hashin/pull/220 — thanks @hartwork
+
+  * Drop deprecated trove license classifier from ``setup.py``.
+    See https://github.com/peterbe/hashin/pull/218 — thanks @hartwork
+
+  * Resolve gone option ``tests_require`` from ``setup.py``.
+    See https://github.com/peterbe/hashin/pull/219 — thanks @hartwork
 
 1.0.4
   * Resolve dependency on pip-api.

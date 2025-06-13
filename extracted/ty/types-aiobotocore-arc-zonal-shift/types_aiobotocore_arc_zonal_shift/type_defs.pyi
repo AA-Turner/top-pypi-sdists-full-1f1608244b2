@@ -25,6 +25,7 @@ from .literals import (
     AutoshiftExecutionStatusType,
     AutoshiftObserverNotificationStatusType,
     PracticeRunOutcomeType,
+    ShiftTypeType,
     ZonalAutoshiftStatusType,
     ZonalShiftStatusType,
 )
@@ -85,9 +86,9 @@ class AutoshiftInResourceTypeDef(TypedDict):
 
 class AutoshiftSummaryTypeDef(TypedDict):
     awayFrom: str
-    endTime: datetime
     startTime: datetime
     status: AutoshiftExecutionStatusType
+    endTime: NotRequired[datetime]
 
 class CancelZonalShiftRequestTypeDef(TypedDict):
     zonalShiftId: str
@@ -122,6 +123,7 @@ class ZonalShiftInResourceTypeDef(TypedDict):
     startTime: datetime
     zonalShiftId: str
     practiceRunOutcome: NotRequired[PracticeRunOutcomeType]
+    shiftType: NotRequired[ShiftTypeType]
 
 class PaginatorConfigTypeDef(TypedDict):
     MaxItems: NotRequired[int]
@@ -152,6 +154,7 @@ class ZonalShiftSummaryTypeDef(TypedDict):
     status: ZonalShiftStatusType
     zonalShiftId: str
     practiceRunOutcome: NotRequired[PracticeRunOutcomeType]
+    shiftType: NotRequired[ShiftTypeType]
 
 class StartZonalShiftRequestTypeDef(TypedDict):
     awayFrom: str

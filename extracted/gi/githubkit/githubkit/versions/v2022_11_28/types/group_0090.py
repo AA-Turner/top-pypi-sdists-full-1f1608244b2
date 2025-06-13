@@ -9,61 +9,23 @@ See https://github.com/github/rest-api-description for more information.
 
 from __future__ import annotations
 
-from datetime import date, datetime
 from typing import Literal, Union
-from typing_extensions import NotRequired, TypedDict
-
-from .group_0003 import SimpleUserType
-from .group_0061 import OrganizationSimpleType
-from .group_0080 import TeamType
+from typing_extensions import TypedDict
 
 
-class CopilotSeatDetailsType(TypedDict):
-    """Copilot Business Seat Detail
+class CodespaceMachineType(TypedDict):
+    """Codespace machine
 
-    Information about a Copilot Business seat assignment for a user, team, or
-    organization.
+    A description of the machine powering a codespace.
     """
 
-    assignee: NotRequired[Union[None, SimpleUserType]]
-    organization: NotRequired[Union[None, OrganizationSimpleType]]
-    assigning_team: NotRequired[Union[TeamType, EnterpriseTeamType, None]]
-    pending_cancellation_date: NotRequired[Union[date, None]]
-    last_activity_at: NotRequired[Union[datetime, None]]
-    last_activity_editor: NotRequired[Union[str, None]]
-    created_at: datetime
-    updated_at: NotRequired[datetime]
-    plan_type: NotRequired[Literal["business", "enterprise", "unknown"]]
-
-
-class EnterpriseTeamType(TypedDict):
-    """Enterprise Team
-
-    Group of enterprise owners and/or members
-    """
-
-    id: int
     name: str
-    slug: str
-    url: str
-    sync_to_organizations: str
-    group_id: NotRequired[Union[str, None]]
-    group_name: NotRequired[Union[str, None]]
-    html_url: str
-    members_url: str
-    created_at: datetime
-    updated_at: datetime
+    display_name: str
+    operating_system: str
+    storage_in_bytes: int
+    memory_in_bytes: int
+    cpus: int
+    prebuild_availability: Union[None, Literal["none", "ready", "in_progress"]]
 
 
-class OrgsOrgCopilotBillingSeatsGetResponse200Type(TypedDict):
-    """OrgsOrgCopilotBillingSeatsGetResponse200"""
-
-    total_seats: NotRequired[int]
-    seats: NotRequired[list[CopilotSeatDetailsType]]
-
-
-__all__ = (
-    "CopilotSeatDetailsType",
-    "EnterpriseTeamType",
-    "OrgsOrgCopilotBillingSeatsGetResponse200Type",
-)
+__all__ = ("CodespaceMachineType",)

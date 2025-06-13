@@ -344,7 +344,7 @@ class OpenSearchServiceClient(AioBaseClient):
         self, **kwargs: Unpack[CreateApplicationRequestTypeDef]
     ) -> CreateApplicationResponseTypeDef:
         """
-        Creates an OpenSearch Application.
+        Creates an OpenSearch UI application.
 
         [Show boto3 documentation](https://boto3.amazonaws.com/v1/documentation/api/latest/reference/services/opensearch/client/create_application.html)
         [Show types-aiobotocore documentation](https://youtype.github.io/types_aiobotocore_docs/types_aiobotocore_opensearch/client/#create_application)
@@ -395,7 +395,7 @@ class OpenSearchServiceClient(AioBaseClient):
         self, **kwargs: Unpack[DeleteApplicationRequestTypeDef]
     ) -> Dict[str, Any]:
         """
-        Deletes an existing OpenSearch Application.
+        Deletes a specified OpenSearch application.
 
         [Show boto3 documentation](https://boto3.amazonaws.com/v1/documentation/api/latest/reference/services/opensearch/client/delete_application.html)
         [Show types-aiobotocore documentation](https://youtype.github.io/types_aiobotocore_docs/types_aiobotocore_opensearch/client/#delete_application)
@@ -661,7 +661,7 @@ class OpenSearchServiceClient(AioBaseClient):
         self, **kwargs: Unpack[GetApplicationRequestTypeDef]
     ) -> GetApplicationResponseTypeDef:
         """
-        Check the configuration and status of an existing OpenSearch Application.
+        Retrieves the configuration and status of an existing OpenSearch application.
 
         [Show boto3 documentation](https://boto3.amazonaws.com/v1/documentation/api/latest/reference/services/opensearch/client/get_application.html)
         [Show types-aiobotocore documentation](https://youtype.github.io/types_aiobotocore_docs/types_aiobotocore_opensearch/client/#get_application)
@@ -747,7 +747,7 @@ class OpenSearchServiceClient(AioBaseClient):
         self, **kwargs: Unpack[ListApplicationsRequestTypeDef]
     ) -> ListApplicationsResponseTypeDef:
         """
-        List all OpenSearch Applications under your account.
+        Lists all OpenSearch applications under your account.
 
         [Show boto3 documentation](https://boto3.amazonaws.com/v1/documentation/api/latest/reference/services/opensearch/client/list_applications.html)
         [Show types-aiobotocore documentation](https://youtype.github.io/types_aiobotocore_docs/types_aiobotocore_opensearch/client/#list_applications)
@@ -957,7 +957,7 @@ class OpenSearchServiceClient(AioBaseClient):
         self, **kwargs: Unpack[UpdateApplicationRequestTypeDef]
     ) -> UpdateApplicationResponseTypeDef:
         """
-        Update the OpenSearch Application.
+        Updates the configuration and settings of an existing OpenSearch application.
 
         [Show boto3 documentation](https://boto3.amazonaws.com/v1/documentation/api/latest/reference/services/opensearch/client/update_application.html)
         [Show types-aiobotocore documentation](https://youtype.github.io/types_aiobotocore_docs/types_aiobotocore_opensearch/client/#update_application)

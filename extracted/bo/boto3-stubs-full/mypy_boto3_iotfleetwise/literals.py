@@ -176,7 +176,9 @@ UpdateCampaignActionType = Literal["APPROVE", "RESUME", "SUSPEND", "UPDATE"]
 UpdateModeType = Literal["Merge", "Overwrite"]
 VehicleAssociationBehaviorType = Literal["CreateIotThing", "ValidateIotThingExists"]
 VehicleMiddlewareProtocolType = Literal["ROS_2"]
-VehicleStateType = Literal["CREATED", "DELETING", "HEALTHY", "READY", "SUSPENDED"]
+VehicleStateType = Literal[
+    "CREATED", "DELETING", "HEALTHY", "READY", "READY_FOR_CHECKIN", "SUSPENDED"
+]
 IoTFleetWiseServiceName = Literal["iotfleetwise"]
 ServiceName = Literal[
     "accessanalyzer",

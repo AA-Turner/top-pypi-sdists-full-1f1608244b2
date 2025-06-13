@@ -29,6 +29,7 @@ __all__ = (
     "LoggingConfigurationStatusCodeType",
     "PaginatorName",
     "PrometheusServiceServiceName",
+    "QueryLoggingConfigurationStatusCodeType",
     "RegionName",
     "ResourceServiceName",
     "RuleGroupsNamespaceStatusCodeType",
@@ -38,6 +39,7 @@ __all__ = (
     "ServiceName",
     "WaiterName",
     "WorkspaceActiveWaiterName",
+    "WorkspaceConfigurationStatusCodeType",
     "WorkspaceDeletedWaiterName",
     "WorkspaceStatusCodeType",
 )
@@ -49,6 +51,9 @@ ListRuleGroupsNamespacesPaginatorName = Literal["list_rule_groups_namespaces"]
 ListScrapersPaginatorName = Literal["list_scrapers"]
 ListWorkspacesPaginatorName = Literal["list_workspaces"]
 LoggingConfigurationStatusCodeType = Literal[
+    "ACTIVE", "CREATING", "CREATION_FAILED", "DELETING", "UPDATE_FAILED", "UPDATING"
+]
+QueryLoggingConfigurationStatusCodeType = Literal[
     "ACTIVE", "CREATING", "CREATION_FAILED", "DELETING", "UPDATE_FAILED", "UPDATING"
 ]
 RuleGroupsNamespaceStatusCodeType = Literal[
@@ -66,6 +71,7 @@ ScraperStatusCodeType = Literal[
     "UPDATING",
 ]
 WorkspaceActiveWaiterName = Literal["workspace_active"]
+WorkspaceConfigurationStatusCodeType = Literal["ACTIVE", "UPDATE_FAILED", "UPDATING"]
 WorkspaceDeletedWaiterName = Literal["workspace_deleted"]
 WorkspaceStatusCodeType = Literal["ACTIVE", "CREATING", "CREATION_FAILED", "DELETING", "UPDATING"]
 PrometheusServiceServiceName = Literal["amp"]
@@ -225,6 +231,7 @@ ServiceName = Literal[
     "freetier",
     "fsx",
     "gamelift",
+    "gameliftstreams",
     "geo-maps",
     "geo-places",
     "geo-routes",
@@ -250,6 +257,7 @@ ServiceName = Literal[
     "iot",
     "iot-data",
     "iot-jobs-data",
+    "iot-managed-integrations",
     "iotanalytics",
     "iotdeviceadvisor",
     "iotevents",
@@ -364,7 +372,6 @@ ServiceName = Literal[
     "pipes",
     "polly",
     "pricing",
-    "privatenetworks",
     "proton",
     "qapps",
     "qbusiness",
@@ -425,7 +432,6 @@ ServiceName = Literal[
     "signer",
     "simspaceweaver",
     "sms",
-    "sms-voice",
     "snow-device-management",
     "snowball",
     "sns",
@@ -433,6 +439,7 @@ ServiceName = Literal[
     "sqs",
     "ssm",
     "ssm-contacts",
+    "ssm-guiconnect",
     "ssm-incidents",
     "ssm-quicksetup",
     "ssm-sap",
@@ -493,6 +500,7 @@ RegionName = Literal[
     "ap-south-1",
     "ap-southeast-1",
     "ap-southeast-2",
+    "ca-central-1",
     "eu-central-1",
     "eu-north-1",
     "eu-west-1",

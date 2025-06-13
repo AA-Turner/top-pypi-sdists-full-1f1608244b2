@@ -163,6 +163,9 @@ KeySpecType = Literal[
     "HMAC_256",
     "HMAC_384",
     "HMAC_512",
+    "ML_DSA_44",
+    "ML_DSA_65",
+    "ML_DSA_87",
     "RSA_2048",
     "RSA_3072",
     "RSA_4096",
@@ -188,7 +191,7 @@ ListKeysPaginatorName = Literal["list_keys"]
 ListResourceTagsPaginatorName = Literal["list_resource_tags"]
 ListRetirableGrantsPaginatorName = Literal["list_retirable_grants"]
 MacAlgorithmSpecType = Literal["HMAC_SHA_224", "HMAC_SHA_256", "HMAC_SHA_384", "HMAC_SHA_512"]
-MessageTypeType = Literal["DIGEST", "RAW"]
+MessageTypeType = Literal["DIGEST", "EXTERNAL_MU", "RAW"]
 MultiRegionKeyTypeType = Literal["PRIMARY", "REPLICA"]
 OriginTypeType = Literal["AWS_CLOUDHSM", "AWS_KMS", "EXTERNAL", "EXTERNAL_KEY_STORE"]
 RotationTypeType = Literal["AUTOMATIC", "ON_DEMAND"]
@@ -196,6 +199,7 @@ SigningAlgorithmSpecType = Literal[
     "ECDSA_SHA_256",
     "ECDSA_SHA_384",
     "ECDSA_SHA_512",
+    "ML_DSA_SHAKE_256",
     "RSASSA_PKCS1_V1_5_SHA_256",
     "RSASSA_PKCS1_V1_5_SHA_384",
     "RSASSA_PKCS1_V1_5_SHA_512",

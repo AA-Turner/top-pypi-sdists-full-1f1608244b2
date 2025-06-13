@@ -268,6 +268,7 @@ def _add_ingest_xmlupload(
     subparser.add_argument("-p", "--password", default=root_user_pw, help=password_text)
     subparser.add_argument("--interrupt-after", type=int, default=-1, help="interrupt after this number of resources")
     subparser.add_argument("xml_file", help="path to XML file containing the data")
+    subparser.add_argument("--skip-validation", action="store_true", help="Skip the SHACL schema validation")
 
 
 def _add_xmlupload(
@@ -289,9 +290,15 @@ def _add_xmlupload(
     subparser.add_argument(
         "-V", "--validate-only", action="store_true", help="validate the XML file without uploading it"
     )
+    subparser.add_argument("--skip-validation", action="store_true", help="Skip the SHACL schema validation")
     subparser.add_argument("--interrupt-after", type=int, default=-1, help="interrupt after this number of resources")
     subparser.add_argument("xmlfile", help="path to the XML file containing the data")
     subparser.add_argument("--no-iiif-uri-validation", action="store_true", help="skip the IIIF URI validation")
+    subparser.add_argument(
+        "--ignore-duplicate-files-warning",
+        action="store_true",
+        help="don't check if multimedia files are referenced more than once",
+    )
     subparser.add_argument(
         "--validation-severity",
         choices=["error", "warning", "info"],
@@ -311,6 +318,11 @@ def _add_validate_data(
     subparser.add_argument("xmlfile", help="path to the XML file containing the data")
     subparser.add_argument("-u", "--user", default=root_user_email, help=username_text)
     subparser.add_argument("-p", "--password", default=root_user_pw, help=password_text)
+    subparser.add_argument(
+        "--ignore-duplicate-files-warning",
+        action="store_true",
+        help="don't check if multimedia files are referenced more than once",
+    )
     subparser.add_argument(
         "-s", "--server", default=default_dsp_api_url, help="URL of the DSP server where DSP-TOOLS sends the data to"
     )

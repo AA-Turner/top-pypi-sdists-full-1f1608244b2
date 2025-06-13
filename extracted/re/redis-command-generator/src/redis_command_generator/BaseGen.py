@@ -3,6 +3,7 @@ import random
 import string
 import threading
 import json
+import time
 from typing import Callable
 from simple_parsing import parse
 from dataclasses import dataclass
@@ -64,6 +65,7 @@ class BaseGen():
     logfile: str = None  # Optional log file path to write debug information to
     maxmemory_bytes: int = None  # Override INFO's maxmemory (useful when unavailable, for e.g. in cluster mode)
     print_prefix: str = "COMMAND GENERATOR: "
+    identical_values_across_hosts: bool = False  # Flag to control if values should be identical across hosts
     
     ttl_low: int = 15
     ttl_high: int = 300
@@ -88,14 +90,12 @@ class BaseGen():
         
         if type not in self.scan_cursors[conn]:
             self.scan_cursors[conn][type] = 0
-        
-        cursor, keys = redis_obj.scan(self.scan_cursors[conn][type], _type=type)
+
+        # cursor, keys = redis_obj.scan(self.scan_cursors[conn][type], _type=type)
+        scan_return = redis_obj.scan(self.scan_cursors[conn][type], _type=type)
+        cursor, keys = scan_return
         self.scan_cursors[conn][type] = cursor
         return random.choice(keys) if keys else None
-    
-    def _get_rand_cmd(self) -> Callable[[redis.client.Pipeline, str], None]:
-        name = random.choices(list(self.distributions.keys()), weights=list(self.distributions.values()))[0]
-        return getattr(self, name)
     
     def _check_mem_cap(self, redis_obj: redis.Redis):
         info = redis_obj.info()
@@ -169,15 +169,32 @@ class BaseGen():
                     if self._check_mem_cap(r):
                         return
                 
+                # Generate a single key for all hosts
                 key = self._rand_key()
-                cmd = self._get_rand_cmd()
+                cmd_name = random.choices(list(self.distributions.keys()), weights=list(self.distributions.values()))[0]
+                cmd = getattr(self, cmd_name)
 
                 should_expire = False
                 if random.randint(0, 99) < self.expire_precentage:
                     should_expire = True
 
+                # Set a common seed for all hosts if identical_values_across_hosts is True
+                if self.identical_values_across_hosts:
+                    # Use a deterministic seed based on the iteration and command
+                    seed = time.time()
+
+                if cmd_name in ['tsalter', 'tsdel', 'tsdelkey']:
+                    temp_obj = self._pipe_to_redis(redis_pipes[0])
+                    key = self._scan_rand_key(temp_obj, "TSDB-TYPE")
+                    if not key:
+                        continue
+                elif cmd_name in ['tsadd', 'tscreate', 'tsqueryindex', 'tsmget', 'tsmrange_tsmrevrange']:
+                    key = self._rand_key()
                 for pipe in redis_pipes:
+                    if self.identical_values_across_hosts:
+                        random.seed(seed)
                     cmd(pipe, key)
+                    
                     if should_expire:
                         self.expire(pipe, key)
 

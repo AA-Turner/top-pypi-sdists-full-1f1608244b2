@@ -128,6 +128,8 @@ from .type_defs import (
     RunTaskResponseTypeDef,
     StartTaskRequestTypeDef,
     StartTaskResponseTypeDef,
+    StopServiceDeploymentRequestTypeDef,
+    StopServiceDeploymentResponseTypeDef,
     StopTaskRequestTypeDef,
     StopTaskResponseTypeDef,
     SubmitAttachmentStateChangesRequestTypeDef,
@@ -198,6 +200,7 @@ class Exceptions(BaseClientExceptions):
     ResourceInUseException: Type[BotocoreClientError]
     ResourceNotFoundException: Type[BotocoreClientError]
     ServerException: Type[BotocoreClientError]
+    ServiceDeploymentNotFoundException: Type[BotocoreClientError]
     ServiceNotActiveException: Type[BotocoreClientError]
     ServiceNotFoundException: Type[BotocoreClientError]
     TargetNotConnectedException: Type[BotocoreClientError]
@@ -688,6 +691,16 @@ class ECSClient(AioBaseClient):
 
         [Show boto3 documentation](https://boto3.amazonaws.com/v1/documentation/api/latest/reference/services/ecs/client/start_task.html)
         [Show types-aiobotocore documentation](https://youtype.github.io/types_aiobotocore_docs/types_aiobotocore_ecs/client/#start_task)
+        """
+
+    async def stop_service_deployment(
+        self, **kwargs: Unpack[StopServiceDeploymentRequestTypeDef]
+    ) -> StopServiceDeploymentResponseTypeDef:
+        """
+        Stops an ongoing service deployment.
+
+        [Show boto3 documentation](https://boto3.amazonaws.com/v1/documentation/api/latest/reference/services/ecs/client/stop_service_deployment.html)
+        [Show types-aiobotocore documentation](https://youtype.github.io/types_aiobotocore_docs/types_aiobotocore_ecs/client/#stop_service_deployment)
         """
 
     async def stop_task(self, **kwargs: Unpack[StopTaskRequestTypeDef]) -> StopTaskResponseTypeDef:

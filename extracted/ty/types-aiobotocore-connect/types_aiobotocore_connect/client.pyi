@@ -863,7 +863,7 @@ class ConnectClient(AioBaseClient):
         self, **kwargs: Unpack[CreateContactRequestTypeDef]
     ) -> CreateContactResponseTypeDef:
         """
-        Only the EMAIL channel is supported.
+        Only the EMAIL and VOICE channels are supported.
 
         [Show boto3 documentation](https://boto3.amazonaws.com/v1/documentation/api/latest/reference/services/connect/client/create_contact.html)
         [Show types-aiobotocore documentation](https://youtype.github.io/types_aiobotocore_docs/types_aiobotocore_connect/client/#create_contact)
@@ -2294,7 +2294,7 @@ class ConnectClient(AioBaseClient):
         self, **kwargs: Unpack[ListRealtimeContactAnalysisSegmentsV2RequestTypeDef]
     ) -> ListRealtimeContactAnalysisSegmentsV2ResponseTypeDef:
         """
-        Provides a list of analysis segments for a real-time analysis session.
+        Provides a list of analysis segments for a real-time chat analysis session.
 
         [Show boto3 documentation](https://boto3.amazonaws.com/v1/documentation/api/latest/reference/services/connect/client/list_realtime_contact_analysis_segments_v2.html)
         [Show types-aiobotocore documentation](https://youtype.github.io/types_aiobotocore_docs/types_aiobotocore_connect/client/#list_realtime_contact_analysis_segments_v2)
@@ -2921,7 +2921,7 @@ class ConnectClient(AioBaseClient):
     ) -> Dict[str, Any]:
         """
         When a contact is being recorded, this API suspends recording whatever is
-        selected in the flow configuration: call, screen, or both.
+        selected in the flow configuration: call (IVR or agent), screen, or both.
 
         [Show boto3 documentation](https://boto3.amazonaws.com/v1/documentation/api/latest/reference/services/connect/client/suspend_contact_recording.html)
         [Show types-aiobotocore documentation](https://youtype.github.io/types_aiobotocore_docs/types_aiobotocore_connect/client/#suspend_contact_recording)
@@ -2949,8 +2949,8 @@ class ConnectClient(AioBaseClient):
         self, **kwargs: Unpack[TransferContactRequestTypeDef]
     ) -> TransferContactResponseTypeDef:
         """
-        Transfers contacts from one agent or queue to another agent or queue at any
-        point after a contact is created.
+        Transfers <code>TASK</code> or <code>EMAIL</code> contacts from one agent or
+        queue to another agent or queue at any point after a contact is created.
 
         [Show boto3 documentation](https://boto3.amazonaws.com/v1/documentation/api/latest/reference/services/connect/client/transfer_contact.html)
         [Show types-aiobotocore documentation](https://youtype.github.io/types_aiobotocore_docs/types_aiobotocore_connect/client/#transfer_contact)

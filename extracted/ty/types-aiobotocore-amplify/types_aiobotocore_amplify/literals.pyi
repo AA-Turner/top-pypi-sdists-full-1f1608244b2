@@ -8,9 +8,9 @@ Copyright 2025 Vlad Emelianov
 Usage::
 
     ```python
-    from types_aiobotocore_amplify.literals import CacheConfigTypeType
+    from types_aiobotocore_amplify.literals import BuildComputeTypeType
 
-    data: CacheConfigTypeType = "AMPLIFY_MANAGED"
+    data: BuildComputeTypeType = "LARGE_16GB"
     ```
 """
 
@@ -23,6 +23,7 @@ else:
 
 __all__ = (
     "AmplifyServiceName",
+    "BuildComputeTypeType",
     "CacheConfigTypeType",
     "CertificateTypeType",
     "DomainStatusType",
@@ -44,6 +45,7 @@ __all__ = (
     "WafStatusType",
 )
 
+BuildComputeTypeType = Literal["LARGE_16GB", "STANDARD_8GB", "XLARGE_72GB"]
 CacheConfigTypeType = Literal["AMPLIFY_MANAGED", "AMPLIFY_MANAGED_NO_COOKIES"]
 CertificateTypeType = Literal["AMPLIFY_MANAGED", "CUSTOM"]
 DomainStatusType = Literal[
@@ -243,6 +245,7 @@ ServiceName = Literal[
     "freetier",
     "fsx",
     "gamelift",
+    "gameliftstreams",
     "geo-maps",
     "geo-places",
     "geo-routes",
@@ -268,6 +271,7 @@ ServiceName = Literal[
     "iot",
     "iot-data",
     "iot-jobs-data",
+    "iot-managed-integrations",
     "iotanalytics",
     "iotdeviceadvisor",
     "iotevents",
@@ -382,7 +386,6 @@ ServiceName = Literal[
     "pipes",
     "polly",
     "pricing",
-    "privatenetworks",
     "proton",
     "qapps",
     "qbusiness",
@@ -443,7 +446,6 @@ ServiceName = Literal[
     "signer",
     "simspaceweaver",
     "sms",
-    "sms-voice",
     "snow-device-management",
     "snowball",
     "sns",
@@ -451,6 +453,7 @@ ServiceName = Literal[
     "sqs",
     "ssm",
     "ssm-contacts",
+    "ssm-guiconnect",
     "ssm-incidents",
     "ssm-quicksetup",
     "ssm-sap",

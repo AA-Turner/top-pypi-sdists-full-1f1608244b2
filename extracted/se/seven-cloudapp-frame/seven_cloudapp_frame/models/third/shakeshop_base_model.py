@@ -71,10 +71,10 @@ class ShakeShopBaseModel():
             exception_message = 'assess_token获取失败，请检查配置，店铺ID:' + str(shop_id)
             if self.app_type == "SELF":
                 if self.init_token() == False:
-                    raise Exception(exception_message) 
+                    raise Exception(exception_message)
             elif self.app_type == "TOOL" and code:
                 if self.init_token(code) == False:
-                    raise Exception(exception_message) 
+                    raise Exception(exception_message)
 
     def _sign(self, method: str, param_json: str, timestamp: str) -> str:
         param_pattern = 'app_key{}method{}param_json{}timestamp{}v{}'.format(self.app_key, method, param_json, timestamp, self._version)
@@ -145,7 +145,7 @@ class ShakeShopBaseModel():
                 SevenHelper.redis_init(config_dict=config.get_value("platform_redis")).set(self.redis_token_key, json.dumps(self._token), ex=3600)
                 return True
             else:
-                raise Exception("初始化失败：" + json.dumps(result))
+                raise Exception("初始化失败：" + json.dumps({"request": params, "reponse": result}))
         except Exception as e:
             if self.context:
                 self.context.logging_link_error(traceback.format_exc())
@@ -281,7 +281,7 @@ class ShakeShopBaseModel():
         :last_editors: HuangJianYi
         """
         return {'code': 0, 'msg': 'success'}
-    
+
     def callback_response_error(self, error_code: str = 40041, error_message: str = "解析推送数据失败"):
         """
         :description: 抖店推送服务验证消息，需立即返回success
@@ -304,7 +304,7 @@ class ShakeShopBaseModel():
             return 'https://fuwu.jinritemai.com/authorize?service_id={}&state={}'.format(service_id, state)
         else:
             return None
-        
+
     def openid_switch(self, open_id: str, open_id_type: int = 1, is_log=False):
         """
         :description: 提供抖音和抖店 Openid 转换功能(https://op.jinritemai.com/docs/api-docs/162/1973)
@@ -394,7 +394,7 @@ class ShakeShopBaseModel():
                         return invoke_result_data
                     raise Exception(f"按抖音小程序open_id查询订单简要信息失败:{SevenHelper.json_dumps(response)}")
                 page = page + 1
-                
+
             invoke_result_data.data = all_order
             return invoke_result_data
 
@@ -406,8 +406,8 @@ class ShakeShopBaseModel():
             invoke_result_data.success = False
             invoke_result_data.error_code = "get_user_order_list"
             invoke_result_data.error_message = "按抖音小程序open_id查询订单简要信息(/order/getUserOrderList)"
-            return invoke_result_data    
-        
+            return invoke_result_data
+
     def order_detail(self, shop_order_id, is_log=False, is_cache=False):
         """
         :description: 订单详情查询(https://op.jinritemai.com/docs/api-docs/15/1343)
@@ -452,7 +452,7 @@ class ShakeShopBaseModel():
             invoke_result_data.error_code = "order_detail"
             invoke_result_data.error_message = "抖店接口错误：订单详情查询(/order/orderDetail)"
             return invoke_result_data
-        
+
     def order_search_list(self, page=0, size=100, order_type=None, order_by=None, order_asc=None, product=None, create_time_start='', create_time_end='', custom_params={}, is_log=False):
         """
         :description: 根据条件检索满足要求的订单列表，支持下单时间和更新时间排序；最大支持查询近90天的数据(https://op.jinritemai.com/docs/api-docs/15/1342)
@@ -487,7 +487,7 @@ class ShakeShopBaseModel():
                 params["create_time_start"] = create_time_start
             if create_time_end:
                 params["create_time_end"] = create_time_end
-                
+
             params.update(custom_params)
             response = self.request(path="/order/searchList", params=params, is_log=is_log)
             if response and response.get("code") == 10000 and "data" in response:
@@ -511,7 +511,7 @@ class ShakeShopBaseModel():
             invoke_result_data.error_code = "order_search_list"
             invoke_result_data.error_message = "抖店接口错误：订单列表查询(/order/searchList)"
             return invoke_result_data
-        
+
     def product_search_list(self, page=1, size=100, name="", product_id=[], status=0, product_type=-1, custom_params={}, field="product_id,name,img,status,discount_price,market_price,product_type,out_product_id,outer_product_id", is_log=False):
         """
         :description: 批量查询商品列表 使用场景：批量查询商家抖店商品信息 1、支持使用商品状态，商品类型、商品创建时间和更新时间筛选商品 2、最大支持1次查询1万条，如返回商品数据大于1万条，请增加筛选条件。
@@ -537,7 +537,7 @@ class ShakeShopBaseModel():
                 params["status"] = status
             if product_type != -1:
                 params["product_type"] = product_type
-                
+
             params.update(custom_params)
             response = self.request(path="/product/listV2", params=params, is_log=is_log)
             if response and response.get("code") == 10000 and "data" in response:
@@ -564,7 +564,7 @@ class ShakeShopBaseModel():
             invoke_result_data.error_code = "product_search_list"
             invoke_result_data.error_message = "抖店接口错误：批量查询商品列表(/product/listV2)"
             return invoke_result_data
-        
+
     def product_detail(self, product_id='', out_product_id='', is_log=False):
         """
         :description: 查询商品详情 使用场景：查询抖店商品详情信息 1、支持使用抖店商品id 2、商品外部开发者自定义编码查询
@@ -645,7 +645,7 @@ class ShakeShopBaseModel():
             invoke_result_data.error_code = "product_search_list"
             invoke_result_data.error_message = "抖店接口错误：获取商品sku列表(/sku/list)"
             return invoke_result_data
-        
+
     def mini_activity_create(self, goods_id, activity_name, act_start_date, act_end_date, user_buy_limit=0, online_directly=False, is_log=False):
         """
         :description: 创建专属活动
@@ -808,7 +808,7 @@ class ShakeShopBaseModel():
             invoke_result_data.error_code = "order_detail"
             invoke_result_data.error_message = "查询专属活动(/product/detail)"
             return invoke_result_data
-        
+
     def m_get_member_info_by_open_id_list(self, app_id, open_id_list, extend_info_list=None, is_log=False):
         """
         :description: 【会员通商家】获取会员信息(https://op.jinritemai.com/docs/api-docs/66/2750)
@@ -886,7 +886,7 @@ class ShakeShopBaseModel():
             invoke_result_data.error_code = "batch_get_union_id_by_open_id_list"
             invoke_result_data.error_message = "抖店接口错误：【会员通商家】会员open_id转union_id(/member/batchGetUnionIdByOpenIdList)"
             return invoke_result_data
-        
+
     def batch_get_open_id_list_by_union_id(self, union_id_list, is_log=False):
         """
         :description: 服务商可以根据品牌维度的用户唯一身份UnionId来查询品牌下每个店铺的用户OpenId(https://op.jinritemai.com/docs/api-docs/66/2814)
@@ -920,7 +920,7 @@ class ShakeShopBaseModel():
             invoke_result_data.error_code = "batch_get_open_id_list_by_union_id"
             invoke_result_data.error_message = "抖店接口错误：UnionId查询品牌下每个店铺的用户OpenId(/member/batchGetOpenIdListByUnionId)"
             return invoke_result_data
-        
+
     def batch_get_history_member_union_id(self, app_id, open_id_list, is_log=False):
         """
         :description:【品牌会员店铺专用】根据店铺会员的openId获取品牌维度的用户身份标识unionId(https://op.jinritemai.com/docs/api-docs/66/2136)
@@ -960,4 +960,3 @@ class ShakeShopBaseModel():
             invoke_result_data.error_code = "batch_get_history_member_union_id"
             invoke_result_data.error_message = "抖店接口错误：根据店铺会员的openId获取品牌维度的用户身份标识unionId(/member/batchGetHistoryMemberUnionId)"
             return invoke_result_data
-

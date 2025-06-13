@@ -6,11 +6,13 @@
 # @Author       : betterme
 # @WeChat       : meutils
 # @Software     : PyCharm
-# @Description  : 
+# @Description  :
+import datetime
 
 from meutils.pipe import *
 from meutils.hash_utils import murmurhash
 from meutils.schemas.oneapi import BASE_URL, GROUP_RATIO
+from meutils.schemas.oneapi._types import ChannelInfo
 
 headers = {
     'authorization': f'Bearer {os.getenv("CHATFIRE_ONEAPI_TOKEN")}',
@@ -73,57 +75,29 @@ async def edit_channel(models, token: Optional[str] = None):
 
 
 async def create_or_update_channel(
-        api_key,
-        base_url: Optional[str] = "https://api.ffire.cc",
-        models: str = "",
-        channel_id: Optional[int] = None,
+        request: ChannelInfo,
+
+        base_url: Optional[str] = None,
+        api_key: Optional[str] = None,
 ):
-    if isinstance(api_key, list):
-        api_keys = api_key | xgroup(128)  # [[],]
-    else:
-        api_keys = [[api_key]]
+    method = "put" if request.id else "post"
+    base_url = base_url or  "https://api.ffire.cc"
 
-    payload = {
-        "id": channel_id,
-        "type": 24,  # gemini
-        # "key": "AIzaSyCXWV19FRM4XX0KHmpR9lYUz9i1wxQTYUg",
-        "openai_organization": "",
-        "test_model": "",
-        "status": 1,
-        "name": "gemini",
+    # 新创建的优先级低，保证旧key刷的时间更长
+    request.priority = request.priority or int(1000 - (time.time() - time.time() // 1000 * 1000))
 
-        "priority": murmurhash(api_key, bins=3),
-        "weight": 0,
-        # "created_time": 1745554162,
-        # "test_time": 1745554168,
-        # "response_time": 575,
-        # "base_url": "https://g.chatfire.cn/v1beta/openai/chat/completions",
-        # "other": "",
-        # "balance": 0,
-        # "balance_updated_time": 0,
-        "models": models,
-        # "used_quota": 0,
-        "model_mapping": """{"gemini-2.5-pro-preview-03-25": "gemini-2.5-pro-exp-03-25"}""",
-        # "status_code_mapping": "",
-        # "auto_ban": 1,
-        # "other_info": "",
-        # "settings": "",
-        "tag": "gemini",
-        # "setting": None,
-        # "param_override": "\n {\n \"seed\": null,\n \"frequency_penalty\": null,\n \"presence_penalty\": null,\n \"max_tokens\": null\n }\n ",
-        "group": "default",
-        "groups": [
-            "default"
-        ]
+    api_key = api_key or os.getenv("CHATFIRE_ONEAPI_TOKEN")
+    headers = {
+        'authorization': f'Bearer {api_key}',
+        'new-api-user': '1',
+        'rix-api-user': '1',
     }
-
-    for api_key in tqdm(api_keys):
-        payload['key'] = '\n'.join(api_key)
-        # logger.debug(payload)
-        async with httpx.AsyncClient(base_url=base_url, headers=headers, timeout=100) as client:
-            response = await client.post("/api/channel/", json=payload)
-            response.raise_for_status()
-            logger.debug(response.json())
+    payload = request.model_dump(exclude_none=True)
+    async with httpx.AsyncClient(base_url=base_url, headers=headers, timeout=60) as client:
+        response = await client.request(method, "/api/channel/", json=payload)
+        response.raise_for_status()
+        logger.debug(response.json())
+        return response.json()
 
 
 async def create_or_update_channel_for_gemini(api_key, base_url: Optional[str] = "https://api.ffire.cc"):
@@ -206,13 +180,18 @@ if __name__ == '__main__':
     # gemini
     FEISHU_URL = "https://xchatllm.feishu.cn/sheets/Bmjtst2f6hfMqFttbhLcdfRJnNf?sheet=kfKGzt"
     #
-    # base_url = "https://api.ffire.cc"
-    base_url = "https://usa.chatfire.cn"
+    base_url = "https://api.ffire.cc"
+    # base_url = "https://usa.chatfire.cn"
     #
-    tokens = arun(get_series(FEISHU_URL))  # [:5]
-    arun(create_or_update_channel(tokens, base_url))
+    # tokens = arun(get_series(FEISHU_URL))  # [:5]
+    # arun(create_or_update_channel(tokens, base_url))
     # arun(create_or_update_channel(tokens))
     # # arun(delete_channel(range(10000, 20000)))
+    key= "KEY"
+    request = ChannelInfo(name='', key=key)
+    request = ChannelInfo(key=key)
+
+    arun(create_or_update_channel(request))
 
 """
 API_KEY=6c255307-7b4d-4be8-984b-5440a3e867eb

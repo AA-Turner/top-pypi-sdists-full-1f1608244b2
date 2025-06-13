@@ -16,7 +16,7 @@ except ImportError:
 
 setup(
     name="hashin",
-    version="1.0.4",
+    version="1.0.5",
     description="Edits your requirements.txt by hashing them in",
     long_description=open(path.join(_here, "README.rst")).read(),
     author="Peter Bengtsson",
@@ -28,12 +28,10 @@ setup(
     include_package_data=True,
     python_requires=">=3.9",
     install_requires=["packaging", "pip"],
-    tests_require=["pytest"],
-    extras_require={"dev": ["tox", "twine"]},
+    extras_require={"dev": ["tox", "twine"], "tests": ["pytest"]},
     classifiers=[
         "Intended Audience :: Developers",
         "Intended Audience :: System Administrators",
-        "License :: OSI Approved :: MIT License",
         "Programming Language :: Python :: 3",
         "Programming Language :: Python :: 3.9",
         "Programming Language :: Python :: 3.10",

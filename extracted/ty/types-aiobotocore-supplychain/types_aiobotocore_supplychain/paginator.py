@@ -12,8 +12,11 @@ Usage::
 
     from types_aiobotocore_supplychain.client import SupplyChainClient
     from types_aiobotocore_supplychain.paginator import (
+        ListDataIntegrationEventsPaginator,
+        ListDataIntegrationFlowExecutionsPaginator,
         ListDataIntegrationFlowsPaginator,
         ListDataLakeDatasetsPaginator,
+        ListDataLakeNamespacesPaginator,
         ListInstancesPaginator,
     )
 
@@ -21,8 +24,11 @@ Usage::
     with session.create_client("supplychain") as client:
         client: SupplyChainClient
 
+        list_data_integration_events_paginator: ListDataIntegrationEventsPaginator = client.get_paginator("list_data_integration_events")
+        list_data_integration_flow_executions_paginator: ListDataIntegrationFlowExecutionsPaginator = client.get_paginator("list_data_integration_flow_executions")
         list_data_integration_flows_paginator: ListDataIntegrationFlowsPaginator = client.get_paginator("list_data_integration_flows")
         list_data_lake_datasets_paginator: ListDataLakeDatasetsPaginator = client.get_paginator("list_data_lake_datasets")
+        list_data_lake_namespaces_paginator: ListDataLakeNamespacesPaginator = client.get_paginator("list_data_lake_namespaces")
         list_instances_paginator: ListInstancesPaginator = client.get_paginator("list_instances")
     ```
 """
@@ -35,10 +41,16 @@ from typing import TYPE_CHECKING
 from aiobotocore.paginate import AioPageIterator, AioPaginator
 
 from .type_defs import (
+    ListDataIntegrationEventsRequestPaginateTypeDef,
+    ListDataIntegrationEventsResponseTypeDef,
+    ListDataIntegrationFlowExecutionsRequestPaginateTypeDef,
+    ListDataIntegrationFlowExecutionsResponseTypeDef,
     ListDataIntegrationFlowsRequestPaginateTypeDef,
     ListDataIntegrationFlowsResponseTypeDef,
     ListDataLakeDatasetsRequestPaginateTypeDef,
     ListDataLakeDatasetsResponseTypeDef,
+    ListDataLakeNamespacesRequestPaginateTypeDef,
+    ListDataLakeNamespacesResponseTypeDef,
     ListInstancesRequestPaginateTypeDef,
     ListInstancesResponseTypeDef,
 )
@@ -50,10 +62,57 @@ else:
 
 
 __all__ = (
+    "ListDataIntegrationEventsPaginator",
+    "ListDataIntegrationFlowExecutionsPaginator",
     "ListDataIntegrationFlowsPaginator",
     "ListDataLakeDatasetsPaginator",
+    "ListDataLakeNamespacesPaginator",
     "ListInstancesPaginator",
 )
+
+
+if TYPE_CHECKING:
+    _ListDataIntegrationEventsPaginatorBase = AioPaginator[ListDataIntegrationEventsResponseTypeDef]
+else:
+    _ListDataIntegrationEventsPaginatorBase = AioPaginator  # type: ignore[assignment]
+
+
+class ListDataIntegrationEventsPaginator(_ListDataIntegrationEventsPaginatorBase):
+    """
+    [Show boto3 documentation](https://boto3.amazonaws.com/v1/documentation/api/latest/reference/services/supplychain/paginator/ListDataIntegrationEvents.html#SupplyChain.Paginator.ListDataIntegrationEvents)
+    [Show types-aiobotocore documentation](https://youtype.github.io/types_aiobotocore_docs/types_aiobotocore_supplychain/paginators/#listdataintegrationeventspaginator)
+    """
+
+    def paginate(  # type: ignore[override]
+        self, **kwargs: Unpack[ListDataIntegrationEventsRequestPaginateTypeDef]
+    ) -> AioPageIterator[ListDataIntegrationEventsResponseTypeDef]:
+        """
+        [Show boto3 documentation](https://boto3.amazonaws.com/v1/documentation/api/latest/reference/services/supplychain/paginator/ListDataIntegrationEvents.html#SupplyChain.Paginator.ListDataIntegrationEvents.paginate)
+        [Show types-aiobotocore documentation](https://youtype.github.io/types_aiobotocore_docs/types_aiobotocore_supplychain/paginators/#listdataintegrationeventspaginator)
+        """
+
+
+if TYPE_CHECKING:
+    _ListDataIntegrationFlowExecutionsPaginatorBase = AioPaginator[
+        ListDataIntegrationFlowExecutionsResponseTypeDef
+    ]
+else:
+    _ListDataIntegrationFlowExecutionsPaginatorBase = AioPaginator  # type: ignore[assignment]
+
+
+class ListDataIntegrationFlowExecutionsPaginator(_ListDataIntegrationFlowExecutionsPaginatorBase):
+    """
+    [Show boto3 documentation](https://boto3.amazonaws.com/v1/documentation/api/latest/reference/services/supplychain/paginator/ListDataIntegrationFlowExecutions.html#SupplyChain.Paginator.ListDataIntegrationFlowExecutions)
+    [Show types-aiobotocore documentation](https://youtype.github.io/types_aiobotocore_docs/types_aiobotocore_supplychain/paginators/#listdataintegrationflowexecutionspaginator)
+    """
+
+    def paginate(  # type: ignore[override]
+        self, **kwargs: Unpack[ListDataIntegrationFlowExecutionsRequestPaginateTypeDef]
+    ) -> AioPageIterator[ListDataIntegrationFlowExecutionsResponseTypeDef]:
+        """
+        [Show boto3 documentation](https://boto3.amazonaws.com/v1/documentation/api/latest/reference/services/supplychain/paginator/ListDataIntegrationFlowExecutions.html#SupplyChain.Paginator.ListDataIntegrationFlowExecutions.paginate)
+        [Show types-aiobotocore documentation](https://youtype.github.io/types_aiobotocore_docs/types_aiobotocore_supplychain/paginators/#listdataintegrationflowexecutionspaginator)
+        """
 
 
 if TYPE_CHECKING:
@@ -95,6 +154,27 @@ class ListDataLakeDatasetsPaginator(_ListDataLakeDatasetsPaginatorBase):
         """
         [Show boto3 documentation](https://boto3.amazonaws.com/v1/documentation/api/latest/reference/services/supplychain/paginator/ListDataLakeDatasets.html#SupplyChain.Paginator.ListDataLakeDatasets.paginate)
         [Show types-aiobotocore documentation](https://youtype.github.io/types_aiobotocore_docs/types_aiobotocore_supplychain/paginators/#listdatalakedatasetspaginator)
+        """
+
+
+if TYPE_CHECKING:
+    _ListDataLakeNamespacesPaginatorBase = AioPaginator[ListDataLakeNamespacesResponseTypeDef]
+else:
+    _ListDataLakeNamespacesPaginatorBase = AioPaginator  # type: ignore[assignment]
+
+
+class ListDataLakeNamespacesPaginator(_ListDataLakeNamespacesPaginatorBase):
+    """
+    [Show boto3 documentation](https://boto3.amazonaws.com/v1/documentation/api/latest/reference/services/supplychain/paginator/ListDataLakeNamespaces.html#SupplyChain.Paginator.ListDataLakeNamespaces)
+    [Show types-aiobotocore documentation](https://youtype.github.io/types_aiobotocore_docs/types_aiobotocore_supplychain/paginators/#listdatalakenamespacespaginator)
+    """
+
+    def paginate(  # type: ignore[override]
+        self, **kwargs: Unpack[ListDataLakeNamespacesRequestPaginateTypeDef]
+    ) -> AioPageIterator[ListDataLakeNamespacesResponseTypeDef]:
+        """
+        [Show boto3 documentation](https://boto3.amazonaws.com/v1/documentation/api/latest/reference/services/supplychain/paginator/ListDataLakeNamespaces.html#SupplyChain.Paginator.ListDataLakeNamespaces.paginate)
+        [Show types-aiobotocore documentation](https://youtype.github.io/types_aiobotocore_docs/types_aiobotocore_supplychain/paginators/#listdatalakenamespacespaginator)
         """
 
 

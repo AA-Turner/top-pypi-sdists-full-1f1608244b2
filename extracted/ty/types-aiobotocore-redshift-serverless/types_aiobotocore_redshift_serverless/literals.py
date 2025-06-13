@@ -28,6 +28,8 @@ __all__ = (
     "ListManagedWorkgroupsPaginatorName",
     "ListNamespacesPaginatorName",
     "ListRecoveryPointsPaginatorName",
+    "ListReservationOfferingsPaginatorName",
+    "ListReservationsPaginatorName",
     "ListScheduledActionsPaginatorName",
     "ListSnapshotCopyConfigurationsPaginatorName",
     "ListSnapshotsPaginatorName",
@@ -38,6 +40,7 @@ __all__ = (
     "LogExportType",
     "ManagedWorkgroupStatusType",
     "NamespaceStatusType",
+    "OfferingTypeType",
     "PaginatorName",
     "PerformanceTargetStatusType",
     "RedshiftServerlessServiceName",
@@ -58,6 +61,8 @@ ListEndpointAccessPaginatorName = Literal["list_endpoint_access"]
 ListManagedWorkgroupsPaginatorName = Literal["list_managed_workgroups"]
 ListNamespacesPaginatorName = Literal["list_namespaces"]
 ListRecoveryPointsPaginatorName = Literal["list_recovery_points"]
+ListReservationOfferingsPaginatorName = Literal["list_reservation_offerings"]
+ListReservationsPaginatorName = Literal["list_reservations"]
 ListScheduledActionsPaginatorName = Literal["list_scheduled_actions"]
 ListSnapshotCopyConfigurationsPaginatorName = Literal["list_snapshot_copy_configurations"]
 ListSnapshotsPaginatorName = Literal["list_snapshots"]
@@ -70,6 +75,7 @@ ManagedWorkgroupStatusType = Literal[
     "AVAILABLE", "CREATING", "DELETING", "MODIFYING", "NOT_AVAILABLE"
 ]
 NamespaceStatusType = Literal["AVAILABLE", "DELETING", "MODIFYING"]
+OfferingTypeType = Literal["ALL_UPFRONT", "NO_UPFRONT"]
 PerformanceTargetStatusType = Literal["DISABLED", "ENABLED"]
 SnapshotStatusType = Literal["AVAILABLE", "CANCELLED", "COPYING", "CREATING", "DELETED", "FAILED"]
 StateType = Literal["ACTIVE", "DISABLED"]
@@ -234,6 +240,7 @@ ServiceName = Literal[
     "freetier",
     "fsx",
     "gamelift",
+    "gameliftstreams",
     "geo-maps",
     "geo-places",
     "geo-routes",
@@ -259,6 +266,7 @@ ServiceName = Literal[
     "iot",
     "iot-data",
     "iot-jobs-data",
+    "iot-managed-integrations",
     "iotanalytics",
     "iotdeviceadvisor",
     "iotevents",
@@ -373,7 +381,6 @@ ServiceName = Literal[
     "pipes",
     "polly",
     "pricing",
-    "privatenetworks",
     "proton",
     "qapps",
     "qbusiness",
@@ -434,7 +441,6 @@ ServiceName = Literal[
     "signer",
     "simspaceweaver",
     "sms",
-    "sms-voice",
     "snow-device-management",
     "snowball",
     "sns",
@@ -442,6 +448,7 @@ ServiceName = Literal[
     "sqs",
     "ssm",
     "ssm-contacts",
+    "ssm-guiconnect",
     "ssm-incidents",
     "ssm-quicksetup",
     "ssm-sap",
@@ -500,6 +507,8 @@ PaginatorName = Literal[
     "list_managed_workgroups",
     "list_namespaces",
     "list_recovery_points",
+    "list_reservation_offerings",
+    "list_reservations",
     "list_scheduled_actions",
     "list_snapshot_copy_configurations",
     "list_snapshots",
@@ -513,9 +522,11 @@ RegionName = Literal[
     "ap-northeast-1",
     "ap-northeast-2",
     "ap-south-1",
+    "ap-south-2",
     "ap-southeast-1",
     "ap-southeast-2",
     "ap-southeast-3",
+    "ap-southeast-7",
     "ca-central-1",
     "eu-central-1",
     "eu-central-2",
@@ -526,6 +537,7 @@ RegionName = Literal[
     "eu-west-3",
     "il-central-1",
     "me-central-1",
+    "mx-central-1",
     "sa-east-1",
     "us-east-1",
     "us-east-2",

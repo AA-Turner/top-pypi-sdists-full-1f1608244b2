@@ -44,17 +44,23 @@ from .type_defs import (
     CreateAppMonitorRequestTypeDef,
     CreateAppMonitorResponseTypeDef,
     DeleteAppMonitorRequestTypeDef,
+    DeleteResourcePolicyRequestTypeDef,
+    DeleteResourcePolicyResponseTypeDef,
     DeleteRumMetricsDestinationRequestTypeDef,
     GetAppMonitorDataRequestTypeDef,
     GetAppMonitorDataResponseTypeDef,
     GetAppMonitorRequestTypeDef,
     GetAppMonitorResponseTypeDef,
+    GetResourcePolicyRequestTypeDef,
+    GetResourcePolicyResponseTypeDef,
     ListAppMonitorsRequestTypeDef,
     ListAppMonitorsResponseTypeDef,
     ListRumMetricsDestinationsRequestTypeDef,
     ListRumMetricsDestinationsResponseTypeDef,
     ListTagsForResourceRequestTypeDef,
     ListTagsForResourceResponseTypeDef,
+    PutResourcePolicyRequestTypeDef,
+    PutResourcePolicyResponseTypeDef,
     PutRumEventsRequestTypeDef,
     PutRumMetricsDestinationRequestTypeDef,
     TagResourceRequestTypeDef,
@@ -81,6 +87,10 @@ class Exceptions(BaseClientExceptions):
     ClientError: Type[BotocoreClientError]
     ConflictException: Type[BotocoreClientError]
     InternalServerException: Type[BotocoreClientError]
+    InvalidPolicyRevisionIdException: Type[BotocoreClientError]
+    MalformedPolicyDocumentException: Type[BotocoreClientError]
+    PolicyNotFoundException: Type[BotocoreClientError]
+    PolicySizeLimitExceededException: Type[BotocoreClientError]
     ResourceNotFoundException: Type[BotocoreClientError]
     ServiceQuotaExceededException: Type[BotocoreClientError]
     ThrottlingException: Type[BotocoreClientError]
@@ -175,6 +185,16 @@ class CloudWatchRUMClient(AioBaseClient):
         [Show types-aiobotocore documentation](https://youtype.github.io/types_aiobotocore_docs/types_aiobotocore_rum/client/#delete_app_monitor)
         """
 
+    async def delete_resource_policy(
+        self, **kwargs: Unpack[DeleteResourcePolicyRequestTypeDef]
+    ) -> DeleteResourcePolicyResponseTypeDef:
+        """
+        Removes the association of a resource-based policy from an app monitor.
+
+        [Show boto3 documentation](https://boto3.amazonaws.com/v1/documentation/api/latest/reference/services/rum/client/delete_resource_policy.html)
+        [Show types-aiobotocore documentation](https://youtype.github.io/types_aiobotocore_docs/types_aiobotocore_rum/client/#delete_resource_policy)
+        """
+
     async def delete_rum_metrics_destination(
         self, **kwargs: Unpack[DeleteRumMetricsDestinationRequestTypeDef]
     ) -> Dict[str, Any]:
@@ -207,6 +227,17 @@ class CloudWatchRUMClient(AioBaseClient):
         [Show types-aiobotocore documentation](https://youtype.github.io/types_aiobotocore_docs/types_aiobotocore_rum/client/#get_app_monitor_data)
         """
 
+    async def get_resource_policy(
+        self, **kwargs: Unpack[GetResourcePolicyRequestTypeDef]
+    ) -> GetResourcePolicyResponseTypeDef:
+        """
+        Use this operation to retrieve information about a resource-based policy that
+        is attached to an app monitor.
+
+        [Show boto3 documentation](https://boto3.amazonaws.com/v1/documentation/api/latest/reference/services/rum/client/get_resource_policy.html)
+        [Show types-aiobotocore documentation](https://youtype.github.io/types_aiobotocore_docs/types_aiobotocore_rum/client/#get_resource_policy)
+        """
+
     async def list_app_monitors(
         self, **kwargs: Unpack[ListAppMonitorsRequestTypeDef]
     ) -> ListAppMonitorsResponseTypeDef:
@@ -236,6 +267,17 @@ class CloudWatchRUMClient(AioBaseClient):
 
         [Show boto3 documentation](https://boto3.amazonaws.com/v1/documentation/api/latest/reference/services/rum/client/list_tags_for_resource.html)
         [Show types-aiobotocore documentation](https://youtype.github.io/types_aiobotocore_docs/types_aiobotocore_rum/client/#list_tags_for_resource)
+        """
+
+    async def put_resource_policy(
+        self, **kwargs: Unpack[PutResourcePolicyRequestTypeDef]
+    ) -> PutResourcePolicyResponseTypeDef:
+        """
+        Use this operation to assign a resource-based policy to a CloudWatch RUM app
+        monitor to control access to it.
+
+        [Show boto3 documentation](https://boto3.amazonaws.com/v1/documentation/api/latest/reference/services/rum/client/put_resource_policy.html)
+        [Show types-aiobotocore documentation](https://youtype.github.io/types_aiobotocore_docs/types_aiobotocore_rum/client/#put_resource_policy)
         """
 
     async def put_rum_events(self, **kwargs: Unpack[PutRumEventsRequestTypeDef]) -> Dict[str, Any]:

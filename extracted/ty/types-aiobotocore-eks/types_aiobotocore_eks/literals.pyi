@@ -10,7 +10,7 @@ Usage::
     ```python
     from types_aiobotocore_eks.literals import AMITypesType
 
-    data: AMITypesType = "AL2023_ARM_64_STANDARD"
+    data: AMITypesType = "AL2023_ARM_64_NVIDIA"
     ```
 """
 
@@ -84,6 +84,7 @@ __all__ = (
 )
 
 AMITypesType = Literal[
+    "AL2023_ARM_64_NVIDIA",
     "AL2023_ARM_64_STANDARD",
     "AL2023_x86_64_NEURON",
     "AL2023_x86_64_NVIDIA",
@@ -92,8 +93,10 @@ AMITypesType = Literal[
     "AL2_x86_64",
     "AL2_x86_64_GPU",
     "BOTTLEROCKET_ARM_64",
+    "BOTTLEROCKET_ARM_64_FIPS",
     "BOTTLEROCKET_ARM_64_NVIDIA",
     "BOTTLEROCKET_x86_64",
+    "BOTTLEROCKET_x86_64_FIPS",
     "BOTTLEROCKET_x86_64_NVIDIA",
     "CUSTOM",
     "WINDOWS_CORE_2019_x86_64",
@@ -279,6 +282,7 @@ UpdateParamTypeType = Literal[
     "PodIdentityAssociations",
     "PublicAccessCidrs",
     "ReleaseVersion",
+    "RemoteNetworkConfig",
     "ResolveConflicts",
     "SecurityGroups",
     "ServiceAccountRoleArn",
@@ -302,6 +306,7 @@ UpdateTypeType = Literal[
     "DisassociateIdentityProviderConfig",
     "EndpointAccessUpdate",
     "LoggingUpdate",
+    "RemoteNetworkConfigUpdate",
     "UpgradePolicyUpdate",
     "VersionUpdate",
     "VpcConfigUpdate",
@@ -465,6 +470,7 @@ ServiceName = Literal[
     "freetier",
     "fsx",
     "gamelift",
+    "gameliftstreams",
     "geo-maps",
     "geo-places",
     "geo-routes",
@@ -490,6 +496,7 @@ ServiceName = Literal[
     "iot",
     "iot-data",
     "iot-jobs-data",
+    "iot-managed-integrations",
     "iotanalytics",
     "iotdeviceadvisor",
     "iotevents",
@@ -604,7 +611,6 @@ ServiceName = Literal[
     "pipes",
     "polly",
     "pricing",
-    "privatenetworks",
     "proton",
     "qapps",
     "qbusiness",
@@ -665,7 +671,6 @@ ServiceName = Literal[
     "signer",
     "simspaceweaver",
     "sms",
-    "sms-voice",
     "snow-device-management",
     "snowball",
     "sns",
@@ -673,6 +678,7 @@ ServiceName = Literal[
     "sqs",
     "ssm",
     "ssm-contacts",
+    "ssm-guiconnect",
     "ssm-incidents",
     "ssm-quicksetup",
     "ssm-sap",

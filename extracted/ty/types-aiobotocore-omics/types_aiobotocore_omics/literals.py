@@ -58,6 +58,7 @@ __all__ = (
     "ListSharesPaginatorName",
     "ListVariantImportJobsPaginatorName",
     "ListVariantStoresPaginatorName",
+    "ListWorkflowVersionsPaginatorName",
     "ListWorkflowsPaginatorName",
     "OmicsServiceName",
     "PaginatorName",
@@ -111,6 +112,7 @@ __all__ = (
     "WorkflowExportType",
     "WorkflowStatusType",
     "WorkflowTypeType",
+    "WorkflowVersionActiveWaiterName",
 )
 
 
@@ -169,6 +171,7 @@ ListSequenceStoresPaginatorName = Literal["list_sequence_stores"]
 ListSharesPaginatorName = Literal["list_shares"]
 ListVariantImportJobsPaginatorName = Literal["list_variant_import_jobs"]
 ListVariantStoresPaginatorName = Literal["list_variant_stores"]
+ListWorkflowVersionsPaginatorName = Literal["list_workflow_versions"]
 ListWorkflowsPaginatorName = Literal["list_workflows"]
 ReadSetActivationJobCompletedWaiterName = Literal["read_set_activation_job_completed"]
 ReadSetActivationJobItemStatusType = Literal["FAILED", "FINISHED", "IN_PROGRESS", "NOT_STARTED"]
@@ -254,6 +257,7 @@ WorkflowEngineType = Literal["CWL", "NEXTFLOW", "WDL"]
 WorkflowExportType = Literal["DEFINITION"]
 WorkflowStatusType = Literal["ACTIVE", "CREATING", "DELETED", "FAILED", "INACTIVE", "UPDATING"]
 WorkflowTypeType = Literal["PRIVATE", "READY2RUN"]
+WorkflowVersionActiveWaiterName = Literal["workflow_version_active"]
 OmicsServiceName = Literal["omics"]
 ServiceName = Literal[
     "accessanalyzer",
@@ -411,6 +415,7 @@ ServiceName = Literal[
     "freetier",
     "fsx",
     "gamelift",
+    "gameliftstreams",
     "geo-maps",
     "geo-places",
     "geo-routes",
@@ -436,6 +441,7 @@ ServiceName = Literal[
     "iot",
     "iot-data",
     "iot-jobs-data",
+    "iot-managed-integrations",
     "iotanalytics",
     "iotdeviceadvisor",
     "iotevents",
@@ -550,7 +556,6 @@ ServiceName = Literal[
     "pipes",
     "polly",
     "pricing",
-    "privatenetworks",
     "proton",
     "qapps",
     "qbusiness",
@@ -611,7 +616,6 @@ ServiceName = Literal[
     "signer",
     "simspaceweaver",
     "sms",
-    "sms-voice",
     "snow-device-management",
     "snowball",
     "sns",
@@ -619,6 +623,7 @@ ServiceName = Literal[
     "sqs",
     "ssm",
     "ssm-contacts",
+    "ssm-guiconnect",
     "ssm-incidents",
     "ssm-quicksetup",
     "ssm-sap",
@@ -692,6 +697,7 @@ PaginatorName = Literal[
     "list_shares",
     "list_variant_import_jobs",
     "list_variant_stores",
+    "list_workflow_versions",
     "list_workflows",
 ]
 WaiterName = Literal[
@@ -712,6 +718,7 @@ WaiterName = Literal[
     "variant_store_created",
     "variant_store_deleted",
     "workflow_active",
+    "workflow_version_active",
 ]
 RegionName = Literal[
     "ap-southeast-1",

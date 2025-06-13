@@ -37,6 +37,7 @@ from .paginator import (
     ListServicesPaginator,
 )
 from .type_defs import (
+    CreateSupportCaseRequestTypeDef,
     DeleteServiceQuotaIncreaseRequestFromTemplateRequestTypeDef,
     GetAssociationForServiceQuotaTemplateResponseTypeDef,
     GetAWSDefaultServiceQuotaRequestTypeDef,
@@ -148,6 +149,16 @@ class ServiceQuotasClient(AioBaseClient):
         [Show types-aiobotocore documentation](https://youtype.github.io/types_aiobotocore_docs/types_aiobotocore_service_quotas/client/#associate_service_quota_template)
         """
 
+    async def create_support_case(
+        self, **kwargs: Unpack[CreateSupportCaseRequestTypeDef]
+    ) -> Dict[str, Any]:
+        """
+        Creates a Support case for an existing quota increase request.
+
+        [Show boto3 documentation](https://boto3.amazonaws.com/v1/documentation/api/latest/reference/services/service-quotas/client/create_support_case.html)
+        [Show types-aiobotocore documentation](https://youtype.github.io/types_aiobotocore_docs/types_aiobotocore_service_quotas/client/#create_support_case)
+        """
+
     async def delete_service_quota_increase_request_from_template(
         self, **kwargs: Unpack[DeleteServiceQuotaIncreaseRequestFromTemplateRequestTypeDef]
     ) -> Dict[str, Any]:
@@ -201,7 +212,8 @@ class ServiceQuotasClient(AioBaseClient):
         self, **kwargs: Unpack[GetServiceQuotaRequestTypeDef]
     ) -> GetServiceQuotaResponseTypeDef:
         """
-        Retrieves the applied quota value for the specified quota.
+        Retrieves the applied quota value for the specified account-level or
+        resource-level quota.
 
         [Show boto3 documentation](https://boto3.amazonaws.com/v1/documentation/api/latest/reference/services/service-quotas/client/get_service_quota.html)
         [Show types-aiobotocore documentation](https://youtype.github.io/types_aiobotocore_docs/types_aiobotocore_service_quotas/client/#get_service_quota)
@@ -222,7 +234,8 @@ class ServiceQuotasClient(AioBaseClient):
         self, **kwargs: Unpack[ListAWSDefaultServiceQuotasRequestTypeDef]
     ) -> ListAWSDefaultServiceQuotasResponseTypeDef:
         """
-        Lists the default values for the quotas for the specified Amazon Web Service.
+        Lists the default values for the quotas for the specified Amazon Web Services
+        service.
 
         [Show boto3 documentation](https://boto3.amazonaws.com/v1/documentation/api/latest/reference/services/service-quotas/client/list_aws_default_service_quotas.html)
         [Show types-aiobotocore documentation](https://youtype.github.io/types_aiobotocore_docs/types_aiobotocore_service_quotas/client/#list_aws_default_service_quotas)
@@ -232,7 +245,8 @@ class ServiceQuotasClient(AioBaseClient):
         self, **kwargs: Unpack[ListRequestedServiceQuotaChangeHistoryRequestTypeDef]
     ) -> ListRequestedServiceQuotaChangeHistoryResponseTypeDef:
         """
-        Retrieves the quota increase requests for the specified Amazon Web Service.
+        Retrieves the quota increase requests for the specified Amazon Web Services
+        service.
 
         [Show boto3 documentation](https://boto3.amazonaws.com/v1/documentation/api/latest/reference/services/service-quotas/client/list_requested_service_quota_change_history.html)
         [Show types-aiobotocore documentation](https://youtype.github.io/types_aiobotocore_docs/types_aiobotocore_service_quotas/client/#list_requested_service_quota_change_history)
@@ -262,7 +276,7 @@ class ServiceQuotasClient(AioBaseClient):
         self, **kwargs: Unpack[ListServiceQuotasRequestTypeDef]
     ) -> ListServiceQuotasResponseTypeDef:
         """
-        Lists the applied quota values for the specified Amazon Web Service.
+        Lists the applied quota values for the specified Amazon Web Services service.
 
         [Show boto3 documentation](https://boto3.amazonaws.com/v1/documentation/api/latest/reference/services/service-quotas/client/list_service_quotas.html)
         [Show types-aiobotocore documentation](https://youtype.github.io/types_aiobotocore_docs/types_aiobotocore_service_quotas/client/#list_service_quotas)
@@ -272,8 +286,8 @@ class ServiceQuotasClient(AioBaseClient):
         self, **kwargs: Unpack[ListServicesRequestTypeDef]
     ) -> ListServicesResponseTypeDef:
         """
-        Lists the names and codes for the Amazon Web Services integrated with Service
-        Quotas.
+        Lists the names and codes for the Amazon Web Services services integrated with
+        Service Quotas.
 
         [Show boto3 documentation](https://boto3.amazonaws.com/v1/documentation/api/latest/reference/services/service-quotas/client/list_services.html)
         [Show types-aiobotocore documentation](https://youtype.github.io/types_aiobotocore_docs/types_aiobotocore_service_quotas/client/#list_services)
@@ -303,7 +317,8 @@ class ServiceQuotasClient(AioBaseClient):
         self, **kwargs: Unpack[RequestServiceQuotaIncreaseRequestTypeDef]
     ) -> RequestServiceQuotaIncreaseResponseTypeDef:
         """
-        Submits a quota increase request for the specified quota.
+        Submits a quota increase request for the specified quota at the account or
+        resource level.
 
         [Show boto3 documentation](https://boto3.amazonaws.com/v1/documentation/api/latest/reference/services/service-quotas/client/request_service_quota_increase.html)
         [Show types-aiobotocore documentation](https://youtype.github.io/types_aiobotocore_docs/types_aiobotocore_service_quotas/client/#request_service_quota_increase)

@@ -35,6 +35,7 @@ __all__ = (
     "FailureCodeType",
     "GetCampaignStateBatchFailureCodeType",
     "InstanceIdFilterOperatorType",
+    "InstanceLimitsHandlingType",
     "InstanceOnboardingJobFailureCodeType",
     "InstanceOnboardingJobStatusCodeType",
     "ListCampaignsPaginatorName",
@@ -63,6 +64,7 @@ EventTypeType = Literal[
 FailureCodeType = Literal["BufferLimitExceeded", "InvalidInput", "RequestThrottled", "UnknownError"]
 GetCampaignStateBatchFailureCodeType = Literal["ResourceNotFound", "UnknownError"]
 InstanceIdFilterOperatorType = Literal["Eq"]
+InstanceLimitsHandlingType = Literal["OPT_IN", "OPT_OUT"]
 InstanceOnboardingJobFailureCodeType = Literal[
     "EVENT_BRIDGE_ACCESS_DENIED",
     "EVENT_BRIDGE_MANAGED_RULE_LIMIT_EXCEEDED",

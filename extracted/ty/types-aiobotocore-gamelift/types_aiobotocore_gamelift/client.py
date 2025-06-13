@@ -513,7 +513,7 @@ class GameLiftClient(AioBaseClient):
         self, **kwargs: Unpack[CreateScriptInputTypeDef]
     ) -> CreateScriptOutputTypeDef:
         """
-        Creates a new script record for your Realtime Servers script.
+        Creates a new script record for your Amazon GameLift Realtime script.
 
         [Show boto3 documentation](https://boto3.amazonaws.com/v1/documentation/api/latest/reference/services/gamelift/client/create_script.html)
         [Show types-aiobotocore documentation](https://youtype.github.io/types_aiobotocore_docs/types_aiobotocore_gamelift/client/#create_script)
@@ -697,7 +697,7 @@ class GameLiftClient(AioBaseClient):
         self, **kwargs: Unpack[DeregisterComputeInputTypeDef]
     ) -> Dict[str, Any]:
         """
-        Removes a compute resource from an Amazon GameLift Anywhere fleet.
+        Removes a compute resource from an Anywhere fleet.
 
         [Show boto3 documentation](https://boto3.amazonaws.com/v1/documentation/api/latest/reference/services/gamelift/client/deregister_compute.html)
         [Show types-aiobotocore documentation](https://youtype.github.io/types_aiobotocore_docs/types_aiobotocore_gamelift/client/#deregister_compute)
@@ -738,7 +738,8 @@ class GameLiftClient(AioBaseClient):
         self, **kwargs: Unpack[DescribeComputeInputTypeDef]
     ) -> DescribeComputeOutputTypeDef:
         """
-        Retrieves properties for a compute resource in an Amazon GameLift fleet.
+        Retrieves properties for a specific compute resource in an Amazon GameLift
+        fleet.
 
         [Show boto3 documentation](https://boto3.amazonaws.com/v1/documentation/api/latest/reference/services/gamelift/client/describe_compute.html)
         [Show types-aiobotocore documentation](https://youtype.github.io/types_aiobotocore_docs/types_aiobotocore_gamelift/client/#describe_compute)
@@ -1357,7 +1358,7 @@ class GameLiftClient(AioBaseClient):
         self, **kwargs: Unpack[StopGameSessionPlacementInputTypeDef]
     ) -> StopGameSessionPlacementOutputTypeDef:
         """
-        Cancels a game session placement that is in <code>PENDING</code> status.
+        Cancels a game session placement that's in <code>PENDING</code> status.
 
         [Show boto3 documentation](https://boto3.amazonaws.com/v1/documentation/api/latest/reference/services/gamelift/client/stop_game_session_placement.html)
         [Show types-aiobotocore documentation](https://youtype.github.io/types_aiobotocore_docs/types_aiobotocore_gamelift/client/#stop_game_session_placement)

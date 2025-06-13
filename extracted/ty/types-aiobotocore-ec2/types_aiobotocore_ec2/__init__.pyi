@@ -74,6 +74,7 @@ Usage::
         DescribeLocalGatewayVirtualInterfacesPaginator,
         DescribeLocalGatewaysPaginator,
         DescribeMacHostsPaginator,
+        DescribeMacModificationTasksPaginator,
         DescribeManagedPrefixListsPaginator,
         DescribeMovingAddressesPaginator,
         DescribeNatGatewaysPaginator,
@@ -90,6 +91,9 @@ Usage::
         DescribeReplaceRootVolumeTasksPaginator,
         DescribeReservedInstancesModificationsPaginator,
         DescribeReservedInstancesOfferingsPaginator,
+        DescribeRouteServerEndpointsPaginator,
+        DescribeRouteServerPeersPaginator,
+        DescribeRouteServersPaginator,
         DescribeRouteTablesPaginator,
         DescribeScheduledInstanceAvailabilityPaginator,
         DescribeScheduledInstancesPaginator,
@@ -300,6 +304,7 @@ Usage::
     describe_local_gateway_virtual_interfaces_paginator: DescribeLocalGatewayVirtualInterfacesPaginator = client.get_paginator("describe_local_gateway_virtual_interfaces")
     describe_local_gateways_paginator: DescribeLocalGatewaysPaginator = client.get_paginator("describe_local_gateways")
     describe_mac_hosts_paginator: DescribeMacHostsPaginator = client.get_paginator("describe_mac_hosts")
+    describe_mac_modification_tasks_paginator: DescribeMacModificationTasksPaginator = client.get_paginator("describe_mac_modification_tasks")
     describe_managed_prefix_lists_paginator: DescribeManagedPrefixListsPaginator = client.get_paginator("describe_managed_prefix_lists")
     describe_moving_addresses_paginator: DescribeMovingAddressesPaginator = client.get_paginator("describe_moving_addresses")
     describe_nat_gateways_paginator: DescribeNatGatewaysPaginator = client.get_paginator("describe_nat_gateways")
@@ -316,6 +321,9 @@ Usage::
     describe_replace_root_volume_tasks_paginator: DescribeReplaceRootVolumeTasksPaginator = client.get_paginator("describe_replace_root_volume_tasks")
     describe_reserved_instances_modifications_paginator: DescribeReservedInstancesModificationsPaginator = client.get_paginator("describe_reserved_instances_modifications")
     describe_reserved_instances_offerings_paginator: DescribeReservedInstancesOfferingsPaginator = client.get_paginator("describe_reserved_instances_offerings")
+    describe_route_server_endpoints_paginator: DescribeRouteServerEndpointsPaginator = client.get_paginator("describe_route_server_endpoints")
+    describe_route_server_peers_paginator: DescribeRouteServerPeersPaginator = client.get_paginator("describe_route_server_peers")
+    describe_route_servers_paginator: DescribeRouteServersPaginator = client.get_paginator("describe_route_servers")
     describe_route_tables_paginator: DescribeRouteTablesPaginator = client.get_paginator("describe_route_tables")
     describe_scheduled_instance_availability_paginator: DescribeScheduledInstanceAvailabilityPaginator = client.get_paginator("describe_scheduled_instance_availability")
     describe_scheduled_instances_paginator: DescribeScheduledInstancesPaginator = client.get_paginator("describe_scheduled_instances")
@@ -452,6 +460,7 @@ from .paginator import (
     DescribeLocalGatewayVirtualInterfaceGroupsPaginator,
     DescribeLocalGatewayVirtualInterfacesPaginator,
     DescribeMacHostsPaginator,
+    DescribeMacModificationTasksPaginator,
     DescribeManagedPrefixListsPaginator,
     DescribeMovingAddressesPaginator,
     DescribeNatGatewaysPaginator,
@@ -468,6 +477,9 @@ from .paginator import (
     DescribeReplaceRootVolumeTasksPaginator,
     DescribeReservedInstancesModificationsPaginator,
     DescribeReservedInstancesOfferingsPaginator,
+    DescribeRouteServerEndpointsPaginator,
+    DescribeRouteServerPeersPaginator,
+    DescribeRouteServersPaginator,
     DescribeRouteTablesPaginator,
     DescribeScheduledInstanceAvailabilityPaginator,
     DescribeScheduledInstancesPaginator,
@@ -655,6 +667,7 @@ __all__ = (
     "DescribeLocalGatewayVirtualInterfacesPaginator",
     "DescribeLocalGatewaysPaginator",
     "DescribeMacHostsPaginator",
+    "DescribeMacModificationTasksPaginator",
     "DescribeManagedPrefixListsPaginator",
     "DescribeMovingAddressesPaginator",
     "DescribeNatGatewaysPaginator",
@@ -671,6 +684,9 @@ __all__ = (
     "DescribeReplaceRootVolumeTasksPaginator",
     "DescribeReservedInstancesModificationsPaginator",
     "DescribeReservedInstancesOfferingsPaginator",
+    "DescribeRouteServerEndpointsPaginator",
+    "DescribeRouteServerPeersPaginator",
+    "DescribeRouteServersPaginator",
     "DescribeRouteTablesPaginator",
     "DescribeScheduledInstanceAvailabilityPaginator",
     "DescribeScheduledInstancesPaginator",

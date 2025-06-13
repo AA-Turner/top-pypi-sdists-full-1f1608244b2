@@ -87,6 +87,12 @@ def test_configuration_default_values(builder_type, pipeline_builder_definitions
             None,
         ),
         (
+            'json_content',
+            'sdk',
+            [('JSON array of objects', 'ARRAY_OBJECTS'), ('Multiple JSON objects', 'MULTIPLE_OBJECTS')],
+            None,
+        ),
+        (
             'On Record Error',
             'label',
             [('Discard', 'DISCARD'), ('Send to Error', 'TO_ERROR'), ('Stop Pipeline', 'STOP_PIPELINE')],
@@ -104,15 +110,24 @@ def test_configuration_default_values(builder_type, pipeline_builder_definitions
             [('Discard', 'DISCARD'), ('Send to Error', 'TO_ERROR'), ('Stop Pipeline', 'STOP_PIPELINE')],
             None,
         ),
+        (
+            'on_record_error',
+            'sdk',
+            [('Discard', 'DISCARD'), ('Send to Error', 'TO_ERROR'), ('Stop Pipeline', 'STOP_PIPELINE')],
+            None,
+        ),
         ('Max Object Length (chars)', 'label', None, None),
         ('dataFormatConfig.jsonMaxObjectLen', 'full_name', None, None),
         ('jsonMaxObjectLen', 'field_name', None, None),
+        ('max_object_length_in_chars', 'sdk', None, None),
         ('Number of Threads', 'label', None, None),
         ('numberOfThreads', 'full_name', None, None),
         ('numberOfThreads', 'field_name', None, None),
+        ('number_of_threads', 'sdk', None, None),
         ('unknown', 'label', None, ValueError),
         ('unknown', 'full_name', None, ValueError),
         ('unknown', 'field_name', None, ValueError),
+        ('unknown', 'sdk', None, ValueError),
     ],
 )
 def test_get_stage_configuration_options(name, config_name_type, expected, err, request):

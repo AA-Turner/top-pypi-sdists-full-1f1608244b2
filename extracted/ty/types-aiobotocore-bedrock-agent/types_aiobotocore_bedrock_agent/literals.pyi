@@ -30,9 +30,11 @@ __all__ = (
     "AgentsforBedrockServiceName",
     "CachePointTypeType",
     "ChunkingStrategyType",
+    "ConcurrencyTypeType",
     "ConfluenceAuthTypeType",
     "ConfluenceHostTypeType",
     "ContentDataSourceTypeType",
+    "ContextEnrichmentTypeType",
     "ConversationRoleType",
     "CrawlFilterConfigurationTypeType",
     "CreationModeType",
@@ -43,13 +45,16 @@ __all__ = (
     "DataSourceTypeType",
     "DocumentStatusType",
     "EmbeddingDataTypeType",
+    "EnrichmentStrategyMethodType",
     "FlowConnectionTypeType",
     "FlowNodeIODataTypeType",
+    "FlowNodeInputCategoryType",
     "FlowNodeTypeType",
     "FlowStatusType",
     "FlowValidationSeverityType",
     "FlowValidationTypeType",
     "IncludeExcludeType",
+    "IncompatibleLoopNodeTypeType",
     "IngestionJobFilterAttributeType",
     "IngestionJobFilterOperatorType",
     "IngestionJobSortByAttributeType",
@@ -80,6 +85,7 @@ __all__ = (
     "PaginatorName",
     "ParsingModalityType",
     "ParsingStrategyType",
+    "PerformanceConfigLatencyType",
     "PromptStateType",
     "PromptTemplateTypeType",
     "PromptTypeType",
@@ -90,6 +96,7 @@ __all__ = (
     "RedshiftServerlessAuthTypeType",
     "RelayConversationHistoryType",
     "RequireConfirmationType",
+    "RerankingMetadataSelectionModeType",
     "ResourceServiceName",
     "SalesforceAuthTypeType",
     "ServiceName",
@@ -98,11 +105,19 @@ __all__ = (
     "SortOrderType",
     "StepTypeType",
     "SupplementalDataStorageLocationTypeType",
+    "SupportedLanguagesType",
     "TypeType",
+    "VectorSearchRerankingConfigurationTypeType",
     "WebScopeTypeType",
 )
 
-ActionGroupSignatureType = Literal["AMAZON.CodeInterpreter", "AMAZON.UserInput"]
+ActionGroupSignatureType = Literal[
+    "AMAZON.CodeInterpreter",
+    "AMAZON.UserInput",
+    "ANTHROPIC.Bash",
+    "ANTHROPIC.Computer",
+    "ANTHROPIC.TextEditor",
+]
 ActionGroupStateType = Literal["DISABLED", "ENABLED"]
 AgentAliasStatusType = Literal[
     "CREATING", "DELETING", "DISSOCIATED", "FAILED", "PREPARED", "UPDATING"
@@ -120,9 +135,11 @@ AgentStatusType = Literal[
 ]
 CachePointTypeType = Literal["default"]
 ChunkingStrategyType = Literal["FIXED_SIZE", "HIERARCHICAL", "NONE", "SEMANTIC"]
+ConcurrencyTypeType = Literal["Automatic", "Manual"]
 ConfluenceAuthTypeType = Literal["BASIC", "OAUTH2_CLIENT_CREDENTIALS"]
 ConfluenceHostTypeType = Literal["SAAS"]
 ContentDataSourceTypeType = Literal["CUSTOM", "S3"]
+ContextEnrichmentTypeType = Literal["BEDROCK_FOUNDATION_MODEL"]
 ConversationRoleType = Literal["assistant", "user"]
 CrawlFilterConfigurationTypeType = Literal["PATTERN"]
 CreationModeType = Literal["DEFAULT", "OVERRIDDEN"]
@@ -148,17 +165,23 @@ DocumentStatusType = Literal[
     "STARTING",
 ]
 EmbeddingDataTypeType = Literal["BINARY", "FLOAT32"]
+EnrichmentStrategyMethodType = Literal["CHUNK_ENTITY_EXTRACTION"]
 FlowConnectionTypeType = Literal["Conditional", "Data"]
 FlowNodeIODataTypeType = Literal["Array", "Boolean", "Number", "Object", "String"]
+FlowNodeInputCategoryType = Literal["ExitLoop", "LoopCondition", "ReturnValueToLoopStart"]
 FlowNodeTypeType = Literal[
     "Agent",
     "Collector",
     "Condition",
+    "InlineCode",
     "Input",
     "Iterator",
     "KnowledgeBase",
     "LambdaFunction",
     "Lex",
+    "Loop",
+    "LoopController",
+    "LoopInput",
     "Output",
     "Prompt",
     "Retrieval",
@@ -171,6 +194,8 @@ FlowValidationTypeType = Literal[
     "DuplicateConditionExpression",
     "DuplicateConnections",
     "IncompatibleConnectionDataType",
+    "InvalidLoopBoundary",
+    "LoopIncompatibleNodeType",
     "MalformedConditionExpression",
     "MalformedNodeInputExpression",
     "MismatchedNodeInputType",
@@ -178,10 +203,14 @@ FlowValidationTypeType = Literal[
     "MissingConnectionConfiguration",
     "MissingDefaultCondition",
     "MissingEndingNodes",
+    "MissingLoopControllerNode",
+    "MissingLoopInputNode",
     "MissingNodeConfiguration",
     "MissingNodeInput",
     "MissingNodeOutput",
     "MissingStartingNodes",
+    "MultipleLoopControllerNodes",
+    "MultipleLoopInputNodes",
     "MultipleNodeInputConnections",
     "UnfulfilledNodeInput",
     "UnknownConnectionCondition",
@@ -196,6 +225,7 @@ FlowValidationTypeType = Literal[
     "Unspecified",
 ]
 IncludeExcludeType = Literal["EXCLUDE", "INCLUDE"]
+IncompatibleLoopNodeTypeType = Literal["Collector", "Condition", "Input", "Iterator"]
 IngestionJobFilterAttributeType = Literal["STATUS"]
 IngestionJobFilterOperatorType = Literal["EQ"]
 IngestionJobSortByAttributeType = Literal["STARTED_AT", "STATUS"]
@@ -208,7 +238,13 @@ KnowledgeBaseStatusType = Literal[
     "ACTIVE", "CREATING", "DELETE_UNSUCCESSFUL", "DELETING", "FAILED", "UPDATING"
 ]
 KnowledgeBaseStorageTypeType = Literal[
-    "MONGO_DB_ATLAS", "OPENSEARCH_SERVERLESS", "PINECONE", "RDS", "REDIS_ENTERPRISE_CLOUD"
+    "MONGO_DB_ATLAS",
+    "NEPTUNE_ANALYTICS",
+    "OPENSEARCH_MANAGED_CLUSTER",
+    "OPENSEARCH_SERVERLESS",
+    "PINECONE",
+    "RDS",
+    "REDIS_ENTERPRISE_CLOUD",
 ]
 KnowledgeBaseTypeType = Literal["KENDRA", "SQL", "VECTOR"]
 ListAgentActionGroupsPaginatorName = Literal["list_agent_action_groups"]
@@ -231,6 +267,7 @@ MetadataValueTypeType = Literal["BOOLEAN", "NUMBER", "STRING", "STRING_LIST"]
 OrchestrationTypeType = Literal["CUSTOM_ORCHESTRATION", "DEFAULT"]
 ParsingModalityType = Literal["MULTIMODAL"]
 ParsingStrategyType = Literal["BEDROCK_DATA_AUTOMATION", "BEDROCK_FOUNDATION_MODEL"]
+PerformanceConfigLatencyType = Literal["optimized", "standard"]
 PromptStateType = Literal["DISABLED", "ENABLED"]
 PromptTemplateTypeType = Literal["CHAT", "TEXT"]
 PromptTypeType = Literal[
@@ -247,6 +284,7 @@ RedshiftQueryEngineTypeType = Literal["PROVISIONED", "SERVERLESS"]
 RedshiftServerlessAuthTypeType = Literal["IAM", "USERNAME_PASSWORD"]
 RelayConversationHistoryType = Literal["DISABLED", "TO_COLLABORATOR"]
 RequireConfirmationType = Literal["DISABLED", "ENABLED"]
+RerankingMetadataSelectionModeType = Literal["ALL", "SELECTIVE"]
 SalesforceAuthTypeType = Literal["OAUTH2_CLIENT_CREDENTIALS"]
 SharePointAuthTypeType = Literal[
     "OAUTH2_CLIENT_CREDENTIALS", "OAUTH2_SHAREPOINT_APP_ONLY_CLIENT_CREDENTIALS"
@@ -255,7 +293,9 @@ SharePointHostTypeType = Literal["ONLINE"]
 SortOrderType = Literal["ASCENDING", "DESCENDING"]
 StepTypeType = Literal["POST_CHUNKING"]
 SupplementalDataStorageLocationTypeType = Literal["S3"]
+SupportedLanguagesType = Literal["Python_3"]
 TypeType = Literal["array", "boolean", "integer", "number", "string"]
+VectorSearchRerankingConfigurationTypeType = Literal["BEDROCK_RERANKING_MODEL"]
 WebScopeTypeType = Literal["HOST_ONLY", "SUBDOMAINS"]
 AgentsforBedrockServiceName = Literal["bedrock-agent"]
 ServiceName = Literal[
@@ -414,6 +454,7 @@ ServiceName = Literal[
     "freetier",
     "fsx",
     "gamelift",
+    "gameliftstreams",
     "geo-maps",
     "geo-places",
     "geo-routes",
@@ -439,6 +480,7 @@ ServiceName = Literal[
     "iot",
     "iot-data",
     "iot-jobs-data",
+    "iot-managed-integrations",
     "iotanalytics",
     "iotdeviceadvisor",
     "iotevents",
@@ -553,7 +595,6 @@ ServiceName = Literal[
     "pipes",
     "polly",
     "pricing",
-    "privatenetworks",
     "proton",
     "qapps",
     "qbusiness",
@@ -614,7 +655,6 @@ ServiceName = Literal[
     "signer",
     "simspaceweaver",
     "sms",
-    "sms-voice",
     "snow-device-management",
     "snowball",
     "sns",
@@ -622,6 +662,7 @@ ServiceName = Literal[
     "sqs",
     "ssm",
     "ssm-contacts",
+    "ssm-guiconnect",
     "ssm-incidents",
     "ssm-quicksetup",
     "ssm-sap",

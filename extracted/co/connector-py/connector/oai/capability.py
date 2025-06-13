@@ -317,8 +317,8 @@ class CustomRequest(BaseModel, t.Generic[BaseModelType]):
        ...
     """
 
-    auth: AuthCredential
-    credentials: t.Any = None
+    auth: AuthCredential | None = None
+    credentials: list[AuthCredential] | None = None
     page: Page | None = None
     include_raw_data: bool | None = None
     settings: t.Any

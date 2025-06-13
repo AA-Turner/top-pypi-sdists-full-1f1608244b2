@@ -1,5 +1,5 @@
 // This file is part of Invenio-RDM-Records
-// Copyright (C) 2020-2023 CERN.
+// Copyright (C) 2020-2025 CERN.
 // Copyright (C) 2020-2022 Northwestern University.
 //
 // Invenio-RDM-Records is free software; you can redistribute it and/or modify it
@@ -12,6 +12,7 @@ import thunk from "redux-thunk";
 import rootReducer from "./state/reducers";
 import { computeDepositState } from "./state/reducers/deposit";
 import { UploadState } from "./state/reducers/files";
+import { DRAFT_LOADED_WITH_VALIDATION_ERRORS } from "./state/types";
 
 const preloadFiles = (files) => {
   const _files = _cloneDeep(files);
@@ -43,18 +44,18 @@ const preloadFiles = (files) => {
 };
 
 export function configureStore(appConfig) {
-  const { record, preselectedCommunity, files, config, permissions, ...extra } =
+  const { record, errors, preselectedCommunity, files, config, permissions, ...extra } =
     appConfig;
 
   // when not passed, make sure that the value is `undefined` and not `null`
   const _preselectedCommunity = preselectedCommunity || undefined;
-
   const initialDepositState = {
     record,
+    errors: errors || {},
     editorState: computeDepositState(record, _preselectedCommunity),
     config,
     permissions,
-    actionState: null,
+    actionState: errors ? DRAFT_LOADED_WITH_VALIDATION_ERRORS : null,
     actionStateExtra: {},
   };
 

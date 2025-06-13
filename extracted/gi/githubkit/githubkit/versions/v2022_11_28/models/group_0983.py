@@ -18,18 +18,14 @@ from githubkit.typing import Missing
 from githubkit.utils import UNSET
 
 
-class ReposOwnerRepoActionsPermissionsPutBody(GitHubModel):
-    """ReposOwnerRepoActionsPermissionsPutBody"""
+class ProjectsProjectIdCollaboratorsUsernamePutBody(GitHubModel):
+    """ProjectsProjectIdCollaboratorsUsernamePutBody"""
 
-    enabled: bool = Field(
-        description="Whether GitHub Actions is enabled on the repository."
-    )
-    allowed_actions: Missing[Literal["all", "local_only", "selected"]] = Field(
-        default=UNSET,
-        description="The permissions policy that controls the actions and reusable workflows that are allowed to run.",
+    permission: Missing[Literal["read", "write", "admin"]] = Field(
+        default=UNSET, description="The permission to grant the collaborator."
     )
 
 
-model_rebuild(ReposOwnerRepoActionsPermissionsPutBody)
+model_rebuild(ProjectsProjectIdCollaboratorsUsernamePutBody)
 
-__all__ = ("ReposOwnerRepoActionsPermissionsPutBody",)
+__all__ = ("ProjectsProjectIdCollaboratorsUsernamePutBody",)

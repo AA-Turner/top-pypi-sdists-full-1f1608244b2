@@ -36,7 +36,7 @@ class DomoRepository:
     Lineage :dmdl.DomoLineage = None
 
     def __post_init__(self):
-        self.Lineage = dmdl.DomoLineage(parent=self, auth = self.auth, parent_type = 'REPOSITORY')
+        self.Lineage = dmdl.DomoLineage_Sandbox._from_parent(parent=self, auth = self.auth)
 
     @classmethod
     def _from_json(cls, auth : dmda.DomoAuth, obj ):

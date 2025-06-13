@@ -1,6 +1,6 @@
 Metadata-Version: 2.4
 Name: sqlmesh
-Version: 0.191.0
+Version: 0.192.0
 Summary: Next-generation data transformation framework
 Author-email: "TobikoData Inc." <engineering@tobikodata.com>
 License:                                  Apache License
@@ -233,7 +233,7 @@ Requires-Dist: pydantic>=2.0.0
 Requires-Dist: requests
 Requires-Dist: rich[jupyter]
 Requires-Dist: ruamel.yaml
-Requires-Dist: sqlglot[rs]~=26.26.0
+Requires-Dist: sqlglot[rs]~=26.27.0
 Requires-Dist: tenacity
 Requires-Dist: time-machine
 Requires-Dist: json-stream
@@ -241,6 +241,8 @@ Provides-Extra: athena
 Requires-Dist: PyAthena[Pandas]; extra == "athena"
 Provides-Extra: azuresql
 Requires-Dist: pymssql; extra == "azuresql"
+Provides-Extra: azuresql-odbc
+Requires-Dist: pyodbc; extra == "azuresql-odbc"
 Provides-Extra: bigquery
 Requires-Dist: google-cloud-bigquery[pandas]; extra == "bigquery"
 Requires-Dist: google-cloud-bigquery-storage; extra == "bigquery"
@@ -311,6 +313,8 @@ Requires-Dist: langchain; extra == "llm"
 Requires-Dist: openai; extra == "llm"
 Provides-Extra: mssql
 Requires-Dist: pymssql; extra == "mssql"
+Provides-Extra: mssql-odbc
+Requires-Dist: pyodbc; extra == "mssql-odbc"
 Provides-Extra: mysql
 Requires-Dist: pymysql; extra == "mysql"
 Provides-Extra: mwaa

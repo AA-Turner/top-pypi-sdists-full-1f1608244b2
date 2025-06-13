@@ -14,6 +14,7 @@ Usage::
     from types_aiobotocore_codepipeline.paginator import (
         ListActionExecutionsPaginator,
         ListActionTypesPaginator,
+        ListDeployActionExecutionTargetsPaginator,
         ListPipelineExecutionsPaginator,
         ListPipelinesPaginator,
         ListRuleExecutionsPaginator,
@@ -27,6 +28,7 @@ Usage::
 
         list_action_executions_paginator: ListActionExecutionsPaginator = client.get_paginator("list_action_executions")
         list_action_types_paginator: ListActionTypesPaginator = client.get_paginator("list_action_types")
+        list_deploy_action_execution_targets_paginator: ListDeployActionExecutionTargetsPaginator = client.get_paginator("list_deploy_action_execution_targets")
         list_pipeline_executions_paginator: ListPipelineExecutionsPaginator = client.get_paginator("list_pipeline_executions")
         list_pipelines_paginator: ListPipelinesPaginator = client.get_paginator("list_pipelines")
         list_rule_executions_paginator: ListRuleExecutionsPaginator = client.get_paginator("list_rule_executions")
@@ -47,6 +49,8 @@ from .type_defs import (
     ListActionExecutionsOutputTypeDef,
     ListActionTypesInputPaginateTypeDef,
     ListActionTypesOutputTypeDef,
+    ListDeployActionExecutionTargetsInputPaginateTypeDef,
+    ListDeployActionExecutionTargetsOutputTypeDef,
     ListPipelineExecutionsInputPaginateTypeDef,
     ListPipelineExecutionsOutputTypeDef,
     ListPipelinesInputPaginateTypeDef,
@@ -67,6 +71,7 @@ else:
 __all__ = (
     "ListActionExecutionsPaginator",
     "ListActionTypesPaginator",
+    "ListDeployActionExecutionTargetsPaginator",
     "ListPipelineExecutionsPaginator",
     "ListPipelinesPaginator",
     "ListRuleExecutionsPaginator",
@@ -108,6 +113,26 @@ class ListActionTypesPaginator(_ListActionTypesPaginatorBase):
         """
         [Show boto3 documentation](https://boto3.amazonaws.com/v1/documentation/api/latest/reference/services/codepipeline/paginator/ListActionTypes.html#CodePipeline.Paginator.ListActionTypes.paginate)
         [Show types-aiobotocore documentation](https://youtype.github.io/types_aiobotocore_docs/types_aiobotocore_codepipeline/paginators/#listactiontypespaginator)
+        """
+
+if TYPE_CHECKING:
+    _ListDeployActionExecutionTargetsPaginatorBase = AioPaginator[
+        ListDeployActionExecutionTargetsOutputTypeDef
+    ]
+else:
+    _ListDeployActionExecutionTargetsPaginatorBase = AioPaginator  # type: ignore[assignment]
+
+class ListDeployActionExecutionTargetsPaginator(_ListDeployActionExecutionTargetsPaginatorBase):
+    """
+    [Show boto3 documentation](https://boto3.amazonaws.com/v1/documentation/api/latest/reference/services/codepipeline/paginator/ListDeployActionExecutionTargets.html#CodePipeline.Paginator.ListDeployActionExecutionTargets)
+    [Show types-aiobotocore documentation](https://youtype.github.io/types_aiobotocore_docs/types_aiobotocore_codepipeline/paginators/#listdeployactionexecutiontargetspaginator)
+    """
+    def paginate(  # type: ignore[override]
+        self, **kwargs: Unpack[ListDeployActionExecutionTargetsInputPaginateTypeDef]
+    ) -> AioPageIterator[ListDeployActionExecutionTargetsOutputTypeDef]:
+        """
+        [Show boto3 documentation](https://boto3.amazonaws.com/v1/documentation/api/latest/reference/services/codepipeline/paginator/ListDeployActionExecutionTargets.html#CodePipeline.Paginator.ListDeployActionExecutionTargets.paginate)
+        [Show types-aiobotocore documentation](https://youtype.github.io/types_aiobotocore_docs/types_aiobotocore_codepipeline/paginators/#listdeployactionexecutiontargetspaginator)
         """
 
 if TYPE_CHECKING:

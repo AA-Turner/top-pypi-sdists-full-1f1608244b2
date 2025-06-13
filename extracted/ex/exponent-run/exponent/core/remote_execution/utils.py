@@ -14,12 +14,12 @@ from typing import (
 )
 from bs4 import UnicodeDammit
 
+from exponent.core.types.command_data import NaturalEditContent
 from exponent.core.types.event_types import (
     CodeBlockEvent,
     CommandEvent,
     FileWriteEvent,
     LocalEventType,
-    NaturalEditContent,
 )
 
 from exponent.utils.version import get_installed_version

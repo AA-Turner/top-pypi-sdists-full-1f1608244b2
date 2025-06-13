@@ -70,6 +70,7 @@ Usage::
         DescribeLocalGatewayVirtualInterfacesPaginator,
         DescribeLocalGatewaysPaginator,
         DescribeMacHostsPaginator,
+        DescribeMacModificationTasksPaginator,
         DescribeManagedPrefixListsPaginator,
         DescribeMovingAddressesPaginator,
         DescribeNatGatewaysPaginator,
@@ -86,6 +87,9 @@ Usage::
         DescribeReplaceRootVolumeTasksPaginator,
         DescribeReservedInstancesModificationsPaginator,
         DescribeReservedInstancesOfferingsPaginator,
+        DescribeRouteServerEndpointsPaginator,
+        DescribeRouteServerPeersPaginator,
+        DescribeRouteServersPaginator,
         DescribeRouteTablesPaginator,
         DescribeScheduledInstanceAvailabilityPaginator,
         DescribeScheduledInstancesPaginator,
@@ -223,6 +227,7 @@ Usage::
         describe_local_gateway_virtual_interfaces_paginator: DescribeLocalGatewayVirtualInterfacesPaginator = client.get_paginator("describe_local_gateway_virtual_interfaces")
         describe_local_gateways_paginator: DescribeLocalGatewaysPaginator = client.get_paginator("describe_local_gateways")
         describe_mac_hosts_paginator: DescribeMacHostsPaginator = client.get_paginator("describe_mac_hosts")
+        describe_mac_modification_tasks_paginator: DescribeMacModificationTasksPaginator = client.get_paginator("describe_mac_modification_tasks")
         describe_managed_prefix_lists_paginator: DescribeManagedPrefixListsPaginator = client.get_paginator("describe_managed_prefix_lists")
         describe_moving_addresses_paginator: DescribeMovingAddressesPaginator = client.get_paginator("describe_moving_addresses")
         describe_nat_gateways_paginator: DescribeNatGatewaysPaginator = client.get_paginator("describe_nat_gateways")
@@ -239,6 +244,9 @@ Usage::
         describe_replace_root_volume_tasks_paginator: DescribeReplaceRootVolumeTasksPaginator = client.get_paginator("describe_replace_root_volume_tasks")
         describe_reserved_instances_modifications_paginator: DescribeReservedInstancesModificationsPaginator = client.get_paginator("describe_reserved_instances_modifications")
         describe_reserved_instances_offerings_paginator: DescribeReservedInstancesOfferingsPaginator = client.get_paginator("describe_reserved_instances_offerings")
+        describe_route_server_endpoints_paginator: DescribeRouteServerEndpointsPaginator = client.get_paginator("describe_route_server_endpoints")
+        describe_route_server_peers_paginator: DescribeRouteServerPeersPaginator = client.get_paginator("describe_route_server_peers")
+        describe_route_servers_paginator: DescribeRouteServersPaginator = client.get_paginator("describe_route_servers")
         describe_route_tables_paginator: DescribeRouteTablesPaginator = client.get_paginator("describe_route_tables")
         describe_scheduled_instance_availability_paginator: DescribeScheduledInstanceAvailabilityPaginator = client.get_paginator("describe_scheduled_instance_availability")
         describe_scheduled_instances_paginator: DescribeScheduledInstancesPaginator = client.get_paginator("describe_scheduled_instances")
@@ -439,6 +447,8 @@ from .type_defs import (
     DescribeLocalGatewayVirtualInterfacesResultTypeDef,
     DescribeMacHostsRequestPaginateTypeDef,
     DescribeMacHostsResultTypeDef,
+    DescribeMacModificationTasksRequestPaginateTypeDef,
+    DescribeMacModificationTasksResultTypeDef,
     DescribeManagedPrefixListsRequestPaginateTypeDef,
     DescribeManagedPrefixListsResultTypeDef,
     DescribeMovingAddressesRequestPaginateTypeDef,
@@ -471,6 +481,12 @@ from .type_defs import (
     DescribeReservedInstancesModificationsResultTypeDef,
     DescribeReservedInstancesOfferingsRequestPaginateTypeDef,
     DescribeReservedInstancesOfferingsResultTypeDef,
+    DescribeRouteServerEndpointsRequestPaginateTypeDef,
+    DescribeRouteServerEndpointsResultTypeDef,
+    DescribeRouteServerPeersRequestPaginateTypeDef,
+    DescribeRouteServerPeersResultTypeDef,
+    DescribeRouteServersRequestPaginateTypeDef,
+    DescribeRouteServersResultTypeDef,
     DescribeRouteTablesRequestPaginateTypeDef,
     DescribeRouteTablesResultTypeDef,
     DescribeScheduledInstanceAvailabilityRequestPaginateTypeDef,
@@ -684,6 +700,7 @@ __all__ = (
     "DescribeLocalGatewayVirtualInterfacesPaginator",
     "DescribeLocalGatewaysPaginator",
     "DescribeMacHostsPaginator",
+    "DescribeMacModificationTasksPaginator",
     "DescribeManagedPrefixListsPaginator",
     "DescribeMovingAddressesPaginator",
     "DescribeNatGatewaysPaginator",
@@ -700,6 +717,9 @@ __all__ = (
     "DescribeReplaceRootVolumeTasksPaginator",
     "DescribeReservedInstancesModificationsPaginator",
     "DescribeReservedInstancesOfferingsPaginator",
+    "DescribeRouteServerEndpointsPaginator",
+    "DescribeRouteServerPeersPaginator",
+    "DescribeRouteServersPaginator",
     "DescribeRouteTablesPaginator",
     "DescribeScheduledInstanceAvailabilityPaginator",
     "DescribeScheduledInstancesPaginator",
@@ -2083,6 +2103,29 @@ class DescribeMacHostsPaginator(_DescribeMacHostsPaginatorBase):
 
 
 if TYPE_CHECKING:
+    _DescribeMacModificationTasksPaginatorBase = AioPaginator[
+        DescribeMacModificationTasksResultTypeDef
+    ]
+else:
+    _DescribeMacModificationTasksPaginatorBase = AioPaginator  # type: ignore[assignment]
+
+
+class DescribeMacModificationTasksPaginator(_DescribeMacModificationTasksPaginatorBase):
+    """
+    [Show boto3 documentation](https://boto3.amazonaws.com/v1/documentation/api/latest/reference/services/ec2/paginator/DescribeMacModificationTasks.html#EC2.Paginator.DescribeMacModificationTasks)
+    [Show types-aiobotocore documentation](https://youtype.github.io/types_aiobotocore_docs/types_aiobotocore_ec2/paginators/#describemacmodificationtaskspaginator)
+    """
+
+    def paginate(  # type: ignore[override]
+        self, **kwargs: Unpack[DescribeMacModificationTasksRequestPaginateTypeDef]
+    ) -> AioPageIterator[DescribeMacModificationTasksResultTypeDef]:
+        """
+        [Show boto3 documentation](https://boto3.amazonaws.com/v1/documentation/api/latest/reference/services/ec2/paginator/DescribeMacModificationTasks.html#EC2.Paginator.DescribeMacModificationTasks.paginate)
+        [Show types-aiobotocore documentation](https://youtype.github.io/types_aiobotocore_docs/types_aiobotocore_ec2/paginators/#describemacmodificationtaskspaginator)
+        """
+
+
+if TYPE_CHECKING:
     _DescribeManagedPrefixListsPaginatorBase = AioPaginator[DescribeManagedPrefixListsResultTypeDef]
 else:
     _DescribeManagedPrefixListsPaginatorBase = AioPaginator  # type: ignore[assignment]
@@ -2439,6 +2482,71 @@ class DescribeReservedInstancesOfferingsPaginator(_DescribeReservedInstancesOffe
         """
         [Show boto3 documentation](https://boto3.amazonaws.com/v1/documentation/api/latest/reference/services/ec2/paginator/DescribeReservedInstancesOfferings.html#EC2.Paginator.DescribeReservedInstancesOfferings.paginate)
         [Show types-aiobotocore documentation](https://youtype.github.io/types_aiobotocore_docs/types_aiobotocore_ec2/paginators/#describereservedinstancesofferingspaginator)
+        """
+
+
+if TYPE_CHECKING:
+    _DescribeRouteServerEndpointsPaginatorBase = AioPaginator[
+        DescribeRouteServerEndpointsResultTypeDef
+    ]
+else:
+    _DescribeRouteServerEndpointsPaginatorBase = AioPaginator  # type: ignore[assignment]
+
+
+class DescribeRouteServerEndpointsPaginator(_DescribeRouteServerEndpointsPaginatorBase):
+    """
+    [Show boto3 documentation](https://boto3.amazonaws.com/v1/documentation/api/latest/reference/services/ec2/paginator/DescribeRouteServerEndpoints.html#EC2.Paginator.DescribeRouteServerEndpoints)
+    [Show types-aiobotocore documentation](https://youtype.github.io/types_aiobotocore_docs/types_aiobotocore_ec2/paginators/#describerouteserverendpointspaginator)
+    """
+
+    def paginate(  # type: ignore[override]
+        self, **kwargs: Unpack[DescribeRouteServerEndpointsRequestPaginateTypeDef]
+    ) -> AioPageIterator[DescribeRouteServerEndpointsResultTypeDef]:
+        """
+        [Show boto3 documentation](https://boto3.amazonaws.com/v1/documentation/api/latest/reference/services/ec2/paginator/DescribeRouteServerEndpoints.html#EC2.Paginator.DescribeRouteServerEndpoints.paginate)
+        [Show types-aiobotocore documentation](https://youtype.github.io/types_aiobotocore_docs/types_aiobotocore_ec2/paginators/#describerouteserverendpointspaginator)
+        """
+
+
+if TYPE_CHECKING:
+    _DescribeRouteServerPeersPaginatorBase = AioPaginator[DescribeRouteServerPeersResultTypeDef]
+else:
+    _DescribeRouteServerPeersPaginatorBase = AioPaginator  # type: ignore[assignment]
+
+
+class DescribeRouteServerPeersPaginator(_DescribeRouteServerPeersPaginatorBase):
+    """
+    [Show boto3 documentation](https://boto3.amazonaws.com/v1/documentation/api/latest/reference/services/ec2/paginator/DescribeRouteServerPeers.html#EC2.Paginator.DescribeRouteServerPeers)
+    [Show types-aiobotocore documentation](https://youtype.github.io/types_aiobotocore_docs/types_aiobotocore_ec2/paginators/#describerouteserverpeerspaginator)
+    """
+
+    def paginate(  # type: ignore[override]
+        self, **kwargs: Unpack[DescribeRouteServerPeersRequestPaginateTypeDef]
+    ) -> AioPageIterator[DescribeRouteServerPeersResultTypeDef]:
+        """
+        [Show boto3 documentation](https://boto3.amazonaws.com/v1/documentation/api/latest/reference/services/ec2/paginator/DescribeRouteServerPeers.html#EC2.Paginator.DescribeRouteServerPeers.paginate)
+        [Show types-aiobotocore documentation](https://youtype.github.io/types_aiobotocore_docs/types_aiobotocore_ec2/paginators/#describerouteserverpeerspaginator)
+        """
+
+
+if TYPE_CHECKING:
+    _DescribeRouteServersPaginatorBase = AioPaginator[DescribeRouteServersResultTypeDef]
+else:
+    _DescribeRouteServersPaginatorBase = AioPaginator  # type: ignore[assignment]
+
+
+class DescribeRouteServersPaginator(_DescribeRouteServersPaginatorBase):
+    """
+    [Show boto3 documentation](https://boto3.amazonaws.com/v1/documentation/api/latest/reference/services/ec2/paginator/DescribeRouteServers.html#EC2.Paginator.DescribeRouteServers)
+    [Show types-aiobotocore documentation](https://youtype.github.io/types_aiobotocore_docs/types_aiobotocore_ec2/paginators/#describerouteserverspaginator)
+    """
+
+    def paginate(  # type: ignore[override]
+        self, **kwargs: Unpack[DescribeRouteServersRequestPaginateTypeDef]
+    ) -> AioPageIterator[DescribeRouteServersResultTypeDef]:
+        """
+        [Show boto3 documentation](https://boto3.amazonaws.com/v1/documentation/api/latest/reference/services/ec2/paginator/DescribeRouteServers.html#EC2.Paginator.DescribeRouteServers.paginate)
+        [Show types-aiobotocore documentation](https://youtype.github.io/types_aiobotocore_docs/types_aiobotocore_ec2/paginators/#describerouteserverspaginator)
         """
 
 

@@ -33,7 +33,9 @@ __all__ = (
     "ExternalSourceTypeType",
     "FineTuningJobStatusType",
     "FoundationModelLifecycleStatusType",
+    "GuardrailContentFilterActionType",
     "GuardrailContentFilterTypeType",
+    "GuardrailContextualGroundingActionType",
     "GuardrailContextualGroundingFilterTypeType",
     "GuardrailFilterStrengthType",
     "GuardrailManagedWordsTypeType",
@@ -41,10 +43,13 @@ __all__ = (
     "GuardrailPiiEntityTypeType",
     "GuardrailSensitiveInformationActionType",
     "GuardrailStatusType",
+    "GuardrailTopicActionType",
     "GuardrailTopicTypeType",
+    "GuardrailWordActionType",
     "InferenceProfileStatusType",
     "InferenceProfileTypeType",
     "InferenceTypeType",
+    "JobStatusDetailsType",
     "ListCustomModelsPaginatorName",
     "ListEvaluationJobsPaginatorName",
     "ListGuardrailsPaginatorName",
@@ -96,9 +101,11 @@ EvaluationTaskTypeType = Literal[
 ExternalSourceTypeType = Literal["BYTE_CONTENT", "S3"]
 FineTuningJobStatusType = Literal["Completed", "Failed", "InProgress", "Stopped", "Stopping"]
 FoundationModelLifecycleStatusType = Literal["ACTIVE", "LEGACY"]
+GuardrailContentFilterActionType = Literal["BLOCK", "NONE"]
 GuardrailContentFilterTypeType = Literal[
     "HATE", "INSULTS", "MISCONDUCT", "PROMPT_ATTACK", "SEXUAL", "VIOLENCE"
 ]
+GuardrailContextualGroundingActionType = Literal["BLOCK", "NONE"]
 GuardrailContextualGroundingFilterTypeType = Literal["GROUNDING", "RELEVANCE"]
 GuardrailFilterStrengthType = Literal["HIGH", "LOW", "MEDIUM", "NONE"]
 GuardrailManagedWordsTypeType = Literal["PROFANITY"]
@@ -136,12 +143,17 @@ GuardrailPiiEntityTypeType = Literal[
     "US_SOCIAL_SECURITY_NUMBER",
     "VEHICLE_IDENTIFICATION_NUMBER",
 ]
-GuardrailSensitiveInformationActionType = Literal["ANONYMIZE", "BLOCK"]
+GuardrailSensitiveInformationActionType = Literal["ANONYMIZE", "BLOCK", "NONE"]
 GuardrailStatusType = Literal["CREATING", "DELETING", "FAILED", "READY", "UPDATING", "VERSIONING"]
+GuardrailTopicActionType = Literal["BLOCK", "NONE"]
 GuardrailTopicTypeType = Literal["DENY"]
+GuardrailWordActionType = Literal["BLOCK", "NONE"]
 InferenceProfileStatusType = Literal["ACTIVE"]
 InferenceProfileTypeType = Literal["APPLICATION", "SYSTEM_DEFINED"]
 InferenceTypeType = Literal["ON_DEMAND", "PROVISIONED"]
+JobStatusDetailsType = Literal[
+    "Completed", "Failed", "InProgress", "NotStarted", "Stopped", "Stopping"
+]
 ListCustomModelsPaginatorName = Literal["list_custom_models"]
 ListEvaluationJobsPaginatorName = Literal["list_evaluation_jobs"]
 ListGuardrailsPaginatorName = Literal["list_guardrails"]
@@ -343,6 +355,7 @@ ServiceName = Literal[
     "freetier",
     "fsx",
     "gamelift",
+    "gameliftstreams",
     "geo-maps",
     "geo-places",
     "geo-routes",
@@ -368,6 +381,7 @@ ServiceName = Literal[
     "iot",
     "iot-data",
     "iot-jobs-data",
+    "iot-managed-integrations",
     "iotanalytics",
     "iotdeviceadvisor",
     "iotevents",
@@ -482,7 +496,6 @@ ServiceName = Literal[
     "pipes",
     "polly",
     "pricing",
-    "privatenetworks",
     "proton",
     "qapps",
     "qbusiness",
@@ -543,7 +556,6 @@ ServiceName = Literal[
     "signer",
     "simspaceweaver",
     "sms",
-    "sms-voice",
     "snow-device-management",
     "snowball",
     "sns",
@@ -551,6 +563,7 @@ ServiceName = Literal[
     "sqs",
     "ssm",
     "ssm-contacts",
+    "ssm-guiconnect",
     "ssm-incidents",
     "ssm-quicksetup",
     "ssm-sap",
@@ -629,6 +642,8 @@ RegionName = Literal[
     "eu-central-1",
     "eu-central-2",
     "eu-north-1",
+    "eu-south-1",
+    "eu-south-2",
     "eu-west-1",
     "eu-west-2",
     "eu-west-3",

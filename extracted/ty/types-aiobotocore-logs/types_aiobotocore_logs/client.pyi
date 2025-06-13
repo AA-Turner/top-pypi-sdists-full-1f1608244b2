@@ -144,6 +144,8 @@ from .type_defs import (
     ListLogAnomalyDetectorsResponseTypeDef,
     ListLogGroupsForQueryRequestTypeDef,
     ListLogGroupsForQueryResponseTypeDef,
+    ListLogGroupsRequestTypeDef,
+    ListLogGroupsResponseTypeDef,
     ListTagsForResourceRequestTypeDef,
     ListTagsForResourceResponseTypeDef,
     ListTagsLogGroupRequestTypeDef,
@@ -618,7 +620,7 @@ class CloudWatchLogsClient(AioBaseClient):
         self, **kwargs: Unpack[DescribeLogGroupsRequestTypeDef]
     ) -> DescribeLogGroupsResponseTypeDef:
         """
-        Lists the specified log groups.
+        Returns information about log groups.
 
         [Show boto3 documentation](https://boto3.amazonaws.com/v1/documentation/api/latest/reference/services/logs/client/describe_log_groups.html)
         [Show types-aiobotocore documentation](https://youtype.github.io/types_aiobotocore_docs/types_aiobotocore_logs/client/#describe_log_groups)
@@ -860,6 +862,16 @@ class CloudWatchLogsClient(AioBaseClient):
 
         [Show boto3 documentation](https://boto3.amazonaws.com/v1/documentation/api/latest/reference/services/logs/client/list_log_anomaly_detectors.html)
         [Show types-aiobotocore documentation](https://youtype.github.io/types_aiobotocore_docs/types_aiobotocore_logs/client/#list_log_anomaly_detectors)
+        """
+
+    async def list_log_groups(
+        self, **kwargs: Unpack[ListLogGroupsRequestTypeDef]
+    ) -> ListLogGroupsResponseTypeDef:
+        """
+        Returns a list of log groups in the Region in your account.
+
+        [Show boto3 documentation](https://boto3.amazonaws.com/v1/documentation/api/latest/reference/services/logs/client/list_log_groups.html)
+        [Show types-aiobotocore documentation](https://youtype.github.io/types_aiobotocore_docs/types_aiobotocore_logs/client/#list_log_groups)
         """
 
     async def list_log_groups_for_query(

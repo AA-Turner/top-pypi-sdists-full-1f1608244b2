@@ -9,17 +9,19 @@ See https://github.com/github/rest-api-description for more information.
 
 from __future__ import annotations
 
+from typing import Union
+
 from pydantic import Field
 
 from githubkit.compat import GitHubModel, model_rebuild
 
 
-class ProjectsProjectIdColumnsPostBody(GitHubModel):
-    """ProjectsProjectIdColumnsPostBody"""
+class ProjectsColumnsColumnIdCardsPostBodyOneof0(GitHubModel):
+    """ProjectsColumnsColumnIdCardsPostBodyOneof0"""
 
-    name: str = Field(description="Name of the project column")
+    note: Union[str, None] = Field(description="The project card's note")
 
 
-model_rebuild(ProjectsProjectIdColumnsPostBody)
+model_rebuild(ProjectsColumnsColumnIdCardsPostBodyOneof0)
 
-__all__ = ("ProjectsProjectIdColumnsPostBody",)
+__all__ = ("ProjectsColumnsColumnIdCardsPostBodyOneof0",)

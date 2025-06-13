@@ -37,6 +37,7 @@ from neptune_fetcher.internal.filters import (
     _AttributeFilter,
     _Filter,
 )
+from neptune_fetcher.internal.identifiers import ProjectIdentifier
 from neptune_fetcher.internal.output_format import create_series_dataframe
 from neptune_fetcher.internal.retrieval import (
     search,
@@ -50,13 +51,15 @@ __all__ = ("fetch_series",)
 
 
 def fetch_series(
+    *,
+    project_identifier: ProjectIdentifier,
     filter_: _Filter,
     attributes: _AttributeFilter,
     include_time: Optional[Literal["absolute"]],
     step_range: Tuple[Optional[float], Optional[float]],
     lineage_to_the_root: bool,
     tail_limit: Optional[int],
-    context: Optional[Context],
+    context: Optional[Context] = None,
     container_type: ContainerType,
 ) -> pd.DataFrame:
     _validate_step_range(step_range)
@@ -64,8 +67,7 @@ def fetch_series(
     _validate_include_time(include_time)
 
     valid_context = validate_context(context or get_context())
-    client = get_client(valid_context)
-    project_identifier = identifiers.ProjectIdentifier(valid_context.project)  # type: ignore
+    client = get_client(context=valid_context)
 
     with (
         concurrency.create_thread_pool_executor() as executor,
@@ -112,7 +114,7 @@ def fetch_series(
                 downstream=lambda sys_ids_split, definitions_page: concurrency.generate_concurrently(
                     items=split.split_series_attributes(
                         items=(
-                            series.RunAttributeDefinition(
+                            identifiers.RunAttributeDefinition(
                                 run_identifier=identifiers.RunIdentifier(project_identifier, sys_id),
                                 attribute_definition=definition,
                             )
@@ -137,10 +139,10 @@ def fetch_series(
             ),
         )
         results: Generator[
-            util.Page[tuple[series.RunAttributeDefinition, list[series.StringSeriesValue]]], None, None
+            util.Page[tuple[identifiers.RunAttributeDefinition, list[series.StringSeriesValue]]], None, None
         ] = concurrency.gather_results(output)
 
-        series_data: dict[series.RunAttributeDefinition, list[series.StringSeriesValue]] = {}
+        series_data: dict[identifiers.RunAttributeDefinition, list[series.StringSeriesValue]] = {}
         for result in results:
             for run_attribute_definition, series_values in result.items:
                 series_data.setdefault(run_attribute_definition, []).extend(series_values)

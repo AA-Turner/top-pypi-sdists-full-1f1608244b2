@@ -24,6 +24,7 @@ from .literals import (
     LogExportType,
     ManagedWorkgroupStatusType,
     NamespaceStatusType,
+    OfferingTypeType,
     PerformanceTargetStatusType,
     SnapshotStatusType,
     StateType,
@@ -56,6 +57,8 @@ __all__ = (
     "CreateEndpointAccessResponseTypeDef",
     "CreateNamespaceRequestTypeDef",
     "CreateNamespaceResponseTypeDef",
+    "CreateReservationRequestTypeDef",
+    "CreateReservationResponseTypeDef",
     "CreateScheduledActionRequestTypeDef",
     "CreateScheduledActionResponseTypeDef",
     "CreateSnapshotCopyConfigurationRequestTypeDef",
@@ -96,6 +99,10 @@ __all__ = (
     "GetNamespaceResponseTypeDef",
     "GetRecoveryPointRequestTypeDef",
     "GetRecoveryPointResponseTypeDef",
+    "GetReservationOfferingRequestTypeDef",
+    "GetReservationOfferingResponseTypeDef",
+    "GetReservationRequestTypeDef",
+    "GetReservationResponseTypeDef",
     "GetResourcePolicyRequestTypeDef",
     "GetResourcePolicyResponseTypeDef",
     "GetScheduledActionRequestTypeDef",
@@ -125,6 +132,12 @@ __all__ = (
     "ListRecoveryPointsRequestPaginateTypeDef",
     "ListRecoveryPointsRequestTypeDef",
     "ListRecoveryPointsResponseTypeDef",
+    "ListReservationOfferingsRequestPaginateTypeDef",
+    "ListReservationOfferingsRequestTypeDef",
+    "ListReservationOfferingsResponseTypeDef",
+    "ListReservationsRequestPaginateTypeDef",
+    "ListReservationsRequestTypeDef",
+    "ListReservationsResponseTypeDef",
     "ListScheduledActionsRequestPaginateTypeDef",
     "ListScheduledActionsRequestTypeDef",
     "ListScheduledActionsResponseTypeDef",
@@ -156,6 +169,8 @@ __all__ = (
     "PutResourcePolicyRequestTypeDef",
     "PutResourcePolicyResponseTypeDef",
     "RecoveryPointTypeDef",
+    "ReservationOfferingTypeDef",
+    "ReservationTypeDef",
     "ResourcePolicyTypeDef",
     "ResponseMetadataTypeDef",
     "RestoreFromRecoveryPointRequestTypeDef",
@@ -286,6 +301,12 @@ class NamespaceTypeDef(TypedDict):
     status: NotRequired[NamespaceStatusType]
 
 
+class CreateReservationRequestTypeDef(TypedDict):
+    capacity: int
+    offeringId: str
+    clientToken: NotRequired[str]
+
+
 TimestampTypeDef = Union[datetime, str]
 
 
@@ -405,6 +426,23 @@ class RecoveryPointTypeDef(TypedDict):
     workgroupName: NotRequired[str]
 
 
+class GetReservationOfferingRequestTypeDef(TypedDict):
+    offeringId: str
+
+
+class ReservationOfferingTypeDef(TypedDict):
+    currencyCode: NotRequired[str]
+    duration: NotRequired[int]
+    hourlyCharge: NotRequired[float]
+    offeringId: NotRequired[str]
+    offeringType: NotRequired[OfferingTypeType]
+    upfrontCharge: NotRequired[float]
+
+
+class GetReservationRequestTypeDef(TypedDict):
+    reservationId: str
+
+
 class GetResourcePolicyRequestTypeDef(TypedDict):
     resourceArn: str
 
@@ -495,6 +533,16 @@ class ManagedWorkgroupListItemTypeDef(TypedDict):
 
 
 class ListNamespacesRequestTypeDef(TypedDict):
+    maxResults: NotRequired[int]
+    nextToken: NotRequired[str]
+
+
+class ListReservationOfferingsRequestTypeDef(TypedDict):
+    maxResults: NotRequired[int]
+    nextToken: NotRequired[str]
+
+
+class ListReservationsRequestTypeDef(TypedDict):
     maxResults: NotRequired[int]
     nextToken: NotRequired[str]
 
@@ -929,6 +977,27 @@ class ListRecoveryPointsResponseTypeDef(TypedDict):
     nextToken: NotRequired[str]
 
 
+class GetReservationOfferingResponseTypeDef(TypedDict):
+    reservationOffering: ReservationOfferingTypeDef
+    ResponseMetadata: ResponseMetadataTypeDef
+
+
+class ListReservationOfferingsResponseTypeDef(TypedDict):
+    reservationOfferingsList: List[ReservationOfferingTypeDef]
+    ResponseMetadata: ResponseMetadataTypeDef
+    nextToken: NotRequired[str]
+
+
+class ReservationTypeDef(TypedDict):
+    capacity: NotRequired[int]
+    endDate: NotRequired[datetime]
+    offering: NotRequired[ReservationOfferingTypeDef]
+    reservationArn: NotRequired[str]
+    reservationId: NotRequired[str]
+    startDate: NotRequired[datetime]
+    status: NotRequired[str]
+
+
 class GetResourcePolicyResponseTypeDef(TypedDict):
     resourcePolicy: ResourcePolicyTypeDef
     ResponseMetadata: ResponseMetadataTypeDef
@@ -987,6 +1056,14 @@ class ListRecoveryPointsRequestPaginateTypeDef(TypedDict):
     namespaceArn: NotRequired[str]
     namespaceName: NotRequired[str]
     startTime: NotRequired[TimestampTypeDef]
+    PaginationConfig: NotRequired[PaginatorConfigTypeDef]
+
+
+class ListReservationOfferingsRequestPaginateTypeDef(TypedDict):
+    PaginationConfig: NotRequired[PaginatorConfigTypeDef]
+
+
+class ListReservationsRequestPaginateTypeDef(TypedDict):
     PaginationConfig: NotRequired[PaginatorConfigTypeDef]
 
 
@@ -1063,6 +1140,22 @@ class TargetActionTypeDef(TypedDict):
 
 
 ScheduleUnionTypeDef = Union[ScheduleTypeDef, ScheduleOutputTypeDef]
+
+
+class CreateReservationResponseTypeDef(TypedDict):
+    reservation: ReservationTypeDef
+    ResponseMetadata: ResponseMetadataTypeDef
+
+
+class GetReservationResponseTypeDef(TypedDict):
+    reservation: ReservationTypeDef
+    ResponseMetadata: ResponseMetadataTypeDef
+
+
+class ListReservationsResponseTypeDef(TypedDict):
+    reservationsList: List[ReservationTypeDef]
+    ResponseMetadata: ResponseMetadataTypeDef
+    nextToken: NotRequired[str]
 
 
 class EndpointAccessTypeDef(TypedDict):

@@ -68,7 +68,7 @@ if sys.argv[-1] == "publish":
 
 setup(
     name='pytest-sbase',
-    version='4.39.3',
+    version='4.39.4',
     description='A complete web automation framework for end-to-end testing.',
     long_description=long_description,
     long_description_content_type='text/markdown',
@@ -108,6 +108,7 @@ setup(
         "Programming Language :: Python :: 3.11",
         "Programming Language :: Python :: 3.12",
         "Programming Language :: Python :: 3.13",
+        "Programming Language :: Python :: 3.14",
         "Topic :: Internet",
         "Topic :: Scientific/Engineering",
         "Topic :: Software Development",
@@ -122,7 +123,7 @@ setup(
     ],
     python_requires=">=3.8",
     install_requires=[
-        'seleniumbase>=4.39.3',
+        'seleniumbase>=4.39.4',
         ],
     packages=[
         ],

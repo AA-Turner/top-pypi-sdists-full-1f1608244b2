@@ -1746,13 +1746,13 @@ class Hwp(ParamHelpers, RunMethods):
         빈 문단일 경우 제자리에서 True, 비어있지 않은 경우 False를 리턴
 
         """
-        self.MoveSelNextChar()
-        if self.get_pos()[2] == 0:  # 빈 문단이면?
-            self.Cancel()
-            self.MovePrevParaEnd()
+        before_pos = self.get_pos()
+        self.MoveRight()
+        after_pos = self.get_pos()
+        self.set_pos(*before_pos)
+        if before_pos[2] == after_pos[2] == 0 and before_pos[0] == after_pos[0]:
             return True
         else:
-            self.MoveParaBegin()
             return False
 
     def goto_addr(
@@ -4918,6 +4918,9 @@ class Hwp(ParamHelpers, RunMethods):
         Returns:
             단어를 찾으면 찾아가서 선택한 후 True를 리턴, 단어가 더이상 없으면 False를 리턴
         """
+        pset = self.hwp.HParameterSet.HFindReplace
+        self.hwp.HAction.GetDefault("FindDlg", pset.HSet)
+        self.hwp.HAction.Execute("FindDlg", pset.HSet)
         self.SetMessageBoxMode(0x2FFF1)
         init_pos = str(self.KeyIndicator())
         pset = self.hwp.HParameterSet.HFindReplace
@@ -4948,6 +4951,9 @@ class Hwp(ParamHelpers, RunMethods):
         Returns:
             단어를 찾으면 찾아가서 선택한 후 True를 리턴, 단어가 더이상 없으면 False를 리턴
         """
+        pset = self.hwp.HParameterSet.HFindReplace
+        self.hwp.HAction.GetDefault("FindDlg", pset.HSet)
+        self.hwp.HAction.Execute("FindDlg", pset.HSet)
         self.SetMessageBoxMode(0x2FFF1)
         init_pos = str(self.KeyIndicator())
         pset = self.hwp.HParameterSet.HFindReplace
@@ -4971,6 +4977,7 @@ class Hwp(ParamHelpers, RunMethods):
             direction: Literal["Forward", "Backward", "AllDoc"] = "Forward",
             regex: bool = False,
             TextColor: Optional[int] = None,
+            Height: Optional[int|float] = None,
             MatchCase: int = 1,
             SeveralWords: int = 0,
             UseWildCards: int = 1,
@@ -5000,6 +5007,7 @@ class Hwp(ParamHelpers, RunMethods):
 
             regex: 정규식 탐색(기본값 False)
             TextColor: 글자색(hwp.RGBColor)
+            Height: 글자크기(hwp.PointToHwpUnit)
             MatchCase: 대소문자 구분(기본값 1)
             SeveralWords: 여러 단어 찾기(콤마로 구분하여 or연산 실시, 기본값 0)
             UseWildCards: 아무개 문자(1),
@@ -5038,6 +5046,8 @@ class Hwp(ParamHelpers, RunMethods):
         pset.FindType = FindType
         if TextColor is not None:
             pset.FindCharShape.TextColor = TextColor
+        if Height is not None:
+            pset.FindCharShape.Height = self.PointToHwpUnit(Height)
         try:
             return self.hwp.HAction.Execute("RepeatFind", pset.HSet)
         finally:
@@ -5060,43 +5070,38 @@ class Hwp(ParamHelpers, RunMethods):
 
         Returns:
         """
+        cur_loc = self.get_pos()
         self.MoveDocBegin()
-        while self.find("{{"):
-            while True:
-                self.hwp.HAction.Run("MoveSelRight")
-                if self.get_selected_text().endswith("}}"):
-                    field_name = self.get_selected_text()[2:-2]
-                    if ":" in field_name:
-                        field_name, direction = field_name.split(":", maxsplit=1)
-                        if ":" in direction:
-                            direction, memo = direction.split(":", maxsplit=1)
-                        else:
-                            memo = ""
-                    else:
-                        direction = memo = ""
-                    break
-                if self.get_selected_text().endswith("\r\n"):
-                    raise Exception("필드를 닫는 중괄호가 없습니다.")
+        while self.find(r"\{\{[^(\}\})]+\}\}", regex=True):
+            field_name = self.get_selected_text(keep_select=True)[2:-2]
+            if ":" in field_name:
+                field_name, direction = field_name.split(":", maxsplit=1)
+                if ":" in direction:
+                    direction, memo = direction.split(":", maxsplit=1)
+                else:
+                    memo = ""
+            else:
+                direction = field_name
+                memo = ""
+            if self.get_selected_text(keep_select=True).endswith("\r\n"):
+                raise Exception("필드를 닫는 중괄호가 없습니다.")
             self.hwp.HAction.Run("Delete")
             self.create_field(field_name, direction, memo)
 
         self.MoveDocBegin()
-        while self.find("[["):
-            while True:
-                self.hwp.HAction.Run("MoveSelRight")
-                if self.get_selected_text().endswith("]]"):
-                    field_name = self.get_selected_text()[2:-2]
-                    if ":" in field_name:
-                        field_name, direction = field_name.split(":", maxsplit=1)
-                        if ":" in direction:
-                            direction, memo = direction.split(":", maxsplit=1)
-                        else:
-                            memo = ""
-                    else:
-                        direction = memo = ""
-                    break
-                if self.get_selected_text().endswith("\r\n"):
-                    raise Exception("필드를 닫는 중괄호가 없습니다.")
+        while self.find(r"\[\[[^\]\]]+\]\]", regex=True):
+            field_name = self.get_selected_text(keep_select=True)[2:-2]
+            if ":" in field_name:
+                field_name, direction = field_name.split(":", maxsplit=1)
+                if ":" in direction:
+                    direction, memo = direction.split(":", maxsplit=1)
+                else:
+                    memo = ""
+            else:
+                direction = field_name
+                memo = ""
+            if self.get_selected_text(keep_select=True).endswith("\r\n"):
+                raise Exception("필드를 닫는 중괄호가 없습니다.")
             self.hwp.HAction.Run("Delete")
             if self.is_cell():
                 self.set_cur_field_name(
@@ -5104,6 +5109,7 @@ class Hwp(ParamHelpers, RunMethods):
                 )
             else:
                 pass
+        self.set_pos(*cur_loc)
 
     def find_replace(
         self,
@@ -5134,6 +5140,9 @@ class Hwp(ParamHelpers, RunMethods):
         파이썬의 re.sub 함수를 실행한다.
         """
         self.SetMessageBoxMode(0x2FFF1)
+        pset = self.hwp.HParameterSet.HFindReplace
+        self.hwp.HAction.GetDefault("FindDlg", pset.HSet)
+        self.hwp.HAction.Execute("FindDlg", pset.HSet)
         if regex:
             whole_text = self.get_text_file()
             src_list = [i.group() for i in re.finditer(src, whole_text)]
@@ -5217,6 +5226,9 @@ class Hwp(ParamHelpers, RunMethods):
         파이썬의 re.sub 함수를 실행한다.
         """
         self.SetMessageBoxMode(0x2FFF1)
+        pset = self.hwp.HParameterSet.HFindReplace
+        self.hwp.HAction.GetDefault("FindDlg", pset.HSet)
+        self.hwp.HAction.Execute("FindDlg", pset.HSet)
         if regex:
             whole_text = self.get_text_file()
             src_list = [i.group() for i in re.finditer(src, whole_text)]
@@ -5590,20 +5602,20 @@ class Hwp(ParamHelpers, RunMethods):
                 )
             self.hwp.FindCtrl()
             self.ShapeObjTableSelCell()
-        data = [self.get_selected_text()]
+        data = [self.get_selected_text(keep_select=True)]
         col_count = 1
         start = False
         while self.TableRightCell():
             if not startrow:
                 if re.match(r"\([A-Z]+1\)", self.hwp.KeyIndicator()[-1]):
                     col_count += 1
-                data.append(self.get_selected_text())
+                data.append(self.get_selected_text(keep_select=True))
             else:
                 if re.match(rf"\([A-Z]+{1 + startrow}\)", self.hwp.KeyIndicator()[-1]):
                     col_count += 1
                     start = True
                 if start:
-                    data.append(self.get_selected_text())
+                    data.append(self.get_selected_text(keep_select=True))
 
         array = np.array(data).reshape(-1, col_count)
         df = pd.DataFrame(array[1:], columns=array[0])
@@ -5697,7 +5709,7 @@ class Hwp(ParamHelpers, RunMethods):
         # rows = int(re.sub(r"[A-Z]+", "", self.get_cell_addr()))
         rows = int(re.sub(r"[A-Z]+", "", self.get_cell_addr())) - startrow
 
-        arr = np.array(self.get_selected_text(as_="list"), dtype=object).reshape(
+        arr = np.array(self.get_selected_text(as_="list", keep_select=True), dtype=object).reshape(
             rows, -1
         )
         # if startrow:
@@ -7974,7 +7986,7 @@ class Hwp(ParamHelpers, RunMethods):
 
         if type(field) in [pd.Series]:  # 필드명 리스트를 파라미터로 넣은 경우
             if not text:  # text 파라미터가 입력되지 않았다면
-                text_str = "\x02".join([field[i] for i in field.index])
+                text_str = "\x02".join([str(field[i]) for i in field.index])
                 field_str = "\x02".join([str(i) for i in field.index])  # \x02로 병합
                 self.hwp.PutFieldText(Field=field_str, Text=text_str)
                 return

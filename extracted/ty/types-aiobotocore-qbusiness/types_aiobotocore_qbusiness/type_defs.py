@@ -29,6 +29,8 @@ from .literals import (
     AttachmentsControlModeType,
     AttachmentStatusType,
     AttributeTypeType,
+    AudioExtractionStatusType,
+    AudioExtractionTypeType,
     AutoSubscriptionStatusType,
     BrowserExtensionType,
     ChatModeType,
@@ -41,6 +43,7 @@ from .literals import (
     DocumentStatusType,
     ErrorCodeType,
     GroupStatusType,
+    HallucinationReductionControlType,
     IdentityTypeType,
     ImageExtractionStatusType,
     IndexStatusType,
@@ -67,6 +70,9 @@ from .literals import (
     StatusType,
     StringAttributeValueBoostingLevelType,
     SubscriptionTypeType,
+    SystemMessageTypeType,
+    VideoExtractionStatusType,
+    VideoExtractionTypeType,
     WebExperienceSamplePromptsControlModeType,
     WebExperienceStatusType,
 )
@@ -111,6 +117,8 @@ __all__ = (
     "AppliedOrchestrationConfigurationTypeDef",
     "AssociatePermissionRequestTypeDef",
     "AssociatePermissionResponseTypeDef",
+    "AssociatedGroupTypeDef",
+    "AssociatedUserTypeDef",
     "AttachmentInputEventTypeDef",
     "AttachmentInputTypeDef",
     "AttachmentOutputTypeDef",
@@ -120,6 +128,8 @@ __all__ = (
     "AttributeFilterPaginatorTypeDef",
     "AttributeFilterTypeDef",
     "AttributeFilterUnionTypeDef",
+    "AudioExtractionConfigurationTypeDef",
+    "AudioSourceDetailsTypeDef",
     "AuthChallengeRequestEventTypeDef",
     "AuthChallengeRequestTypeDef",
     "AuthChallengeResponseEventTypeDef",
@@ -145,6 +155,8 @@ __all__ = (
     "ChatOutputTypeDef",
     "ChatSyncInputTypeDef",
     "ChatSyncOutputTypeDef",
+    "CheckDocumentAccessRequestTypeDef",
+    "CheckDocumentAccessResponseTypeDef",
     "ConfigurationEventTypeDef",
     "ContentBlockerRuleTypeDef",
     "ContentRetrievalRuleOutputTypeDef",
@@ -154,6 +166,8 @@ __all__ = (
     "ConversationSourceTypeDef",
     "ConversationTypeDef",
     "CopyFromSourceTypeDef",
+    "CreateAnonymousWebExperienceUrlRequestTypeDef",
+    "CreateAnonymousWebExperienceUrlResponseTypeDef",
     "CreateApplicationRequestTypeDef",
     "CreateApplicationResponseTypeDef",
     "CreateDataAccessorRequestTypeDef",
@@ -196,6 +210,11 @@ __all__ = (
     "DeleteUserRequestTypeDef",
     "DeleteWebExperienceRequestTypeDef",
     "DisassociatePermissionRequestTypeDef",
+    "DocumentAclConditionTypeDef",
+    "DocumentAclGroupTypeDef",
+    "DocumentAclMembershipTypeDef",
+    "DocumentAclTypeDef",
+    "DocumentAclUserTypeDef",
     "DocumentAttributeBoostingConfigurationOutputTypeDef",
     "DocumentAttributeBoostingConfigurationTypeDef",
     "DocumentAttributeConditionOutputTypeDef",
@@ -251,12 +270,14 @@ __all__ = (
     "GroupMembersTypeDef",
     "GroupStatusDetailTypeDef",
     "GroupSummaryTypeDef",
+    "HallucinationReductionConfigurationTypeDef",
     "HookConfigurationOutputTypeDef",
     "HookConfigurationTypeDef",
     "HookConfigurationUnionTypeDef",
     "IdcAuthConfigurationTypeDef",
     "IdentityProviderConfigurationTypeDef",
     "ImageExtractionConfigurationTypeDef",
+    "ImageSourceDetailsTypeDef",
     "IndexCapacityConfigurationTypeDef",
     "IndexStatisticsTypeDef",
     "IndexTypeDef",
@@ -366,6 +387,7 @@ __all__ = (
     "SearchRelevantContentResponseTypeDef",
     "SnippetExcerptTypeDef",
     "SourceAttributionTypeDef",
+    "SourceDetailsTypeDef",
     "StartDataSourceSyncJobRequestTypeDef",
     "StartDataSourceSyncJobResponseTypeDef",
     "StopDataSourceSyncJobRequestTypeDef",
@@ -402,6 +424,8 @@ __all__ = (
     "UsersAndGroupsOutputTypeDef",
     "UsersAndGroupsTypeDef",
     "UsersAndGroupsUnionTypeDef",
+    "VideoExtractionConfigurationTypeDef",
+    "VideoSourceDetailsTypeDef",
     "WebExperienceAuthConfigurationTypeDef",
     "WebExperienceTypeDef",
 )
@@ -463,6 +487,20 @@ class ResponseMetadataTypeDef(TypedDict):
     HostId: NotRequired[str]
 
 
+AssociatedGroupTypeDef = TypedDict(
+    "AssociatedGroupTypeDef",
+    {
+        "name": NotRequired[str],
+        "type": NotRequired[MembershipTypeType],
+    },
+)
+AssociatedUserTypeDef = TypedDict(
+    "AssociatedUserTypeDef",
+    {
+        "id": NotRequired[str],
+        "type": NotRequired[MembershipTypeType],
+    },
+)
 BlobTypeDef = Union[str, bytes, IO[Any], StreamingBody]
 
 
@@ -473,6 +511,18 @@ class ErrorDetailTypeDef(TypedDict):
 
 class AttachmentsConfigurationTypeDef(TypedDict):
     attachmentsControlMode: AttachmentsControlModeType
+
+
+class AudioExtractionConfigurationTypeDef(TypedDict):
+    audioExtractionStatus: AudioExtractionStatusType
+
+
+class AudioSourceDetailsTypeDef(TypedDict):
+    mediaId: NotRequired[str]
+    mediaMimeType: NotRequired[str]
+    startTimeMilliseconds: NotRequired[int]
+    endTimeMilliseconds: NotRequired[int]
+    audioExtractionType: NotRequired[AudioExtractionTypeType]
 
 
 class AuthChallengeRequestEventTypeDef(TypedDict):
@@ -546,10 +596,19 @@ class PluginConfigurationTypeDef(TypedDict):
 
 
 class TextOutputEventTypeDef(TypedDict):
+    systemMessageType: NotRequired[SystemMessageTypeType]
     conversationId: NotRequired[str]
     userMessageId: NotRequired[str]
     systemMessageId: NotRequired[str]
     systemMessage: NotRequired[str]
+
+
+class CheckDocumentAccessRequestTypeDef(TypedDict):
+    applicationId: str
+    indexId: str
+    userId: str
+    documentId: str
+    dataSourceId: NotRequired[str]
 
 
 class ContentBlockerRuleTypeDef(TypedDict):
@@ -574,6 +633,12 @@ class ConversationTypeDef(TypedDict):
     conversationId: NotRequired[str]
     title: NotRequired[str]
     startTime: NotRequired[datetime]
+
+
+class CreateAnonymousWebExperienceUrlRequestTypeDef(TypedDict):
+    applicationId: str
+    webExperienceId: str
+    sessionDurationInMinutes: NotRequired[int]
 
 
 class EncryptionConfigurationTypeDef(TypedDict):
@@ -734,6 +799,22 @@ class DisassociatePermissionRequestTypeDef(TypedDict):
     statementId: str
 
 
+DocumentAclGroupTypeDef = TypedDict(
+    "DocumentAclGroupTypeDef",
+    {
+        "name": NotRequired[str],
+        "type": NotRequired[MembershipTypeType],
+    },
+)
+DocumentAclUserTypeDef = TypedDict(
+    "DocumentAclUserTypeDef",
+    {
+        "id": NotRequired[str],
+        "type": NotRequired[MembershipTypeType],
+    },
+)
+
+
 class NumberAttributeBoostingConfigurationTypeDef(TypedDict):
     boostingLevel: DocumentAttributeBoostingLevelType
     boostingType: NotRequired[NumberAttributeBoostingTypeType]
@@ -785,6 +866,10 @@ class GetChatControlsConfigurationRequestTypeDef(TypedDict):
     applicationId: str
     maxResults: NotRequired[int]
     nextToken: NotRequired[str]
+
+
+class HallucinationReductionConfigurationTypeDef(TypedDict):
+    hallucinationReductionControl: NotRequired[HallucinationReductionControlType]
 
 
 class GetDataAccessorRequestTypeDef(TypedDict):
@@ -877,6 +962,11 @@ class SamlProviderConfigurationTypeDef(TypedDict):
 
 class ImageExtractionConfigurationTypeDef(TypedDict):
     imageExtractionStatus: ImageExtractionStatusType
+
+
+class ImageSourceDetailsTypeDef(TypedDict):
+    mediaId: NotRequired[str]
+    mediaMimeType: NotRequired[str]
 
 
 class TextDocumentStatisticsTypeDef(TypedDict):
@@ -1042,6 +1132,10 @@ class WebExperienceTypeDef(TypedDict):
     status: NotRequired[WebExperienceStatusType]
 
 
+class VideoExtractionConfigurationTypeDef(TypedDict):
+    videoExtractionStatus: VideoExtractionStatusType
+
+
 class OAuth2ClientCredentialConfigurationTypeDef(TypedDict):
     secretArn: str
     roleArn: str
@@ -1087,6 +1181,14 @@ class SamlConfigurationTypeDef(TypedDict):
 
 class SnippetExcerptTypeDef(TypedDict):
     text: NotRequired[str]
+
+
+class VideoSourceDetailsTypeDef(TypedDict):
+    mediaId: NotRequired[str]
+    mediaMimeType: NotRequired[str]
+    startTimeMilliseconds: NotRequired[int]
+    endTimeMilliseconds: NotRequired[int]
+    videoExtractionType: NotRequired[VideoExtractionTypeType]
 
 
 class StartDataSourceSyncJobRequestTypeDef(TypedDict):
@@ -1171,6 +1273,11 @@ class ApplicationTypeDef(TypedDict):
 
 class AssociatePermissionResponseTypeDef(TypedDict):
     statement: str
+    ResponseMetadata: ResponseMetadataTypeDef
+
+
+class CreateAnonymousWebExperienceUrlResponseTypeDef(TypedDict):
+    anonymousUrl: str
     ResponseMetadata: ResponseMetadataTypeDef
 
 
@@ -1493,6 +1600,12 @@ DataSourceVpcConfigurationUnionTypeDef = Union[
 ]
 
 
+class DocumentAclConditionTypeDef(TypedDict):
+    memberRelation: NotRequired[MemberRelationType]
+    users: NotRequired[List[DocumentAclUserTypeDef]]
+    groups: NotRequired[List[DocumentAclGroupTypeDef]]
+
+
 class DocumentAttributeBoostingConfigurationOutputTypeDef(TypedDict):
     numberConfiguration: NotRequired[NumberAttributeBoostingConfigurationTypeDef]
     stringConfiguration: NotRequired[StringAttributeBoostingConfigurationOutputTypeDef]
@@ -1693,10 +1806,6 @@ class IdentityProviderConfigurationTypeDef(TypedDict):
     openIDConnectConfiguration: NotRequired[OpenIDConnectProviderConfigurationTypeDef]
 
 
-class MediaExtractionConfigurationTypeDef(TypedDict):
-    imageExtractionConfiguration: NotRequired[ImageExtractionConfigurationTypeDef]
-
-
 class IndexStatisticsTypeDef(TypedDict):
     textDocumentStatistics: NotRequired[TextDocumentStatisticsTypeDef]
 
@@ -1731,6 +1840,12 @@ class ListWebExperiencesResponseTypeDef(TypedDict):
     nextToken: NotRequired[str]
 
 
+class MediaExtractionConfigurationTypeDef(TypedDict):
+    imageExtractionConfiguration: NotRequired[ImageExtractionConfigurationTypeDef]
+    audioExtractionConfiguration: NotRequired[AudioExtractionConfigurationTypeDef]
+    videoExtractionConfiguration: NotRequired[VideoExtractionConfigurationTypeDef]
+
+
 class PluginAuthConfigurationOutputTypeDef(TypedDict):
     basicAuthConfiguration: NotRequired[BasicAuthConfigurationTypeDef]
     oAuth2ClientCredentialConfiguration: NotRequired[OAuth2ClientCredentialConfigurationTypeDef]
@@ -1754,12 +1869,10 @@ class WebExperienceAuthConfigurationTypeDef(TypedDict):
     samlConfiguration: NotRequired[SamlConfigurationTypeDef]
 
 
-class TextSegmentTypeDef(TypedDict):
-    beginOffset: NotRequired[int]
-    endOffset: NotRequired[int]
-    snippetExcerpt: NotRequired[SnippetExcerptTypeDef]
-    mediaId: NotRequired[str]
-    mediaMimeType: NotRequired[str]
+class SourceDetailsTypeDef(TypedDict):
+    imageSourceDetails: NotRequired[ImageSourceDetailsTypeDef]
+    audioSourceDetails: NotRequired[AudioSourceDetailsTypeDef]
+    videoSourceDetails: NotRequired[VideoSourceDetailsTypeDef]
 
 
 UsersAndGroupsUnionTypeDef = Union[UsersAndGroupsTypeDef, UsersAndGroupsOutputTypeDef]
@@ -1871,6 +1984,11 @@ class ListDataSourceSyncJobsResponseTypeDef(TypedDict):
     history: List[DataSourceSyncJobTypeDef]
     ResponseMetadata: ResponseMetadataTypeDef
     nextToken: NotRequired[str]
+
+
+class DocumentAclMembershipTypeDef(TypedDict):
+    memberRelation: NotRequired[MemberRelationType]
+    conditions: NotRequired[List[DocumentAclConditionTypeDef]]
 
 
 class NativeIndexConfigurationOutputTypeDef(TypedDict):
@@ -2027,13 +2145,13 @@ class UpdateWebExperienceRequestTypeDef(TypedDict):
     customizationConfiguration: NotRequired[CustomizationConfigurationTypeDef]
 
 
-class SourceAttributionTypeDef(TypedDict):
-    title: NotRequired[str]
-    snippet: NotRequired[str]
-    url: NotRequired[str]
-    citationNumber: NotRequired[int]
-    updatedAt: NotRequired[datetime]
-    textMessageSegments: NotRequired[List[TextSegmentTypeDef]]
+class TextSegmentTypeDef(TypedDict):
+    beginOffset: NotRequired[int]
+    endOffset: NotRequired[int]
+    snippetExcerpt: NotRequired[SnippetExcerptTypeDef]
+    mediaId: NotRequired[str]
+    mediaMimeType: NotRequired[str]
+    sourceDetails: NotRequired[SourceDetailsTypeDef]
 
 
 GetPluginResponseTypeDef = TypedDict(
@@ -2076,6 +2194,11 @@ class ListAttachmentsResponseTypeDef(TypedDict):
     attachments: List[AttachmentTypeDef]
     ResponseMetadata: ResponseMetadataTypeDef
     nextToken: NotRequired[str]
+
+
+class DocumentAclTypeDef(TypedDict):
+    allowlist: NotRequired[DocumentAclMembershipTypeDef]
+    denyList: NotRequired[DocumentAclMembershipTypeDef]
 
 
 class RetrieverConfigurationOutputTypeDef(TypedDict):
@@ -2155,39 +2278,13 @@ class AccessConfigurationTypeDef(TypedDict):
     memberRelation: NotRequired[MemberRelationType]
 
 
-class ChatSyncOutputTypeDef(TypedDict):
-    conversationId: str
-    systemMessage: str
-    systemMessageId: str
-    userMessageId: str
-    actionReview: ActionReviewTypeDef
-    authChallengeRequest: AuthChallengeRequestTypeDef
-    sourceAttributions: List[SourceAttributionTypeDef]
-    failedAttachments: List[AttachmentOutputTypeDef]
-    ResponseMetadata: ResponseMetadataTypeDef
-
-
-MessageTypeDef = TypedDict(
-    "MessageTypeDef",
-    {
-        "messageId": NotRequired[str],
-        "body": NotRequired[str],
-        "time": NotRequired[datetime],
-        "type": NotRequired[MessageTypeType],
-        "attachments": NotRequired[List[AttachmentOutputTypeDef]],
-        "sourceAttribution": NotRequired[List[SourceAttributionTypeDef]],
-        "actionReview": NotRequired[ActionReviewTypeDef],
-        "actionExecution": NotRequired[ActionExecutionOutputTypeDef],
-    },
-)
-
-
-class MetadataEventTypeDef(TypedDict):
-    conversationId: NotRequired[str]
-    userMessageId: NotRequired[str]
-    systemMessageId: NotRequired[str]
-    sourceAttributions: NotRequired[List[SourceAttributionTypeDef]]
-    finalTextMessage: NotRequired[str]
+class SourceAttributionTypeDef(TypedDict):
+    title: NotRequired[str]
+    snippet: NotRequired[str]
+    url: NotRequired[str]
+    citationNumber: NotRequired[int]
+    updatedAt: NotRequired[datetime]
+    textMessageSegments: NotRequired[List[TextSegmentTypeDef]]
 
 
 class TopicConfigurationOutputTypeDef(TypedDict):
@@ -2198,6 +2295,16 @@ class TopicConfigurationOutputTypeDef(TypedDict):
 
 
 RuleConfigurationUnionTypeDef = Union[RuleConfigurationTypeDef, RuleConfigurationOutputTypeDef]
+
+
+class CheckDocumentAccessResponseTypeDef(TypedDict):
+    userGroups: List[AssociatedGroupTypeDef]
+    userAliases: List[AssociatedUserTypeDef]
+    hasAccess: bool
+    documentAcl: DocumentAclTypeDef
+    ResponseMetadata: ResponseMetadataTypeDef
+
+
 GetRetrieverResponseTypeDef = TypedDict(
     "GetRetrieverResponseTypeDef",
     {
@@ -2256,18 +2363,39 @@ DocumentAttributeTargetUnionTypeDef = Union[
 DocumentAttributeUnionTypeDef = Union[DocumentAttributeTypeDef, DocumentAttributeOutputTypeDef]
 
 
-class ListMessagesResponseTypeDef(TypedDict):
-    messages: List[MessageTypeDef]
+class ChatSyncOutputTypeDef(TypedDict):
+    conversationId: str
+    systemMessage: str
+    systemMessageId: str
+    userMessageId: str
+    actionReview: ActionReviewTypeDef
+    authChallengeRequest: AuthChallengeRequestTypeDef
+    sourceAttributions: List[SourceAttributionTypeDef]
+    failedAttachments: List[AttachmentOutputTypeDef]
     ResponseMetadata: ResponseMetadataTypeDef
-    nextToken: NotRequired[str]
 
 
-class ChatOutputStreamTypeDef(TypedDict):
-    textEvent: NotRequired[TextOutputEventTypeDef]
-    metadataEvent: NotRequired[MetadataEventTypeDef]
-    actionReviewEvent: NotRequired[ActionReviewEventTypeDef]
-    failedAttachmentEvent: NotRequired[FailedAttachmentEventTypeDef]
-    authChallengeRequestEvent: NotRequired[AuthChallengeRequestEventTypeDef]
+MessageTypeDef = TypedDict(
+    "MessageTypeDef",
+    {
+        "messageId": NotRequired[str],
+        "body": NotRequired[str],
+        "time": NotRequired[datetime],
+        "type": NotRequired[MessageTypeType],
+        "attachments": NotRequired[List[AttachmentOutputTypeDef]],
+        "sourceAttribution": NotRequired[List[SourceAttributionTypeDef]],
+        "actionReview": NotRequired[ActionReviewTypeDef],
+        "actionExecution": NotRequired[ActionExecutionOutputTypeDef],
+    },
+)
+
+
+class MetadataEventTypeDef(TypedDict):
+    conversationId: NotRequired[str]
+    userMessageId: NotRequired[str]
+    systemMessageId: NotRequired[str]
+    sourceAttributions: NotRequired[List[SourceAttributionTypeDef]]
+    finalTextMessage: NotRequired[str]
 
 
 class GetChatControlsConfigurationResponseTypeDef(TypedDict):
@@ -2276,6 +2404,7 @@ class GetChatControlsConfigurationResponseTypeDef(TypedDict):
     blockedPhrases: BlockedPhrasesConfigurationTypeDef
     topicConfigurations: List[TopicConfigurationOutputTypeDef]
     creatorModeConfiguration: AppliedCreatorModeConfigurationTypeDef
+    hallucinationReductionConfiguration: HallucinationReductionConfigurationTypeDef
     ResponseMetadata: ResponseMetadataTypeDef
     nextToken: NotRequired[str]
 
@@ -2361,9 +2490,18 @@ class AttributeFilterTypeDef(TypedDict):
     lessThanOrEquals: NotRequired[DocumentAttributeUnionTypeDef]
 
 
-class ChatOutputTypeDef(TypedDict):
-    outputStream: AioEventStream[ChatOutputStreamTypeDef]
+class ListMessagesResponseTypeDef(TypedDict):
+    messages: List[MessageTypeDef]
     ResponseMetadata: ResponseMetadataTypeDef
+    nextToken: NotRequired[str]
+
+
+class ChatOutputStreamTypeDef(TypedDict):
+    textEvent: NotRequired[TextOutputEventTypeDef]
+    metadataEvent: NotRequired[MetadataEventTypeDef]
+    actionReviewEvent: NotRequired[ActionReviewEventTypeDef]
+    failedAttachmentEvent: NotRequired[FailedAttachmentEventTypeDef]
+    authChallengeRequestEvent: NotRequired[AuthChallengeRequestEventTypeDef]
 
 
 RuleUnionTypeDef = Union[RuleTypeDef, RuleOutputTypeDef]
@@ -2382,6 +2520,11 @@ class SearchRelevantContentRequestPaginateTypeDef(TypedDict):
 
 
 AttributeFilterUnionTypeDef = Union[AttributeFilterTypeDef, AttributeFilterOutputTypeDef]
+
+
+class ChatOutputTypeDef(TypedDict):
+    outputStream: AioEventStream[ChatOutputStreamTypeDef]
+    ResponseMetadata: ResponseMetadataTypeDef
 
 
 class TopicConfigurationTypeDef(TypedDict):
@@ -2459,6 +2602,7 @@ class UpdateChatControlsConfigurationRequestTypeDef(TypedDict):
     topicConfigurationsToCreateOrUpdate: NotRequired[Sequence[TopicConfigurationUnionTypeDef]]
     topicConfigurationsToDelete: NotRequired[Sequence[TopicConfigurationUnionTypeDef]]
     creatorModeConfiguration: NotRequired[CreatorModeConfigurationTypeDef]
+    hallucinationReductionConfiguration: NotRequired[HallucinationReductionConfigurationTypeDef]
 
 
 class CreateDataSourceRequestTypeDef(TypedDict):

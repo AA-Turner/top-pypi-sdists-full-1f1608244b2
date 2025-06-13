@@ -21,6 +21,7 @@ from dataclasses import dataclass, field
 from typing import Optional, Union
 from urllib.parse import urlparse
 
+import domolibrary.client.DomoError as dmde
 from abc import abstractmethod
 import httpx
 
@@ -49,6 +50,8 @@ class DomoAuth:
             domo_instance=self.domo_instance
         )
 
+        self.token_name = self.token_name or self.domo_instance
+
     @staticmethod
     def _generate_manual_login(domo_instance):
         return f"https://{domo_instance}.domo.com/auth/index?domoManualLogin=true"
@@ -74,13 +77,14 @@ class DomoAuth:
     ):
         """Perform an API call to identify the user associated with the token."""
 
-        if not self.auth_header:
-            self.generate_auth_header()
+        # if not self.token:
+        #     await self.get_auth_token(debug_api=debug_api, session=session)
+
+        # # if not self.auth_header:
+        # #     self.generate_auth_header()
 
         res = await auth_routes.who_am_i(
-            auth=None,
-            auth_header=self.auth_header,
-            domo_instance=self.domo_instance,
+            auth=self,
             parent_class=self.__class__.__name__,
             session=session,
             debug_api=debug_api,
@@ -88,6 +92,25 @@ class DomoAuth:
         )
 
         self.user_id = res.response["id"]
+
+        return res
+
+    async def elevate_otp(
+        self,
+        one_time_password: str,
+        debug_api: bool = False,
+        session: httpx.AsyncClient = None,
+        debug_num_stacks_to_drop=2,
+    ):
+        """Elevate the authentication to include OTP (One-Time Password) if required."""
+
+        res = await auth_routes.elevate_otp(
+            auth=self,
+            debug_api=debug_api,
+            session=session,
+            one_time_password=one_time_password,
+            debug_num_stacks_to_drop=debug_num_stacks_to_drop,
+        )
 
         return res
 
@@ -191,7 +214,7 @@ class DomoFullAuth(DomoAuth):
 
         return self.token
 
-# %% ../../nbs/client/95_DomoAuth.ipynb 16
+# %% ../../nbs/client/95_DomoAuth.ipynb 17
 def test_is_full_auth(
     auth, function_name=None, num_stacks_to_drop=1  # pass q for route pass 2 for class
 ):
@@ -207,7 +230,7 @@ def test_is_full_auth(
             required_auth_type=DomoFullAuth,
         )
 
-# %% ../../nbs/client/95_DomoAuth.ipynb 18
+# %% ../../nbs/client/95_DomoAuth.ipynb 19
 @dataclass
 class DomoTokenAuth(DomoAuth):
     domo_access_token: str = field(repr=False)
@@ -229,7 +252,7 @@ class DomoTokenAuth(DomoAuth):
             url_manual_login=super()._generate_manual_login(domo_instance),
             auth_header={},
             token_name=token_name,
-            token=None,
+            token=domo_access_token,
             user_id=None,
             is_valid_token=False,
         )
@@ -254,7 +277,7 @@ class DomoTokenAuth(DomoAuth):
     ) -> str:
         """Retrieve the access token, updating internal attributes as necessary."""
 
-        if not self.user_id or not self.token:
+        if not self.user_id:
             await self.who_am_i(
                 session=session,
                 debug_api=debug_api,
@@ -267,7 +290,7 @@ class DomoTokenAuth(DomoAuth):
 
         return self.token
 
-# %% ../../nbs/client/95_DomoAuth.ipynb 24
+# %% ../../nbs/client/95_DomoAuth.ipynb 25
 @dataclass
 class DomoDeveloperAuth(DomoAuth):
     domo_client_id: str
@@ -336,7 +359,7 @@ class DomoDeveloperAuth(DomoAuth):
 
         return self.token
 
-# %% ../../nbs/client/95_DomoAuth.ipynb 28
+# %% ../../nbs/client/95_DomoAuth.ipynb 29
 @dataclass
 class _DomoJupyter_Optional:
     def __post_init__(self):
@@ -386,12 +409,12 @@ class _DomoJupyter_Required:
                 "DomoJupyterAuth objects must have jupyter_token, service_location and service_prefix"
             )
 
-# %% ../../nbs/client/95_DomoAuth.ipynb 29
+# %% ../../nbs/client/95_DomoAuth.ipynb 30
 @dataclass
 class DomoJupyterAuth(_DomoJupyter_Optional, _DomoJupyter_Required):
     """base class"""
 
-# %% ../../nbs/client/95_DomoAuth.ipynb 31
+# %% ../../nbs/client/95_DomoAuth.ipynb 32
 @dataclass
 class DomoJupyterFullAuth(_DomoJupyter_Optional, DomoFullAuth, _DomoJupyter_Required):
 
@@ -430,7 +453,7 @@ class DomoJupyterFullAuth(_DomoJupyter_Optional, DomoFullAuth, _DomoJupyter_Requ
 
         return self.auth_header
 
-# %% ../../nbs/client/95_DomoAuth.ipynb 35
+# %% ../../nbs/client/95_DomoAuth.ipynb 36
 @dataclass
 class DomoJupyterTokenAuth(_DomoJupyter_Optional, DomoTokenAuth, _DomoJupyter_Required):
     @classmethod
@@ -466,7 +489,7 @@ class DomoJupyterTokenAuth(_DomoJupyter_Optional, DomoTokenAuth, _DomoJupyter_Re
 
         return self.auth_header
 
-# %% ../../nbs/client/95_DomoAuth.ipynb 39
+# %% ../../nbs/client/95_DomoAuth.ipynb 40
 def test_is_jupyter_auth(
     auth: DomoJupyterAuth,
     function_name=None,

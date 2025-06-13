@@ -47,6 +47,7 @@ from .paginator import (
     ListNodesPaginator,
     ListOfferingsPaginator,
     ListReservationsPaginator,
+    ListSdiSourcesPaginator,
     ListSignalMapsPaginator,
 )
 from .type_defs import (
@@ -91,6 +92,8 @@ from .type_defs import (
     CreateNodeResponseTypeDef,
     CreatePartnerInputRequestTypeDef,
     CreatePartnerInputResponseTypeDef,
+    CreateSdiSourceRequestTypeDef,
+    CreateSdiSourceResponseTypeDef,
     CreateSignalMapRequestTypeDef,
     CreateSignalMapResponseTypeDef,
     CreateTagsRequestTypeDef,
@@ -117,6 +120,8 @@ from .type_defs import (
     DeleteReservationRequestTypeDef,
     DeleteReservationResponseTypeDef,
     DeleteScheduleRequestTypeDef,
+    DeleteSdiSourceRequestTypeDef,
+    DeleteSdiSourceResponseTypeDef,
     DeleteSignalMapRequestTypeDef,
     DeleteTagsRequestTypeDef,
     DescribeAccountConfigurationResponseTypeDef,
@@ -148,6 +153,8 @@ from .type_defs import (
     DescribeReservationResponseTypeDef,
     DescribeScheduleRequestTypeDef,
     DescribeScheduleResponseTypeDef,
+    DescribeSdiSourceRequestTypeDef,
+    DescribeSdiSourceResponseTypeDef,
     DescribeThumbnailsRequestTypeDef,
     DescribeThumbnailsResponseTypeDef,
     EmptyResponseMetadataTypeDef,
@@ -195,6 +202,8 @@ from .type_defs import (
     ListOfferingsResponseTypeDef,
     ListReservationsRequestTypeDef,
     ListReservationsResponseTypeDef,
+    ListSdiSourcesRequestTypeDef,
+    ListSdiSourcesResponseTypeDef,
     ListSignalMapsRequestTypeDef,
     ListSignalMapsResponseTypeDef,
     ListTagsForResourceRequestTypeDef,
@@ -260,6 +269,8 @@ from .type_defs import (
     UpdateNodeStateResponseTypeDef,
     UpdateReservationRequestTypeDef,
     UpdateReservationResponseTypeDef,
+    UpdateSdiSourceRequestTypeDef,
+    UpdateSdiSourceResponseTypeDef,
 )
 from .waiter import (
     ChannelCreatedWaiter,
@@ -1499,6 +1510,56 @@ class MediaLiveClient(AioBaseClient):
         [Show types-aiobotocore documentation](https://youtype.github.io/types_aiobotocore_docs/types_aiobotocore_medialive/client/#list_versions)
         """
 
+    async def create_sdi_source(
+        self, **kwargs: Unpack[CreateSdiSourceRequestTypeDef]
+    ) -> CreateSdiSourceResponseTypeDef:
+        """
+        Create an SdiSource for each video source that uses the SDI protocol.
+
+        [Show boto3 documentation](https://boto3.amazonaws.com/v1/documentation/api/latest/reference/services/medialive/client/create_sdi_source.html)
+        [Show types-aiobotocore documentation](https://youtype.github.io/types_aiobotocore_docs/types_aiobotocore_medialive/client/#create_sdi_source)
+        """
+
+    async def delete_sdi_source(
+        self, **kwargs: Unpack[DeleteSdiSourceRequestTypeDef]
+    ) -> DeleteSdiSourceResponseTypeDef:
+        """
+        Delete an SdiSource.
+
+        [Show boto3 documentation](https://boto3.amazonaws.com/v1/documentation/api/latest/reference/services/medialive/client/delete_sdi_source.html)
+        [Show types-aiobotocore documentation](https://youtype.github.io/types_aiobotocore_docs/types_aiobotocore_medialive/client/#delete_sdi_source)
+        """
+
+    async def describe_sdi_source(
+        self, **kwargs: Unpack[DescribeSdiSourceRequestTypeDef]
+    ) -> DescribeSdiSourceResponseTypeDef:
+        """
+        Gets details about a SdiSource.
+
+        [Show boto3 documentation](https://boto3.amazonaws.com/v1/documentation/api/latest/reference/services/medialive/client/describe_sdi_source.html)
+        [Show types-aiobotocore documentation](https://youtype.github.io/types_aiobotocore_docs/types_aiobotocore_medialive/client/#describe_sdi_source)
+        """
+
+    async def list_sdi_sources(
+        self, **kwargs: Unpack[ListSdiSourcesRequestTypeDef]
+    ) -> ListSdiSourcesResponseTypeDef:
+        """
+        List all the SdiSources in the AWS account.
+
+        [Show boto3 documentation](https://boto3.amazonaws.com/v1/documentation/api/latest/reference/services/medialive/client/list_sdi_sources.html)
+        [Show types-aiobotocore documentation](https://youtype.github.io/types_aiobotocore_docs/types_aiobotocore_medialive/client/#list_sdi_sources)
+        """
+
+    async def update_sdi_source(
+        self, **kwargs: Unpack[UpdateSdiSourceRequestTypeDef]
+    ) -> UpdateSdiSourceResponseTypeDef:
+        """
+        Change some of the settings in an SdiSource.
+
+        [Show boto3 documentation](https://boto3.amazonaws.com/v1/documentation/api/latest/reference/services/medialive/client/update_sdi_source.html)
+        [Show types-aiobotocore documentation](https://youtype.github.io/types_aiobotocore_docs/types_aiobotocore_medialive/client/#update_sdi_source)
+        """
+
     @overload  # type: ignore[override]
     def get_paginator(  # type: ignore[override]
         self, operation_name: Literal["describe_schedule"]
@@ -1690,6 +1751,17 @@ class MediaLiveClient(AioBaseClient):
     def get_paginator(  # type: ignore[override]
         self, operation_name: Literal["list_reservations"]
     ) -> ListReservationsPaginator:
+        """
+        Create a paginator for an operation.
+
+        [Show boto3 documentation](https://boto3.amazonaws.com/v1/documentation/api/latest/reference/services/medialive/client/get_paginator.html)
+        [Show types-aiobotocore documentation](https://youtype.github.io/types_aiobotocore_docs/types_aiobotocore_medialive/client/#get_paginator)
+        """
+
+    @overload  # type: ignore[override]
+    def get_paginator(  # type: ignore[override]
+        self, operation_name: Literal["list_sdi_sources"]
+    ) -> ListSdiSourcesPaginator:
         """
         Create a paginator for an operation.
 

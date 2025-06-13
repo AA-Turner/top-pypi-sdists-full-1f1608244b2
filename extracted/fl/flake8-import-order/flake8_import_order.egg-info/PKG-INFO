@@ -1,6 +1,6 @@
-Metadata-Version: 2.1
-Name: flake8-import-order
-Version: 0.18.2
+Metadata-Version: 2.4
+Name: flake8_import_order
+Version: 0.19.0
 Summary: Flake8 and pylama plugin that checks the ordering of import statements.
 Home-page: https://github.com/PyCQA/flake8-import-order
 Author: Alex Stapleton
@@ -8,18 +8,20 @@ Author-email: alexs@prol.etari.at
 Maintainer: Phil Jones
 Maintainer-email: philip.graham.jones+flake8-import@gmail.com
 License: LGPLv3
+Classifier: Development Status :: 4 - Beta
 Classifier: Framework :: Flake8
 Classifier: Intended Audience :: Developers
-Classifier: Development Status :: 4 - Beta
-Classifier: License :: OSI Approved :: MIT License
+Classifier: Operating System :: OS Independent
 Classifier: Programming Language :: Python
-Classifier: Programming Language :: Python :: 2
 Classifier: Programming Language :: Python :: 3
-Classifier: License :: OSI Approved :: GNU Lesser General Public License v3 (LGPLv3)
+Classifier: Programming Language :: Python :: Implementation :: PyPy
 Classifier: Topic :: Software Development :: Libraries :: Python Modules
 Classifier: Topic :: Software Development :: Quality Assurance
-Classifier: Operating System :: OS Independent
+Description-Content-Type: text/x-rst
 License-File: COPYING
+Requires-Dist: pycodestyle
+Requires-Dist: setuptools
+Dynamic: license-file
 
 flake8-import-order
 ===================
@@ -57,7 +59,7 @@ Styles
 The following styles are directly supported,
 
 * ``cryptography`` - see an `example <https://github.com/PyCQA/flake8-import-order/blob/master/tests/test_cases/complete_cryptography.py>`__
-* ``google`` - style described in `Google Style Guidelines <https://google.github.io/styleguide/pyguide.html?showone=Imports_formatting#Imports_formatting>`__, see an `example <https://github.com/PyCQA/flake8-import-order/blob/master/tests/test_cases/complete_google.py>`__
+* ``google`` - style described in `Google Style Guidelines <https://google.github.io/styleguide/pyguide.html?showone=Imports_formatting#313-imports-formatting>`__, see an `example <https://github.com/PyCQA/flake8-import-order/blob/master/tests/test_cases/complete_google.py>`__
 * ``smarkets`` - style as ``google`` only with `import` statements before `from X import ...` statements, see an `example <https://github.com/PyCQA/flake8-import-order/blob/master/tests/test_cases/complete_smarkets.py>`__
 * ``appnexus`` - style as ``google`` only with `import` statements for packages local to your company or organisation coming after `import` statements for third-party packages, see an `example <https://github.com/PyCQA/flake8-import-order/blob/master/tests/test_cases/complete_appnexus.py>`__
 * ``edited`` - see an `example <https://github.com/PyCQA/flake8-import-order/blob/master/tests/test_cases/complete_edited.py>`__
@@ -96,7 +98,8 @@ Limitations
 -----------
 
 Currently these checks are limited to module scope imports only.
-Conditional imports in module scope will also be ignored.
+Conditional imports in module scope will be ignored except imports
+under ```if TYPE_CHECKING:``` block.
 
 Classification of an imported module is achieved by checking the
 module against a stdlib list and then if there is no match against the

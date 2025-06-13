@@ -66,6 +66,7 @@ __all__ = (
     "JobDriverTypeDef",
     "JobDriverUnionTypeDef",
     "JobRunAttemptSummaryTypeDef",
+    "JobRunExecutionIamPolicyTypeDef",
     "JobRunSummaryTypeDef",
     "JobRunTypeDef",
     "ListApplicationsRequestPaginateTypeDef",
@@ -251,6 +252,11 @@ JobRunAttemptSummaryTypeDef = TypedDict(
         "attempt": NotRequired[int],
     },
 )
+
+class JobRunExecutionIamPolicyTypeDef(TypedDict):
+    policy: NotRequired[str]
+    policyArns: NotRequired[Sequence[str]]
+
 JobRunSummaryTypeDef = TypedDict(
     "JobRunSummaryTypeDef",
     {
@@ -571,6 +577,7 @@ class StartJobRunRequestTypeDef(TypedDict):
     applicationId: str
     clientToken: str
     executionRoleArn: str
+    executionIamPolicy: NotRequired[JobRunExecutionIamPolicyTypeDef]
     jobDriver: NotRequired[JobDriverUnionTypeDef]
     configurationOverrides: NotRequired[ConfigurationOverridesUnionTypeDef]
     tags: NotRequired[Mapping[str, str]]

@@ -5,7 +5,7 @@ kwargs = json.loads(
     """
 {
     "name": "cdktf-cdktf-provider-aws",
-    "version": "20.0.0",
+    "version": "20.1.0",
     "description": "Prebuilt aws Provider for Terraform CDK (cdktf)",
     "license": "MPL-2.0",
     "url": "https://github.com/cdktf/cdktf-provider-aws.git",
@@ -1071,6 +1071,8 @@ kwargs = json.loads(
         "cdktf_cdktf_provider_aws.docdb_subnet_group",
         "cdktf_cdktf_provider_aws.docdbelastic_cluster",
         "cdktf_cdktf_provider_aws.drs_replication_configuration_template",
+        "cdktf_cdktf_provider_aws.dsql_cluster",
+        "cdktf_cdktf_provider_aws.dsql_cluster_peering",
         "cdktf_cdktf_provider_aws.dx_bgp_peer",
         "cdktf_cdktf_provider_aws.dx_connection",
         "cdktf_cdktf_provider_aws.dx_connection_association",
@@ -1654,6 +1656,7 @@ kwargs = json.loads(
         "cdktf_cdktf_provider_aws.prometheus_rule_group_namespace",
         "cdktf_cdktf_provider_aws.prometheus_scraper",
         "cdktf_cdktf_provider_aws.prometheus_workspace",
+        "cdktf_cdktf_provider_aws.prometheus_workspace_configuration",
         "cdktf_cdktf_provider_aws.provider",
         "cdktf_cdktf_provider_aws.proxy_protocol_policy",
         "cdktf_cdktf_provider_aws.qbusiness_application",
@@ -1817,6 +1820,7 @@ kwargs = json.loads(
         "cdktf_cdktf_provider_aws.s3_control_bucket",
         "cdktf_cdktf_provider_aws.s3_control_bucket_lifecycle_configuration",
         "cdktf_cdktf_provider_aws.s3_control_bucket_policy",
+        "cdktf_cdktf_provider_aws.s3_control_directory_bucket_access_point_scope",
         "cdktf_cdktf_provider_aws.s3_control_multi_region_access_point",
         "cdktf_cdktf_provider_aws.s3_control_multi_region_access_point_policy",
         "cdktf_cdktf_provider_aws.s3_control_object_lambda_access_point",
@@ -2079,6 +2083,11 @@ kwargs = json.loads(
         "cdktf_cdktf_provider_aws.vpc_peering_connection",
         "cdktf_cdktf_provider_aws.vpc_peering_connection_accepter",
         "cdktf_cdktf_provider_aws.vpc_peering_connection_options",
+        "cdktf_cdktf_provider_aws.vpc_route_server",
+        "cdktf_cdktf_provider_aws.vpc_route_server_endpoint",
+        "cdktf_cdktf_provider_aws.vpc_route_server_peer",
+        "cdktf_cdktf_provider_aws.vpc_route_server_propagation",
+        "cdktf_cdktf_provider_aws.vpc_route_server_vpc_association",
         "cdktf_cdktf_provider_aws.vpc_security_group_egress_rule",
         "cdktf_cdktf_provider_aws.vpc_security_group_ingress_rule",
         "cdktf_cdktf_provider_aws.vpc_security_group_vpc_association",
@@ -2140,7 +2149,10 @@ kwargs = json.loads(
         "cdktf_cdktf_provider_aws.workspaces_ip_group",
         "cdktf_cdktf_provider_aws.workspaces_workspace",
         "cdktf_cdktf_provider_aws.workspacesweb_browser_settings",
+        "cdktf_cdktf_provider_aws.workspacesweb_data_protection_settings",
+        "cdktf_cdktf_provider_aws.workspacesweb_ip_access_settings",
         "cdktf_cdktf_provider_aws.workspacesweb_network_settings",
+        "cdktf_cdktf_provider_aws.workspacesweb_user_access_logging_settings",
         "cdktf_cdktf_provider_aws.workspacesweb_user_settings",
         "cdktf_cdktf_provider_aws.xray_encryption_config",
         "cdktf_cdktf_provider_aws.xray_group",
@@ -2149,7 +2161,7 @@ kwargs = json.loads(
     ],
     "package_data": {
         "cdktf_cdktf_provider_aws._jsii": [
-            "provider-aws@20.0.0.jsii.tgz"
+            "provider-aws@20.1.0.jsii.tgz"
         ],
         "cdktf_cdktf_provider_aws": [
             "py.typed"
@@ -2159,7 +2171,7 @@ kwargs = json.loads(
     "install_requires": [
         "cdktf>=0.21.0, <0.22.0",
         "constructs>=10.4.2, <11.0.0",
-        "jsii>=1.111.0, <2.0.0",
+        "jsii>=1.112.0, <2.0.0",
         "publication>=0.0.3",
         "typeguard>=2.13.3,<4.3.0"
     ],

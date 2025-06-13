@@ -1,7 +1,7 @@
 r'''
 # `aws_cloudfrontkeyvaluestore_keys_exclusive`
 
-Refer to the Terraform Registry for docs: [`aws_cloudfrontkeyvaluestore_keys_exclusive`](https://registry.terraform.io/providers/hashicorp/aws/5.99.1/docs/resources/cloudfrontkeyvaluestore_keys_exclusive).
+Refer to the Terraform Registry for docs: [`aws_cloudfrontkeyvaluestore_keys_exclusive`](https://registry.terraform.io/providers/hashicorp/aws/5.100.0/docs/resources/cloudfrontkeyvaluestore_keys_exclusive).
 '''
 from pkgutil import extend_path
 __path__ = extend_path(__path__, __name__)
@@ -44,7 +44,7 @@ class CloudfrontkeyvaluestoreKeysExclusive(
     metaclass=jsii.JSIIMeta,
     jsii_type="@cdktf/provider-aws.cloudfrontkeyvaluestoreKeysExclusive.CloudfrontkeyvaluestoreKeysExclusive",
 ):
-    '''Represents a {@link https://registry.terraform.io/providers/hashicorp/aws/5.99.1/docs/resources/cloudfrontkeyvaluestore_keys_exclusive aws_cloudfrontkeyvaluestore_keys_exclusive}.'''
+    '''Represents a {@link https://registry.terraform.io/providers/hashicorp/aws/5.100.0/docs/resources/cloudfrontkeyvaluestore_keys_exclusive aws_cloudfrontkeyvaluestore_keys_exclusive}.'''
 
     def __init__(
         self,
@@ -52,6 +52,7 @@ class CloudfrontkeyvaluestoreKeysExclusive(
         id: builtins.str,
         *,
         key_value_store_arn: builtins.str,
+        max_batch_size: typing.Optional[jsii.Number] = None,
         resource_key_value_pair: typing.Optional[typing.Union[_cdktf_9a9027ec.IResolvable, typing.Sequence[typing.Union["CloudfrontkeyvaluestoreKeysExclusiveResourceKeyValuePair", typing.Dict[builtins.str, typing.Any]]]]] = None,
         connection: typing.Optional[typing.Union[typing.Union[_cdktf_9a9027ec.SSHProvisionerConnection, typing.Dict[builtins.str, typing.Any]], typing.Union[_cdktf_9a9027ec.WinrmProvisionerConnection, typing.Dict[builtins.str, typing.Any]]]] = None,
         count: typing.Optional[typing.Union[jsii.Number, _cdktf_9a9027ec.TerraformCount]] = None,
@@ -61,12 +62,13 @@ class CloudfrontkeyvaluestoreKeysExclusive(
         provider: typing.Optional[_cdktf_9a9027ec.TerraformProvider] = None,
         provisioners: typing.Optional[typing.Sequence[typing.Union[typing.Union[_cdktf_9a9027ec.FileProvisioner, typing.Dict[builtins.str, typing.Any]], typing.Union[_cdktf_9a9027ec.LocalExecProvisioner, typing.Dict[builtins.str, typing.Any]], typing.Union[_cdktf_9a9027ec.RemoteExecProvisioner, typing.Dict[builtins.str, typing.Any]]]]] = None,
     ) -> None:
-        '''Create a new {@link https://registry.terraform.io/providers/hashicorp/aws/5.99.1/docs/resources/cloudfrontkeyvaluestore_keys_exclusive aws_cloudfrontkeyvaluestore_keys_exclusive} Resource.
+        '''Create a new {@link https://registry.terraform.io/providers/hashicorp/aws/5.100.0/docs/resources/cloudfrontkeyvaluestore_keys_exclusive aws_cloudfrontkeyvaluestore_keys_exclusive} Resource.
 
         :param scope: The scope in which to define this construct.
         :param id: The scoped construct ID. Must be unique amongst siblings in the same scope
-        :param key_value_store_arn: The Amazon Resource Name (ARN) of the Key Value Store. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/aws/5.99.1/docs/resources/cloudfrontkeyvaluestore_keys_exclusive#key_value_store_arn CloudfrontkeyvaluestoreKeysExclusive#key_value_store_arn}
-        :param resource_key_value_pair: resource_key_value_pair block. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/aws/5.99.1/docs/resources/cloudfrontkeyvaluestore_keys_exclusive#resource_key_value_pair CloudfrontkeyvaluestoreKeysExclusive#resource_key_value_pair}
+        :param key_value_store_arn: The Amazon Resource Name (ARN) of the Key Value Store. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/aws/5.100.0/docs/resources/cloudfrontkeyvaluestore_keys_exclusive#key_value_store_arn CloudfrontkeyvaluestoreKeysExclusive#key_value_store_arn}
+        :param max_batch_size: Maximum resource key values pairs that you wills update in a single API request. AWS has a default quota of 50 keys or a 3 MB payload, whichever is reached first Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/aws/5.100.0/docs/resources/cloudfrontkeyvaluestore_keys_exclusive#max_batch_size CloudfrontkeyvaluestoreKeysExclusive#max_batch_size}
+        :param resource_key_value_pair: resource_key_value_pair block. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/aws/5.100.0/docs/resources/cloudfrontkeyvaluestore_keys_exclusive#resource_key_value_pair CloudfrontkeyvaluestoreKeysExclusive#resource_key_value_pair}
         :param connection: 
         :param count: 
         :param depends_on: 
@@ -81,6 +83,7 @@ class CloudfrontkeyvaluestoreKeysExclusive(
             check_type(argname="argument id", value=id, expected_type=type_hints["id"])
         config = CloudfrontkeyvaluestoreKeysExclusiveConfig(
             key_value_store_arn=key_value_store_arn,
+            max_batch_size=max_batch_size,
             resource_key_value_pair=resource_key_value_pair,
             connection=connection,
             count=count,
@@ -106,7 +109,7 @@ class CloudfrontkeyvaluestoreKeysExclusive(
 
         :param scope: The scope in which to define this construct.
         :param import_to_id: The construct id used in the generated config for the CloudfrontkeyvaluestoreKeysExclusive to import.
-        :param import_from_id: The id of the existing CloudfrontkeyvaluestoreKeysExclusive that should be imported. Refer to the {@link https://registry.terraform.io/providers/hashicorp/aws/5.99.1/docs/resources/cloudfrontkeyvaluestore_keys_exclusive#import import section} in the documentation of this resource for the id to use
+        :param import_from_id: The id of the existing CloudfrontkeyvaluestoreKeysExclusive that should be imported. Refer to the {@link https://registry.terraform.io/providers/hashicorp/aws/5.100.0/docs/resources/cloudfrontkeyvaluestore_keys_exclusive#import import section} in the documentation of this resource for the id to use
         :param provider: ? Optional instance of the provider where the CloudfrontkeyvaluestoreKeysExclusive to import is found.
         '''
         if __debug__:
@@ -129,6 +132,10 @@ class CloudfrontkeyvaluestoreKeysExclusive(
             type_hints = typing.get_type_hints(_typecheckingstub__5ff7fac4c5a1ad68ce25d892200382e2808877a1c2c5491d53ebd58907b94214)
             check_type(argname="argument value", value=value, expected_type=type_hints["value"])
         return typing.cast(None, jsii.invoke(self, "putResourceKeyValuePair", [value]))
+
+    @jsii.member(jsii_name="resetMaxBatchSize")
+    def reset_max_batch_size(self) -> None:
+        return typing.cast(None, jsii.invoke(self, "resetMaxBatchSize", []))
 
     @jsii.member(jsii_name="resetResourceKeyValuePair")
     def reset_resource_key_value_pair(self) -> None:
@@ -165,6 +172,11 @@ class CloudfrontkeyvaluestoreKeysExclusive(
         return typing.cast(typing.Optional[builtins.str], jsii.get(self, "keyValueStoreArnInput"))
 
     @builtins.property
+    @jsii.member(jsii_name="maxBatchSizeInput")
+    def max_batch_size_input(self) -> typing.Optional[jsii.Number]:
+        return typing.cast(typing.Optional[jsii.Number], jsii.get(self, "maxBatchSizeInput"))
+
+    @builtins.property
     @jsii.member(jsii_name="resourceKeyValuePairInput")
     def resource_key_value_pair_input(
         self,
@@ -183,6 +195,18 @@ class CloudfrontkeyvaluestoreKeysExclusive(
             check_type(argname="argument value", value=value, expected_type=type_hints["value"])
         jsii.set(self, "keyValueStoreArn", value) # pyright: ignore[reportArgumentType]
 
+    @builtins.property
+    @jsii.member(jsii_name="maxBatchSize")
+    def max_batch_size(self) -> jsii.Number:
+        return typing.cast(jsii.Number, jsii.get(self, "maxBatchSize"))
+
+    @max_batch_size.setter
+    def max_batch_size(self, value: jsii.Number) -> None:
+        if __debug__:
+            type_hints = typing.get_type_hints(_typecheckingstub__5ecc259f87768da780368584b7610235e3fc98c3453d7ccb5b717ec9e45d3998)
+            check_type(argname="argument value", value=value, expected_type=type_hints["value"])
+        jsii.set(self, "maxBatchSize", value) # pyright: ignore[reportArgumentType]
+
 
 @jsii.data_type(
     jsii_type="@cdktf/provider-aws.cloudfrontkeyvaluestoreKeysExclusive.CloudfrontkeyvaluestoreKeysExclusiveConfig",
@@ -196,6 +220,7 @@ class CloudfrontkeyvaluestoreKeysExclusive(
         "provider": "provider",
         "provisioners": "provisioners",
         "key_value_store_arn": "keyValueStoreArn",
+        "max_batch_size": "maxBatchSize",
         "resource_key_value_pair": "resourceKeyValuePair",
     },
 )
@@ -213,6 +238,7 @@ class CloudfrontkeyvaluestoreKeysExclusiveConfig(
         provider: typing.Optional[_cdktf_9a9027ec.TerraformProvider] = None,
         provisioners: typing.Optional[typing.Sequence[typing.Union[typing.Union[_cdktf_9a9027ec.FileProvisioner, typing.Dict[builtins.str, typing.Any]], typing.Union[_cdktf_9a9027ec.LocalExecProvisioner, typing.Dict[builtins.str, typing.Any]], typing.Union[_cdktf_9a9027ec.RemoteExecProvisioner, typing.Dict[builtins.str, typing.Any]]]]] = None,
         key_value_store_arn: builtins.str,
+        max_batch_size: typing.Optional[jsii.Number] = None,
         resource_key_value_pair: typing.Optional[typing.Union[_cdktf_9a9027ec.IResolvable, typing.Sequence[typing.Union["CloudfrontkeyvaluestoreKeysExclusiveResourceKeyValuePair", typing.Dict[builtins.str, typing.Any]]]]] = None,
     ) -> None:
         '''
@@ -223,8 +249,9 @@ class CloudfrontkeyvaluestoreKeysExclusiveConfig(
         :param lifecycle: 
         :param provider: 
         :param provisioners: 
-        :param key_value_store_arn: The Amazon Resource Name (ARN) of the Key Value Store. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/aws/5.99.1/docs/resources/cloudfrontkeyvaluestore_keys_exclusive#key_value_store_arn CloudfrontkeyvaluestoreKeysExclusive#key_value_store_arn}
-        :param resource_key_value_pair: resource_key_value_pair block. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/aws/5.99.1/docs/resources/cloudfrontkeyvaluestore_keys_exclusive#resource_key_value_pair CloudfrontkeyvaluestoreKeysExclusive#resource_key_value_pair}
+        :param key_value_store_arn: The Amazon Resource Name (ARN) of the Key Value Store. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/aws/5.100.0/docs/resources/cloudfrontkeyvaluestore_keys_exclusive#key_value_store_arn CloudfrontkeyvaluestoreKeysExclusive#key_value_store_arn}
+        :param max_batch_size: Maximum resource key values pairs that you wills update in a single API request. AWS has a default quota of 50 keys or a 3 MB payload, whichever is reached first Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/aws/5.100.0/docs/resources/cloudfrontkeyvaluestore_keys_exclusive#max_batch_size CloudfrontkeyvaluestoreKeysExclusive#max_batch_size}
+        :param resource_key_value_pair: resource_key_value_pair block. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/aws/5.100.0/docs/resources/cloudfrontkeyvaluestore_keys_exclusive#resource_key_value_pair CloudfrontkeyvaluestoreKeysExclusive#resource_key_value_pair}
         '''
         if isinstance(lifecycle, dict):
             lifecycle = _cdktf_9a9027ec.TerraformResourceLifecycle(**lifecycle)
@@ -238,6 +265,7 @@ class CloudfrontkeyvaluestoreKeysExclusiveConfig(
             check_type(argname="argument provider", value=provider, expected_type=type_hints["provider"])
             check_type(argname="argument provisioners", value=provisioners, expected_type=type_hints["provisioners"])
             check_type(argname="argument key_value_store_arn", value=key_value_store_arn, expected_type=type_hints["key_value_store_arn"])
+            check_type(argname="argument max_batch_size", value=max_batch_size, expected_type=type_hints["max_batch_size"])
             check_type(argname="argument resource_key_value_pair", value=resource_key_value_pair, expected_type=type_hints["resource_key_value_pair"])
         self._values: typing.Dict[builtins.str, typing.Any] = {
             "key_value_store_arn": key_value_store_arn,
@@ -256,6 +284,8 @@ class CloudfrontkeyvaluestoreKeysExclusiveConfig(
             self._values["provider"] = provider
         if provisioners is not None:
             self._values["provisioners"] = provisioners
+        if max_batch_size is not None:
+            self._values["max_batch_size"] = max_batch_size
         if resource_key_value_pair is not None:
             self._values["resource_key_value_pair"] = resource_key_value_pair
 
@@ -327,11 +357,22 @@ class CloudfrontkeyvaluestoreKeysExclusiveConfig(
     def key_value_store_arn(self) -> builtins.str:
         '''The Amazon Resource Name (ARN) of the Key Value Store.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/aws/5.99.1/docs/resources/cloudfrontkeyvaluestore_keys_exclusive#key_value_store_arn CloudfrontkeyvaluestoreKeysExclusive#key_value_store_arn}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/aws/5.100.0/docs/resources/cloudfrontkeyvaluestore_keys_exclusive#key_value_store_arn CloudfrontkeyvaluestoreKeysExclusive#key_value_store_arn}
         '''
         result = self._values.get("key_value_store_arn")
         assert result is not None, "Required property 'key_value_store_arn' is missing"
         return typing.cast(builtins.str, result)
+
+    @builtins.property
+    def max_batch_size(self) -> typing.Optional[jsii.Number]:
+        '''Maximum resource key values pairs that you wills update in a single API request.
+
+        AWS has a default quota of 50 keys or a 3 MB payload, whichever is reached first
+
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/aws/5.100.0/docs/resources/cloudfrontkeyvaluestore_keys_exclusive#max_batch_size CloudfrontkeyvaluestoreKeysExclusive#max_batch_size}
+        '''
+        result = self._values.get("max_batch_size")
+        return typing.cast(typing.Optional[jsii.Number], result)
 
     @builtins.property
     def resource_key_value_pair(
@@ -339,7 +380,7 @@ class CloudfrontkeyvaluestoreKeysExclusiveConfig(
     ) -> typing.Optional[typing.Union[_cdktf_9a9027ec.IResolvable, typing.List["CloudfrontkeyvaluestoreKeysExclusiveResourceKeyValuePair"]]]:
         '''resource_key_value_pair block.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/aws/5.99.1/docs/resources/cloudfrontkeyvaluestore_keys_exclusive#resource_key_value_pair CloudfrontkeyvaluestoreKeysExclusive#resource_key_value_pair}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/aws/5.100.0/docs/resources/cloudfrontkeyvaluestore_keys_exclusive#resource_key_value_pair CloudfrontkeyvaluestoreKeysExclusive#resource_key_value_pair}
         '''
         result = self._values.get("resource_key_value_pair")
         return typing.cast(typing.Optional[typing.Union[_cdktf_9a9027ec.IResolvable, typing.List["CloudfrontkeyvaluestoreKeysExclusiveResourceKeyValuePair"]]], result)
@@ -364,8 +405,8 @@ class CloudfrontkeyvaluestoreKeysExclusiveConfig(
 class CloudfrontkeyvaluestoreKeysExclusiveResourceKeyValuePair:
     def __init__(self, *, key: builtins.str, value: builtins.str) -> None:
         '''
-        :param key: The key to put. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/aws/5.99.1/docs/resources/cloudfrontkeyvaluestore_keys_exclusive#key CloudfrontkeyvaluestoreKeysExclusive#key}
-        :param value: The value to put. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/aws/5.99.1/docs/resources/cloudfrontkeyvaluestore_keys_exclusive#value CloudfrontkeyvaluestoreKeysExclusive#value}
+        :param key: The key to put. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/aws/5.100.0/docs/resources/cloudfrontkeyvaluestore_keys_exclusive#key CloudfrontkeyvaluestoreKeysExclusive#key}
+        :param value: The value to put. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/aws/5.100.0/docs/resources/cloudfrontkeyvaluestore_keys_exclusive#value CloudfrontkeyvaluestoreKeysExclusive#value}
         '''
         if __debug__:
             type_hints = typing.get_type_hints(_typecheckingstub__d65ee216e16180b64b92281ae60578f91c303800091b7f19d144c55eb379cac3)
@@ -380,7 +421,7 @@ class CloudfrontkeyvaluestoreKeysExclusiveResourceKeyValuePair:
     def key(self) -> builtins.str:
         '''The key to put.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/aws/5.99.1/docs/resources/cloudfrontkeyvaluestore_keys_exclusive#key CloudfrontkeyvaluestoreKeysExclusive#key}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/aws/5.100.0/docs/resources/cloudfrontkeyvaluestore_keys_exclusive#key CloudfrontkeyvaluestoreKeysExclusive#key}
         '''
         result = self._values.get("key")
         assert result is not None, "Required property 'key' is missing"
@@ -390,7 +431,7 @@ class CloudfrontkeyvaluestoreKeysExclusiveResourceKeyValuePair:
     def value(self) -> builtins.str:
         '''The value to put.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/aws/5.99.1/docs/resources/cloudfrontkeyvaluestore_keys_exclusive#value CloudfrontkeyvaluestoreKeysExclusive#value}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/aws/5.100.0/docs/resources/cloudfrontkeyvaluestore_keys_exclusive#value CloudfrontkeyvaluestoreKeysExclusive#value}
         '''
         result = self._values.get("value")
         assert result is not None, "Required property 'value' is missing"
@@ -594,6 +635,7 @@ def _typecheckingstub__f73060dce5ea478bff3f674d590f63beb593a1084382d7615adb41690
     id: builtins.str,
     *,
     key_value_store_arn: builtins.str,
+    max_batch_size: typing.Optional[jsii.Number] = None,
     resource_key_value_pair: typing.Optional[typing.Union[_cdktf_9a9027ec.IResolvable, typing.Sequence[typing.Union[CloudfrontkeyvaluestoreKeysExclusiveResourceKeyValuePair, typing.Dict[builtins.str, typing.Any]]]]] = None,
     connection: typing.Optional[typing.Union[typing.Union[_cdktf_9a9027ec.SSHProvisionerConnection, typing.Dict[builtins.str, typing.Any]], typing.Union[_cdktf_9a9027ec.WinrmProvisionerConnection, typing.Dict[builtins.str, typing.Any]]]] = None,
     count: typing.Optional[typing.Union[jsii.Number, _cdktf_9a9027ec.TerraformCount]] = None,
@@ -627,6 +669,12 @@ def _typecheckingstub__a56d1f7aa203d646133bf16e1b5240d7d04df156992a49dbf9a79b5f9
     """Type checking stubs"""
     pass
 
+def _typecheckingstub__5ecc259f87768da780368584b7610235e3fc98c3453d7ccb5b717ec9e45d3998(
+    value: jsii.Number,
+) -> None:
+    """Type checking stubs"""
+    pass
+
 def _typecheckingstub__0b299702128437cc26621c6a886ce973063453aaf08d6e9da4db22921ee520b4(
     *,
     connection: typing.Optional[typing.Union[typing.Union[_cdktf_9a9027ec.SSHProvisionerConnection, typing.Dict[builtins.str, typing.Any]], typing.Union[_cdktf_9a9027ec.WinrmProvisionerConnection, typing.Dict[builtins.str, typing.Any]]]] = None,
@@ -637,6 +685,7 @@ def _typecheckingstub__0b299702128437cc26621c6a886ce973063453aaf08d6e9da4db22921
     provider: typing.Optional[_cdktf_9a9027ec.TerraformProvider] = None,
     provisioners: typing.Optional[typing.Sequence[typing.Union[typing.Union[_cdktf_9a9027ec.FileProvisioner, typing.Dict[builtins.str, typing.Any]], typing.Union[_cdktf_9a9027ec.LocalExecProvisioner, typing.Dict[builtins.str, typing.Any]], typing.Union[_cdktf_9a9027ec.RemoteExecProvisioner, typing.Dict[builtins.str, typing.Any]]]]] = None,
     key_value_store_arn: builtins.str,
+    max_batch_size: typing.Optional[jsii.Number] = None,
     resource_key_value_pair: typing.Optional[typing.Union[_cdktf_9a9027ec.IResolvable, typing.Sequence[typing.Union[CloudfrontkeyvaluestoreKeysExclusiveResourceKeyValuePair, typing.Dict[builtins.str, typing.Any]]]]] = None,
 ) -> None:
     """Type checking stubs"""

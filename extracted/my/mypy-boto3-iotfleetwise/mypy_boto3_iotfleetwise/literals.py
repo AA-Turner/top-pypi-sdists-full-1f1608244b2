@@ -176,7 +176,9 @@ UpdateCampaignActionType = Literal["APPROVE", "RESUME", "SUSPEND", "UPDATE"]
 UpdateModeType = Literal["Merge", "Overwrite"]
 VehicleAssociationBehaviorType = Literal["CreateIotThing", "ValidateIotThingExists"]
 VehicleMiddlewareProtocolType = Literal["ROS_2"]
-VehicleStateType = Literal["CREATED", "DELETING", "HEALTHY", "READY", "SUSPENDED"]
+VehicleStateType = Literal[
+    "CREATED", "DELETING", "HEALTHY", "READY", "READY_FOR_CHECKIN", "SUSPENDED"
+]
 IoTFleetWiseServiceName = Literal["iotfleetwise"]
 ServiceName = Literal[
     "accessanalyzer",
@@ -323,6 +325,7 @@ ServiceName = Literal[
     "es",
     "events",
     "evidently",
+    "evs",
     "finspace",
     "finspace-data",
     "firehose",
@@ -475,7 +478,6 @@ ServiceName = Literal[
     "pipes",
     "polly",
     "pricing",
-    "privatenetworks",
     "proton",
     "qapps",
     "qbusiness",
@@ -536,7 +538,6 @@ ServiceName = Literal[
     "signer",
     "simspaceweaver",
     "sms",
-    "sms-voice",
     "snow-device-management",
     "snowball",
     "sns",
@@ -544,6 +545,7 @@ ServiceName = Literal[
     "sqs",
     "ssm",
     "ssm-contacts",
+    "ssm-guiconnect",
     "ssm-incidents",
     "ssm-quicksetup",
     "ssm-sap",

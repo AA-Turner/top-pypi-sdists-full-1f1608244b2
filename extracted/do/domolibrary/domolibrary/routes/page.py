@@ -44,6 +44,9 @@ class PageRetrieval_byId_Error(dmde.RouteError):
 # %% ../../nbs/routes/page.ipynb 8
 async def get_pages_adminsummary(
     auth: dmda.DomoAuth,
+    search_title: str = None,
+    page_parent_id : str = None,
+    body : dict = None,
     debug_loop: bool = False,
     debug_api: bool = False,
     limit=35,
@@ -58,7 +61,14 @@ async def get_pages_adminsummary(
         "limit": "limit",
     }
 
-    body = {"orderBy": "pageTitle", "ascending": True}
+    body = body or {"orderBy": "pageTitle", "ascending": True}
+
+    if search_title:
+        body.update({"includePageTitleClause": True, "pageTitleSearchText": search_title})
+    
+    if page_parent_id:
+        body.update({"includeParentPageIdsClause":True,
+                     "parentPageIds":[page_parent_id]})
 
     def arr_fn(res) -> list[dict]:
         return res.response.get("pageAdminSummaries")

@@ -37,6 +37,7 @@ __all__ = (
     "JobReportFormatType",
     "JobReportScopeType",
     "JobStatusType",
+    "ListAccessPointsForDirectoryBucketsPaginatorName",
     "ListAccessPointsForObjectLambdaPaginatorName",
     "ListCallerAccessGrantsPaginatorName",
     "MFADeleteStatusType",
@@ -74,6 +75,7 @@ __all__ = (
     "S3PrefixTypeType",
     "S3SSEAlgorithmType",
     "S3StorageClassType",
+    "ScopePermissionType",
     "ServiceName",
     "SseKmsEncryptedObjectsStatusType",
     "TransitionStorageClassType",
@@ -123,6 +125,9 @@ JobStatusType = Literal[
     "Preparing",
     "Ready",
     "Suspended",
+]
+ListAccessPointsForDirectoryBucketsPaginatorName = Literal[
+    "list_access_points_for_directory_buckets"
 ]
 ListAccessPointsForObjectLambdaPaginatorName = Literal["list_access_points_for_object_lambda"]
 ListCallerAccessGrantsPaginatorName = Literal["list_caller_access_grants"]
@@ -203,6 +208,16 @@ S3StorageClassType = Literal[
     "ONEZONE_IA",
     "STANDARD",
     "STANDARD_IA",
+]
+ScopePermissionType = Literal[
+    "AbortMultipartUpload",
+    "DeleteObject",
+    "GetObject",
+    "GetObjectAttributes",
+    "ListBucket",
+    "ListBucketMultipartUploads",
+    "ListMultipartUploadParts",
+    "PutObject",
 ]
 SseKmsEncryptedObjectsStatusType = Literal["Disabled", "Enabled"]
 TransitionStorageClassType = Literal[
@@ -365,6 +380,7 @@ ServiceName = Literal[
     "freetier",
     "fsx",
     "gamelift",
+    "gameliftstreams",
     "geo-maps",
     "geo-places",
     "geo-routes",
@@ -390,6 +406,7 @@ ServiceName = Literal[
     "iot",
     "iot-data",
     "iot-jobs-data",
+    "iot-managed-integrations",
     "iotanalytics",
     "iotdeviceadvisor",
     "iotevents",
@@ -504,7 +521,6 @@ ServiceName = Literal[
     "pipes",
     "polly",
     "pricing",
-    "privatenetworks",
     "proton",
     "qapps",
     "qbusiness",
@@ -565,7 +581,6 @@ ServiceName = Literal[
     "signer",
     "simspaceweaver",
     "sms",
-    "sms-voice",
     "snow-device-management",
     "snowball",
     "sns",
@@ -573,6 +588,7 @@ ServiceName = Literal[
     "sqs",
     "ssm",
     "ssm-contacts",
+    "ssm-guiconnect",
     "ssm-incidents",
     "ssm-quicksetup",
     "ssm-sap",
@@ -625,7 +641,11 @@ ResourceServiceName = Literal[
     "sns",
     "sqs",
 ]
-PaginatorName = Literal["list_access_points_for_object_lambda", "list_caller_access_grants"]
+PaginatorName = Literal[
+    "list_access_points_for_directory_buckets",
+    "list_access_points_for_object_lambda",
+    "list_caller_access_grants",
+]
 RegionName = Literal[
     "af-south-1",
     "ap-east-1",

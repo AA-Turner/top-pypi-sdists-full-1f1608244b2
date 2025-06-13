@@ -14,6 +14,7 @@ Usage::
         CodePipelineClient,
         ListActionExecutionsPaginator,
         ListActionTypesPaginator,
+        ListDeployActionExecutionTargetsPaginator,
         ListPipelineExecutionsPaginator,
         ListPipelinesPaginator,
         ListRuleExecutionsPaginator,
@@ -29,6 +30,7 @@ Usage::
 
     list_action_executions_paginator: ListActionExecutionsPaginator = client.get_paginator("list_action_executions")
     list_action_types_paginator: ListActionTypesPaginator = client.get_paginator("list_action_types")
+    list_deploy_action_execution_targets_paginator: ListDeployActionExecutionTargetsPaginator = client.get_paginator("list_deploy_action_execution_targets")
     list_pipeline_executions_paginator: ListPipelineExecutionsPaginator = client.get_paginator("list_pipeline_executions")
     list_pipelines_paginator: ListPipelinesPaginator = client.get_paginator("list_pipelines")
     list_rule_executions_paginator: ListRuleExecutionsPaginator = client.get_paginator("list_rule_executions")
@@ -41,6 +43,7 @@ from .client import CodePipelineClient
 from .paginator import (
     ListActionExecutionsPaginator,
     ListActionTypesPaginator,
+    ListDeployActionExecutionTargetsPaginator,
     ListPipelineExecutionsPaginator,
     ListPipelinesPaginator,
     ListRuleExecutionsPaginator,
@@ -56,6 +59,7 @@ __all__ = (
     "CodePipelineClient",
     "ListActionExecutionsPaginator",
     "ListActionTypesPaginator",
+    "ListDeployActionExecutionTargetsPaginator",
     "ListPipelineExecutionsPaginator",
     "ListPipelinesPaginator",
     "ListRuleExecutionsPaginator",

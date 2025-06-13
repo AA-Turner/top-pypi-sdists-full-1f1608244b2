@@ -6,7 +6,7 @@ requires = ["poetry-core>=1.0.0"]
 authors = ["Sashank Thupukari <sashank@exponent.run>"]
 description = "Exponent is an AI Pair Programmer"
 name = "exponent-run"
-version = "0.0.89"
+version = "0.0.90"
 packages = [{ include = "exponent" }]
 
 [tool.poetry.scripts]

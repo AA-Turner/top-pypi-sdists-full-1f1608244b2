@@ -509,6 +509,44 @@ def _extract_images(response):
     return {}
 
 
+def _filter_crawl_dict(d, keep_columns=None, discard_columns=None):
+    """
+    Filters a dictionary by optionally applying regex-based keep and discard rules.
+    Certain keys are always included regardless of the filters.
+
+    Parameters:
+    - d (dict): The input dictionary with string keys.
+    - keep_columns (list of str or None): Regex patterns for keys to keep.
+    - discard_columns (list of str or None): Regex patterns for keys to discard.
+
+    Returns:
+    - dict: A filtered dictionary.
+    """
+    always_include = {"url", "errors", "jsonld_errors"}
+
+    def matches_any(patterns, key):
+        return any(re.search(pattern, key) for pattern in patterns)
+
+    if not keep_columns and not discard_columns:
+        return d
+
+    result = {}
+    for k, v in d.items():
+        if k in always_include:
+            result[k] = v
+            continue
+
+        keep = True
+        if keep_columns:
+            keep = matches_any(keep_columns, k)
+        if discard_columns and matches_any(discard_columns, k):
+            keep = False
+        if keep:
+            result[k] = v
+
+    return result
+
+
 def get_max_cmd_len():
     system = platform.system()
     cmd_dict = {"Windows": 7000, "Linux": 100000, "Darwin": 100000}
@@ -665,6 +703,16 @@ def _extract_content(resp, **tags_xpaths):
     return d
 
 
+def _now():
+    try:
+        utc = datetime.UTC
+    except AttributeError:
+        utc = datetime.timezone.utc
+
+    now = datetime.datetime.now(utc).strftime("%Y-%m-%d %H:%M:%S")
+    return now
+
+
 class SEOSitemapSpider(Spider):
     name = "seo_spider"
     follow_links = False
@@ -677,6 +725,8 @@ class SEOSitemapSpider(Spider):
         "ROBOTSTXT_OBEY": True,
         "HTTPERROR_ALLOW_ALL": True,
     }
+    keep_columns = None
+    discard_columns = None
 
     def __init__(
         self,
@@ -690,6 +740,8 @@ class SEOSitemapSpider(Spider):
         css_selectors=None,
         xpath_selectors=None,
         meta=None,
+        keep_columns=None,
+        discard_columns=None,
         *args,
         **kwargs,
     ):
@@ -708,6 +760,8 @@ class SEOSitemapSpider(Spider):
         self.css_selectors = eval(json.loads(json.dumps(css_selectors)))
         self.xpath_selectors = eval(json.loads(json.dumps(xpath_selectors)))
         self.meta = eval(json.loads(json.dumps(meta)))
+        self.keep_columns = eval(json.loads(json.dumps(keep_columns)))
+        self.discard_columns = eval(json.loads(json.dumps(discard_columns)))
 
     def get_custom_headers(self):
         if self.meta:
@@ -732,13 +786,37 @@ class SEOSitemapSpider(Spider):
                 )
             except Exception as e:
                 self.logger.error(repr(e))
+                yield {
+                    "url": url,
+                    "crawl_time": _now(),
+                    "errors": repr(e),
+                }
+
+    async def start(self):
+        self.get_custom_headers()
+        for url in self.start_urls:
+            try:
+                yield Request(
+                    url,
+                    callback=self.parse,
+                    errback=self.errback,
+                    meta=self.meta,
+                    headers=self.custom_headers.get(url),
+                )
+            except Exception as e:
+                self.logger.error(repr(e))
+                yield {
+                    "url": url,
+                    "crawl_time": _now(),
+                    "errors": repr(e),
+                }
 
     def errback(self, failure):
         if not failure.check(scrapy.exceptions.IgnoreRequest):
             self.logger.error(repr(failure))
             yield {
                 "url": failure.request.url,
-                "crawl_time": datetime.datetime.utcnow().strftime("%Y-%m-%d %H:%M:%S"),
+                "crawl_time": _now(),
                 "errors": repr(failure),
             }
 
@@ -866,7 +944,7 @@ class SEOSitemapSpider(Spider):
                 " ".join([str(e), str(response.status), response.url])
             )
         page_content = _extract_content(response, **tags_xpaths)
-        yield dict(
+        crawl_dict = dict(
             url=response.request.url,
             **page_content,
             **open_graph,
@@ -888,7 +966,7 @@ class SEOSitemapSpider(Spider):
             **parsed_footer_links,
             **images,
             ip_address=str(response.ip_address),
-            crawl_time=datetime.datetime.utcnow().strftime("%Y-%m-%d %H:%M:%S"),
+            crawl_time=_now(),
             **{
                 "resp_headers_" + k: v
                 for k, v in response.headers.to_unicode_dict().items()
@@ -898,6 +976,12 @@ class SEOSitemapSpider(Spider):
                 for k, v in response.request.headers.to_unicode_dict().items()
             },
         )
+        crawl_dict = _filter_crawl_dict(
+            crawl_dict,
+            keep_columns=self.keep_columns,
+            discard_columns=self.discard_columns,
+        )
+        yield crawl_dict
         if self.follow_links:
             next_pages = [link.url for link in links]
             if next_pages:
@@ -932,6 +1016,8 @@ def crawl(
     xpath_selectors=None,
     custom_settings=None,
     meta=None,
+    keep_columns=None,
+    discard_columns=None,
 ):
     """
     Crawl a website or a list of URLs based on the supplied options.
@@ -979,6 +1065,14 @@ def crawl(
     meta : dict
       Additional data to pass to the crawler; add arbitrary metadata, set custom request
       headers per URL, and/or enable some third party plugins.
+    keep_columns : list
+      A list of regex patterns for the columns to keep in the output. If not specified,
+      all columns are kept.
+    discard_columns : list
+      A list of regex patterns for the columns to discard in the output. If not
+      specified, all columns are kept. If both ``keep_columns`` and
+      ``discard_columns`` are specified, the columns will be filtered based on the
+      ``keep_columns`` regex patterns first, and then the ``discard_columns``.
     Examples
     --------
     Crawl a website and let the crawler discover as many pages as available
@@ -1183,6 +1277,10 @@ def crawl(
         "xpath_selectors=" + str(xpath_selectors),
         "-a",
         "meta=" + str(meta),
+        "-a",
+        "keep_columns=" + str(keep_columns),
+        "-a",
+        "discard_columns=" + str(discard_columns),
         "-o",
         output_file,
     ] + settings_list

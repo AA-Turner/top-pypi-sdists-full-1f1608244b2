@@ -25,8 +25,10 @@ from aiobotocore.response import StreamingBody
 from .literals import (
     AlertManagerDefinitionStatusCodeType,
     LoggingConfigurationStatusCodeType,
+    QueryLoggingConfigurationStatusCodeType,
     RuleGroupsNamespaceStatusCodeType,
     ScraperStatusCodeType,
+    WorkspaceConfigurationStatusCodeType,
     WorkspaceStatusCodeType,
 )
 
@@ -47,10 +49,13 @@ __all__ = (
     "AlertManagerDefinitionStatusTypeDef",
     "AmpConfigurationTypeDef",
     "BlobTypeDef",
+    "CloudWatchLogDestinationTypeDef",
     "CreateAlertManagerDefinitionRequestTypeDef",
     "CreateAlertManagerDefinitionResponseTypeDef",
     "CreateLoggingConfigurationRequestTypeDef",
     "CreateLoggingConfigurationResponseTypeDef",
+    "CreateQueryLoggingConfigurationRequestTypeDef",
+    "CreateQueryLoggingConfigurationResponseTypeDef",
     "CreateRuleGroupsNamespaceRequestTypeDef",
     "CreateRuleGroupsNamespaceResponseTypeDef",
     "CreateScraperRequestTypeDef",
@@ -59,6 +64,7 @@ __all__ = (
     "CreateWorkspaceResponseTypeDef",
     "DeleteAlertManagerDefinitionRequestTypeDef",
     "DeleteLoggingConfigurationRequestTypeDef",
+    "DeleteQueryLoggingConfigurationRequestTypeDef",
     "DeleteRuleGroupsNamespaceRequestTypeDef",
     "DeleteScraperRequestTypeDef",
     "DeleteScraperResponseTypeDef",
@@ -67,12 +73,16 @@ __all__ = (
     "DescribeAlertManagerDefinitionResponseTypeDef",
     "DescribeLoggingConfigurationRequestTypeDef",
     "DescribeLoggingConfigurationResponseTypeDef",
+    "DescribeQueryLoggingConfigurationRequestTypeDef",
+    "DescribeQueryLoggingConfigurationResponseTypeDef",
     "DescribeRuleGroupsNamespaceRequestTypeDef",
     "DescribeRuleGroupsNamespaceResponseTypeDef",
     "DescribeScraperRequestTypeDef",
     "DescribeScraperRequestWaitExtraTypeDef",
     "DescribeScraperRequestWaitTypeDef",
     "DescribeScraperResponseTypeDef",
+    "DescribeWorkspaceConfigurationRequestTypeDef",
+    "DescribeWorkspaceConfigurationResponseTypeDef",
     "DescribeWorkspaceRequestTypeDef",
     "DescribeWorkspaceRequestWaitExtraTypeDef",
     "DescribeWorkspaceRequestWaitTypeDef",
@@ -82,6 +92,10 @@ __all__ = (
     "EksConfigurationTypeDef",
     "EmptyResponseMetadataTypeDef",
     "GetDefaultScraperConfigurationResponseTypeDef",
+    "LimitsPerLabelSetEntryTypeDef",
+    "LimitsPerLabelSetOutputTypeDef",
+    "LimitsPerLabelSetTypeDef",
+    "LimitsPerLabelSetUnionTypeDef",
     "ListRuleGroupsNamespacesRequestPaginateTypeDef",
     "ListRuleGroupsNamespacesRequestTypeDef",
     "ListRuleGroupsNamespacesResponseTypeDef",
@@ -95,11 +109,15 @@ __all__ = (
     "ListWorkspacesResponseTypeDef",
     "LoggingConfigurationMetadataTypeDef",
     "LoggingConfigurationStatusTypeDef",
+    "LoggingDestinationTypeDef",
+    "LoggingFilterTypeDef",
     "PaginatorConfigTypeDef",
     "PutAlertManagerDefinitionRequestTypeDef",
     "PutAlertManagerDefinitionResponseTypeDef",
     "PutRuleGroupsNamespaceRequestTypeDef",
     "PutRuleGroupsNamespaceResponseTypeDef",
+    "QueryLoggingConfigurationMetadataTypeDef",
+    "QueryLoggingConfigurationStatusTypeDef",
     "ResponseMetadataTypeDef",
     "RoleConfigurationTypeDef",
     "RuleGroupsNamespaceDescriptionTypeDef",
@@ -118,10 +136,16 @@ __all__ = (
     "UntagResourceRequestTypeDef",
     "UpdateLoggingConfigurationRequestTypeDef",
     "UpdateLoggingConfigurationResponseTypeDef",
+    "UpdateQueryLoggingConfigurationRequestTypeDef",
+    "UpdateQueryLoggingConfigurationResponseTypeDef",
     "UpdateScraperRequestTypeDef",
     "UpdateScraperResponseTypeDef",
     "UpdateWorkspaceAliasRequestTypeDef",
+    "UpdateWorkspaceConfigurationRequestTypeDef",
+    "UpdateWorkspaceConfigurationResponseTypeDef",
     "WaiterConfigTypeDef",
+    "WorkspaceConfigurationDescriptionTypeDef",
+    "WorkspaceConfigurationStatusTypeDef",
     "WorkspaceDescriptionTypeDef",
     "WorkspaceStatusTypeDef",
     "WorkspaceSummaryTypeDef",
@@ -140,6 +164,10 @@ class AmpConfigurationTypeDef(TypedDict):
 BlobTypeDef = Union[str, bytes, IO[Any], StreamingBody]
 
 
+class CloudWatchLogDestinationTypeDef(TypedDict):
+    logGroupArn: str
+
+
 class ResponseMetadataTypeDef(TypedDict):
     RequestId: str
     HTTPStatusCode: int
@@ -156,6 +184,11 @@ class CreateLoggingConfigurationRequestTypeDef(TypedDict):
 
 class LoggingConfigurationStatusTypeDef(TypedDict):
     statusCode: LoggingConfigurationStatusCodeType
+    statusReason: NotRequired[str]
+
+
+class QueryLoggingConfigurationStatusTypeDef(TypedDict):
+    statusCode: QueryLoggingConfigurationStatusCodeType
     statusReason: NotRequired[str]
 
 
@@ -194,6 +227,11 @@ class DeleteLoggingConfigurationRequestTypeDef(TypedDict):
     clientToken: NotRequired[str]
 
 
+class DeleteQueryLoggingConfigurationRequestTypeDef(TypedDict):
+    workspaceId: str
+    clientToken: NotRequired[str]
+
+
 class DeleteRuleGroupsNamespaceRequestTypeDef(TypedDict):
     name: str
     workspaceId: str
@@ -218,6 +256,10 @@ class DescribeLoggingConfigurationRequestTypeDef(TypedDict):
     workspaceId: str
 
 
+class DescribeQueryLoggingConfigurationRequestTypeDef(TypedDict):
+    workspaceId: str
+
+
 class DescribeRuleGroupsNamespaceRequestTypeDef(TypedDict):
     name: str
     workspaceId: str
@@ -230,6 +272,10 @@ class DescribeScraperRequestTypeDef(TypedDict):
 class WaiterConfigTypeDef(TypedDict):
     Delay: NotRequired[int]
     MaxAttempts: NotRequired[int]
+
+
+class DescribeWorkspaceConfigurationRequestTypeDef(TypedDict):
+    workspaceId: str
 
 
 class DescribeWorkspaceRequestTypeDef(TypedDict):
@@ -246,6 +292,10 @@ class EksConfigurationTypeDef(TypedDict):
     clusterArn: str
     subnetIds: Sequence[str]
     securityGroupIds: NotRequired[Sequence[str]]
+
+
+class LimitsPerLabelSetEntryTypeDef(TypedDict):
+    maxSeries: NotRequired[int]
 
 
 class PaginatorConfigTypeDef(TypedDict):
@@ -277,6 +327,10 @@ class ListWorkspacesRequestTypeDef(TypedDict):
     nextToken: NotRequired[str]
 
 
+class LoggingFilterTypeDef(TypedDict):
+    qspThreshold: int
+
+
 class ScrapeConfigurationOutputTypeDef(TypedDict):
     configurationBlob: NotRequired[bytes]
 
@@ -301,6 +355,11 @@ class UpdateWorkspaceAliasRequestTypeDef(TypedDict):
     workspaceId: str
     alias: NotRequired[str]
     clientToken: NotRequired[str]
+
+
+class WorkspaceConfigurationStatusTypeDef(TypedDict):
+    statusCode: WorkspaceConfigurationStatusCodeType
+    statusReason: NotRequired[str]
 
 
 class AlertManagerDefinitionDescriptionTypeDef(TypedDict):
@@ -384,6 +443,16 @@ class LoggingConfigurationMetadataTypeDef(TypedDict):
 
 class UpdateLoggingConfigurationResponseTypeDef(TypedDict):
     status: LoggingConfigurationStatusTypeDef
+    ResponseMetadata: ResponseMetadataTypeDef
+
+
+class CreateQueryLoggingConfigurationResponseTypeDef(TypedDict):
+    status: QueryLoggingConfigurationStatusTypeDef
+    ResponseMetadata: ResponseMetadataTypeDef
+
+
+class UpdateQueryLoggingConfigurationResponseTypeDef(TypedDict):
+    status: QueryLoggingConfigurationStatusTypeDef
     ResponseMetadata: ResponseMetadataTypeDef
 
 
@@ -502,6 +571,16 @@ class SourceTypeDef(TypedDict):
     eksConfiguration: NotRequired[EksConfigurationTypeDef]
 
 
+class LimitsPerLabelSetOutputTypeDef(TypedDict):
+    labelSet: Dict[str, str]
+    limits: LimitsPerLabelSetEntryTypeDef
+
+
+class LimitsPerLabelSetTypeDef(TypedDict):
+    labelSet: Mapping[str, str]
+    limits: LimitsPerLabelSetEntryTypeDef
+
+
 class ListRuleGroupsNamespacesRequestPaginateTypeDef(TypedDict):
     workspaceId: str
     name: NotRequired[str]
@@ -516,6 +595,16 @@ class ListScrapersRequestPaginateTypeDef(TypedDict):
 class ListWorkspacesRequestPaginateTypeDef(TypedDict):
     alias: NotRequired[str]
     PaginationConfig: NotRequired[PaginatorConfigTypeDef]
+
+
+class LoggingDestinationTypeDef(TypedDict):
+    cloudWatchLogs: CloudWatchLogDestinationTypeDef
+    filters: LoggingFilterTypeDef
+
+
+class UpdateWorkspaceConfigurationResponseTypeDef(TypedDict):
+    status: WorkspaceConfigurationStatusTypeDef
+    ResponseMetadata: ResponseMetadataTypeDef
 
 
 class DescribeAlertManagerDefinitionResponseTypeDef(TypedDict):
@@ -589,6 +678,35 @@ class ScraperSummaryTypeDef(TypedDict):
 SourceUnionTypeDef = Union[SourceTypeDef, SourceOutputTypeDef]
 
 
+class WorkspaceConfigurationDescriptionTypeDef(TypedDict):
+    status: WorkspaceConfigurationStatusTypeDef
+    limitsPerLabelSet: NotRequired[List[LimitsPerLabelSetOutputTypeDef]]
+    retentionPeriodInDays: NotRequired[int]
+
+
+LimitsPerLabelSetUnionTypeDef = Union[LimitsPerLabelSetTypeDef, LimitsPerLabelSetOutputTypeDef]
+
+
+class CreateQueryLoggingConfigurationRequestTypeDef(TypedDict):
+    destinations: Sequence[LoggingDestinationTypeDef]
+    workspaceId: str
+    clientToken: NotRequired[str]
+
+
+class QueryLoggingConfigurationMetadataTypeDef(TypedDict):
+    createdAt: datetime
+    destinations: List[LoggingDestinationTypeDef]
+    modifiedAt: datetime
+    status: QueryLoggingConfigurationStatusTypeDef
+    workspace: str
+
+
+class UpdateQueryLoggingConfigurationRequestTypeDef(TypedDict):
+    destinations: Sequence[LoggingDestinationTypeDef]
+    workspaceId: str
+    clientToken: NotRequired[str]
+
+
 class UpdateScraperRequestTypeDef(TypedDict):
     scraperId: str
     alias: NotRequired[str]
@@ -617,3 +735,20 @@ class CreateScraperRequestTypeDef(TypedDict):
     clientToken: NotRequired[str]
     roleConfiguration: NotRequired[RoleConfigurationTypeDef]
     tags: NotRequired[Mapping[str, str]]
+
+
+class DescribeWorkspaceConfigurationResponseTypeDef(TypedDict):
+    workspaceConfiguration: WorkspaceConfigurationDescriptionTypeDef
+    ResponseMetadata: ResponseMetadataTypeDef
+
+
+class UpdateWorkspaceConfigurationRequestTypeDef(TypedDict):
+    workspaceId: str
+    clientToken: NotRequired[str]
+    limitsPerLabelSet: NotRequired[Sequence[LimitsPerLabelSetUnionTypeDef]]
+    retentionPeriodInDays: NotRequired[int]
+
+
+class DescribeQueryLoggingConfigurationResponseTypeDef(TypedDict):
+    queryLoggingConfiguration: QueryLoggingConfigurationMetadataTypeDef
+    ResponseMetadata: ResponseMetadataTypeDef

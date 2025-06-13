@@ -30,6 +30,8 @@ from botocore.exceptions import ClientError as BotocoreClientError
 
 from .paginator import (
     GetAgentMemoryPaginator,
+    ListFlowExecutionEventsPaginator,
+    ListFlowExecutionsPaginator,
     ListInvocationsPaginator,
     ListInvocationStepsPaginator,
     ListSessionsPaginator,
@@ -49,6 +51,10 @@ from .type_defs import (
     GenerateQueryResponseTypeDef,
     GetAgentMemoryRequestTypeDef,
     GetAgentMemoryResponseTypeDef,
+    GetExecutionFlowSnapshotRequestTypeDef,
+    GetExecutionFlowSnapshotResponseTypeDef,
+    GetFlowExecutionRequestTypeDef,
+    GetFlowExecutionResponseTypeDef,
     GetInvocationStepRequestTypeDef,
     GetInvocationStepResponseTypeDef,
     GetSessionRequestTypeDef,
@@ -59,6 +65,10 @@ from .type_defs import (
     InvokeFlowResponseTypeDef,
     InvokeInlineAgentRequestTypeDef,
     InvokeInlineAgentResponseTypeDef,
+    ListFlowExecutionEventsRequestTypeDef,
+    ListFlowExecutionEventsResponseTypeDef,
+    ListFlowExecutionsRequestTypeDef,
+    ListFlowExecutionsResponseTypeDef,
     ListInvocationsRequestTypeDef,
     ListInvocationsResponseTypeDef,
     ListInvocationStepsRequestTypeDef,
@@ -79,6 +89,10 @@ from .type_defs import (
     RetrieveAndGenerateStreamResponseTypeDef,
     RetrieveRequestTypeDef,
     RetrieveResponseTypeDef,
+    StartFlowExecutionRequestTypeDef,
+    StartFlowExecutionResponseTypeDef,
+    StopFlowExecutionRequestTypeDef,
+    StopFlowExecutionResponseTypeDef,
     TagResourceRequestTypeDef,
     UntagResourceRequestTypeDef,
     UpdateSessionRequestTypeDef,
@@ -219,6 +233,27 @@ class AgentsforBedrockRuntimeClient(AioBaseClient):
         [Show types-aiobotocore documentation](https://youtype.github.io/types_aiobotocore_docs/types_aiobotocore_bedrock_agent_runtime/client/#get_agent_memory)
         """
 
+    async def get_execution_flow_snapshot(
+        self, **kwargs: Unpack[GetExecutionFlowSnapshotRequestTypeDef]
+    ) -> GetExecutionFlowSnapshotResponseTypeDef:
+        """
+        Retrieves the flow definition snapshot used for an asynchronous execution.
+
+        [Show boto3 documentation](https://boto3.amazonaws.com/v1/documentation/api/latest/reference/services/bedrock-agent-runtime/client/get_execution_flow_snapshot.html)
+        [Show types-aiobotocore documentation](https://youtype.github.io/types_aiobotocore_docs/types_aiobotocore_bedrock_agent_runtime/client/#get_execution_flow_snapshot)
+        """
+
+    async def get_flow_execution(
+        self, **kwargs: Unpack[GetFlowExecutionRequestTypeDef]
+    ) -> GetFlowExecutionResponseTypeDef:
+        """
+        Retrieves details about a specific asynchronous execution of a flow, including
+        its status, start and end times, and any errors that occurred during execution.
+
+        [Show boto3 documentation](https://boto3.amazonaws.com/v1/documentation/api/latest/reference/services/bedrock-agent-runtime/client/get_flow_execution.html)
+        [Show types-aiobotocore documentation](https://youtype.github.io/types_aiobotocore_docs/types_aiobotocore_bedrock_agent_runtime/client/#get_flow_execution)
+        """
+
     async def get_invocation_step(
         self, **kwargs: Unpack[GetInvocationStepRequestTypeDef]
     ) -> GetInvocationStepResponseTypeDef:
@@ -244,7 +279,7 @@ class AgentsforBedrockRuntimeClient(AioBaseClient):
         self, **kwargs: Unpack[InvokeAgentRequestTypeDef]
     ) -> InvokeAgentResponseTypeDef:
         """
-        Sends a prompt for the agent to process and respond to.
+        <note> </note> <p>Sends a prompt for the agent to process and respond to.
 
         [Show boto3 documentation](https://boto3.amazonaws.com/v1/documentation/api/latest/reference/services/bedrock-agent-runtime/client/invoke_agent.html)
         [Show types-aiobotocore documentation](https://youtype.github.io/types_aiobotocore_docs/types_aiobotocore_bedrock_agent_runtime/client/#invoke_agent)
@@ -270,6 +305,26 @@ class AgentsforBedrockRuntimeClient(AioBaseClient):
 
         [Show boto3 documentation](https://boto3.amazonaws.com/v1/documentation/api/latest/reference/services/bedrock-agent-runtime/client/invoke_inline_agent.html)
         [Show types-aiobotocore documentation](https://youtype.github.io/types_aiobotocore_docs/types_aiobotocore_bedrock_agent_runtime/client/#invoke_inline_agent)
+        """
+
+    async def list_flow_execution_events(
+        self, **kwargs: Unpack[ListFlowExecutionEventsRequestTypeDef]
+    ) -> ListFlowExecutionEventsResponseTypeDef:
+        """
+        Lists events that occurred during an asynchronous execution of a flow.
+
+        [Show boto3 documentation](https://boto3.amazonaws.com/v1/documentation/api/latest/reference/services/bedrock-agent-runtime/client/list_flow_execution_events.html)
+        [Show types-aiobotocore documentation](https://youtype.github.io/types_aiobotocore_docs/types_aiobotocore_bedrock_agent_runtime/client/#list_flow_execution_events)
+        """
+
+    async def list_flow_executions(
+        self, **kwargs: Unpack[ListFlowExecutionsRequestTypeDef]
+    ) -> ListFlowExecutionsResponseTypeDef:
+        """
+        Lists all asynchronous executions for a flow.
+
+        [Show boto3 documentation](https://boto3.amazonaws.com/v1/documentation/api/latest/reference/services/bedrock-agent-runtime/client/list_flow_executions.html)
+        [Show types-aiobotocore documentation](https://youtype.github.io/types_aiobotocore_docs/types_aiobotocore_bedrock_agent_runtime/client/#list_flow_executions)
         """
 
     async def list_invocation_steps(
@@ -373,6 +428,26 @@ class AgentsforBedrockRuntimeClient(AioBaseClient):
         [Show types-aiobotocore documentation](https://youtype.github.io/types_aiobotocore_docs/types_aiobotocore_bedrock_agent_runtime/client/#retrieve_and_generate_stream)
         """
 
+    async def start_flow_execution(
+        self, **kwargs: Unpack[StartFlowExecutionRequestTypeDef]
+    ) -> StartFlowExecutionResponseTypeDef:
+        """
+        Starts an asynchronous execution of an Amazon Bedrock flow.
+
+        [Show boto3 documentation](https://boto3.amazonaws.com/v1/documentation/api/latest/reference/services/bedrock-agent-runtime/client/start_flow_execution.html)
+        [Show types-aiobotocore documentation](https://youtype.github.io/types_aiobotocore_docs/types_aiobotocore_bedrock_agent_runtime/client/#start_flow_execution)
+        """
+
+    async def stop_flow_execution(
+        self, **kwargs: Unpack[StopFlowExecutionRequestTypeDef]
+    ) -> StopFlowExecutionResponseTypeDef:
+        """
+        Stops an Amazon Bedrock flow's asynchronous execution.
+
+        [Show boto3 documentation](https://boto3.amazonaws.com/v1/documentation/api/latest/reference/services/bedrock-agent-runtime/client/stop_flow_execution.html)
+        [Show types-aiobotocore documentation](https://youtype.github.io/types_aiobotocore_docs/types_aiobotocore_bedrock_agent_runtime/client/#stop_flow_execution)
+        """
+
     async def tag_resource(self, **kwargs: Unpack[TagResourceRequestTypeDef]) -> Dict[str, Any]:
         """
         Associate tags with a resource.
@@ -403,6 +478,28 @@ class AgentsforBedrockRuntimeClient(AioBaseClient):
     def get_paginator(  # type: ignore[override]
         self, operation_name: Literal["get_agent_memory"]
     ) -> GetAgentMemoryPaginator:
+        """
+        Create a paginator for an operation.
+
+        [Show boto3 documentation](https://boto3.amazonaws.com/v1/documentation/api/latest/reference/services/bedrock-agent-runtime/client/get_paginator.html)
+        [Show types-aiobotocore documentation](https://youtype.github.io/types_aiobotocore_docs/types_aiobotocore_bedrock_agent_runtime/client/#get_paginator)
+        """
+
+    @overload  # type: ignore[override]
+    def get_paginator(  # type: ignore[override]
+        self, operation_name: Literal["list_flow_execution_events"]
+    ) -> ListFlowExecutionEventsPaginator:
+        """
+        Create a paginator for an operation.
+
+        [Show boto3 documentation](https://boto3.amazonaws.com/v1/documentation/api/latest/reference/services/bedrock-agent-runtime/client/get_paginator.html)
+        [Show types-aiobotocore documentation](https://youtype.github.io/types_aiobotocore_docs/types_aiobotocore_bedrock_agent_runtime/client/#get_paginator)
+        """
+
+    @overload  # type: ignore[override]
+    def get_paginator(  # type: ignore[override]
+        self, operation_name: Literal["list_flow_executions"]
+    ) -> ListFlowExecutionsPaginator:
         """
         Create a paginator for an operation.
 

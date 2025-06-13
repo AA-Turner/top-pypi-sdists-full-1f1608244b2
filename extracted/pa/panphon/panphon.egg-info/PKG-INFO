@@ -1,6 +1,6 @@
-Metadata-Version: 2.4
+Metadata-Version: 2.1
 Name: panphon
-Version: 0.22.1
+Version: 0.22.2
 Summary: Tools for using the International Phonetic Alphabet with phonological features
 Home-page: https://github.com/dmort27/panphon
 Download-URL: https://github.com/dmort27/panphon/archive/0.21.1.tar.gz
@@ -21,17 +21,6 @@ Requires-Dist: numpy>=1.20.2
 Requires-Dist: editdistance
 Requires-Dist: munkres
 Requires-Dist: pandas
-Dynamic: author
-Dynamic: author-email
-Dynamic: classifier
-Dynamic: description
-Dynamic: description-content-type
-Dynamic: download-url
-Dynamic: home-page
-Dynamic: license
-Dynamic: license-file
-Dynamic: requires-dist
-Dynamic: summary
 
 # PanPhon
 

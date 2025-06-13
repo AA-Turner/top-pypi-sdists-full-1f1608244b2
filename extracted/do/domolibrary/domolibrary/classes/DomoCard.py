@@ -27,7 +27,6 @@ import json
 import httpx
 from nbdev.showdoc import patch_to
 
-
 # %% ../../nbs/classes/50_DomoCard.ipynb 5
 @dataclass
 class DomoCard(DomoEntity_w_Lineage):
@@ -50,14 +49,51 @@ class DomoCard(DomoEntity_w_Lineage):
     certification: dict = None
     owners: List[any] = None
 
-    datasources: List[Any] = field(repr=False, default=None)
+    datasets: List[Any] = field(repr=False, default=None)
 
     def __post_init__(self):
         # self.Definition = CardDefinition(self)
-        self.Lineage = dmdl.DomoLineage.from_parent(auth=self.auth, parent=self)
+        self.Lineage = dmdl.DomoLineage._from_parent(auth=self.auth, parent=self)
 
     def display_url(self) -> str:
         return f"https://{self.auth.domo_instance}.domo.com/kpis/details/{self.id}"
+
+    @classmethod
+    async def _from_json(cls, card_obj, auth: dmda.DomoAuth):
+        import domolibrary.classes.DomoUser as dmdu
+        import domolibrary.classes.DomoGroup as dmgr
+
+        dd = card_obj
+        if isinstance(card_obj, dict):
+            dd = util_dd.DictDot(card_obj)
+
+        card = cls(
+            auth=auth,
+            id=dd.id,
+            raw=card_obj,
+            title=dd.title,
+            description=dd.description,
+            type=dd.type,
+            urn=dd.urn,
+            certification=dd.certification,
+            chart_type=dd.metadata and dd.metadata.chartType,
+            dataset_id=dd.datasources[0].dataSourceId if dd.datasources else None,
+            Lineage=None,
+        )
+
+        tasks = []
+        for user in dd.owners:
+            if user.type == "USER":
+                tasks.append(dmdu.DomoUser.get_by_id(user_id=user.id, auth=auth))
+            if user.type == "GROUP":
+                tasks.append(dmgr.DomoGroup.get_by_id(group_id=user.id, auth=auth))
+
+        card.owners = await dmce.gather_with_concurrency(n=60, *tasks)
+
+        if card_obj.get("domoapp", {}).get("id"):
+            card.datastore_id = card_obj["domoapp"]["id"]
+
+        return card
 
     @classmethod
     async def get_by_id(
@@ -89,45 +125,9 @@ class DomoCard(DomoEntity_w_Lineage):
     async def _get_entity_by_id(cls, entity_id: str, auth: dmda.DomoAuth, **kwargs):
         return await cls.get_by_id(card_id=entity_id, auth=auth, **kwargs)
 
-    @classmethod
-    async def _from_json(cls, card_obj, auth: dmda.DomoAuth):
-        import domolibrary.classes.DomoUser as dmdu
-        import domolibrary.classes.DomoGroup as dmgr
-
-        dd = card_obj
-        if isinstance(card_obj, dict):
-            dd = util_dd.DictDot(card_obj)
-
-        card = cls(
-            auth=auth,
-            id=dd.id,
-            title=dd.title,
-            description=dd.description,
-            type=dd.type,
-            urn=dd.urn,
-            certification=dd.certification,
-            chart_type=dd.metadata and dd.metadata.chartType,
-            dataset_id=dd.datasources[0].dataSourceId if dd.datasources else None,
-            Lineage = None
-        )
-
-        tasks = []
-        for user in dd.owners:
-            if user.type == "USER":
-                tasks.append(dmdu.DomoUser.get_by_id(user_id=user.id, auth=auth))
-            if user.type == "GROUP":
-                tasks.append(dmgr.DomoGroup.get_by_id(group_id=user.id, auth=auth))
-
-        card.owners = await dmce.gather_with_concurrency(n=60, *tasks)
-
-        if card_obj.get("domoapp", {}).get("id"):
-            card.datastore_id = card_obj["domoapp"]["id"]
-
-        return card
-
 # %% ../../nbs/classes/50_DomoCard.ipynb 7
 @patch_to(DomoCard)
-async def get_datasources(
+async def get_datasets(
     self,
     debug_api: bool = False,
     session: httpx.AsyncClient = None,
@@ -150,7 +150,7 @@ async def get_datasources(
 
     import domolibrary.classes.DomoDataset as dmds
 
-    self.datasources= await dmce.gather_with_concurrency(
+    self.datasets = await dmce.gather_with_concurrency(
         *[
             dmds.DomoDataset.get_by_id(dataset_id=obj["dataSourceId"], auth=self.auth)
             for obj in res.response
@@ -158,7 +158,7 @@ async def get_datasources(
         n=10
     )
 
-    return self.datasources
+    return self.datasets
 
 # %% ../../nbs/classes/50_DomoCard.ipynb 9
 @patch_to(DomoCard)
@@ -221,10 +221,11 @@ async def get_collections(
             )
             for domo_collection in domo_collections
         ],
-        n=60
+        n=60,
     )
 
     return self.domo_collections
+
 
 @patch_to(DomoCard)
 async def get_source_code(self, debug_api: bool = False, try_auto_share: bool = False):
@@ -285,7 +286,6 @@ async def download_source_code(
             return doc
 
     ddx_type = next(iter(doc.content))
-
 
     for key, value in doc.content[ddx_type].items():
         if key == "js":

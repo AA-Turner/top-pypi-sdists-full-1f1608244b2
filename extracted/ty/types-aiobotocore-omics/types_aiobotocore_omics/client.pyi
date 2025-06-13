@@ -50,6 +50,7 @@ from .paginator import (
     ListVariantImportJobsPaginator,
     ListVariantStoresPaginator,
     ListWorkflowsPaginator,
+    ListWorkflowVersionsPaginator,
 )
 from .type_defs import (
     AbortMultipartReadSetUploadRequestTypeDef,
@@ -82,6 +83,8 @@ from .type_defs import (
     CreateVariantStoreResponseTypeDef,
     CreateWorkflowRequestTypeDef,
     CreateWorkflowResponseTypeDef,
+    CreateWorkflowVersionRequestTypeDef,
+    CreateWorkflowVersionResponseTypeDef,
     DeleteAnnotationStoreRequestTypeDef,
     DeleteAnnotationStoreResponseTypeDef,
     DeleteAnnotationStoreVersionsRequestTypeDef,
@@ -98,6 +101,7 @@ from .type_defs import (
     DeleteVariantStoreRequestTypeDef,
     DeleteVariantStoreResponseTypeDef,
     DeleteWorkflowRequestTypeDef,
+    DeleteWorkflowVersionRequestTypeDef,
     EmptyResponseMetadataTypeDef,
     GetAnnotationImportRequestTypeDef,
     GetAnnotationImportResponseTypeDef,
@@ -143,6 +147,8 @@ from .type_defs import (
     GetVariantStoreResponseTypeDef,
     GetWorkflowRequestTypeDef,
     GetWorkflowResponseTypeDef,
+    GetWorkflowVersionRequestTypeDef,
+    GetWorkflowVersionResponseTypeDef,
     ListAnnotationImportJobsRequestTypeDef,
     ListAnnotationImportJobsResponseTypeDef,
     ListAnnotationStoresRequestTypeDef,
@@ -187,6 +193,8 @@ from .type_defs import (
     ListVariantStoresResponseTypeDef,
     ListWorkflowsRequestTypeDef,
     ListWorkflowsResponseTypeDef,
+    ListWorkflowVersionsRequestTypeDef,
+    ListWorkflowVersionsResponseTypeDef,
     PutS3AccessPolicyRequestTypeDef,
     PutS3AccessPolicyResponseTypeDef,
     StartAnnotationImportRequestTypeDef,
@@ -216,6 +224,7 @@ from .type_defs import (
     UpdateVariantStoreRequestTypeDef,
     UpdateVariantStoreResponseTypeDef,
     UpdateWorkflowRequestTypeDef,
+    UpdateWorkflowVersionRequestTypeDef,
     UploadReadSetPartRequestTypeDef,
     UploadReadSetPartResponseTypeDef,
 )
@@ -237,6 +246,7 @@ from .waiter import (
     VariantStoreCreatedWaiter,
     VariantStoreDeletedWaiter,
     WorkflowActiveWaiter,
+    WorkflowVersionActiveWaiter,
 )
 
 if sys.version_info >= (3, 9):
@@ -466,10 +476,22 @@ class OmicsClient(AioBaseClient):
         self, **kwargs: Unpack[CreateWorkflowRequestTypeDef]
     ) -> CreateWorkflowResponseTypeDef:
         """
-        Creates a workflow.
+        Creates a private workflow.Private workflows depend on a variety of resources
+        that you create and configure before creating the workflow:.
 
         [Show boto3 documentation](https://boto3.amazonaws.com/v1/documentation/api/latest/reference/services/omics/client/create_workflow.html)
         [Show types-aiobotocore documentation](https://youtype.github.io/types_aiobotocore_docs/types_aiobotocore_omics/client/#create_workflow)
+        """
+
+    async def create_workflow_version(
+        self, **kwargs: Unpack[CreateWorkflowVersionRequestTypeDef]
+    ) -> CreateWorkflowVersionResponseTypeDef:
+        """
+        Creates a new workflow version for the workflow that you specify with the
+        <code>workflowId</code> parameter.
+
+        [Show boto3 documentation](https://boto3.amazonaws.com/v1/documentation/api/latest/reference/services/omics/client/create_workflow_version.html)
+        [Show types-aiobotocore documentation](https://youtype.github.io/types_aiobotocore_docs/types_aiobotocore_omics/client/#create_workflow_version)
         """
 
     async def delete_annotation_store(
@@ -590,6 +612,16 @@ class OmicsClient(AioBaseClient):
 
         [Show boto3 documentation](https://boto3.amazonaws.com/v1/documentation/api/latest/reference/services/omics/client/delete_workflow.html)
         [Show types-aiobotocore documentation](https://youtype.github.io/types_aiobotocore_docs/types_aiobotocore_omics/client/#delete_workflow)
+        """
+
+    async def delete_workflow_version(
+        self, **kwargs: Unpack[DeleteWorkflowVersionRequestTypeDef]
+    ) -> EmptyResponseMetadataTypeDef:
+        """
+        Deletes a workflow version.
+
+        [Show boto3 documentation](https://boto3.amazonaws.com/v1/documentation/api/latest/reference/services/omics/client/delete_workflow_version.html)
+        [Show types-aiobotocore documentation](https://youtype.github.io/types_aiobotocore_docs/types_aiobotocore_omics/client/#delete_workflow_version)
         """
 
     async def get_annotation_import_job(
@@ -808,6 +840,16 @@ class OmicsClient(AioBaseClient):
         [Show types-aiobotocore documentation](https://youtype.github.io/types_aiobotocore_docs/types_aiobotocore_omics/client/#get_workflow)
         """
 
+    async def get_workflow_version(
+        self, **kwargs: Unpack[GetWorkflowVersionRequestTypeDef]
+    ) -> GetWorkflowVersionResponseTypeDef:
+        """
+        Gets information about a workflow version.
+
+        [Show boto3 documentation](https://boto3.amazonaws.com/v1/documentation/api/latest/reference/services/omics/client/get_workflow_version.html)
+        [Show types-aiobotocore documentation](https://youtype.github.io/types_aiobotocore_docs/types_aiobotocore_omics/client/#get_workflow_version)
+        """
+
     async def list_annotation_import_jobs(
         self, **kwargs: Unpack[ListAnnotationImportJobsRequestTypeDef]
     ) -> ListAnnotationImportJobsResponseTypeDef:
@@ -1017,6 +1059,16 @@ class OmicsClient(AioBaseClient):
         [Show types-aiobotocore documentation](https://youtype.github.io/types_aiobotocore_docs/types_aiobotocore_omics/client/#list_variant_stores)
         """
 
+    async def list_workflow_versions(
+        self, **kwargs: Unpack[ListWorkflowVersionsRequestTypeDef]
+    ) -> ListWorkflowVersionsResponseTypeDef:
+        """
+        Lists the workflow versions for the specified workflow.
+
+        [Show boto3 documentation](https://boto3.amazonaws.com/v1/documentation/api/latest/reference/services/omics/client/list_workflow_versions.html)
+        [Show types-aiobotocore documentation](https://youtype.github.io/types_aiobotocore_docs/types_aiobotocore_omics/client/#list_workflow_versions)
+        """
+
     async def list_workflows(
         self, **kwargs: Unpack[ListWorkflowsRequestTypeDef]
     ) -> ListWorkflowsResponseTypeDef:
@@ -1089,7 +1141,7 @@ class OmicsClient(AioBaseClient):
 
     async def start_run(self, **kwargs: Unpack[StartRunRequestTypeDef]) -> StartRunResponseTypeDef:
         """
-        Starts a workflow run.
+        Starts a new run or duplicates an existing run.
 
         [Show boto3 documentation](https://boto3.amazonaws.com/v1/documentation/api/latest/reference/services/omics/client/start_run.html)
         [Show types-aiobotocore documentation](https://youtype.github.io/types_aiobotocore_docs/types_aiobotocore_omics/client/#start_run)
@@ -1185,10 +1237,20 @@ class OmicsClient(AioBaseClient):
         self, **kwargs: Unpack[UpdateWorkflowRequestTypeDef]
     ) -> EmptyResponseMetadataTypeDef:
         """
-        Updates a workflow.
+        Updates information about a workflow.
 
         [Show boto3 documentation](https://boto3.amazonaws.com/v1/documentation/api/latest/reference/services/omics/client/update_workflow.html)
         [Show types-aiobotocore documentation](https://youtype.github.io/types_aiobotocore_docs/types_aiobotocore_omics/client/#update_workflow)
+        """
+
+    async def update_workflow_version(
+        self, **kwargs: Unpack[UpdateWorkflowVersionRequestTypeDef]
+    ) -> EmptyResponseMetadataTypeDef:
+        """
+        Updates information about the workflow version.
+
+        [Show boto3 documentation](https://boto3.amazonaws.com/v1/documentation/api/latest/reference/services/omics/client/update_workflow_version.html)
+        [Show types-aiobotocore documentation](https://youtype.github.io/types_aiobotocore_docs/types_aiobotocore_omics/client/#update_workflow_version)
         """
 
     async def upload_read_set_part(
@@ -1423,6 +1485,17 @@ class OmicsClient(AioBaseClient):
 
     @overload  # type: ignore[override]
     def get_paginator(  # type: ignore[override]
+        self, operation_name: Literal["list_workflow_versions"]
+    ) -> ListWorkflowVersionsPaginator:
+        """
+        Create a paginator for an operation.
+
+        [Show boto3 documentation](https://boto3.amazonaws.com/v1/documentation/api/latest/reference/services/omics/client/get_paginator.html)
+        [Show types-aiobotocore documentation](https://youtype.github.io/types_aiobotocore_docs/types_aiobotocore_omics/client/#get_paginator)
+        """
+
+    @overload  # type: ignore[override]
+    def get_paginator(  # type: ignore[override]
         self, operation_name: Literal["list_workflows"]
     ) -> ListWorkflowsPaginator:
         """
@@ -1612,6 +1685,17 @@ class OmicsClient(AioBaseClient):
     def get_waiter(  # type: ignore[override]
         self, waiter_name: Literal["workflow_active"]
     ) -> WorkflowActiveWaiter:
+        """
+        Returns an object that can wait for some condition.
+
+        [Show boto3 documentation](https://boto3.amazonaws.com/v1/documentation/api/latest/reference/services/omics/client/get_waiter.html)
+        [Show types-aiobotocore documentation](https://youtype.github.io/types_aiobotocore_docs/types_aiobotocore_omics/client/#get_waiter)
+        """
+
+    @overload  # type: ignore[override]
+    def get_waiter(  # type: ignore[override]
+        self, waiter_name: Literal["workflow_version_active"]
+    ) -> WorkflowVersionActiveWaiter:
         """
         Returns an object that can wait for some condition.
 

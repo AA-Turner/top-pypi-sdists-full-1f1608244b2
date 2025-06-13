@@ -1,7 +1,7 @@
 Metadata-Version: 2.4
 Name: types-aiobotocore-bedrock-agent-runtime
-Version: 2.22.0
-Summary: Type annotations for aiobotocore AgentsforBedrockRuntime 2.22.0 service generated with mypy-boto3-builder 8.10.1
+Version: 2.23.0
+Summary: Type annotations for aiobotocore AgentsforBedrockRuntime 2.23.0 service generated with mypy-boto3-builder 8.11.0
 Home-page: https://github.com/youtype/mypy_boto3_builder
 Author: Vlad Emelianov
 Author-email: vlad.emelianov.nz@gmail.com
@@ -57,7 +57,7 @@ Dynamic: summary
 ![boto3.typed](https://github.com/youtype/mypy_boto3_builder/raw/main/logo.png)
 
 Type annotations for
-[aiobotocore AgentsforBedrockRuntime 2.22.0](https://pypi.org/project/aiobotocore/)
+[aiobotocore AgentsforBedrockRuntime 2.23.0](https://pypi.org/project/aiobotocore/)
 compatible with [VSCode](https://code.visualstudio.com/),
 [PyCharm](https://www.jetbrains.com/pycharm/),
 [Emacs](https://www.gnu.org/software/emacs/),
@@ -66,7 +66,7 @@ compatible with [VSCode](https://code.visualstudio.com/),
 [pyright](https://github.com/microsoft/pyright) and other tools.
 
 Generated with
-[mypy-boto3-builder 8.10.1](https://github.com/youtype/mypy_boto3_builder).
+[mypy-boto3-builder 8.11.0](https://github.com/youtype/mypy_boto3_builder).
 
 More information can be found on
 [types-aiobotocore](https://pypi.org/project/types-aiobotocore/) page and in
@@ -118,7 +118,7 @@ You can generate type annotations for `aiobotocore` package locally with
 isolation.
 
 1. Run mypy-boto3-builder in your package root directory:
-   `uvx --with 'aiobotocore==2.22.0' mypy-boto3-builder`
+   `uvx --with 'aiobotocore==2.23.0' mypy-boto3-builder`
 2. Select `aiobotocore` AWS SDK.
 3. Add `AgentsforBedrockRuntime` service.
 4. Use provided commands to install generated packages.
@@ -348,6 +348,8 @@ from aiobotocore.session import get_session
 from types_aiobotocore_bedrock_agent_runtime import AgentsforBedrockRuntimeClient
 from types_aiobotocore_bedrock_agent_runtime.paginator import (
     GetAgentMemoryPaginator,
+    ListFlowExecutionEventsPaginator,
+    ListFlowExecutionsPaginator,
     ListInvocationStepsPaginator,
     ListInvocationsPaginator,
     ListSessionsPaginator,
@@ -362,6 +364,12 @@ async with session.create_client("bedrock-agent-runtime") as client:
     # Explicit type annotations are optional here
     # Types should be correctly discovered by mypy and IDEs
     get_agent_memory_paginator: GetAgentMemoryPaginator = client.get_paginator("get_agent_memory")
+    list_flow_execution_events_paginator: ListFlowExecutionEventsPaginator = client.get_paginator(
+        "list_flow_execution_events"
+    )
+    list_flow_executions_paginator: ListFlowExecutionsPaginator = client.get_paginator(
+        "list_flow_executions"
+    )
     list_invocation_steps_paginator: ListInvocationStepsPaginator = client.get_paginator(
         "list_invocation_steps"
     )

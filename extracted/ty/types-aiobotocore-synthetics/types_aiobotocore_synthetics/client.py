@@ -57,6 +57,8 @@ from .type_defs import (
     ListGroupsResponseTypeDef,
     ListTagsForResourceRequestTypeDef,
     ListTagsForResourceResponseTypeDef,
+    StartCanaryDryRunRequestTypeDef,
+    StartCanaryDryRunResponseTypeDef,
     StartCanaryRequestTypeDef,
     StopCanaryRequestTypeDef,
     TagResourceRequestTypeDef,
@@ -80,6 +82,7 @@ __all__ = ("SyntheticsClient",)
 
 
 class Exceptions(BaseClientExceptions):
+    AccessDeniedException: Type[BotocoreClientError]
     BadRequestException: Type[BotocoreClientError]
     ClientError: Type[BotocoreClientError]
     ConflictException: Type[BotocoreClientError]
@@ -293,6 +296,17 @@ class SyntheticsClient(AioBaseClient):
 
         [Show boto3 documentation](https://boto3.amazonaws.com/v1/documentation/api/latest/reference/services/synthetics/client/start_canary.html)
         [Show types-aiobotocore documentation](https://youtype.github.io/types_aiobotocore_docs/types_aiobotocore_synthetics/client/#start_canary)
+        """
+
+    async def start_canary_dry_run(
+        self, **kwargs: Unpack[StartCanaryDryRunRequestTypeDef]
+    ) -> StartCanaryDryRunResponseTypeDef:
+        """
+        Use this operation to start a dry run for a canary that has already been
+        created.
+
+        [Show boto3 documentation](https://boto3.amazonaws.com/v1/documentation/api/latest/reference/services/synthetics/client/start_canary_dry_run.html)
+        [Show types-aiobotocore documentation](https://youtype.github.io/types_aiobotocore_docs/types_aiobotocore_synthetics/client/#start_canary_dry_run)
         """
 
     async def stop_canary(self, **kwargs: Unpack[StopCanaryRequestTypeDef]) -> Dict[str, Any]:

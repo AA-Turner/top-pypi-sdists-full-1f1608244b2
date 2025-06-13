@@ -370,7 +370,8 @@ class AmplifyClient(AioBaseClient):
         self, **kwargs: Unpack[ListArtifactsRequestTypeDef]
     ) -> ListArtifactsResultTypeDef:
         """
-        Returns a list of artifacts for a specified app, branch, and job.
+        Returns a list of end-to-end testing artifacts for a specified app, branch, and
+        job.
 
         [Show boto3 documentation](https://boto3.amazonaws.com/v1/documentation/api/latest/reference/services/amplify/client/list_artifacts.html)
         [Show types-aiobotocore documentation](https://youtype.github.io/types_aiobotocore_docs/types_aiobotocore_amplify/client/#list_artifacts)

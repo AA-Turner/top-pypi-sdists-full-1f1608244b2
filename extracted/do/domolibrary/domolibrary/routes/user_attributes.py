@@ -6,7 +6,7 @@ __all__ = ['UserAttributes_IssuerType', 'UserAttributes_GET_Error', 'UserAttribu
            'create_user_attribute', 'update_user_attribute', 'delete_user_attribute']
 
 # %% ../../nbs/routes/user_attributes.ipynb 2
-from enum import Enum
+from ..client.DomoEntity import DomoEnum
 from typing import List
 
 import datetime as dt
@@ -20,7 +20,7 @@ import domolibrary.client.DomoError as de
 import domolibrary.client.DomoAuth as dmda
 
 # %% ../../nbs/routes/user_attributes.ipynb 4
-class UserAttributes_IssuerType(Enum):
+class UserAttributes_IssuerType(DomoEnum):
     IDP = "idp"
     SYSTEM = "domo-defined"
     CUSTOM = "customer-defined"

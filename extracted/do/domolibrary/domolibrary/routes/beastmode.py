@@ -7,7 +7,8 @@ __all__ = ['BeastModes_API_Error', 'Search_BeastModeLink', 'generate_beastmode_b
 # %% ../../nbs/routes/beastmode.ipynb 3
 from typing import List
 import httpx
-from enum import Enum
+
+from domolibrary.client.DomoEntity import DomoEnum
 
 import domolibrary.client.get_data as gd
 import domolibrary.client.ResponseGetData as rgd
@@ -21,7 +22,7 @@ class BeastModes_API_Error(dmde.RouteError):
     def __init__(self, res: rgd.ResponseGetData, message: str = None):
         super().__init__(res=res, message=message)
 
-class Search_BeastModeLink(Enum):
+class Search_BeastModeLink(DomoEnum):
     CARD = "CARD"
     DATASOURCE = "DATA_SOURCE"
 

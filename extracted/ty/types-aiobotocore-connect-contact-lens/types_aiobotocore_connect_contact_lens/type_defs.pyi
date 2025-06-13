@@ -91,7 +91,7 @@ class TranscriptTypeDef(TypedDict):
     Content: str
     BeginOffsetMillis: int
     EndOffsetMillis: int
-    Sentiment: SentimentValueType
+    Sentiment: NotRequired[SentimentValueType]
     IssuesDetected: NotRequired[List[IssueDetectedTypeDef]]
 
 class RealtimeContactAnalysisSegmentTypeDef(TypedDict):

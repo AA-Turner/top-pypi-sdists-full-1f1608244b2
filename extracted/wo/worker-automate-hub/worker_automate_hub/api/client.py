@@ -591,43 +591,45 @@ async def send_file(
     file_extension: str = "jpg",
 ) -> None:
     """
-    Função assíncrona para enviar um arquivo de imagem/text para uma API.
+    Função assíncrona para enviar um arquivo para uma API.
 
     Args:
         uuidRelacao (str): UUID da relação associada ao arquivo.
-        desArquivo (str): Descrição do arquivo.
-        tipo (str): Tipo de arquivo.
+        desArquivo (str): Nome real do arquivo (com extensão).
+        tipo (str): Tipo de arquivo (ex: 'xls').
         file (bytes): Conteúdo binário do arquivo.
+        file_extension (str): Extensão do arquivo (sem o ponto), usada para definir o content-type.
     """
     try:
         # Carrega as configurações de ambiente
         env_config, _ = load_env_config()
 
+        # Define o content-type e o filename baseados na extensão
         if file_extension == "txt":
-            filename = "text.txt"
             content_type = "text/plain"
         elif file_extension == "pdf":
-            filename = "file.pdf"
             content_type = "application/pdf"
         elif file_extension == "jpg":
-            filename = "file.jpg"
             content_type = "image/jpeg"
         elif file_extension == "001":
-            filename = desArquivo
             content_type = "text/plain"
-        elif file_extension =="xls":
-            filename = "file.xls"
+        elif file_extension == "xls":
             content_type = "application/vnd.ms-excel"
+        elif file_extension == "xlsx":
+            content_type = "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
+        else:
+            raise ValueError(f"Extensão de arquivo não suportada: {file_extension}")
 
         # Criação do corpo da requisição multipart
         body = aiohttp.FormData()
         body.add_field("uuidRelacao", uuidRelacao)
         body.add_field("desArquivo", desArquivo)
         body.add_field("tipo", tipo)
-        body.add_field("file", file, filename=filename, content_type=content_type)
-        # body.add_field('file', file, filename="file.jpg", content_type="image/jpeg")
+        body.add_field("file", file, filename=desArquivo, content_type=content_type)
 
-        headers_basic = {"Authorization": f"Basic {env_config['API_AUTHORIZATION']}"}
+        headers_basic = {
+            "Authorization": f"Basic {env_config['API_AUTHORIZATION']}"
+        }
 
         # Enviando requisição para a API
         async with ClientSession(connector=aiohttp.TCPConnector(ssl=False)) as session:
@@ -636,8 +638,11 @@ async def send_file(
                 data=body,
                 headers=headers_basic,
             ) as response:
-                response.raise_for_status()  # Levanta exceção se o status não for 2xx
-                log_msg = f"\nSucesso ao enviar arquivo: {uuidRelacao}.\n"
+                if response.status != 200:
+                    content = await response.text()
+                    raise Exception(f"Erro {response.status} - Resposta da API: {content}")
+
+                log_msg = f"\n✅ Sucesso ao enviar arquivo: {uuidRelacao}\n"
                 console.print(log_msg, style="bold green")
                 logger.info(log_msg)
 

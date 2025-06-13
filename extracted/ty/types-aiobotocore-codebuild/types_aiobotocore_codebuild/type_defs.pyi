@@ -88,6 +88,8 @@ __all__ = (
     "BatchGetBuildBatchesOutputTypeDef",
     "BatchGetBuildsInputTypeDef",
     "BatchGetBuildsOutputTypeDef",
+    "BatchGetCommandExecutionsInputTypeDef",
+    "BatchGetCommandExecutionsOutputTypeDef",
     "BatchGetFleetsInputTypeDef",
     "BatchGetFleetsOutputTypeDef",
     "BatchGetProjectsInputTypeDef",
@@ -96,6 +98,8 @@ __all__ = (
     "BatchGetReportGroupsOutputTypeDef",
     "BatchGetReportsInputTypeDef",
     "BatchGetReportsOutputTypeDef",
+    "BatchGetSandboxesInputTypeDef",
+    "BatchGetSandboxesOutputTypeDef",
     "BatchRestrictionsOutputTypeDef",
     "BatchRestrictionsTypeDef",
     "BuildArtifactsTypeDef",
@@ -111,6 +115,7 @@ __all__ = (
     "CloudWatchLogsConfigTypeDef",
     "CodeCoverageReportSummaryTypeDef",
     "CodeCoverageTypeDef",
+    "CommandExecutionTypeDef",
     "ComputeConfigurationTypeDef",
     "CreateFleetInputTypeDef",
     "CreateFleetOutputTypeDef",
@@ -137,6 +142,9 @@ __all__ = (
     "DescribeTestCasesInputPaginateTypeDef",
     "DescribeTestCasesInputTypeDef",
     "DescribeTestCasesOutputTypeDef",
+    "DockerServerOutputTypeDef",
+    "DockerServerStatusTypeDef",
+    "DockerServerTypeDef",
     "EnvironmentImageTypeDef",
     "EnvironmentLanguageTypeDef",
     "EnvironmentPlatformTypeDef",
@@ -166,6 +174,9 @@ __all__ = (
     "ListBuildsInputPaginateTypeDef",
     "ListBuildsInputTypeDef",
     "ListBuildsOutputTypeDef",
+    "ListCommandExecutionsForSandboxInputPaginateTypeDef",
+    "ListCommandExecutionsForSandboxInputTypeDef",
+    "ListCommandExecutionsForSandboxOutputTypeDef",
     "ListCuratedEnvironmentImagesOutputTypeDef",
     "ListFleetsInputTypeDef",
     "ListFleetsOutputTypeDef",
@@ -181,6 +192,12 @@ __all__ = (
     "ListReportsInputPaginateTypeDef",
     "ListReportsInputTypeDef",
     "ListReportsOutputTypeDef",
+    "ListSandboxesForProjectInputPaginateTypeDef",
+    "ListSandboxesForProjectInputTypeDef",
+    "ListSandboxesForProjectOutputTypeDef",
+    "ListSandboxesInputPaginateTypeDef",
+    "ListSandboxesInputTypeDef",
+    "ListSandboxesOutputTypeDef",
     "ListSharedProjectsInputPaginateTypeDef",
     "ListSharedProjectsInputTypeDef",
     "ListSharedProjectsOutputTypeDef",
@@ -229,6 +246,10 @@ __all__ = (
     "RetryBuildOutputTypeDef",
     "S3LogsConfigTypeDef",
     "S3ReportExportConfigTypeDef",
+    "SSMSessionTypeDef",
+    "SandboxSessionPhaseTypeDef",
+    "SandboxSessionTypeDef",
+    "SandboxTypeDef",
     "ScalingConfigurationInputTypeDef",
     "ScalingConfigurationOutputTypeDef",
     "ScopeConfigurationTypeDef",
@@ -238,10 +259,18 @@ __all__ = (
     "StartBuildBatchOutputTypeDef",
     "StartBuildInputTypeDef",
     "StartBuildOutputTypeDef",
+    "StartCommandExecutionInputTypeDef",
+    "StartCommandExecutionOutputTypeDef",
+    "StartSandboxConnectionInputTypeDef",
+    "StartSandboxConnectionOutputTypeDef",
+    "StartSandboxInputTypeDef",
+    "StartSandboxOutputTypeDef",
     "StopBuildBatchInputTypeDef",
     "StopBuildBatchOutputTypeDef",
     "StopBuildInputTypeDef",
     "StopBuildOutputTypeDef",
+    "StopSandboxInputTypeDef",
+    "StopSandboxOutputTypeDef",
     "TagTypeDef",
     "TargetTrackingScalingConfigurationTypeDef",
     "TestCaseFilterTypeDef",
@@ -294,6 +323,10 @@ class BatchGetBuildBatchesInputTypeDef(TypedDict):
 class BatchGetBuildsInputTypeDef(TypedDict):
     ids: Sequence[str]
 
+class BatchGetCommandExecutionsInputTypeDef(TypedDict):
+    sandboxId: str
+    commandExecutionIds: Sequence[str]
+
 class BatchGetFleetsInputTypeDef(TypedDict):
     names: Sequence[str]
 
@@ -305,6 +338,9 @@ class BatchGetReportGroupsInputTypeDef(TypedDict):
 
 class BatchGetReportsInputTypeDef(TypedDict):
     reportArns: Sequence[str]
+
+class BatchGetSandboxesInputTypeDef(TypedDict):
+    ids: Sequence[str]
 
 class BatchRestrictionsOutputTypeDef(TypedDict):
     maximumBuildsAllowed: NotRequired[int]
@@ -338,6 +374,7 @@ ProjectCacheOutputTypeDef = TypedDict(
         "type": CacheTypeType,
         "location": NotRequired[str],
         "modes": NotRequired[List[CacheModeType]],
+        "cacheNamespace": NotRequired[str],
     },
 )
 ProjectFileSystemLocationTypeDef = TypedDict(
@@ -419,6 +456,7 @@ class ComputeConfigurationTypeDef(TypedDict):
     memory: NotRequired[int]
     disk: NotRequired[int]
     machineType: NotRequired[MachineTypeType]
+    instanceType: NotRequired[str]
 
 class TagTypeDef(TypedDict):
     key: NotRequired[str]
@@ -511,6 +549,10 @@ class TestCaseTypeDef(TypedDict):
     expired: NotRequired[datetime]
     testSuiteName: NotRequired[str]
 
+class DockerServerStatusTypeDef(TypedDict):
+    status: NotRequired[str]
+    message: NotRequired[str]
+
 class EnvironmentImageTypeDef(TypedDict):
     name: NotRequired[str]
     description: NotRequired[str]
@@ -589,6 +631,12 @@ class ListBuildsInputTypeDef(TypedDict):
     sortOrder: NotRequired[SortOrderTypeType]
     nextToken: NotRequired[str]
 
+class ListCommandExecutionsForSandboxInputTypeDef(TypedDict):
+    sandboxId: str
+    maxResults: NotRequired[int]
+    sortOrder: NotRequired[SortOrderTypeType]
+    nextToken: NotRequired[str]
+
 class ListFleetsInputTypeDef(TypedDict):
     nextToken: NotRequired[str]
     maxResults: NotRequired[int]
@@ -608,6 +656,17 @@ class ListReportGroupsInputTypeDef(TypedDict):
 
 class ReportFilterTypeDef(TypedDict):
     status: NotRequired[ReportStatusTypeType]
+
+class ListSandboxesForProjectInputTypeDef(TypedDict):
+    projectName: str
+    maxResults: NotRequired[int]
+    sortOrder: NotRequired[SortOrderTypeType]
+    nextToken: NotRequired[str]
+
+class ListSandboxesInputTypeDef(TypedDict):
+    maxResults: NotRequired[int]
+    sortOrder: NotRequired[SortOrderTypeType]
+    nextToken: NotRequired[str]
 
 class ListSharedProjectsInputTypeDef(TypedDict):
     sortBy: NotRequired[SharedResourceSortByTypeType]
@@ -643,6 +702,7 @@ ProjectCacheTypeDef = TypedDict(
         "type": CacheTypeType,
         "location": NotRequired[str],
         "modes": NotRequired[Sequence[CacheModeType]],
+        "cacheNamespace": NotRequired[str],
     },
 )
 
@@ -694,9 +754,30 @@ RetryBuildInputTypeDef = TypedDict(
     },
 )
 
+class SSMSessionTypeDef(TypedDict):
+    sessionId: NotRequired[str]
+    tokenValue: NotRequired[str]
+    streamUrl: NotRequired[str]
+
 class TargetTrackingScalingConfigurationTypeDef(TypedDict):
     metricType: NotRequired[Literal["FLEET_UTILIZATION_RATE"]]
     targetValue: NotRequired[float]
+
+StartCommandExecutionInputTypeDef = TypedDict(
+    "StartCommandExecutionInputTypeDef",
+    {
+        "sandboxId": str,
+        "command": str,
+        "type": NotRequired[Literal["SHELL"]],
+    },
+)
+
+class StartSandboxConnectionInputTypeDef(TypedDict):
+    sandboxId: str
+
+class StartSandboxInputTypeDef(TypedDict):
+    projectName: NotRequired[str]
+    idempotencyToken: NotRequired[str]
 
 StopBuildBatchInputTypeDef = TypedDict(
     "StopBuildBatchInputTypeDef",
@@ -706,6 +787,12 @@ StopBuildBatchInputTypeDef = TypedDict(
 )
 StopBuildInputTypeDef = TypedDict(
     "StopBuildInputTypeDef",
+    {
+        "id": str,
+    },
+)
+StopSandboxInputTypeDef = TypedDict(
+    "StopSandboxInputTypeDef",
     {
         "id": str,
     },
@@ -789,6 +876,16 @@ class ListReportsOutputTypeDef(TypedDict):
     ResponseMetadata: ResponseMetadataTypeDef
     nextToken: NotRequired[str]
 
+class ListSandboxesForProjectOutputTypeDef(TypedDict):
+    ids: List[str]
+    ResponseMetadata: ResponseMetadataTypeDef
+    nextToken: NotRequired[str]
+
+class ListSandboxesOutputTypeDef(TypedDict):
+    ids: List[str]
+    ResponseMetadata: ResponseMetadataTypeDef
+    nextToken: NotRequired[str]
+
 class ListSharedProjectsOutputTypeDef(TypedDict):
     projects: List[str]
     ResponseMetadata: ResponseMetadataTypeDef
@@ -853,6 +950,14 @@ class BuildBatchPhaseTypeDef(TypedDict):
 
 class BuildPhaseTypeDef(TypedDict):
     phaseType: NotRequired[BuildPhaseTypeType]
+    phaseStatus: NotRequired[StatusTypeType]
+    startTime: NotRequired[datetime]
+    endTime: NotRequired[datetime]
+    durationInSeconds: NotRequired[int]
+    contexts: NotRequired[List[PhaseContextTypeDef]]
+
+class SandboxSessionPhaseTypeDef(TypedDict):
+    phaseType: NotRequired[str]
     phaseStatus: NotRequired[StatusTypeType]
     startTime: NotRequired[datetime]
     endTime: NotRequired[datetime]
@@ -934,6 +1039,11 @@ class ListBuildsInputPaginateTypeDef(TypedDict):
     sortOrder: NotRequired[SortOrderTypeType]
     PaginationConfig: NotRequired[PaginatorConfigTypeDef]
 
+class ListCommandExecutionsForSandboxInputPaginateTypeDef(TypedDict):
+    sandboxId: str
+    sortOrder: NotRequired[SortOrderTypeType]
+    PaginationConfig: NotRequired[PaginatorConfigTypeDef]
+
 class ListProjectsInputPaginateTypeDef(TypedDict):
     sortBy: NotRequired[ProjectSortByTypeType]
     sortOrder: NotRequired[SortOrderTypeType]
@@ -942,6 +1052,15 @@ class ListProjectsInputPaginateTypeDef(TypedDict):
 class ListReportGroupsInputPaginateTypeDef(TypedDict):
     sortOrder: NotRequired[SortOrderTypeType]
     sortBy: NotRequired[ReportGroupSortByTypeType]
+    PaginationConfig: NotRequired[PaginatorConfigTypeDef]
+
+class ListSandboxesForProjectInputPaginateTypeDef(TypedDict):
+    projectName: str
+    sortOrder: NotRequired[SortOrderTypeType]
+    PaginationConfig: NotRequired[PaginatorConfigTypeDef]
+
+class ListSandboxesInputPaginateTypeDef(TypedDict):
+    sortOrder: NotRequired[SortOrderTypeType]
     PaginationConfig: NotRequired[PaginatorConfigTypeDef]
 
 class ListSharedProjectsInputPaginateTypeDef(TypedDict):
@@ -976,6 +1095,16 @@ class DescribeTestCasesOutputTypeDef(TypedDict):
     testCases: List[TestCaseTypeDef]
     ResponseMetadata: ResponseMetadataTypeDef
     nextToken: NotRequired[str]
+
+class DockerServerOutputTypeDef(TypedDict):
+    computeType: ComputeTypeType
+    securityGroupIds: NotRequired[List[str]]
+    status: NotRequired[DockerServerStatusTypeDef]
+
+class DockerServerTypeDef(TypedDict):
+    computeType: ComputeTypeType
+    securityGroupIds: NotRequired[Sequence[str]]
+    status: NotRequired[DockerServerStatusTypeDef]
 
 class EnvironmentLanguageTypeDef(TypedDict):
     language: NotRequired[LanguageTypeType]
@@ -1050,36 +1179,6 @@ class LogsLocationTypeDef(TypedDict):
     s3Logs: NotRequired[S3LogsConfigTypeDef]
 
 ProjectCacheUnionTypeDef = Union[ProjectCacheTypeDef, ProjectCacheOutputTypeDef]
-ProjectEnvironmentOutputTypeDef = TypedDict(
-    "ProjectEnvironmentOutputTypeDef",
-    {
-        "type": EnvironmentTypeType,
-        "image": str,
-        "computeType": ComputeTypeType,
-        "computeConfiguration": NotRequired[ComputeConfigurationTypeDef],
-        "fleet": NotRequired[ProjectFleetTypeDef],
-        "environmentVariables": NotRequired[List[EnvironmentVariableTypeDef]],
-        "privilegedMode": NotRequired[bool],
-        "certificate": NotRequired[str],
-        "registryCredential": NotRequired[RegistryCredentialTypeDef],
-        "imagePullCredentialsType": NotRequired[ImagePullCredentialsTypeType],
-    },
-)
-ProjectEnvironmentTypeDef = TypedDict(
-    "ProjectEnvironmentTypeDef",
-    {
-        "type": EnvironmentTypeType,
-        "image": str,
-        "computeType": ComputeTypeType,
-        "computeConfiguration": NotRequired[ComputeConfigurationTypeDef],
-        "fleet": NotRequired[ProjectFleetTypeDef],
-        "environmentVariables": NotRequired[Sequence[EnvironmentVariableTypeDef]],
-        "privilegedMode": NotRequired[bool],
-        "certificate": NotRequired[str],
-        "registryCredential": NotRequired[RegistryCredentialTypeDef],
-        "imagePullCredentialsType": NotRequired[ImagePullCredentialsTypeType],
-    },
-)
 ProjectSourceTypeDef = TypedDict(
     "ProjectSourceTypeDef",
     {
@@ -1099,6 +1198,10 @@ ProjectSourceTypeDef = TypedDict(
 class ReportExportConfigTypeDef(TypedDict):
     exportConfigType: NotRequired[ReportExportConfigTypeType]
     s3Destination: NotRequired[S3ReportExportConfigTypeDef]
+
+class StartSandboxConnectionOutputTypeDef(TypedDict):
+    ssmSession: SSMSessionTypeDef
+    ResponseMetadata: ResponseMetadataTypeDef
 
 class ScalingConfigurationInputTypeDef(TypedDict):
     scalingType: NotRequired[Literal["TARGET_TRACKING_SCALING"]]
@@ -1131,81 +1234,76 @@ class UpdateWebhookOutputTypeDef(TypedDict):
     webhook: WebhookTypeDef
     ResponseMetadata: ResponseMetadataTypeDef
 
+ProjectEnvironmentOutputTypeDef = TypedDict(
+    "ProjectEnvironmentOutputTypeDef",
+    {
+        "type": EnvironmentTypeType,
+        "image": str,
+        "computeType": ComputeTypeType,
+        "computeConfiguration": NotRequired[ComputeConfigurationTypeDef],
+        "fleet": NotRequired[ProjectFleetTypeDef],
+        "environmentVariables": NotRequired[List[EnvironmentVariableTypeDef]],
+        "privilegedMode": NotRequired[bool],
+        "certificate": NotRequired[str],
+        "registryCredential": NotRequired[RegistryCredentialTypeDef],
+        "imagePullCredentialsType": NotRequired[ImagePullCredentialsTypeType],
+        "dockerServer": NotRequired[DockerServerOutputTypeDef],
+    },
+)
+ProjectEnvironmentTypeDef = TypedDict(
+    "ProjectEnvironmentTypeDef",
+    {
+        "type": EnvironmentTypeType,
+        "image": str,
+        "computeType": ComputeTypeType,
+        "computeConfiguration": NotRequired[ComputeConfigurationTypeDef],
+        "fleet": NotRequired[ProjectFleetTypeDef],
+        "environmentVariables": NotRequired[Sequence[EnvironmentVariableTypeDef]],
+        "privilegedMode": NotRequired[bool],
+        "certificate": NotRequired[str],
+        "registryCredential": NotRequired[RegistryCredentialTypeDef],
+        "imagePullCredentialsType": NotRequired[ImagePullCredentialsTypeType],
+        "dockerServer": NotRequired[DockerServerTypeDef],
+    },
+)
+
 class EnvironmentPlatformTypeDef(TypedDict):
     platform: NotRequired[PlatformTypeType]
     languages: NotRequired[List[EnvironmentLanguageTypeDef]]
 
 ProxyConfigurationUnionTypeDef = Union[ProxyConfigurationTypeDef, ProxyConfigurationOutputTypeDef]
-ProjectEnvironmentUnionTypeDef = Union[ProjectEnvironmentTypeDef, ProjectEnvironmentOutputTypeDef]
-BuildTypeDef = TypedDict(
-    "BuildTypeDef",
+CommandExecutionTypeDef = TypedDict(
+    "CommandExecutionTypeDef",
     {
         "id": NotRequired[str],
-        "arn": NotRequired[str],
-        "buildNumber": NotRequired[int],
+        "sandboxId": NotRequired[str],
+        "submitTime": NotRequired[datetime],
+        "startTime": NotRequired[datetime],
+        "endTime": NotRequired[datetime],
+        "status": NotRequired[str],
+        "command": NotRequired[str],
+        "type": NotRequired[Literal["SHELL"]],
+        "exitCode": NotRequired[str],
+        "standardOutputContent": NotRequired[str],
+        "standardErrContent": NotRequired[str],
+        "logs": NotRequired[LogsLocationTypeDef],
+        "sandboxArn": NotRequired[str],
+    },
+)
+SandboxSessionTypeDef = TypedDict(
+    "SandboxSessionTypeDef",
+    {
+        "id": NotRequired[str],
+        "status": NotRequired[str],
         "startTime": NotRequired[datetime],
         "endTime": NotRequired[datetime],
         "currentPhase": NotRequired[str],
-        "buildStatus": NotRequired[StatusTypeType],
-        "sourceVersion": NotRequired[str],
+        "phases": NotRequired[List[SandboxSessionPhaseTypeDef]],
         "resolvedSourceVersion": NotRequired[str],
-        "projectName": NotRequired[str],
-        "phases": NotRequired[List[BuildPhaseTypeDef]],
-        "source": NotRequired[ProjectSourceTypeDef],
-        "secondarySources": NotRequired[List[ProjectSourceTypeDef]],
-        "secondarySourceVersions": NotRequired[List[ProjectSourceVersionTypeDef]],
-        "artifacts": NotRequired[BuildArtifactsTypeDef],
-        "secondaryArtifacts": NotRequired[List[BuildArtifactsTypeDef]],
-        "cache": NotRequired[ProjectCacheOutputTypeDef],
-        "environment": NotRequired[ProjectEnvironmentOutputTypeDef],
-        "serviceRole": NotRequired[str],
         "logs": NotRequired[LogsLocationTypeDef],
-        "timeoutInMinutes": NotRequired[int],
-        "queuedTimeoutInMinutes": NotRequired[int],
-        "buildComplete": NotRequired[bool],
-        "initiator": NotRequired[str],
-        "vpcConfig": NotRequired[VpcConfigOutputTypeDef],
         "networkInterface": NotRequired[NetworkInterfaceTypeDef],
-        "encryptionKey": NotRequired[str],
-        "exportedEnvironmentVariables": NotRequired[List[ExportedEnvironmentVariableTypeDef]],
-        "reportArns": NotRequired[List[str]],
-        "fileSystemLocations": NotRequired[List[ProjectFileSystemLocationTypeDef]],
-        "debugSession": NotRequired[DebugSessionTypeDef],
-        "buildBatchArn": NotRequired[str],
-        "autoRetryConfig": NotRequired[AutoRetryConfigTypeDef],
     },
 )
-
-class ProjectTypeDef(TypedDict):
-    name: NotRequired[str]
-    arn: NotRequired[str]
-    description: NotRequired[str]
-    source: NotRequired[ProjectSourceTypeDef]
-    secondarySources: NotRequired[List[ProjectSourceTypeDef]]
-    sourceVersion: NotRequired[str]
-    secondarySourceVersions: NotRequired[List[ProjectSourceVersionTypeDef]]
-    artifacts: NotRequired[ProjectArtifactsTypeDef]
-    secondaryArtifacts: NotRequired[List[ProjectArtifactsTypeDef]]
-    cache: NotRequired[ProjectCacheOutputTypeDef]
-    environment: NotRequired[ProjectEnvironmentOutputTypeDef]
-    serviceRole: NotRequired[str]
-    timeoutInMinutes: NotRequired[int]
-    queuedTimeoutInMinutes: NotRequired[int]
-    encryptionKey: NotRequired[str]
-    tags: NotRequired[List[TagTypeDef]]
-    created: NotRequired[datetime]
-    lastModified: NotRequired[datetime]
-    webhook: NotRequired[WebhookTypeDef]
-    vpcConfig: NotRequired[VpcConfigOutputTypeDef]
-    badge: NotRequired[ProjectBadgeTypeDef]
-    logsConfig: NotRequired[LogsConfigTypeDef]
-    fileSystemLocations: NotRequired[List[ProjectFileSystemLocationTypeDef]]
-    buildBatchConfig: NotRequired[ProjectBuildBatchConfigOutputTypeDef]
-    concurrentBuildLimit: NotRequired[int]
-    projectVisibility: NotRequired[ProjectVisibilityTypeType]
-    publicProjectAlias: NotRequired[str]
-    resourceAccessRole: NotRequired[str]
-    autoRetryLimit: NotRequired[int]
 
 class StartBuildInputTypeDef(TypedDict):
     projectName: str
@@ -1379,6 +1477,77 @@ BuildBatchTypeDef = TypedDict(
         "reportArns": NotRequired[List[str]],
     },
 )
+BuildTypeDef = TypedDict(
+    "BuildTypeDef",
+    {
+        "id": NotRequired[str],
+        "arn": NotRequired[str],
+        "buildNumber": NotRequired[int],
+        "startTime": NotRequired[datetime],
+        "endTime": NotRequired[datetime],
+        "currentPhase": NotRequired[str],
+        "buildStatus": NotRequired[StatusTypeType],
+        "sourceVersion": NotRequired[str],
+        "resolvedSourceVersion": NotRequired[str],
+        "projectName": NotRequired[str],
+        "phases": NotRequired[List[BuildPhaseTypeDef]],
+        "source": NotRequired[ProjectSourceTypeDef],
+        "secondarySources": NotRequired[List[ProjectSourceTypeDef]],
+        "secondarySourceVersions": NotRequired[List[ProjectSourceVersionTypeDef]],
+        "artifacts": NotRequired[BuildArtifactsTypeDef],
+        "secondaryArtifacts": NotRequired[List[BuildArtifactsTypeDef]],
+        "cache": NotRequired[ProjectCacheOutputTypeDef],
+        "environment": NotRequired[ProjectEnvironmentOutputTypeDef],
+        "serviceRole": NotRequired[str],
+        "logs": NotRequired[LogsLocationTypeDef],
+        "timeoutInMinutes": NotRequired[int],
+        "queuedTimeoutInMinutes": NotRequired[int],
+        "buildComplete": NotRequired[bool],
+        "initiator": NotRequired[str],
+        "vpcConfig": NotRequired[VpcConfigOutputTypeDef],
+        "networkInterface": NotRequired[NetworkInterfaceTypeDef],
+        "encryptionKey": NotRequired[str],
+        "exportedEnvironmentVariables": NotRequired[List[ExportedEnvironmentVariableTypeDef]],
+        "reportArns": NotRequired[List[str]],
+        "fileSystemLocations": NotRequired[List[ProjectFileSystemLocationTypeDef]],
+        "debugSession": NotRequired[DebugSessionTypeDef],
+        "buildBatchArn": NotRequired[str],
+        "autoRetryConfig": NotRequired[AutoRetryConfigTypeDef],
+    },
+)
+
+class ProjectTypeDef(TypedDict):
+    name: NotRequired[str]
+    arn: NotRequired[str]
+    description: NotRequired[str]
+    source: NotRequired[ProjectSourceTypeDef]
+    secondarySources: NotRequired[List[ProjectSourceTypeDef]]
+    sourceVersion: NotRequired[str]
+    secondarySourceVersions: NotRequired[List[ProjectSourceVersionTypeDef]]
+    artifacts: NotRequired[ProjectArtifactsTypeDef]
+    secondaryArtifacts: NotRequired[List[ProjectArtifactsTypeDef]]
+    cache: NotRequired[ProjectCacheOutputTypeDef]
+    environment: NotRequired[ProjectEnvironmentOutputTypeDef]
+    serviceRole: NotRequired[str]
+    timeoutInMinutes: NotRequired[int]
+    queuedTimeoutInMinutes: NotRequired[int]
+    encryptionKey: NotRequired[str]
+    tags: NotRequired[List[TagTypeDef]]
+    created: NotRequired[datetime]
+    lastModified: NotRequired[datetime]
+    webhook: NotRequired[WebhookTypeDef]
+    vpcConfig: NotRequired[VpcConfigOutputTypeDef]
+    badge: NotRequired[ProjectBadgeTypeDef]
+    logsConfig: NotRequired[LogsConfigTypeDef]
+    fileSystemLocations: NotRequired[List[ProjectFileSystemLocationTypeDef]]
+    buildBatchConfig: NotRequired[ProjectBuildBatchConfigOutputTypeDef]
+    concurrentBuildLimit: NotRequired[int]
+    projectVisibility: NotRequired[ProjectVisibilityTypeType]
+    publicProjectAlias: NotRequired[str]
+    resourceAccessRole: NotRequired[str]
+    autoRetryLimit: NotRequired[int]
+
+ProjectEnvironmentUnionTypeDef = Union[ProjectEnvironmentTypeDef, ProjectEnvironmentOutputTypeDef]
 
 class ListCuratedEnvironmentImagesOutputTypeDef(TypedDict):
     platforms: List[EnvironmentPlatformTypeDef]
@@ -1411,6 +1580,124 @@ class UpdateFleetInputTypeDef(TypedDict):
     imageId: NotRequired[str]
     fleetServiceRole: NotRequired[str]
     tags: NotRequired[Sequence[TagTypeDef]]
+
+class BatchGetCommandExecutionsOutputTypeDef(TypedDict):
+    commandExecutions: List[CommandExecutionTypeDef]
+    commandExecutionsNotFound: List[str]
+    ResponseMetadata: ResponseMetadataTypeDef
+
+class ListCommandExecutionsForSandboxOutputTypeDef(TypedDict):
+    commandExecutions: List[CommandExecutionTypeDef]
+    ResponseMetadata: ResponseMetadataTypeDef
+    nextToken: NotRequired[str]
+
+class StartCommandExecutionOutputTypeDef(TypedDict):
+    commandExecution: CommandExecutionTypeDef
+    ResponseMetadata: ResponseMetadataTypeDef
+
+SandboxTypeDef = TypedDict(
+    "SandboxTypeDef",
+    {
+        "id": NotRequired[str],
+        "arn": NotRequired[str],
+        "projectName": NotRequired[str],
+        "requestTime": NotRequired[datetime],
+        "startTime": NotRequired[datetime],
+        "endTime": NotRequired[datetime],
+        "status": NotRequired[str],
+        "source": NotRequired[ProjectSourceTypeDef],
+        "sourceVersion": NotRequired[str],
+        "secondarySources": NotRequired[List[ProjectSourceTypeDef]],
+        "secondarySourceVersions": NotRequired[List[ProjectSourceVersionTypeDef]],
+        "environment": NotRequired[ProjectEnvironmentOutputTypeDef],
+        "fileSystemLocations": NotRequired[List[ProjectFileSystemLocationTypeDef]],
+        "timeoutInMinutes": NotRequired[int],
+        "queuedTimeoutInMinutes": NotRequired[int],
+        "vpcConfig": NotRequired[VpcConfigOutputTypeDef],
+        "logConfig": NotRequired[LogsConfigTypeDef],
+        "encryptionKey": NotRequired[str],
+        "serviceRole": NotRequired[str],
+        "currentSession": NotRequired[SandboxSessionTypeDef],
+    },
+)
+
+class BatchGetReportGroupsOutputTypeDef(TypedDict):
+    reportGroups: List[ReportGroupTypeDef]
+    reportGroupsNotFound: List[str]
+    ResponseMetadata: ResponseMetadataTypeDef
+
+class CreateReportGroupOutputTypeDef(TypedDict):
+    reportGroup: ReportGroupTypeDef
+    ResponseMetadata: ResponseMetadataTypeDef
+
+class UpdateReportGroupOutputTypeDef(TypedDict):
+    reportGroup: ReportGroupTypeDef
+    ResponseMetadata: ResponseMetadataTypeDef
+
+class BatchGetReportsOutputTypeDef(TypedDict):
+    reports: List[ReportTypeDef]
+    reportsNotFound: List[str]
+    ResponseMetadata: ResponseMetadataTypeDef
+
+class BatchGetFleetsOutputTypeDef(TypedDict):
+    fleets: List[FleetTypeDef]
+    fleetsNotFound: List[str]
+    ResponseMetadata: ResponseMetadataTypeDef
+
+class CreateFleetOutputTypeDef(TypedDict):
+    fleet: FleetTypeDef
+    ResponseMetadata: ResponseMetadataTypeDef
+
+class UpdateFleetOutputTypeDef(TypedDict):
+    fleet: FleetTypeDef
+    ResponseMetadata: ResponseMetadataTypeDef
+
+class BatchGetBuildBatchesOutputTypeDef(TypedDict):
+    buildBatches: List[BuildBatchTypeDef]
+    buildBatchesNotFound: List[str]
+    ResponseMetadata: ResponseMetadataTypeDef
+
+class RetryBuildBatchOutputTypeDef(TypedDict):
+    buildBatch: BuildBatchTypeDef
+    ResponseMetadata: ResponseMetadataTypeDef
+
+class StartBuildBatchOutputTypeDef(TypedDict):
+    buildBatch: BuildBatchTypeDef
+    ResponseMetadata: ResponseMetadataTypeDef
+
+class StopBuildBatchOutputTypeDef(TypedDict):
+    buildBatch: BuildBatchTypeDef
+    ResponseMetadata: ResponseMetadataTypeDef
+
+class BatchGetBuildsOutputTypeDef(TypedDict):
+    builds: List[BuildTypeDef]
+    buildsNotFound: List[str]
+    ResponseMetadata: ResponseMetadataTypeDef
+
+class RetryBuildOutputTypeDef(TypedDict):
+    build: BuildTypeDef
+    ResponseMetadata: ResponseMetadataTypeDef
+
+class StartBuildOutputTypeDef(TypedDict):
+    build: BuildTypeDef
+    ResponseMetadata: ResponseMetadataTypeDef
+
+class StopBuildOutputTypeDef(TypedDict):
+    build: BuildTypeDef
+    ResponseMetadata: ResponseMetadataTypeDef
+
+class BatchGetProjectsOutputTypeDef(TypedDict):
+    projects: List[ProjectTypeDef]
+    projectsNotFound: List[str]
+    ResponseMetadata: ResponseMetadataTypeDef
+
+class CreateProjectOutputTypeDef(TypedDict):
+    project: ProjectTypeDef
+    ResponseMetadata: ResponseMetadataTypeDef
+
+class UpdateProjectOutputTypeDef(TypedDict):
+    project: ProjectTypeDef
+    ResponseMetadata: ResponseMetadataTypeDef
 
 class CreateProjectInputTypeDef(TypedDict):
     name: str
@@ -1460,80 +1747,15 @@ class UpdateProjectInputTypeDef(TypedDict):
     concurrentBuildLimit: NotRequired[int]
     autoRetryLimit: NotRequired[int]
 
-class BatchGetBuildsOutputTypeDef(TypedDict):
-    builds: List[BuildTypeDef]
-    buildsNotFound: List[str]
+class BatchGetSandboxesOutputTypeDef(TypedDict):
+    sandboxes: List[SandboxTypeDef]
+    sandboxesNotFound: List[str]
     ResponseMetadata: ResponseMetadataTypeDef
 
-class RetryBuildOutputTypeDef(TypedDict):
-    build: BuildTypeDef
+class StartSandboxOutputTypeDef(TypedDict):
+    sandbox: SandboxTypeDef
     ResponseMetadata: ResponseMetadataTypeDef
 
-class StartBuildOutputTypeDef(TypedDict):
-    build: BuildTypeDef
-    ResponseMetadata: ResponseMetadataTypeDef
-
-class StopBuildOutputTypeDef(TypedDict):
-    build: BuildTypeDef
-    ResponseMetadata: ResponseMetadataTypeDef
-
-class BatchGetProjectsOutputTypeDef(TypedDict):
-    projects: List[ProjectTypeDef]
-    projectsNotFound: List[str]
-    ResponseMetadata: ResponseMetadataTypeDef
-
-class CreateProjectOutputTypeDef(TypedDict):
-    project: ProjectTypeDef
-    ResponseMetadata: ResponseMetadataTypeDef
-
-class UpdateProjectOutputTypeDef(TypedDict):
-    project: ProjectTypeDef
-    ResponseMetadata: ResponseMetadataTypeDef
-
-class BatchGetReportGroupsOutputTypeDef(TypedDict):
-    reportGroups: List[ReportGroupTypeDef]
-    reportGroupsNotFound: List[str]
-    ResponseMetadata: ResponseMetadataTypeDef
-
-class CreateReportGroupOutputTypeDef(TypedDict):
-    reportGroup: ReportGroupTypeDef
-    ResponseMetadata: ResponseMetadataTypeDef
-
-class UpdateReportGroupOutputTypeDef(TypedDict):
-    reportGroup: ReportGroupTypeDef
-    ResponseMetadata: ResponseMetadataTypeDef
-
-class BatchGetReportsOutputTypeDef(TypedDict):
-    reports: List[ReportTypeDef]
-    reportsNotFound: List[str]
-    ResponseMetadata: ResponseMetadataTypeDef
-
-class BatchGetFleetsOutputTypeDef(TypedDict):
-    fleets: List[FleetTypeDef]
-    fleetsNotFound: List[str]
-    ResponseMetadata: ResponseMetadataTypeDef
-
-class CreateFleetOutputTypeDef(TypedDict):
-    fleet: FleetTypeDef
-    ResponseMetadata: ResponseMetadataTypeDef
-
-class UpdateFleetOutputTypeDef(TypedDict):
-    fleet: FleetTypeDef
-    ResponseMetadata: ResponseMetadataTypeDef
-
-class BatchGetBuildBatchesOutputTypeDef(TypedDict):
-    buildBatches: List[BuildBatchTypeDef]
-    buildBatchesNotFound: List[str]
-    ResponseMetadata: ResponseMetadataTypeDef
-
-class RetryBuildBatchOutputTypeDef(TypedDict):
-    buildBatch: BuildBatchTypeDef
-    ResponseMetadata: ResponseMetadataTypeDef
-
-class StartBuildBatchOutputTypeDef(TypedDict):
-    buildBatch: BuildBatchTypeDef
-    ResponseMetadata: ResponseMetadataTypeDef
-
-class StopBuildBatchOutputTypeDef(TypedDict):
-    buildBatch: BuildBatchTypeDef
+class StopSandboxOutputTypeDef(TypedDict):
+    sandbox: SandboxTypeDef
     ResponseMetadata: ResponseMetadataTypeDef

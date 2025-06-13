@@ -217,7 +217,12 @@ __all__ = (
     "S3BucketConfigurationOutputTypeDef",
     "S3BucketConfigurationTypeDef",
     "S3BucketConfigurationUnionTypeDef",
+    "S3ExpressDirectoryAccessPointConfigurationOutputTypeDef",
+    "S3ExpressDirectoryAccessPointConfigurationTypeDef",
+    "S3ExpressDirectoryAccessPointConfigurationUnionTypeDef",
+    "S3ExpressDirectoryBucketConfigurationOutputTypeDef",
     "S3ExpressDirectoryBucketConfigurationTypeDef",
+    "S3ExpressDirectoryBucketConfigurationUnionTypeDef",
     "S3PublicAccessBlockConfigurationTypeDef",
     "SecretsManagerSecretConfigurationTypeDef",
     "SnsTopicConfigurationTypeDef",
@@ -365,9 +370,6 @@ class EfsFileSystemConfigurationTypeDef(TypedDict):
 
 class IamRoleConfigurationTypeDef(TypedDict):
     trustPolicy: NotRequired[str]
-
-class S3ExpressDirectoryBucketConfigurationTypeDef(TypedDict):
-    bucketPolicy: NotRequired[str]
 
 class SecretsManagerSecretConfigurationTypeDef(TypedDict):
     kmsKeyId: NotRequired[str]
@@ -1079,6 +1081,10 @@ class S3AccessPointConfigurationOutputTypeDef(TypedDict):
     publicAccessBlock: NotRequired[S3PublicAccessBlockConfigurationTypeDef]
     networkOrigin: NotRequired[NetworkOriginConfigurationOutputTypeDef]
 
+class S3ExpressDirectoryAccessPointConfigurationOutputTypeDef(TypedDict):
+    accessPointPolicy: NotRequired[str]
+    networkOrigin: NotRequired[NetworkOriginConfigurationOutputTypeDef]
+
 NetworkOriginConfigurationUnionTypeDef = Union[
     NetworkOriginConfigurationTypeDef, NetworkOriginConfigurationOutputTypeDef
 ]
@@ -1151,9 +1157,17 @@ class S3BucketConfigurationOutputTypeDef(TypedDict):
     bucketPublicAccessBlock: NotRequired[S3PublicAccessBlockConfigurationTypeDef]
     accessPoints: NotRequired[Dict[str, S3AccessPointConfigurationOutputTypeDef]]
 
+class S3ExpressDirectoryBucketConfigurationOutputTypeDef(TypedDict):
+    bucketPolicy: NotRequired[str]
+    accessPoints: NotRequired[Dict[str, S3ExpressDirectoryAccessPointConfigurationOutputTypeDef]]
+
 class S3AccessPointConfigurationTypeDef(TypedDict):
     accessPointPolicy: NotRequired[str]
     publicAccessBlock: NotRequired[S3PublicAccessBlockConfigurationTypeDef]
+    networkOrigin: NotRequired[NetworkOriginConfigurationUnionTypeDef]
+
+class S3ExpressDirectoryAccessPointConfigurationTypeDef(TypedDict):
+    accessPointPolicy: NotRequired[str]
     networkOrigin: NotRequired[NetworkOriginConfigurationUnionTypeDef]
 
 class ValidatePolicyFindingTypeDef(TypedDict):
@@ -1239,12 +1253,16 @@ class ConfigurationOutputTypeDef(TypedDict):
     s3Bucket: NotRequired[S3BucketConfigurationOutputTypeDef]
     snsTopic: NotRequired[SnsTopicConfigurationTypeDef]
     sqsQueue: NotRequired[SqsQueueConfigurationTypeDef]
-    s3ExpressDirectoryBucket: NotRequired[S3ExpressDirectoryBucketConfigurationTypeDef]
+    s3ExpressDirectoryBucket: NotRequired[S3ExpressDirectoryBucketConfigurationOutputTypeDef]
     dynamodbStream: NotRequired[DynamodbStreamConfigurationTypeDef]
     dynamodbTable: NotRequired[DynamodbTableConfigurationTypeDef]
 
 S3AccessPointConfigurationUnionTypeDef = Union[
     S3AccessPointConfigurationTypeDef, S3AccessPointConfigurationOutputTypeDef
+]
+S3ExpressDirectoryAccessPointConfigurationUnionTypeDef = Union[
+    S3ExpressDirectoryAccessPointConfigurationTypeDef,
+    S3ExpressDirectoryAccessPointConfigurationOutputTypeDef,
 ]
 
 class ValidatePolicyResponseTypeDef(TypedDict):
@@ -1298,12 +1316,19 @@ class S3BucketConfigurationTypeDef(TypedDict):
     bucketPublicAccessBlock: NotRequired[S3PublicAccessBlockConfigurationTypeDef]
     accessPoints: NotRequired[Mapping[str, S3AccessPointConfigurationUnionTypeDef]]
 
+class S3ExpressDirectoryBucketConfigurationTypeDef(TypedDict):
+    bucketPolicy: NotRequired[str]
+    accessPoints: NotRequired[Mapping[str, S3ExpressDirectoryAccessPointConfigurationUnionTypeDef]]
+
 class GetAccessPreviewResponseTypeDef(TypedDict):
     accessPreview: AccessPreviewTypeDef
     ResponseMetadata: ResponseMetadataTypeDef
 
 S3BucketConfigurationUnionTypeDef = Union[
     S3BucketConfigurationTypeDef, S3BucketConfigurationOutputTypeDef
+]
+S3ExpressDirectoryBucketConfigurationUnionTypeDef = Union[
+    S3ExpressDirectoryBucketConfigurationTypeDef, S3ExpressDirectoryBucketConfigurationOutputTypeDef
 ]
 
 class ConfigurationTypeDef(TypedDict):
@@ -1318,7 +1343,7 @@ class ConfigurationTypeDef(TypedDict):
     s3Bucket: NotRequired[S3BucketConfigurationUnionTypeDef]
     snsTopic: NotRequired[SnsTopicConfigurationTypeDef]
     sqsQueue: NotRequired[SqsQueueConfigurationTypeDef]
-    s3ExpressDirectoryBucket: NotRequired[S3ExpressDirectoryBucketConfigurationTypeDef]
+    s3ExpressDirectoryBucket: NotRequired[S3ExpressDirectoryBucketConfigurationUnionTypeDef]
     dynamodbStream: NotRequired[DynamodbStreamConfigurationTypeDef]
     dynamodbTable: NotRequired[DynamodbTableConfigurationTypeDef]
 

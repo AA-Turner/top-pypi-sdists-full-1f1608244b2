@@ -627,6 +627,9 @@ def seq_slide(
     value: collections.abc.Sequence[float] | mathutils.Vector | None = (0.0, 0.0),
     use_restore_handle_selection: bool | None = False,
     snap: bool | None = False,
+    texture_space: bool | None = False,
+    remove_on_cancel: bool | None = False,
+    use_duplicated_keyframes: bool | None = False,
     view2d_edge_pan: bool | None = False,
     release_confirm: bool | None = False,
     use_accurate: bool | None = False,
@@ -641,6 +644,12 @@ def seq_slide(
     :type use_restore_handle_selection: bool | None
     :param snap: Use Snapping Options
     :type snap: bool | None
+    :param texture_space: Edit Texture Space, Edit object data texture space
+    :type texture_space: bool | None
+    :param remove_on_cancel: Remove on Cancel, Remove elements on cancel
+    :type remove_on_cancel: bool | None
+    :param use_duplicated_keyframes: Duplicated Keyframes, Transform duplicated keyframes
+    :type use_duplicated_keyframes: bool | None
     :param view2d_edge_pan: Edge Pan, Enable edge panning in 2D view
     :type view2d_edge_pan: bool | None
     :param release_confirm: Confirm on Release, Always confirm operation when releasing button

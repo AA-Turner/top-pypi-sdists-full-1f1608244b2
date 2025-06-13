@@ -36,6 +36,7 @@ __all__ = (
     "FailoverModeType",
     "FlowActiveWaiterName",
     "FlowDeletedWaiterName",
+    "FlowSizeType",
     "FlowStandbyWaiterName",
     "GatewayStateType",
     "InstanceStateType",
@@ -50,6 +51,7 @@ __all__ = (
     "MaintenanceDayType",
     "MediaConnectServiceName",
     "MediaStreamTypeType",
+    "NdiStateType",
     "NetworkInterfaceTypeType",
     "OutputStatusType",
     "PaginatorName",
@@ -97,6 +99,7 @@ EntitlementStatusType = Literal["DISABLED", "ENABLED"]
 FailoverModeType = Literal["FAILOVER", "MERGE"]
 FlowActiveWaiterName = Literal["flow_active"]
 FlowDeletedWaiterName = Literal["flow_deleted"]
+FlowSizeType = Literal["LARGE", "MEDIUM"]
 FlowStandbyWaiterName = Literal["flow_standby"]
 GatewayStateType = Literal["ACTIVE", "CREATING", "DELETED", "DELETING", "ERROR", "UPDATING"]
 InstanceStateType = Literal[
@@ -119,12 +122,14 @@ MaintenanceDayType = Literal[
     "Friday", "Monday", "Saturday", "Sunday", "Thursday", "Tuesday", "Wednesday"
 ]
 MediaStreamTypeType = Literal["ancillary-data", "audio", "video"]
+NdiStateType = Literal["DISABLED", "ENABLED"]
 NetworkInterfaceTypeType = Literal["efa", "ena"]
 OutputStatusType = Literal["DISABLED", "ENABLED"]
 PriceUnitsType = Literal["HOURLY"]
 ProtocolType = Literal[
     "cdi",
     "fujitsu-qos",
+    "ndi-speed-hq",
     "rist",
     "rtp",
     "rtp-fec",
@@ -303,6 +308,7 @@ ServiceName = Literal[
     "freetier",
     "fsx",
     "gamelift",
+    "gameliftstreams",
     "geo-maps",
     "geo-places",
     "geo-routes",
@@ -328,6 +334,7 @@ ServiceName = Literal[
     "iot",
     "iot-data",
     "iot-jobs-data",
+    "iot-managed-integrations",
     "iotanalytics",
     "iotdeviceadvisor",
     "iotevents",
@@ -442,7 +449,6 @@ ServiceName = Literal[
     "pipes",
     "polly",
     "pricing",
-    "privatenetworks",
     "proton",
     "qapps",
     "qbusiness",
@@ -503,7 +509,6 @@ ServiceName = Literal[
     "signer",
     "simspaceweaver",
     "sms",
-    "sms-voice",
     "snow-device-management",
     "snowball",
     "sns",
@@ -511,6 +516,7 @@ ServiceName = Literal[
     "sqs",
     "ssm",
     "ssm-contacts",
+    "ssm-guiconnect",
     "ssm-incidents",
     "ssm-quicksetup",
     "ssm-sap",

@@ -2,7 +2,7 @@
 
 from setuptools import setup
 
-__version__ = "3.8.1"
+__version__ = "3.9.0"
 
 with open("README.md", "r") as fh:
     long_description = fh.read()
@@ -33,11 +33,7 @@ setup(
         "pyYAML>=6.0.1",
     ],
     extras_require={
-        "dev": [
-            "pytest",
-            "requests-mock",
-            "types-setuptools",
-        ],
+        "dev": ["pytest", "requests-mock", "types-setuptools", "stac-pydantic>=3.3.0"],
         "pydantic": [
             "stac-pydantic>=3.3.0",
         ],

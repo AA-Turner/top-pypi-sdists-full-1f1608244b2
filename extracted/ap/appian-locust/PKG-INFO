@@ -1,6 +1,6 @@
 Metadata-Version: 2.4
 Name: appian-locust
-Version: 2.25.2
+Version: 2.26.0
 Summary: Tools and functions to make testing Appian with Locust easier
 Home-page: https://gitlab.com/appian-oss/appian-locust
 Author: Appian Performance & Reliability Engineering Squad
@@ -86,9 +86,6 @@ If using ``pipenv``, simply start from the following ``Pipfile``:
 
     [requires]
     python_version = "3.13"
-
-    [pipenv]
-    allow_prereleases = true
 
 Build from source
 ----------------------

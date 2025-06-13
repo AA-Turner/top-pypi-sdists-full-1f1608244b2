@@ -104,6 +104,7 @@ from .type_defs import (
     UpdateExtensionRequestTypeDef,
     ValidateConfigurationRequestTypeDef,
 )
+from .waiter import DeploymentCompleteWaiter, EnvironmentReadyForDeploymentWaiter
 
 if sys.version_info >= (3, 9):
     from builtins import type as Type
@@ -701,6 +702,28 @@ class AppConfigClient(AioBaseClient):
 
         [Show boto3 documentation](https://boto3.amazonaws.com/v1/documentation/api/latest/reference/services/appconfig/client/get_paginator.html)
         [Show types-aiobotocore documentation](https://youtype.github.io/types_aiobotocore_docs/types_aiobotocore_appconfig/client/#get_paginator)
+        """
+
+    @overload  # type: ignore[override]
+    def get_waiter(  # type: ignore[override]
+        self, waiter_name: Literal["deployment_complete"]
+    ) -> DeploymentCompleteWaiter:
+        """
+        Returns an object that can wait for some condition.
+
+        [Show boto3 documentation](https://boto3.amazonaws.com/v1/documentation/api/latest/reference/services/appconfig/client/get_waiter.html)
+        [Show types-aiobotocore documentation](https://youtype.github.io/types_aiobotocore_docs/types_aiobotocore_appconfig/client/#get_waiter)
+        """
+
+    @overload  # type: ignore[override]
+    def get_waiter(  # type: ignore[override]
+        self, waiter_name: Literal["environment_ready_for_deployment"]
+    ) -> EnvironmentReadyForDeploymentWaiter:
+        """
+        Returns an object that can wait for some condition.
+
+        [Show boto3 documentation](https://boto3.amazonaws.com/v1/documentation/api/latest/reference/services/appconfig/client/get_waiter.html)
+        [Show types-aiobotocore documentation](https://youtype.github.io/types_aiobotocore_docs/types_aiobotocore_appconfig/client/#get_waiter)
         """
 
     async def __aenter__(self) -> Self:

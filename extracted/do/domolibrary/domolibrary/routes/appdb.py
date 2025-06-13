@@ -12,7 +12,7 @@ import domolibrary.client.get_data as gd
 import domolibrary.client.DomoAuth as dmda
 import domolibrary.client.DomoError as de
 
-from enum import Enum
+from domolibrary.client.DomoEntity import DomoEnum
 
 # %% ../../nbs/routes/appdb.ipynb 4
 class AppDb_GET_Exception(de.DomoError):
@@ -323,7 +323,7 @@ async def get_documents_from_collection(
     return res
 
 # %% ../../nbs/routes/appdb.ipynb 23
-class Collection_Permission_Enum(Enum):
+class Collection_Permission_Enum(DomoEnum):
     READ_CONTENT = "READ_CONTENT"
     ADMIN = "ADMIN"
     UPDATE_CONTENT = "UPDATE_CONTENT"

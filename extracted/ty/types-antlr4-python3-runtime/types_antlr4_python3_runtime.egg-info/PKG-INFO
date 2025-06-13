@@ -1,6 +1,6 @@
 Metadata-Version: 2.4
 Name: types-antlr4-python3-runtime
-Version: 4.13.0.20250516
+Version: 4.13.0.20250613
 Summary: Typing stubs for antlr4-python3-runtime
 License-Expression: Apache-2.0
 Project-URL: Homepage, https://github.com/python/typeshed
@@ -36,8 +36,8 @@ for more details. The source for this package can be found in the
 directory.
 
 This package was tested with
-mypy 1.15.0,
+mypy 1.16.0,
 pyright 1.1.400,
 and pytype 2024.10.11.
 It was generated from typeshed commit
-[`126768408a69b7a3a09b7d3992970b289f92937e`](https://github.com/python/typeshed/commit/126768408a69b7a3a09b7d3992970b289f92937e).
+[`ecd5141cc036366cc9e3ca371096d6a14b0ccd13`](https://github.com/python/typeshed/commit/ecd5141cc036366cc9e3ca371096d6a14b0ccd13).

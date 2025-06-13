@@ -29,6 +29,7 @@ Usage::
         VariantStoreCreatedWaiter,
         VariantStoreDeletedWaiter,
         WorkflowActiveWaiter,
+        WorkflowVersionActiveWaiter,
     )
 
     session = get_session()
@@ -52,6 +53,7 @@ Usage::
         variant_store_created_waiter: VariantStoreCreatedWaiter = client.get_waiter("variant_store_created")
         variant_store_deleted_waiter: VariantStoreDeletedWaiter = client.get_waiter("variant_store_deleted")
         workflow_active_waiter: WorkflowActiveWaiter = client.get_waiter("workflow_active")
+        workflow_version_active_waiter: WorkflowVersionActiveWaiter = client.get_waiter("workflow_version_active")
     ```
 """
 
@@ -79,6 +81,7 @@ from .type_defs import (
     GetVariantStoreRequestWaitExtraTypeDef,
     GetVariantStoreRequestWaitTypeDef,
     GetWorkflowRequestWaitTypeDef,
+    GetWorkflowVersionRequestWaitTypeDef,
 )
 
 if sys.version_info >= (3, 12):
@@ -105,6 +108,7 @@ __all__ = (
     "VariantStoreCreatedWaiter",
     "VariantStoreDeletedWaiter",
     "WorkflowActiveWaiter",
+    "WorkflowVersionActiveWaiter",
 )
 
 
@@ -360,4 +364,19 @@ class WorkflowActiveWaiter(AIOWaiter):
         """
         [Show boto3 documentation](https://boto3.amazonaws.com/v1/documentation/api/latest/reference/services/omics/waiter/WorkflowActive.html#Omics.Waiter.WorkflowActive.wait)
         [Show types-aiobotocore documentation](https://youtype.github.io/types_aiobotocore_docs/types_aiobotocore_omics/waiters/#workflowactivewaiter)
+        """
+
+
+class WorkflowVersionActiveWaiter(AIOWaiter):
+    """
+    [Show boto3 documentation](https://boto3.amazonaws.com/v1/documentation/api/latest/reference/services/omics/waiter/WorkflowVersionActive.html#Omics.Waiter.WorkflowVersionActive)
+    [Show types-aiobotocore documentation](https://youtype.github.io/types_aiobotocore_docs/types_aiobotocore_omics/waiters/#workflowversionactivewaiter)
+    """
+
+    async def wait(  # type: ignore[override]
+        self, **kwargs: Unpack[GetWorkflowVersionRequestWaitTypeDef]
+    ) -> None:
+        """
+        [Show boto3 documentation](https://boto3.amazonaws.com/v1/documentation/api/latest/reference/services/omics/waiter/WorkflowVersionActive.html#Omics.Waiter.WorkflowVersionActive.wait)
+        [Show types-aiobotocore documentation](https://youtype.github.io/types_aiobotocore_docs/types_aiobotocore_omics/waiters/#workflowversionactivewaiter)
         """

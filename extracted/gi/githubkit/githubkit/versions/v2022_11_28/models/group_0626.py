@@ -18,18 +18,21 @@ from githubkit.typing import Missing
 from githubkit.utils import UNSET
 
 from .group_0003 import SimpleUser
-from .group_0040 import IssueType
-from .group_0419 import EnterpriseWebhooks
-from .group_0420 import SimpleInstallation
-from .group_0421 import OrganizationSimpleWebhooks
-from .group_0422 import RepositoryWebhooks
-from .group_0439 import WebhooksIssue
+from .group_0424 import EnterpriseWebhooks
+from .group_0425 import SimpleInstallation
+from .group_0426 import OrganizationSimpleWebhooks
+from .group_0427 import RepositoryWebhooks
+from .group_0444 import WebhooksIssue
+from .group_0447 import WebhooksUserMannequin
 
 
-class WebhookIssuesUntyped(GitHubModel):
-    """issues untyped event"""
+class WebhookIssuesUnassigned(GitHubModel):
+    """issues unassigned event"""
 
-    action: Literal["untyped"] = Field()
+    action: Literal["unassigned"] = Field(description="The action that was performed.")
+    assignee: Missing[Union[WebhooksUserMannequin, None]] = Field(
+        default=UNSET, title="User"
+    )
     enterprise: Missing[EnterpriseWebhooks] = Field(
         default=UNSET,
         title="Enterprise",
@@ -44,9 +47,6 @@ class WebhookIssuesUntyped(GitHubModel):
         title="Issue",
         description="The [issue](https://docs.github.com/rest/issues/issues#get-an-issue) itself.",
     )
-    type: Union[IssueType, None] = Field(
-        title="Issue Type", description="The type of issue."
-    )
     organization: Missing[OrganizationSimpleWebhooks] = Field(
         default=UNSET,
         title="Organization Simple",
@@ -59,6 +59,6 @@ class WebhookIssuesUntyped(GitHubModel):
     sender: SimpleUser = Field(title="Simple User", description="A GitHub user.")
 
 
-model_rebuild(WebhookIssuesUntyped)
+model_rebuild(WebhookIssuesUnassigned)
 
-__all__ = ("WebhookIssuesUntyped",)
+__all__ = ("WebhookIssuesUnassigned",)

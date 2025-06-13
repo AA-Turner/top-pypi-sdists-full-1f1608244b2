@@ -3336,6 +3336,7 @@ from com.aspose.cells import CustomFilterCollection
 from com.aspose.cells import CustomFunctionDefinition
 from com.aspose.cells import CustomPiovtFieldGroupItem
 from com.aspose.cells import CustomProperty
+from com.aspose.cells import CustomRenderSettings
 from com.aspose.cells import DataSorterKeyCollection
 from com.aspose.cells import DateTime
 from com.aspose.cells import DateTimeGroupItem

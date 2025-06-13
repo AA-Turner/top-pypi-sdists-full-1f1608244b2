@@ -40,7 +40,9 @@ __all__ = (
     "DescribeSubnetGroupsPaginatorName",
     "DescribeUsersPaginatorName",
     "InputAuthenticationTypeType",
+    "IpDiscoveryType",
     "MemoryDBServiceName",
+    "NetworkTypeType",
     "PaginatorName",
     "RegionName",
     "ResourceServiceName",
@@ -69,6 +71,8 @@ DescribeSnapshotsPaginatorName = Literal["describe_snapshots"]
 DescribeSubnetGroupsPaginatorName = Literal["describe_subnet_groups"]
 DescribeUsersPaginatorName = Literal["describe_users"]
 InputAuthenticationTypeType = Literal["iam", "password"]
+IpDiscoveryType = Literal["ipv4", "ipv6"]
+NetworkTypeType = Literal["dual_stack", "ipv4", "ipv6"]
 ServiceUpdateStatusType = Literal["available", "complete", "in-progress", "scheduled"]
 ServiceUpdateTypeType = Literal["security-update"]
 SourceTypeType = Literal["acl", "cluster", "node", "parameter-group", "subnet-group", "user"]
@@ -230,6 +234,7 @@ ServiceName = Literal[
     "freetier",
     "fsx",
     "gamelift",
+    "gameliftstreams",
     "geo-maps",
     "geo-places",
     "geo-routes",
@@ -255,6 +260,7 @@ ServiceName = Literal[
     "iot",
     "iot-data",
     "iot-jobs-data",
+    "iot-managed-integrations",
     "iotanalytics",
     "iotdeviceadvisor",
     "iotevents",
@@ -369,7 +375,6 @@ ServiceName = Literal[
     "pipes",
     "polly",
     "pricing",
-    "privatenetworks",
     "proton",
     "qapps",
     "qbusiness",
@@ -430,7 +435,6 @@ ServiceName = Literal[
     "signer",
     "simspaceweaver",
     "sms",
-    "sms-voice",
     "snow-device-management",
     "snowball",
     "sns",
@@ -438,6 +442,7 @@ ServiceName = Literal[
     "sqs",
     "ssm",
     "ssm-contacts",
+    "ssm-guiconnect",
     "ssm-incidents",
     "ssm-quicksetup",
     "ssm-sap",

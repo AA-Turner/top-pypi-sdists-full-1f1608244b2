@@ -112,10 +112,11 @@ class UsageAllocationTypeDef(TypedDict):
 
 class UsageRecordOutputTypeDef(TypedDict):
     Timestamp: datetime
-    CustomerIdentifier: str
     Dimension: str
+    CustomerIdentifier: NotRequired[str]
     Quantity: NotRequired[int]
     UsageAllocations: NotRequired[List[UsageAllocationOutputTypeDef]]
+    CustomerAWSAccountId: NotRequired[str]
 
 
 UsageAllocationUnionTypeDef = Union[UsageAllocationTypeDef, UsageAllocationOutputTypeDef]
@@ -138,10 +139,11 @@ class MeterUsageRequestTypeDef(TypedDict):
 
 class UsageRecordTypeDef(TypedDict):
     Timestamp: TimestampTypeDef
-    CustomerIdentifier: str
     Dimension: str
+    CustomerIdentifier: NotRequired[str]
     Quantity: NotRequired[int]
     UsageAllocations: NotRequired[Sequence[UsageAllocationUnionTypeDef]]
+    CustomerAWSAccountId: NotRequired[str]
 
 
 class BatchMeterUsageResultTypeDef(TypedDict):

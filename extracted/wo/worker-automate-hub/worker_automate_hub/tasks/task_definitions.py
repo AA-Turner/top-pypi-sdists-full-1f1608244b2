@@ -131,7 +131,7 @@ task_definitions = {
     "5ad2d209-e9da-438c-ba62-db0a5f9a3795": exportacao_docs_portal_b2b,  # Banco do brasil
     "326a746e-06ec-44c0-84bb-3a2dd866353e": cte_manual,
     "c7a53083-a364-45e2-a1f7-acd439fe8632": integracao_contabil,
-    "e1696b6b-9de4-4f22-a977-b191a39506a9": integracao_contabil,
+    "e1696b6b-9de4-4f22-a977-b191a39506a9": integracao_contabil_generica,
     "0745818a-4760-4cbe-b6bc-073519ac2104": integracao_contabil,
     "044a5713-82bd-4758-aec4-3a502d526568": integracao_contabil,
     "f76dae1d-799b-4b23-b83f-f688e6528f2c": integracao_contabil,

@@ -30,6 +30,7 @@ from botocore.exceptions import ClientError as BotocoreClientError
 
 from .paginator import (
     GetCisScanResultDetailsPaginator,
+    GetClustersForImagePaginator,
     ListAccountPermissionsPaginator,
     ListCisScanConfigurationsPaginator,
     ListCisScanResultsAggregatedByChecksPaginator,
@@ -91,6 +92,8 @@ from .type_defs import (
     GetCisScanReportResponseTypeDef,
     GetCisScanResultDetailsRequestTypeDef,
     GetCisScanResultDetailsResponseTypeDef,
+    GetClustersForImageRequestTypeDef,
+    GetClustersForImageResponseTypeDef,
     GetConfigurationResponseTypeDef,
     GetDelegatedAdminAccountResponseTypeDef,
     GetEc2DeepInspectionConfigurationResponseTypeDef,
@@ -445,6 +448,16 @@ class Inspector2Client(AioBaseClient):
 
         [Show boto3 documentation](https://boto3.amazonaws.com/v1/documentation/api/latest/reference/services/inspector2/client/get_cis_scan_result_details.html)
         [Show types-aiobotocore documentation](https://youtype.github.io/types_aiobotocore_docs/types_aiobotocore_inspector2/client/#get_cis_scan_result_details)
+        """
+
+    async def get_clusters_for_image(
+        self, **kwargs: Unpack[GetClustersForImageRequestTypeDef]
+    ) -> GetClustersForImageResponseTypeDef:
+        """
+        Returns a list of clusters and metadata associated with an image.
+
+        [Show boto3 documentation](https://boto3.amazonaws.com/v1/documentation/api/latest/reference/services/inspector2/client/get_clusters_for_image.html)
+        [Show types-aiobotocore documentation](https://youtype.github.io/types_aiobotocore_docs/types_aiobotocore_inspector2/client/#get_clusters_for_image)
         """
 
     async def get_configuration(self) -> GetConfigurationResponseTypeDef:
@@ -809,6 +822,17 @@ class Inspector2Client(AioBaseClient):
     def get_paginator(  # type: ignore[override]
         self, operation_name: Literal["get_cis_scan_result_details"]
     ) -> GetCisScanResultDetailsPaginator:
+        """
+        Create a paginator for an operation.
+
+        [Show boto3 documentation](https://boto3.amazonaws.com/v1/documentation/api/latest/reference/services/inspector2/client/get_paginator.html)
+        [Show types-aiobotocore documentation](https://youtype.github.io/types_aiobotocore_docs/types_aiobotocore_inspector2/client/#get_paginator)
+        """
+
+    @overload  # type: ignore[override]
+    def get_paginator(  # type: ignore[override]
+        self, operation_name: Literal["get_clusters_for_image"]
+    ) -> GetClustersForImagePaginator:
         """
         Create a paginator for an operation.
 

@@ -23,10 +23,13 @@ from typing import Any, Union
 from .literals import (
     AdditionalAnalysesType,
     AggregateFunctionNameType,
+    AnalysisFormatType,
+    AnalysisMethodType,
     AnalysisRuleTypeType,
     AnalysisTemplateValidationStatusType,
     AnalysisTypeType,
     AnalyticsEngineType,
+    CollaborationJobLogStatusType,
     CollaborationQueryLogStatusType,
     ConfiguredTableAnalysisRuleTypeType,
     ConfiguredTableAssociationAnalysisRuleTypeType,
@@ -36,17 +39,20 @@ from .literals import (
     IdNamespaceTypeType,
     JoinOperatorType,
     MemberAbilityType,
+    MembershipJobLogStatusType,
     MembershipQueryLogStatusType,
     MembershipStatusType,
     MemberStatusType,
     ParameterTypeType,
     PrivacyBudgetTemplateAutoRefreshType,
+    ProtectedJobStatusType,
     ProtectedQueryStatusType,
     ResultFormatType,
     ScalarFunctionsType,
     SchemaStatusReasonCodeType,
     SchemaStatusType,
     SchemaTypeType,
+    SelectedAnalysisMethodType,
     WorkerComputeTypeType,
 )
 
@@ -76,8 +82,17 @@ __all__ = (
     "AnalysisRulePolicyTypeDef",
     "AnalysisRulePolicyV1TypeDef",
     "AnalysisRuleTypeDef",
+    "AnalysisSchemaOutputTypeDef",
     "AnalysisSchemaTypeDef",
+    "AnalysisSchemaUnionTypeDef",
+    "AnalysisSourceMetadataTypeDef",
+    "AnalysisSourceOutputTypeDef",
     "AnalysisSourceTypeDef",
+    "AnalysisSourceUnionTypeDef",
+    "AnalysisTemplateArtifactMetadataTypeDef",
+    "AnalysisTemplateArtifactTypeDef",
+    "AnalysisTemplateArtifactsOutputTypeDef",
+    "AnalysisTemplateArtifactsTypeDef",
     "AnalysisTemplateSummaryTypeDef",
     "AnalysisTemplateTypeDef",
     "AnalysisTemplateValidationStatusDetailTypeDef",
@@ -92,6 +107,7 @@ __all__ = (
     "BatchGetSchemaErrorTypeDef",
     "BatchGetSchemaInputTypeDef",
     "BatchGetSchemaOutputTypeDef",
+    "BilledJobResourceUtilizationTypeDef",
     "BilledResourceUtilizationTypeDef",
     "CollaborationAnalysisTemplateSummaryTypeDef",
     "CollaborationAnalysisTemplateTypeDef",
@@ -131,6 +147,11 @@ __all__ = (
     "ConfiguredTableAssociationTypeDef",
     "ConfiguredTableSummaryTypeDef",
     "ConfiguredTableTypeDef",
+    "ConsolidatedPolicyAggregationTypeDef",
+    "ConsolidatedPolicyCustomTypeDef",
+    "ConsolidatedPolicyListTypeDef",
+    "ConsolidatedPolicyTypeDef",
+    "ConsolidatedPolicyV1TypeDef",
     "CreateAnalysisTemplateInputTypeDef",
     "CreateAnalysisTemplateOutputTypeDef",
     "CreateCollaborationInputTypeDef",
@@ -210,6 +231,8 @@ __all__ = (
     "GetMembershipOutputTypeDef",
     "GetPrivacyBudgetTemplateInputTypeDef",
     "GetPrivacyBudgetTemplateOutputTypeDef",
+    "GetProtectedJobInputTypeDef",
+    "GetProtectedJobOutputTypeDef",
     "GetProtectedQueryInputTypeDef",
     "GetProtectedQueryOutputTypeDef",
     "GetSchemaAnalysisRuleInputTypeDef",
@@ -217,6 +240,7 @@ __all__ = (
     "GetSchemaInputTypeDef",
     "GetSchemaOutputTypeDef",
     "GlueTableReferenceTypeDef",
+    "HashTypeDef",
     "IdMappingConfigTypeDef",
     "IdMappingTableInputReferenceConfigTypeDef",
     "IdMappingTableInputReferencePropertiesTypeDef",
@@ -229,6 +253,7 @@ __all__ = (
     "IdNamespaceAssociationInputReferencePropertiesTypeDef",
     "IdNamespaceAssociationSummaryTypeDef",
     "IdNamespaceAssociationTypeDef",
+    "JobComputePaymentConfigTypeDef",
     "ListAnalysisTemplatesInputPaginateTypeDef",
     "ListAnalysisTemplatesInputTypeDef",
     "ListAnalysisTemplatesOutputTypeDef",
@@ -277,6 +302,9 @@ __all__ = (
     "ListPrivacyBudgetsInputPaginateTypeDef",
     "ListPrivacyBudgetsInputTypeDef",
     "ListPrivacyBudgetsOutputTypeDef",
+    "ListProtectedJobsInputPaginateTypeDef",
+    "ListProtectedJobsInputTypeDef",
+    "ListProtectedJobsOutputTypeDef",
     "ListProtectedQueriesInputPaginateTypeDef",
     "ListProtectedQueriesInputTypeDef",
     "ListProtectedQueriesOutputTypeDef",
@@ -291,10 +319,13 @@ __all__ = (
     "MLPaymentConfigTypeDef",
     "MemberSpecificationTypeDef",
     "MemberSummaryTypeDef",
+    "MembershipJobComputePaymentConfigTypeDef",
     "MembershipMLPaymentConfigTypeDef",
     "MembershipModelInferencePaymentConfigTypeDef",
     "MembershipModelTrainingPaymentConfigTypeDef",
     "MembershipPaymentConfigurationTypeDef",
+    "MembershipProtectedJobOutputConfigurationTypeDef",
+    "MembershipProtectedJobResultConfigurationTypeDef",
     "MembershipProtectedQueryOutputConfigurationTypeDef",
     "MembershipProtectedQueryResultConfigurationTypeDef",
     "MembershipQueryComputePaymentConfigTypeDef",
@@ -317,11 +348,38 @@ __all__ = (
     "PrivacyBudgetTemplateUpdateParametersTypeDef",
     "PrivacyBudgetTypeDef",
     "PrivacyImpactTypeDef",
+    "ProtectedJobConfigurationDetailsTypeDef",
+    "ProtectedJobDirectAnalysisConfigurationDetailsTypeDef",
+    "ProtectedJobErrorTypeDef",
+    "ProtectedJobMemberOutputConfigurationInputTypeDef",
+    "ProtectedJobMemberOutputConfigurationOutputTypeDef",
+    "ProtectedJobOutputConfigurationInputTypeDef",
+    "ProtectedJobOutputConfigurationOutputTypeDef",
+    "ProtectedJobOutputTypeDef",
+    "ProtectedJobParametersTypeDef",
+    "ProtectedJobReceiverConfigurationTypeDef",
+    "ProtectedJobResultConfigurationInputTypeDef",
+    "ProtectedJobResultConfigurationOutputTypeDef",
+    "ProtectedJobResultTypeDef",
+    "ProtectedJobS3OutputConfigurationInputTypeDef",
+    "ProtectedJobS3OutputConfigurationOutputTypeDef",
+    "ProtectedJobS3OutputTypeDef",
+    "ProtectedJobSingleMemberOutputTypeDef",
+    "ProtectedJobStatisticsTypeDef",
+    "ProtectedJobSummaryTypeDef",
+    "ProtectedJobTypeDef",
+    "ProtectedQueryDistributeOutputConfigurationLocationTypeDef",
+    "ProtectedQueryDistributeOutputConfigurationOutputTypeDef",
+    "ProtectedQueryDistributeOutputConfigurationTypeDef",
+    "ProtectedQueryDistributeOutputTypeDef",
     "ProtectedQueryErrorTypeDef",
     "ProtectedQueryMemberOutputConfigurationTypeDef",
+    "ProtectedQueryOutputConfigurationOutputTypeDef",
     "ProtectedQueryOutputConfigurationTypeDef",
     "ProtectedQueryOutputTypeDef",
+    "ProtectedQueryResultConfigurationOutputTypeDef",
     "ProtectedQueryResultConfigurationTypeDef",
+    "ProtectedQueryResultConfigurationUnionTypeDef",
     "ProtectedQueryResultTypeDef",
     "ProtectedQueryS3OutputConfigurationTypeDef",
     "ProtectedQueryS3OutputTypeDef",
@@ -337,6 +395,7 @@ __all__ = (
     "QueryConstraintTypeDef",
     "ReceiverConfigurationTypeDef",
     "ResponseMetadataTypeDef",
+    "S3LocationTypeDef",
     "SchemaAnalysisRuleRequestTypeDef",
     "SchemaStatusDetailTypeDef",
     "SchemaStatusReasonTypeDef",
@@ -348,6 +407,8 @@ __all__ = (
     "SnowflakeTableSchemaOutputTypeDef",
     "SnowflakeTableSchemaTypeDef",
     "SnowflakeTableSchemaV1TypeDef",
+    "StartProtectedJobInputTypeDef",
+    "StartProtectedJobOutputTypeDef",
     "StartProtectedQueryInputTypeDef",
     "StartProtectedQueryOutputTypeDef",
     "TableReferenceOutputTypeDef",
@@ -377,6 +438,8 @@ __all__ = (
     "UpdateMembershipOutputTypeDef",
     "UpdatePrivacyBudgetTemplateInputTypeDef",
     "UpdatePrivacyBudgetTemplateOutputTypeDef",
+    "UpdateProtectedJobInputTypeDef",
+    "UpdateProtectedJobOutputTypeDef",
     "UpdateProtectedQueryInputTypeDef",
     "UpdateProtectedQueryOutputTypeDef",
     "WorkerComputeConfigurationTypeDef",
@@ -419,11 +482,18 @@ class AnalysisRuleListTypeDef(TypedDict):
     allowedJoinOperators: NotRequired[Sequence[JoinOperatorType]]
     additionalAnalyses: NotRequired[AdditionalAnalysesType]
 
-class AnalysisSchemaTypeDef(TypedDict):
+class AnalysisSchemaOutputTypeDef(TypedDict):
     referencedTables: NotRequired[List[str]]
 
-class AnalysisSourceTypeDef(TypedDict):
-    text: NotRequired[str]
+class AnalysisSchemaTypeDef(TypedDict):
+    referencedTables: NotRequired[Sequence[str]]
+
+class HashTypeDef(TypedDict):
+    sha256: NotRequired[str]
+
+class S3LocationTypeDef(TypedDict):
+    bucket: str
+    key: str
 
 AnalysisTemplateSummaryTypeDef = TypedDict(
     "AnalysisTemplateSummaryTypeDef",
@@ -491,6 +561,9 @@ class BatchGetSchemaErrorTypeDef(TypedDict):
 class BatchGetSchemaInputTypeDef(TypedDict):
     collaborationIdentifier: str
     names: Sequence[str]
+
+class BilledJobResourceUtilizationTypeDef(TypedDict):
+    units: float
 
 class BilledResourceUtilizationTypeDef(TypedDict):
     units: float
@@ -676,6 +749,7 @@ ConfiguredTableAssociationSummaryTypeDef = TypedDict(
         "updateTime": datetime,
         "id": str,
         "arn": str,
+        "analysisRuleTypes": NotRequired[List[ConfiguredTableAssociationAnalysisRuleTypeType]],
     },
 )
 ConfiguredTableAssociationTypeDef = TypedDict(
@@ -704,9 +778,18 @@ ConfiguredTableSummaryTypeDef = TypedDict(
         "createTime": datetime,
         "updateTime": datetime,
         "analysisRuleTypes": List[ConfiguredTableAnalysisRuleTypeType],
-        "analysisMethod": Literal["DIRECT_QUERY"],
+        "analysisMethod": AnalysisMethodType,
+        "selectedAnalysisMethods": NotRequired[List[SelectedAnalysisMethodType]],
     },
 )
+
+class ConsolidatedPolicyListTypeDef(TypedDict):
+    joinColumns: List[str]
+    listColumns: List[str]
+    allowedJoinOperators: NotRequired[List[JoinOperatorType]]
+    additionalAnalyses: NotRequired[AdditionalAnalysesType]
+    allowedResultReceivers: NotRequired[List[str]]
+    allowedAdditionalAnalyses: NotRequired[List[str]]
 
 class CreateConfiguredAudienceModelAssociationInputTypeDef(TypedDict):
     membershipIdentifier: str
@@ -875,6 +958,10 @@ class GetPrivacyBudgetTemplateInputTypeDef(TypedDict):
     membershipIdentifier: str
     privacyBudgetTemplateIdentifier: str
 
+class GetProtectedJobInputTypeDef(TypedDict):
+    membershipIdentifier: str
+    protectedJobIdentifier: str
+
 class GetProtectedQueryInputTypeDef(TypedDict):
     membershipIdentifier: str
     protectedQueryIdentifier: str
@@ -903,6 +990,9 @@ IdMappingTableInputSourceTypeDef = TypedDict(
         "type": IdNamespaceTypeType,
     },
 )
+
+class JobComputePaymentConfigTypeDef(TypedDict):
+    isResponsible: bool
 
 class PaginatorConfigTypeDef(TypedDict):
     MaxItems: NotRequired[int]
@@ -1005,6 +1095,12 @@ class ListPrivacyBudgetsInputTypeDef(TypedDict):
     nextToken: NotRequired[str]
     maxResults: NotRequired[int]
 
+class ListProtectedJobsInputTypeDef(TypedDict):
+    membershipIdentifier: str
+    status: NotRequired[ProtectedJobStatusType]
+    nextToken: NotRequired[str]
+    maxResults: NotRequired[int]
+
 class ListProtectedQueriesInputTypeDef(TypedDict):
     membershipIdentifier: str
     status: NotRequired[ProtectedQueryStatusType]
@@ -1028,7 +1124,8 @@ SchemaSummaryTypeDef = TypedDict(
         "collaborationId": str,
         "collaborationArn": str,
         "analysisRuleTypes": List[AnalysisRuleTypeType],
-        "analysisMethod": NotRequired[Literal["DIRECT_QUERY"]],
+        "analysisMethod": NotRequired[AnalysisMethodType],
+        "selectedAnalysisMethods": NotRequired[List[SelectedAnalysisMethodType]],
     },
 )
 
@@ -1047,6 +1144,9 @@ class ModelInferencePaymentConfigTypeDef(TypedDict):
 class ModelTrainingPaymentConfigTypeDef(TypedDict):
     isResponsible: bool
 
+class MembershipJobComputePaymentConfigTypeDef(TypedDict):
+    isResponsible: bool
+
 class MembershipModelInferencePaymentConfigTypeDef(TypedDict):
     isResponsible: bool
 
@@ -1055,6 +1155,10 @@ class MembershipModelTrainingPaymentConfigTypeDef(TypedDict):
 
 class MembershipQueryComputePaymentConfigTypeDef(TypedDict):
     isResponsible: bool
+
+class ProtectedJobS3OutputConfigurationInputTypeDef(TypedDict):
+    bucket: str
+    keyPrefix: NotRequired[str]
 
 class ProtectedQueryS3OutputConfigurationTypeDef(TypedDict):
     resultFormat: ResultFormatType
@@ -1069,9 +1173,31 @@ class PopulateIdMappingTableInputTypeDef(TypedDict):
     idMappingTableIdentifier: str
     membershipIdentifier: str
 
-class ProtectedQueryErrorTypeDef(TypedDict):
+class ProtectedJobDirectAnalysisConfigurationDetailsTypeDef(TypedDict):
+    receiverAccountIds: NotRequired[List[str]]
+
+class ProtectedJobErrorTypeDef(TypedDict):
     message: str
     code: str
+
+class ProtectedJobMemberOutputConfigurationInputTypeDef(TypedDict):
+    accountId: str
+
+class ProtectedJobMemberOutputConfigurationOutputTypeDef(TypedDict):
+    accountId: str
+
+class ProtectedJobS3OutputConfigurationOutputTypeDef(TypedDict):
+    bucket: str
+    keyPrefix: NotRequired[str]
+
+class ProtectedJobS3OutputTypeDef(TypedDict):
+    location: str
+
+class ProtectedJobSingleMemberOutputTypeDef(TypedDict):
+    accountId: str
+
+class ProtectedJobParametersTypeDef(TypedDict):
+    analysisTemplateArn: NotRequired[str]
 
 class ProtectedQueryMemberOutputConfigurationTypeDef(TypedDict):
     accountId: str
@@ -1081,6 +1207,10 @@ class ProtectedQueryS3OutputTypeDef(TypedDict):
 
 class ProtectedQuerySingleMemberOutputTypeDef(TypedDict):
     accountId: str
+
+class ProtectedQueryErrorTypeDef(TypedDict):
+    message: str
+    code: str
 
 class ProtectedQuerySQLParametersOutputTypeDef(TypedDict):
     queryString: NotRequired[str]
@@ -1120,6 +1250,7 @@ class UpdateCollaborationInputTypeDef(TypedDict):
     collaborationIdentifier: str
     name: NotRequired[str]
     description: NotRequired[str]
+    analyticsEngine: NotRequired[AnalyticsEngineType]
 
 class UpdateConfiguredAudienceModelAssociationInputTypeDef(TypedDict):
     configuredAudienceModelAssociationIdentifier: str
@@ -1137,12 +1268,19 @@ class UpdateConfiguredTableInputTypeDef(TypedDict):
     configuredTableIdentifier: str
     name: NotRequired[str]
     description: NotRequired[str]
+    analysisMethod: NotRequired[AnalysisMethodType]
+    selectedAnalysisMethods: NotRequired[Sequence[SelectedAnalysisMethodType]]
 
 class UpdateIdMappingTableInputTypeDef(TypedDict):
     idMappingTableIdentifier: str
     membershipIdentifier: str
     description: NotRequired[str]
     kmsKeyArn: NotRequired[str]
+
+class UpdateProtectedJobInputTypeDef(TypedDict):
+    membershipIdentifier: str
+    protectedJobIdentifier: str
+    targetStatus: Literal["CANCELLED"]
 
 class UpdateProtectedQueryInputTypeDef(TypedDict):
     membershipIdentifier: str
@@ -1169,18 +1307,27 @@ class AnalysisRuleAggregationTypeDef(TypedDict):
     allowedJoinOperators: NotRequired[Sequence[JoinOperatorType]]
     additionalAnalyses: NotRequired[AdditionalAnalysesType]
 
-CreateAnalysisTemplateInputTypeDef = TypedDict(
-    "CreateAnalysisTemplateInputTypeDef",
-    {
-        "membershipIdentifier": str,
-        "name": str,
-        "format": Literal["SQL"],
-        "source": AnalysisSourceTypeDef,
-        "description": NotRequired[str],
-        "tags": NotRequired[Mapping[str, str]],
-        "analysisParameters": NotRequired[Sequence[AnalysisParameterTypeDef]],
-    },
-)
+class ConsolidatedPolicyAggregationTypeDef(TypedDict):
+    aggregateColumns: List[AggregateColumnOutputTypeDef]
+    joinColumns: List[str]
+    dimensionColumns: List[str]
+    scalarFunctions: List[ScalarFunctionsType]
+    outputConstraints: List[AggregationConstraintTypeDef]
+    joinRequired: NotRequired[Literal["QUERY_RUNNER"]]
+    allowedJoinOperators: NotRequired[List[JoinOperatorType]]
+    additionalAnalyses: NotRequired[AdditionalAnalysesType]
+    allowedResultReceivers: NotRequired[List[str]]
+    allowedAdditionalAnalyses: NotRequired[List[str]]
+
+AnalysisSchemaUnionTypeDef = Union[AnalysisSchemaTypeDef, AnalysisSchemaOutputTypeDef]
+
+class AnalysisTemplateArtifactMetadataTypeDef(TypedDict):
+    entryPointHash: HashTypeDef
+    additionalArtifactHashes: NotRequired[List[HashTypeDef]]
+
+class AnalysisTemplateArtifactTypeDef(TypedDict):
+    location: S3LocationTypeDef
+
 AnalysisTemplateValidationStatusDetailTypeDef = TypedDict(
     "AnalysisTemplateValidationStatusDetailTypeDef",
     {
@@ -1206,6 +1353,10 @@ class PopulateIdMappingTableOutputTypeDef(TypedDict):
 class BatchGetSchemaAnalysisRuleInputTypeDef(TypedDict):
     collaborationIdentifier: str
     schemaAnalysisRuleRequests: Sequence[SchemaAnalysisRuleRequestTypeDef]
+
+class ProtectedJobStatisticsTypeDef(TypedDict):
+    totalDurationInMillis: NotRequired[int]
+    billedResourceUtilization: NotRequired[BilledJobResourceUtilizationTypeDef]
 
 class ProtectedQueryStatisticsTypeDef(TypedDict):
     totalDurationInMillis: NotRequired[int]
@@ -1342,6 +1493,7 @@ CollaborationTypeDef = TypedDict(
         "membershipId": NotRequired[str],
         "membershipArn": NotRequired[str],
         "dataEncryptionMetadata": NotRequired[DataEncryptionMetadataTypeDef],
+        "jobLogStatus": NotRequired[CollaborationJobLogStatusType],
         "analyticsEngine": NotRequired[AnalyticsEngineType],
     },
 )
@@ -1534,6 +1686,11 @@ class ListPrivacyBudgetsInputPaginateTypeDef(TypedDict):
     privacyBudgetType: Literal["DIFFERENTIAL_PRIVACY"]
     PaginationConfig: NotRequired[PaginatorConfigTypeDef]
 
+class ListProtectedJobsInputPaginateTypeDef(TypedDict):
+    membershipIdentifier: str
+    status: NotRequired[ProtectedJobStatusType]
+    PaginationConfig: NotRequired[PaginatorConfigTypeDef]
+
 class ListProtectedQueriesInputPaginateTypeDef(TypedDict):
     membershipIdentifier: str
     status: NotRequired[ProtectedQueryStatusType]
@@ -1564,14 +1721,33 @@ class MembershipMLPaymentConfigTypeDef(TypedDict):
     modelTraining: NotRequired[MembershipModelTrainingPaymentConfigTypeDef]
     modelInference: NotRequired[MembershipModelInferencePaymentConfigTypeDef]
 
+class MembershipProtectedJobOutputConfigurationTypeDef(TypedDict):
+    s3: NotRequired[ProtectedJobS3OutputConfigurationInputTypeDef]
+
 class MembershipProtectedQueryOutputConfigurationTypeDef(TypedDict):
     s3: NotRequired[ProtectedQueryS3OutputConfigurationTypeDef]
 
-class ProtectedQueryOutputConfigurationTypeDef(TypedDict):
+class ProtectedJobConfigurationDetailsTypeDef(TypedDict):
+    directAnalysisConfigurationDetails: NotRequired[
+        ProtectedJobDirectAnalysisConfigurationDetailsTypeDef
+    ]
+
+class ProtectedJobOutputConfigurationInputTypeDef(TypedDict):
+    member: NotRequired[ProtectedJobMemberOutputConfigurationInputTypeDef]
+
+class ProtectedJobOutputConfigurationOutputTypeDef(TypedDict):
+    s3: NotRequired[ProtectedJobS3OutputConfigurationOutputTypeDef]
+    member: NotRequired[ProtectedJobMemberOutputConfigurationOutputTypeDef]
+
+class ProtectedJobOutputTypeDef(TypedDict):
+    s3: NotRequired[ProtectedJobS3OutputTypeDef]
+    memberList: NotRequired[List[ProtectedJobSingleMemberOutputTypeDef]]
+
+class ProtectedQueryDistributeOutputConfigurationLocationTypeDef(TypedDict):
     s3: NotRequired[ProtectedQueryS3OutputConfigurationTypeDef]
     member: NotRequired[ProtectedQueryMemberOutputConfigurationTypeDef]
 
-class ProtectedQueryOutputTypeDef(TypedDict):
+class ProtectedQueryDistributeOutputTypeDef(TypedDict):
     s3: NotRequired[ProtectedQueryS3OutputTypeDef]
     memberList: NotRequired[List[ProtectedQuerySingleMemberOutputTypeDef]]
 
@@ -1595,45 +1771,18 @@ class SnowflakeTableSchemaOutputTypeDef(TypedDict):
 class SnowflakeTableSchemaTypeDef(TypedDict):
     v1: NotRequired[Sequence[SnowflakeTableSchemaV1TypeDef]]
 
-AnalysisTemplateTypeDef = TypedDict(
-    "AnalysisTemplateTypeDef",
-    {
-        "id": str,
-        "arn": str,
-        "collaborationId": str,
-        "collaborationArn": str,
-        "membershipId": str,
-        "membershipArn": str,
-        "name": str,
-        "createTime": datetime,
-        "updateTime": datetime,
-        "schema": AnalysisSchemaTypeDef,
-        "format": Literal["SQL"],
-        "source": AnalysisSourceTypeDef,
-        "description": NotRequired[str],
-        "analysisParameters": NotRequired[List[AnalysisParameterTypeDef]],
-        "validations": NotRequired[List[AnalysisTemplateValidationStatusDetailTypeDef]],
-    },
-)
-CollaborationAnalysisTemplateTypeDef = TypedDict(
-    "CollaborationAnalysisTemplateTypeDef",
-    {
-        "id": str,
-        "arn": str,
-        "collaborationId": str,
-        "collaborationArn": str,
-        "creatorAccountId": str,
-        "name": str,
-        "createTime": datetime,
-        "updateTime": datetime,
-        "schema": AnalysisSchemaTypeDef,
-        "format": Literal["SQL"],
-        "source": AnalysisSourceTypeDef,
-        "description": NotRequired[str],
-        "analysisParameters": NotRequired[List[AnalysisParameterTypeDef]],
-        "validations": NotRequired[List[AnalysisTemplateValidationStatusDetailTypeDef]],
-    },
-)
+class AnalysisSourceMetadataTypeDef(TypedDict):
+    artifacts: NotRequired[AnalysisTemplateArtifactMetadataTypeDef]
+
+class AnalysisTemplateArtifactsOutputTypeDef(TypedDict):
+    entryPoint: AnalysisTemplateArtifactTypeDef
+    roleArn: str
+    additionalArtifacts: NotRequired[List[AnalysisTemplateArtifactTypeDef]]
+
+class AnalysisTemplateArtifactsTypeDef(TypedDict):
+    entryPoint: AnalysisTemplateArtifactTypeDef
+    roleArn: str
+    additionalArtifacts: NotRequired[Sequence[AnalysisTemplateArtifactTypeDef]]
 
 class ListCollaborationIdNamespaceAssociationsOutputTypeDef(TypedDict):
     collaborationIdNamespaceAssociationSummaries: List[
@@ -1696,6 +1845,15 @@ class AnalysisRuleCustomOutputTypeDef(TypedDict):
     additionalAnalyses: NotRequired[AdditionalAnalysesType]
     disallowedOutputColumns: NotRequired[List[str]]
     differentialPrivacy: NotRequired[DifferentialPrivacyConfigurationOutputTypeDef]
+
+class ConsolidatedPolicyCustomTypeDef(TypedDict):
+    allowedAnalyses: List[str]
+    allowedAnalysisProviders: NotRequired[List[str]]
+    additionalAnalyses: NotRequired[AdditionalAnalysesType]
+    disallowedOutputColumns: NotRequired[List[str]]
+    differentialPrivacy: NotRequired[DifferentialPrivacyConfigurationOutputTypeDef]
+    allowedResultReceivers: NotRequired[List[str]]
+    allowedAdditionalAnalyses: NotRequired[List[str]]
 
 class AnalysisRuleCustomTypeDef(TypedDict):
     allowedAnalyses: Sequence[str]
@@ -1784,20 +1942,44 @@ class SchemaTypePropertiesTypeDef(TypedDict):
 class PaymentConfigurationTypeDef(TypedDict):
     queryCompute: QueryComputePaymentConfigTypeDef
     machineLearning: NotRequired[MLPaymentConfigTypeDef]
+    jobCompute: NotRequired[JobComputePaymentConfigTypeDef]
 
 class MembershipPaymentConfigurationTypeDef(TypedDict):
     queryCompute: MembershipQueryComputePaymentConfigTypeDef
     machineLearning: NotRequired[MembershipMLPaymentConfigTypeDef]
+    jobCompute: NotRequired[MembershipJobComputePaymentConfigTypeDef]
+
+class MembershipProtectedJobResultConfigurationTypeDef(TypedDict):
+    outputConfiguration: MembershipProtectedJobOutputConfigurationTypeDef
+    roleArn: str
 
 class MembershipProtectedQueryResultConfigurationTypeDef(TypedDict):
     outputConfiguration: MembershipProtectedQueryOutputConfigurationTypeDef
     roleArn: NotRequired[str]
 
-class ProtectedQueryResultConfigurationTypeDef(TypedDict):
-    outputConfiguration: ProtectedQueryOutputConfigurationTypeDef
+class ProtectedJobReceiverConfigurationTypeDef(TypedDict):
+    analysisType: Literal["DIRECT_ANALYSIS"]
+    configurationDetails: NotRequired[ProtectedJobConfigurationDetailsTypeDef]
 
-class ProtectedQueryResultTypeDef(TypedDict):
-    output: ProtectedQueryOutputTypeDef
+class ProtectedJobResultConfigurationInputTypeDef(TypedDict):
+    outputConfiguration: ProtectedJobOutputConfigurationInputTypeDef
+
+class ProtectedJobResultConfigurationOutputTypeDef(TypedDict):
+    outputConfiguration: ProtectedJobOutputConfigurationOutputTypeDef
+
+class ProtectedJobResultTypeDef(TypedDict):
+    output: ProtectedJobOutputTypeDef
+
+class ProtectedQueryDistributeOutputConfigurationOutputTypeDef(TypedDict):
+    locations: List[ProtectedQueryDistributeOutputConfigurationLocationTypeDef]
+
+class ProtectedQueryDistributeOutputConfigurationTypeDef(TypedDict):
+    locations: Sequence[ProtectedQueryDistributeOutputConfigurationLocationTypeDef]
+
+class ProtectedQueryOutputTypeDef(TypedDict):
+    s3: NotRequired[ProtectedQueryS3OutputTypeDef]
+    memberList: NotRequired[List[ProtectedQuerySingleMemberOutputTypeDef]]
+    distribute: NotRequired[ProtectedQueryDistributeOutputTypeDef]
 
 class AnalysisRuleIdMappingTableTypeDef(TypedDict):
     joinColumns: List[str]
@@ -1820,26 +2002,13 @@ class SnowflakeTableReferenceTypeDef(TypedDict):
     schemaName: str
     tableSchema: SnowflakeTableSchemaTypeDef
 
-class CreateAnalysisTemplateOutputTypeDef(TypedDict):
-    analysisTemplate: AnalysisTemplateTypeDef
-    ResponseMetadata: ResponseMetadataTypeDef
+class AnalysisSourceOutputTypeDef(TypedDict):
+    text: NotRequired[str]
+    artifacts: NotRequired[AnalysisTemplateArtifactsOutputTypeDef]
 
-class GetAnalysisTemplateOutputTypeDef(TypedDict):
-    analysisTemplate: AnalysisTemplateTypeDef
-    ResponseMetadata: ResponseMetadataTypeDef
-
-class UpdateAnalysisTemplateOutputTypeDef(TypedDict):
-    analysisTemplate: AnalysisTemplateTypeDef
-    ResponseMetadata: ResponseMetadataTypeDef
-
-class BatchGetCollaborationAnalysisTemplateOutputTypeDef(TypedDict):
-    collaborationAnalysisTemplates: List[CollaborationAnalysisTemplateTypeDef]
-    errors: List[BatchGetCollaborationAnalysisTemplateErrorTypeDef]
-    ResponseMetadata: ResponseMetadataTypeDef
-
-class GetCollaborationAnalysisTemplateOutputTypeDef(TypedDict):
-    collaborationAnalysisTemplate: CollaborationAnalysisTemplateTypeDef
-    ResponseMetadata: ResponseMetadataTypeDef
+class AnalysisSourceTypeDef(TypedDict):
+    text: NotRequired[str]
+    artifacts: NotRequired[AnalysisTemplateArtifactsTypeDef]
 
 ProtectedQuerySummaryTypeDef = TypedDict(
     "ProtectedQuerySummaryTypeDef",
@@ -1874,6 +2043,14 @@ ConfiguredTableAnalysisRulePolicyV1OutputTypeDef = TypedDict(
         "list": NotRequired[AnalysisRuleListOutputTypeDef],
         "aggregation": NotRequired[AnalysisRuleAggregationOutputTypeDef],
         "custom": NotRequired[AnalysisRuleCustomOutputTypeDef],
+    },
+)
+ConsolidatedPolicyV1TypeDef = TypedDict(
+    "ConsolidatedPolicyV1TypeDef",
+    {
+        "list": NotRequired[ConsolidatedPolicyListTypeDef],
+        "aggregation": NotRequired[ConsolidatedPolicyAggregationTypeDef],
+        "custom": NotRequired[ConsolidatedPolicyCustomTypeDef],
     },
 )
 ConfiguredTableAnalysisRulePolicyV1TypeDef = TypedDict(
@@ -1964,7 +2141,8 @@ SchemaTypeDef = TypedDict(
         "updateTime": datetime,
         "type": SchemaTypeType,
         "schemaStatusDetails": List[SchemaStatusDetailTypeDef],
-        "analysisMethod": NotRequired[Literal["DIRECT_QUERY"]],
+        "analysisMethod": NotRequired[AnalysisMethodType],
+        "selectedAnalysisMethods": NotRequired[List[SelectedAnalysisMethodType]],
         "schemaTypeProperties": NotRequired[SchemaTypePropertiesTypeDef],
     },
 )
@@ -2010,8 +2188,10 @@ MembershipSummaryTypeDef = TypedDict(
 class CreateMembershipInputTypeDef(TypedDict):
     collaborationIdentifier: str
     queryLogStatus: MembershipQueryLogStatusType
+    jobLogStatus: NotRequired[MembershipJobLogStatusType]
     tags: NotRequired[Mapping[str, str]]
     defaultResultConfiguration: NotRequired[MembershipProtectedQueryResultConfigurationTypeDef]
+    defaultJobResultConfiguration: NotRequired[MembershipProtectedJobResultConfigurationTypeDef]
     paymentConfiguration: NotRequired[MembershipPaymentConfigurationTypeDef]
 
 MembershipTypeDef = TypedDict(
@@ -2031,8 +2211,12 @@ MembershipTypeDef = TypedDict(
         "queryLogStatus": MembershipQueryLogStatusType,
         "paymentConfiguration": MembershipPaymentConfigurationTypeDef,
         "mlMemberAbilities": NotRequired[MLMemberAbilitiesOutputTypeDef],
+        "jobLogStatus": NotRequired[MembershipJobLogStatusType],
         "defaultResultConfiguration": NotRequired[
             MembershipProtectedQueryResultConfigurationTypeDef
+        ],
+        "defaultJobResultConfiguration": NotRequired[
+            MembershipProtectedJobResultConfigurationTypeDef
         ],
     },
 )
@@ -2040,35 +2224,59 @@ MembershipTypeDef = TypedDict(
 class UpdateMembershipInputTypeDef(TypedDict):
     membershipIdentifier: str
     queryLogStatus: NotRequired[MembershipQueryLogStatusType]
+    jobLogStatus: NotRequired[MembershipJobLogStatusType]
     defaultResultConfiguration: NotRequired[MembershipProtectedQueryResultConfigurationTypeDef]
+    defaultJobResultConfiguration: NotRequired[MembershipProtectedJobResultConfigurationTypeDef]
 
-StartProtectedQueryInputTypeDef = TypedDict(
-    "StartProtectedQueryInputTypeDef",
-    {
-        "type": Literal["SQL"],
-        "membershipIdentifier": str,
-        "sqlParameters": ProtectedQuerySQLParametersUnionTypeDef,
-        "resultConfiguration": NotRequired[ProtectedQueryResultConfigurationTypeDef],
-        "computeConfiguration": NotRequired[ComputeConfigurationTypeDef],
-    },
-)
-ProtectedQueryTypeDef = TypedDict(
-    "ProtectedQueryTypeDef",
+ProtectedJobSummaryTypeDef = TypedDict(
+    "ProtectedJobSummaryTypeDef",
     {
         "id": str,
         "membershipId": str,
         "membershipArn": str,
         "createTime": datetime,
-        "status": ProtectedQueryStatusType,
-        "sqlParameters": NotRequired[ProtectedQuerySQLParametersOutputTypeDef],
-        "resultConfiguration": NotRequired[ProtectedQueryResultConfigurationTypeDef],
-        "statistics": NotRequired[ProtectedQueryStatisticsTypeDef],
-        "result": NotRequired[ProtectedQueryResultTypeDef],
-        "error": NotRequired[ProtectedQueryErrorTypeDef],
-        "differentialPrivacy": NotRequired[DifferentialPrivacyParametersTypeDef],
-        "computeConfiguration": NotRequired[ComputeConfigurationTypeDef],
+        "status": ProtectedJobStatusType,
+        "receiverConfigurations": List[ProtectedJobReceiverConfigurationTypeDef],
     },
 )
+StartProtectedJobInputTypeDef = TypedDict(
+    "StartProtectedJobInputTypeDef",
+    {
+        "type": Literal["PYSPARK"],
+        "membershipIdentifier": str,
+        "jobParameters": ProtectedJobParametersTypeDef,
+        "resultConfiguration": NotRequired[ProtectedJobResultConfigurationInputTypeDef],
+    },
+)
+ProtectedJobTypeDef = TypedDict(
+    "ProtectedJobTypeDef",
+    {
+        "id": str,
+        "membershipId": str,
+        "membershipArn": str,
+        "createTime": datetime,
+        "status": ProtectedJobStatusType,
+        "jobParameters": NotRequired[ProtectedJobParametersTypeDef],
+        "resultConfiguration": NotRequired[ProtectedJobResultConfigurationOutputTypeDef],
+        "statistics": NotRequired[ProtectedJobStatisticsTypeDef],
+        "result": NotRequired[ProtectedJobResultTypeDef],
+        "error": NotRequired[ProtectedJobErrorTypeDef],
+    },
+)
+
+class ProtectedQueryOutputConfigurationOutputTypeDef(TypedDict):
+    s3: NotRequired[ProtectedQueryS3OutputConfigurationTypeDef]
+    member: NotRequired[ProtectedQueryMemberOutputConfigurationTypeDef]
+    distribute: NotRequired[ProtectedQueryDistributeOutputConfigurationOutputTypeDef]
+
+class ProtectedQueryOutputConfigurationTypeDef(TypedDict):
+    s3: NotRequired[ProtectedQueryS3OutputConfigurationTypeDef]
+    member: NotRequired[ProtectedQueryMemberOutputConfigurationTypeDef]
+    distribute: NotRequired[ProtectedQueryDistributeOutputConfigurationTypeDef]
+
+class ProtectedQueryResultTypeDef(TypedDict):
+    output: ProtectedQueryOutputTypeDef
+
 AnalysisRulePolicyV1TypeDef = TypedDict(
     "AnalysisRulePolicyV1TypeDef",
     {
@@ -2088,6 +2296,49 @@ class TableReferenceTypeDef(TypedDict):
     glue: NotRequired[GlueTableReferenceTypeDef]
     snowflake: NotRequired[SnowflakeTableReferenceTypeDef]
     athena: NotRequired[AthenaTableReferenceTypeDef]
+
+AnalysisTemplateTypeDef = TypedDict(
+    "AnalysisTemplateTypeDef",
+    {
+        "id": str,
+        "arn": str,
+        "collaborationId": str,
+        "collaborationArn": str,
+        "membershipId": str,
+        "membershipArn": str,
+        "name": str,
+        "createTime": datetime,
+        "updateTime": datetime,
+        "schema": AnalysisSchemaOutputTypeDef,
+        "format": AnalysisFormatType,
+        "source": AnalysisSourceOutputTypeDef,
+        "description": NotRequired[str],
+        "sourceMetadata": NotRequired[AnalysisSourceMetadataTypeDef],
+        "analysisParameters": NotRequired[List[AnalysisParameterTypeDef]],
+        "validations": NotRequired[List[AnalysisTemplateValidationStatusDetailTypeDef]],
+    },
+)
+CollaborationAnalysisTemplateTypeDef = TypedDict(
+    "CollaborationAnalysisTemplateTypeDef",
+    {
+        "id": str,
+        "arn": str,
+        "collaborationId": str,
+        "collaborationArn": str,
+        "creatorAccountId": str,
+        "name": str,
+        "createTime": datetime,
+        "updateTime": datetime,
+        "schema": AnalysisSchemaOutputTypeDef,
+        "format": AnalysisFormatType,
+        "description": NotRequired[str],
+        "source": NotRequired[AnalysisSourceOutputTypeDef],
+        "sourceMetadata": NotRequired[AnalysisSourceMetadataTypeDef],
+        "analysisParameters": NotRequired[List[AnalysisParameterTypeDef]],
+        "validations": NotRequired[List[AnalysisTemplateValidationStatusDetailTypeDef]],
+    },
+)
+AnalysisSourceUnionTypeDef = Union[AnalysisSourceTypeDef, AnalysisSourceOutputTypeDef]
 
 class ListProtectedQueriesOutputTypeDef(TypedDict):
     protectedQueries: List[ProtectedQuerySummaryTypeDef]
@@ -2121,6 +2372,9 @@ class UpdateConfiguredTableAssociationAnalysisRuleInputTypeDef(TypedDict):
 class ConfiguredTableAnalysisRulePolicyOutputTypeDef(TypedDict):
     v1: NotRequired[ConfiguredTableAnalysisRulePolicyV1OutputTypeDef]
 
+class ConsolidatedPolicyTypeDef(TypedDict):
+    v1: NotRequired[ConsolidatedPolicyV1TypeDef]
+
 class ConfiguredTableAnalysisRulePolicyTypeDef(TypedDict):
     v1: NotRequired[ConfiguredTableAnalysisRulePolicyV1TypeDef]
 
@@ -2152,6 +2406,7 @@ class CreateCollaborationInputTypeDef(TypedDict):
     queryLogStatus: CollaborationQueryLogStatusType
     creatorMLMemberAbilities: NotRequired[MLMemberAbilitiesUnionTypeDef]
     dataEncryptionMetadata: NotRequired[DataEncryptionMetadataTypeDef]
+    jobLogStatus: NotRequired[CollaborationJobLogStatusType]
     tags: NotRequired[Mapping[str, str]]
     creatorPaymentConfiguration: NotRequired[PaymentConfigurationTypeDef]
     analyticsEngine: NotRequired[AnalyticsEngineType]
@@ -2178,17 +2433,28 @@ class UpdateMembershipOutputTypeDef(TypedDict):
     membership: MembershipTypeDef
     ResponseMetadata: ResponseMetadataTypeDef
 
-class GetProtectedQueryOutputTypeDef(TypedDict):
-    protectedQuery: ProtectedQueryTypeDef
+class ListProtectedJobsOutputTypeDef(TypedDict):
+    protectedJobs: List[ProtectedJobSummaryTypeDef]
+    ResponseMetadata: ResponseMetadataTypeDef
+    nextToken: NotRequired[str]
+
+class GetProtectedJobOutputTypeDef(TypedDict):
+    protectedJob: ProtectedJobTypeDef
     ResponseMetadata: ResponseMetadataTypeDef
 
-class StartProtectedQueryOutputTypeDef(TypedDict):
-    protectedQuery: ProtectedQueryTypeDef
+class StartProtectedJobOutputTypeDef(TypedDict):
+    protectedJob: ProtectedJobTypeDef
     ResponseMetadata: ResponseMetadataTypeDef
 
-class UpdateProtectedQueryOutputTypeDef(TypedDict):
-    protectedQuery: ProtectedQueryTypeDef
+class UpdateProtectedJobOutputTypeDef(TypedDict):
+    protectedJob: ProtectedJobTypeDef
     ResponseMetadata: ResponseMetadataTypeDef
+
+class ProtectedQueryResultConfigurationOutputTypeDef(TypedDict):
+    outputConfiguration: ProtectedQueryOutputConfigurationOutputTypeDef
+
+class ProtectedQueryResultConfigurationTypeDef(TypedDict):
+    outputConfiguration: ProtectedQueryOutputConfigurationTypeDef
 
 class AnalysisRulePolicyTypeDef(TypedDict):
     v1: NotRequired[AnalysisRulePolicyV1TypeDef]
@@ -2203,12 +2469,48 @@ ConfiguredTableTypeDef = TypedDict(
         "createTime": datetime,
         "updateTime": datetime,
         "analysisRuleTypes": List[ConfiguredTableAnalysisRuleTypeType],
-        "analysisMethod": Literal["DIRECT_QUERY"],
+        "analysisMethod": AnalysisMethodType,
         "allowedColumns": List[str],
         "description": NotRequired[str],
+        "selectedAnalysisMethods": NotRequired[List[SelectedAnalysisMethodType]],
     },
 )
 TableReferenceUnionTypeDef = Union[TableReferenceTypeDef, TableReferenceOutputTypeDef]
+
+class CreateAnalysisTemplateOutputTypeDef(TypedDict):
+    analysisTemplate: AnalysisTemplateTypeDef
+    ResponseMetadata: ResponseMetadataTypeDef
+
+class GetAnalysisTemplateOutputTypeDef(TypedDict):
+    analysisTemplate: AnalysisTemplateTypeDef
+    ResponseMetadata: ResponseMetadataTypeDef
+
+class UpdateAnalysisTemplateOutputTypeDef(TypedDict):
+    analysisTemplate: AnalysisTemplateTypeDef
+    ResponseMetadata: ResponseMetadataTypeDef
+
+class BatchGetCollaborationAnalysisTemplateOutputTypeDef(TypedDict):
+    collaborationAnalysisTemplates: List[CollaborationAnalysisTemplateTypeDef]
+    errors: List[BatchGetCollaborationAnalysisTemplateErrorTypeDef]
+    ResponseMetadata: ResponseMetadataTypeDef
+
+class GetCollaborationAnalysisTemplateOutputTypeDef(TypedDict):
+    collaborationAnalysisTemplate: CollaborationAnalysisTemplateTypeDef
+    ResponseMetadata: ResponseMetadataTypeDef
+
+CreateAnalysisTemplateInputTypeDef = TypedDict(
+    "CreateAnalysisTemplateInputTypeDef",
+    {
+        "membershipIdentifier": str,
+        "name": str,
+        "format": AnalysisFormatType,
+        "source": AnalysisSourceUnionTypeDef,
+        "description": NotRequired[str],
+        "tags": NotRequired[Mapping[str, str]],
+        "analysisParameters": NotRequired[Sequence[AnalysisParameterTypeDef]],
+        "schema": NotRequired[AnalysisSchemaUnionTypeDef],
+    },
+)
 ConfiguredTableAnalysisRuleTypeDef = TypedDict(
     "ConfiguredTableAnalysisRuleTypeDef",
     {
@@ -2223,6 +2525,26 @@ ConfiguredTableAnalysisRuleTypeDef = TypedDict(
 ConfiguredTableAnalysisRulePolicyUnionTypeDef = Union[
     ConfiguredTableAnalysisRulePolicyTypeDef, ConfiguredTableAnalysisRulePolicyOutputTypeDef
 ]
+ProtectedQueryTypeDef = TypedDict(
+    "ProtectedQueryTypeDef",
+    {
+        "id": str,
+        "membershipId": str,
+        "membershipArn": str,
+        "createTime": datetime,
+        "status": ProtectedQueryStatusType,
+        "sqlParameters": NotRequired[ProtectedQuerySQLParametersOutputTypeDef],
+        "resultConfiguration": NotRequired[ProtectedQueryResultConfigurationOutputTypeDef],
+        "statistics": NotRequired[ProtectedQueryStatisticsTypeDef],
+        "result": NotRequired[ProtectedQueryResultTypeDef],
+        "error": NotRequired[ProtectedQueryErrorTypeDef],
+        "differentialPrivacy": NotRequired[DifferentialPrivacyParametersTypeDef],
+        "computeConfiguration": NotRequired[ComputeConfigurationTypeDef],
+    },
+)
+ProtectedQueryResultConfigurationUnionTypeDef = Union[
+    ProtectedQueryResultConfigurationTypeDef, ProtectedQueryResultConfigurationOutputTypeDef
+]
 AnalysisRuleTypeDef = TypedDict(
     "AnalysisRuleTypeDef",
     {
@@ -2232,6 +2554,10 @@ AnalysisRuleTypeDef = TypedDict(
         "createTime": datetime,
         "updateTime": datetime,
         "policy": AnalysisRulePolicyTypeDef,
+        "collaborationPolicy": NotRequired[
+            ConfiguredTableAssociationAnalysisRulePolicyOutputTypeDef
+        ],
+        "consolidatedPolicy": NotRequired[ConsolidatedPolicyTypeDef],
     },
 )
 
@@ -2251,8 +2577,9 @@ class CreateConfiguredTableInputTypeDef(TypedDict):
     name: str
     tableReference: TableReferenceUnionTypeDef
     allowedColumns: Sequence[str]
-    analysisMethod: Literal["DIRECT_QUERY"]
+    analysisMethod: AnalysisMethodType
     description: NotRequired[str]
+    selectedAnalysisMethods: NotRequired[Sequence[SelectedAnalysisMethodType]]
     tags: NotRequired[Mapping[str, str]]
 
 class CreateConfiguredTableAnalysisRuleOutputTypeDef(TypedDict):
@@ -2276,6 +2603,29 @@ class UpdateConfiguredTableAnalysisRuleInputTypeDef(TypedDict):
     configuredTableIdentifier: str
     analysisRuleType: ConfiguredTableAnalysisRuleTypeType
     analysisRulePolicy: ConfiguredTableAnalysisRulePolicyUnionTypeDef
+
+class GetProtectedQueryOutputTypeDef(TypedDict):
+    protectedQuery: ProtectedQueryTypeDef
+    ResponseMetadata: ResponseMetadataTypeDef
+
+class StartProtectedQueryOutputTypeDef(TypedDict):
+    protectedQuery: ProtectedQueryTypeDef
+    ResponseMetadata: ResponseMetadataTypeDef
+
+class UpdateProtectedQueryOutputTypeDef(TypedDict):
+    protectedQuery: ProtectedQueryTypeDef
+    ResponseMetadata: ResponseMetadataTypeDef
+
+StartProtectedQueryInputTypeDef = TypedDict(
+    "StartProtectedQueryInputTypeDef",
+    {
+        "type": Literal["SQL"],
+        "membershipIdentifier": str,
+        "sqlParameters": ProtectedQuerySQLParametersUnionTypeDef,
+        "resultConfiguration": NotRequired[ProtectedQueryResultConfigurationUnionTypeDef],
+        "computeConfiguration": NotRequired[ComputeConfigurationTypeDef],
+    },
+)
 
 class BatchGetSchemaAnalysisRuleOutputTypeDef(TypedDict):
     analysisRules: List[AnalysisRuleTypeDef]

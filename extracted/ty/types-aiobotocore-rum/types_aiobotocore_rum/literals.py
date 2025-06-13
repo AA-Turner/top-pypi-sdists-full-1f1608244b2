@@ -26,6 +26,7 @@ __all__ = (
     "BatchGetRumMetricDefinitionsPaginatorName",
     "CloudWatchRUMServiceName",
     "CustomEventsStatusType",
+    "DeobfuscationStatusType",
     "GetAppMonitorDataPaginatorName",
     "ListAppMonitorsPaginatorName",
     "ListRumMetricsDestinationsPaginatorName",
@@ -41,6 +42,7 @@ __all__ = (
 
 BatchGetRumMetricDefinitionsPaginatorName = Literal["batch_get_rum_metric_definitions"]
 CustomEventsStatusType = Literal["DISABLED", "ENABLED"]
+DeobfuscationStatusType = Literal["DISABLED", "ENABLED"]
 GetAppMonitorDataPaginatorName = Literal["get_app_monitor_data"]
 ListAppMonitorsPaginatorName = Literal["list_app_monitors"]
 ListRumMetricsDestinationsPaginatorName = Literal["list_rum_metrics_destinations"]
@@ -204,6 +206,7 @@ ServiceName = Literal[
     "freetier",
     "fsx",
     "gamelift",
+    "gameliftstreams",
     "geo-maps",
     "geo-places",
     "geo-routes",
@@ -229,6 +232,7 @@ ServiceName = Literal[
     "iot",
     "iot-data",
     "iot-jobs-data",
+    "iot-managed-integrations",
     "iotanalytics",
     "iotdeviceadvisor",
     "iotevents",
@@ -343,7 +347,6 @@ ServiceName = Literal[
     "pipes",
     "polly",
     "pricing",
-    "privatenetworks",
     "proton",
     "qapps",
     "qbusiness",
@@ -404,7 +407,6 @@ ServiceName = Literal[
     "signer",
     "simspaceweaver",
     "sms",
-    "sms-voice",
     "snow-device-management",
     "snowball",
     "sns",
@@ -412,6 +414,7 @@ ServiceName = Literal[
     "sqs",
     "ssm",
     "ssm-contacts",
+    "ssm-guiconnect",
     "ssm-incidents",
     "ssm-quicksetup",
     "ssm-sap",
@@ -472,6 +475,7 @@ PaginatorName = Literal[
 ]
 RegionName = Literal[
     "af-south-1",
+    "ap-east-1",
     "ap-northeast-1",
     "ap-northeast-2",
     "ap-northeast-3",
@@ -490,6 +494,7 @@ RegionName = Literal[
     "eu-west-1",
     "eu-west-2",
     "eu-west-3",
+    "il-central-1",
     "me-central-1",
     "me-south-1",
     "sa-east-1",

@@ -1,8 +1,9 @@
 import json
-from dataclasses import dataclass
-from typing import Dict, Tuple, Optional
 import os
-from playwright_stealth.properties import Properties, BrowserType
+from dataclasses import dataclass
+from typing import Optional
+
+from playwright_stealth.properties import BrowserType, Properties
 
 
 def from_file(name) -> str:
@@ -12,7 +13,7 @@ def from_file(name) -> str:
         return f.read()
 
 
-SCRIPTS: Dict[str, str] = {
+SCRIPTS: dict[str, str] = {
     "chrome_csi": from_file("chrome.csi.js"),
     "chrome_app": from_file("chrome.app.js"),
     "chrome_runtime": from_file("chrome.runtime.js"),
@@ -76,7 +77,7 @@ class StealthConfig:
     nav_vendor: str = "Google Inc."
     nav_user_agent: str = None
     nav_platform: str = None
-    languages: Tuple[str, str] = ("en-US", "en")
+    languages: tuple[str, str] = ("en-US", "en")
     run_on_insecure_origins: Optional[bool] = None
 
     def enabled_scripts(self, properties: Properties):

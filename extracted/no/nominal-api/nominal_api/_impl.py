@@ -23115,6 +23115,24 @@ scout_chart_api_DeprecatedDefinitionAndSchemaVersion.__qualname__ = "DeprecatedD
 scout_chart_api_DeprecatedDefinitionAndSchemaVersion.__module__ = "nominal_api.scout_chart_api"
 
 
+class scout_chartdefinition_api_AlwaysConnectDisconnectedValues(ConjureBeanType):
+    """This option indicates that disconnected values will always be connected with a line.
+    """
+
+    @builtins.classmethod
+    def _fields(cls) -> Dict[str, ConjureFieldDefinition]:
+        return {
+        }
+
+    __slots__: List[str] = []
+
+
+
+scout_chartdefinition_api_AlwaysConnectDisconnectedValues.__name__ = "AlwaysConnectDisconnectedValues"
+scout_chartdefinition_api_AlwaysConnectDisconnectedValues.__qualname__ = "AlwaysConnectDisconnectedValues"
+scout_chartdefinition_api_AlwaysConnectDisconnectedValues.__module__ = "nominal_api.scout_chartdefinition_api"
+
+
 class scout_chartdefinition_api_AxisDisplayOptions(ConjureBeanType):
 
     @builtins.classmethod
@@ -23823,6 +23841,83 @@ class scout_chartdefinition_api_DefaultFill(ConjureBeanType):
 scout_chartdefinition_api_DefaultFill.__name__ = "DefaultFill"
 scout_chartdefinition_api_DefaultFill.__qualname__ = "DefaultFill"
 scout_chartdefinition_api_DefaultFill.__module__ = "nominal_api.scout_chartdefinition_api"
+
+
+class scout_chartdefinition_api_DisconnectedValueVisualization(ConjureUnionType):
+    _always_connect: Optional["scout_chartdefinition_api_AlwaysConnectDisconnectedValues"] = None
+    _threshold: Optional["scout_chartdefinition_api_ThresholdDisconnectedValues"] = None
+
+    @builtins.classmethod
+    def _options(cls) -> Dict[str, ConjureFieldDefinition]:
+        return {
+            'always_connect': ConjureFieldDefinition('alwaysConnect', scout_chartdefinition_api_AlwaysConnectDisconnectedValues),
+            'threshold': ConjureFieldDefinition('threshold', scout_chartdefinition_api_ThresholdDisconnectedValues)
+        }
+
+    def __init__(
+            self,
+            always_connect: Optional["scout_chartdefinition_api_AlwaysConnectDisconnectedValues"] = None,
+            threshold: Optional["scout_chartdefinition_api_ThresholdDisconnectedValues"] = None,
+            type_of_union: Optional[str] = None
+            ) -> None:
+        if type_of_union is None:
+            if (always_connect is not None) + (threshold is not None) != 1:
+                raise ValueError('a union must contain a single member')
+
+            if always_connect is not None:
+                self._always_connect = always_connect
+                self._type = 'alwaysConnect'
+            if threshold is not None:
+                self._threshold = threshold
+                self._type = 'threshold'
+
+        elif type_of_union == 'alwaysConnect':
+            if always_connect is None:
+                raise ValueError('a union value must not be None')
+            self._always_connect = always_connect
+            self._type = 'alwaysConnect'
+        elif type_of_union == 'threshold':
+            if threshold is None:
+                raise ValueError('a union value must not be None')
+            self._threshold = threshold
+            self._type = 'threshold'
+
+    @builtins.property
+    def always_connect(self) -> Optional["scout_chartdefinition_api_AlwaysConnectDisconnectedValues"]:
+        return self._always_connect
+
+    @builtins.property
+    def threshold(self) -> Optional["scout_chartdefinition_api_ThresholdDisconnectedValues"]:
+        return self._threshold
+
+    def accept(self, visitor) -> Any:
+        if not isinstance(visitor, scout_chartdefinition_api_DisconnectedValueVisualizationVisitor):
+            raise ValueError('{} is not an instance of scout_chartdefinition_api_DisconnectedValueVisualizationVisitor'.format(visitor.__class__.__name__))
+        if self._type == 'alwaysConnect' and self.always_connect is not None:
+            return visitor._always_connect(self.always_connect)
+        if self._type == 'threshold' and self.threshold is not None:
+            return visitor._threshold(self.threshold)
+
+
+scout_chartdefinition_api_DisconnectedValueVisualization.__name__ = "DisconnectedValueVisualization"
+scout_chartdefinition_api_DisconnectedValueVisualization.__qualname__ = "DisconnectedValueVisualization"
+scout_chartdefinition_api_DisconnectedValueVisualization.__module__ = "nominal_api.scout_chartdefinition_api"
+
+
+class scout_chartdefinition_api_DisconnectedValueVisualizationVisitor:
+
+    @abstractmethod
+    def _always_connect(self, always_connect: "scout_chartdefinition_api_AlwaysConnectDisconnectedValues") -> Any:
+        pass
+
+    @abstractmethod
+    def _threshold(self, threshold: "scout_chartdefinition_api_ThresholdDisconnectedValues") -> Any:
+        pass
+
+
+scout_chartdefinition_api_DisconnectedValueVisualizationVisitor.__name__ = "DisconnectedValueVisualizationVisitor"
+scout_chartdefinition_api_DisconnectedValueVisualizationVisitor.__qualname__ = "DisconnectedValueVisualizationVisitor"
+scout_chartdefinition_api_DisconnectedValueVisualizationVisitor.__module__ = "nominal_api.scout_chartdefinition_api"
 
 
 class scout_chartdefinition_api_EnumCellConfig(ConjureBeanType):
@@ -26042,6 +26137,31 @@ scout_chartdefinition_api_Threshold.__qualname__ = "Threshold"
 scout_chartdefinition_api_Threshold.__module__ = "nominal_api.scout_chartdefinition_api"
 
 
+class scout_chartdefinition_api_ThresholdDisconnectedValues(ConjureBeanType):
+    """This option indicates the duration below which disconnected values will always be connected with a line.
+    """
+
+    @builtins.classmethod
+    def _fields(cls) -> Dict[str, ConjureFieldDefinition]:
+        return {
+            'type': ConjureFieldDefinition('type', scout_run_api_Duration)
+        }
+
+    __slots__: List[str] = ['_type']
+
+    def __init__(self, type: "scout_run_api_Duration") -> None:
+        self._type = type
+
+    @builtins.property
+    def type(self) -> "scout_run_api_Duration":
+        return self._type
+
+
+scout_chartdefinition_api_ThresholdDisconnectedValues.__name__ = "ThresholdDisconnectedValues"
+scout_chartdefinition_api_ThresholdDisconnectedValues.__qualname__ = "ThresholdDisconnectedValues"
+scout_chartdefinition_api_ThresholdDisconnectedValues.__module__ = "nominal_api.scout_chartdefinition_api"
+
+
 class scout_chartdefinition_api_ThresholdLineStyle(ConjureEnumType):
 
     DOTTED = 'DOTTED'
@@ -26151,18 +26271,20 @@ class scout_chartdefinition_api_TimeSeriesChartDefinitionV1(ConjureBeanType):
             'events': ConjureFieldDefinition('events', OptionalTypeWrapper[List[scout_chartdefinition_api_Event]]),
             'title': ConjureFieldDefinition('title', OptionalTypeWrapper[str]),
             'value_axes': ConjureFieldDefinition('valueAxes', List[scout_chartdefinition_api_ValueAxis]),
-            'thresholds': ConjureFieldDefinition('thresholds', OptionalTypeWrapper[List[scout_chartdefinition_api_AxisThresholdVisualization]])
+            'thresholds': ConjureFieldDefinition('thresholds', OptionalTypeWrapper[List[scout_chartdefinition_api_AxisThresholdVisualization]]),
+            'disconnected_values': ConjureFieldDefinition('disconnectedValues', OptionalTypeWrapper[scout_chartdefinition_api_DisconnectedValueVisualization])
         }
 
-    __slots__: List[str] = ['_rows', '_comparison_run_groups', '_events', '_title', '_value_axes', '_thresholds']
+    __slots__: List[str] = ['_rows', '_comparison_run_groups', '_events', '_title', '_value_axes', '_thresholds', '_disconnected_values']
 
-    def __init__(self, comparison_run_groups: List["scout_comparisonrun_api_ComparisonRunGroup"], rows: List["scout_chartdefinition_api_TimeSeriesRow"], value_axes: List["scout_chartdefinition_api_ValueAxis"], events: Optional[List["scout_chartdefinition_api_Event"]] = None, thresholds: Optional[List["scout_chartdefinition_api_AxisThresholdVisualization"]] = None, title: Optional[str] = None) -> None:
+    def __init__(self, comparison_run_groups: List["scout_comparisonrun_api_ComparisonRunGroup"], rows: List["scout_chartdefinition_api_TimeSeriesRow"], value_axes: List["scout_chartdefinition_api_ValueAxis"], disconnected_values: Optional["scout_chartdefinition_api_DisconnectedValueVisualization"] = None, events: Optional[List["scout_chartdefinition_api_Event"]] = None, thresholds: Optional[List["scout_chartdefinition_api_AxisThresholdVisualization"]] = None, title: Optional[str] = None) -> None:
         self._rows = rows
         self._comparison_run_groups = comparison_run_groups
         self._events = events
         self._title = title
         self._value_axes = value_axes
         self._thresholds = thresholds
+        self._disconnected_values = disconnected_values
 
     @builtins.property
     def rows(self) -> List["scout_chartdefinition_api_TimeSeriesRow"]:
@@ -26187,6 +26309,12 @@ class scout_chartdefinition_api_TimeSeriesChartDefinitionV1(ConjureBeanType):
     @builtins.property
     def thresholds(self) -> Optional[List["scout_chartdefinition_api_AxisThresholdVisualization"]]:
         return self._thresholds
+
+    @builtins.property
+    def disconnected_values(self) -> Optional["scout_chartdefinition_api_DisconnectedValueVisualization"]:
+        """Determines when disconnected values should be connected. By default, they are always connected.
+        """
+        return self._disconnected_values
 
 
 scout_chartdefinition_api_TimeSeriesChartDefinitionV1.__name__ = "TimeSeriesChartDefinitionV1"

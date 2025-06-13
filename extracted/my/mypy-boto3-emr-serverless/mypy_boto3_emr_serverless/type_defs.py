@@ -67,7 +67,9 @@ __all__ = (
     "JobDriverTypeDef",
     "JobDriverUnionTypeDef",
     "JobRunAttemptSummaryTypeDef",
+    "JobRunExecutionIamPolicyOutputTypeDef",
     "JobRunExecutionIamPolicyTypeDef",
+    "JobRunExecutionIamPolicyUnionTypeDef",
     "JobRunSummaryTypeDef",
     "JobRunTypeDef",
     "ListApplicationsRequestPaginateTypeDef",
@@ -279,6 +281,11 @@ JobRunAttemptSummaryTypeDef = TypedDict(
 )
 
 
+class JobRunExecutionIamPolicyOutputTypeDef(TypedDict):
+    policy: NotRequired[str]
+    policyArns: NotRequired[List[str]]
+
+
 class JobRunExecutionIamPolicyTypeDef(TypedDict):
     policy: NotRequired[str]
     policyArns: NotRequired[Sequence[str]]
@@ -455,6 +462,11 @@ class ListJobRunAttemptsResponseTypeDef(TypedDict):
     nextToken: NotRequired[str]
 
 
+JobRunExecutionIamPolicyUnionTypeDef = Union[
+    JobRunExecutionIamPolicyTypeDef, JobRunExecutionIamPolicyOutputTypeDef
+]
+
+
 class ListJobRunsResponseTypeDef(TypedDict):
     jobRuns: List[JobRunSummaryTypeDef]
     ResponseMetadata: ResponseMetadataTypeDef
@@ -580,6 +592,7 @@ class JobRunTypeDef(TypedDict):
     releaseLabel: str
     jobDriver: JobDriverOutputTypeDef
     name: NotRequired[str]
+    executionIamPolicy: NotRequired[JobRunExecutionIamPolicyOutputTypeDef]
     configurationOverrides: NotRequired[ConfigurationOverridesOutputTypeDef]
     tags: NotRequired[Dict[str, str]]
     totalResourceUtilization: NotRequired[TotalResourceUtilizationTypeDef]
@@ -651,7 +664,7 @@ class StartJobRunRequestTypeDef(TypedDict):
     applicationId: str
     clientToken: str
     executionRoleArn: str
-    executionIamPolicy: NotRequired[JobRunExecutionIamPolicyTypeDef]
+    executionIamPolicy: NotRequired[JobRunExecutionIamPolicyUnionTypeDef]
     jobDriver: NotRequired[JobDriverUnionTypeDef]
     configurationOverrides: NotRequired[ConfigurationOverridesUnionTypeDef]
     tags: NotRequired[Mapping[str, str]]

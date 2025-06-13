@@ -9,19 +9,21 @@ See https://github.com/github/rest-api-description for more information.
 
 from __future__ import annotations
 
-from typing_extensions import TypedDict
+from typing import Literal, Union
+from typing_extensions import NotRequired, TypedDict
+
+from .group_0031 import SimpleRepositoryType
 
 
-class ActionsHostedRunnerMachineSpecType(TypedDict):
-    """Github-owned VM details.
+class DependabotRepositoryAccessDetailsType(TypedDict):
+    """Dependabot Repository Access Details
 
-    Provides details of a particular machine spec.
+    Information about repositories that Dependabot is able to access in an
+    organization
     """
 
-    id: str
-    cpu_cores: int
-    memory_gb: int
-    storage_gb: int
+    default_level: NotRequired[Union[None, Literal["public", "internal"]]]
+    accessible_repositories: NotRequired[list[Union[None, SimpleRepositoryType]]]
 
 
-__all__ = ("ActionsHostedRunnerMachineSpecType",)
+__all__ = ("DependabotRepositoryAccessDetailsType",)

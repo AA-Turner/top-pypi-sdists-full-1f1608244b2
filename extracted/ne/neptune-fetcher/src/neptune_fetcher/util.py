@@ -35,9 +35,12 @@ from neptune_api import (
 from neptune_api.api.backend import get_client_config
 from neptune_api.auth_helpers import exchange_api_key
 from neptune_api.credentials import Credentials
-from neptune_api.errors import ApiKeyRejectedError
+from neptune_api.errors import (
+    ApiKeyRejectedError,
+    UnableToParseResponse,
+)
 from neptune_api.models import ClientConfig
-from neptune_retrieval_api.types import Response
+from neptune_api.types import Response
 
 logger = logging.getLogger(__name__)
 
@@ -142,7 +145,11 @@ def get_config_and_token_urls(
 ) -> tuple[ClientConfig, TokenRefreshingURLs]:
     timeout = httpx.Timeout(NEPTUNE_HTTP_REQUEST_TIMEOUT_SECONDS)
     with Client(
-        base_url=credentials.base_url, httpx_args={"mounts": proxies}, verify_ssl=NEPTUNE_VERIFY_SSL, timeout=timeout
+        base_url=credentials.base_url,
+        httpx_args={"mounts": proxies},
+        verify_ssl=NEPTUNE_VERIFY_SSL,
+        timeout=timeout,
+        headers={"User-Agent": _generate_user_agent()},
     ) as client:
         try:
             config_response = backoff_retry(lambda: get_client_config.sync_detailed(client=client))
@@ -174,7 +181,34 @@ def create_auth_api_client(
         verify_ssl=NEPTUNE_VERIFY_SSL,
         httpx_args={"mounts": proxies, "http2": False},
         timeout=httpx.Timeout(NEPTUNE_HTTP_REQUEST_TIMEOUT_SECONDS),
+        headers={"User-Agent": _generate_user_agent()},
     )
+
+
+_ILLEGAL_CHARS = str.maketrans({c: "_" for c in " ();/"})
+
+
+def _generate_user_agent() -> str:
+    import platform
+    from importlib.metadata import version
+
+    def sanitize(value: Callable[[], str]) -> str:
+        try:
+            result = value()
+            return result.translate(_ILLEGAL_CHARS)
+        except Exception:
+            return "unknown"
+
+    package_name = "neptune-fetcher"
+    package_version = sanitize(lambda: version(package_name))
+    additional_metadata = {
+        "neptune-api": sanitize(lambda: version("neptune-api")),
+        "python": sanitize(platform.python_version),
+        "os": sanitize(platform.system),
+    }
+
+    additional_metadata_str = "; ".join(f"{k}={v}" for k, v in additional_metadata.items())
+    return f"{package_name}/{package_version} ({additional_metadata_str})"
 
 
 def batched_paths(paths: list[str], batch_size: int, query_size_limit: int) -> list[list[str]]:
@@ -229,6 +263,7 @@ def backoff_retry(
 
     while True:
         tries += 1
+        response = None
         try:
             response = func(*args, **kwargs)
         except ApiKeyRejectedError as e:
@@ -237,15 +272,18 @@ def backoff_retry(
                 "Your API token was rejected by the Neptune backend because it is either unknown or expired."
             ) from e
         except httpx.TimeoutException as e:
-            response = None
             last_exc = e
             logger.warning(
                 "Neptune API request timed out. Retrying...\n"
                 "Check your network connection or increase the timeout by setting the "
                 "NEPTUNE_HTTP_REQUEST_TIMEOUT_SECONDS environment variable (default: 60 seconds)."
             )
+        except UnableToParseResponse as e:
+            # Allow invalid response in 5xx errors to be retried, raise otherwise
+            if e.response.status_code < 500:
+                raise NeptuneException("Unable to parse server response") from e
+            last_exc = e
         except Exception as e:
-            response = None
             last_exc = e
 
         if response is not None:

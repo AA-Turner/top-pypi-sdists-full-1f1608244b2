@@ -193,12 +193,10 @@ async def integracao_contabil_generica(
         await worker_sleep(12)
         # pyautogui.press("tab")
         await worker_sleep(3)
-        
-        
+
         # console.print("Selecionando item do campo origem...")
         uuid_processo = task.uuidProcesso
         caminho_imagem = f"assets\\integracao_contabil\\{uuid_processo}.png"
-
 
         await metodo_selecao_origem_especial()
         await localizar_e_clicar(caminho_imagem)  # main_window.set_focus()
@@ -278,7 +276,7 @@ async def integracao_contabil_generica(
             while True:
                 try:
                     localizacao = pyautogui.locateOnScreen(
-                        imagem_finalizada, confidence=0.9
+                        imagem_finalizada, confidence=0.85
                     )
                     print("Verificando imagem...")
                     if localizacao:
@@ -359,7 +357,7 @@ async def integracao_contabil_generica(
                 print("Total Débito:", total_debito)
                 print("Total Crédito:", total_credito)
 
-                if diferenca > 0.0:
+                if diferenca > "0,00":
                     clicou = True
                     main_window_capture = main_window.capture_as_image()
                     return RpaRetornoProcessoDTO(
@@ -386,17 +384,30 @@ async def integracao_contabil_generica(
             )
 
             botao_integrar.click_input()
-
+            assets_int_cont = "assets\\integracao_contabil\\"
+            err_dict = {
+                assets_int_cont + "erro_duplicidade.png": "Erro de Duplicidade localizado enquanto finalizava a integração.",
+                assets_int_cont + "conta_indefinida_error.png": "Conta contábil indefinida no sistema.",
+                assets_int_cont + "lote_sem_complemento_error.png": "Lote encontrado sem complemento obrigatório.",
+            }
             # Aguardar finalizar
             while True:
                 try:
+                    for img_path, mensagem in err_dict.items():
+                        err = pyautogui.locateOnScreen(img_path, confidence=0.86)
+                        if err:
+                            console.print(f"[red]Erro encontrado:[/red] {mensagem}")
+                            return RpaRetornoProcessoDTO(
+                                sucesso=False,
+                                retorno=mensagem,
+                                status=RpaHistoricoStatusEnum.Falha,
+                                tags=[RpaTagDTO(descricao=RpaTagEnum.Negocio)],
+                            )
                     # Conecta à janela do tipo MsgBox
-                    time.sleep(1)
+                    await worker_sleep(1)
                     app = Application(backend="win32").connect(class_name="TMsgBox")
                     msgbox = app.window(class_name="TMsgBox", title_re="Inform.*")
-
                     msgbox.set_focus()
-
                     # Procura pelo botão com texto '&Ok'
                     botao_ok = msgbox.child_window(class_name="TBitBtn", title="&Ok")
                     if botao_ok.exists() and botao_ok.is_visible():
@@ -404,7 +415,7 @@ async def integracao_contabil_generica(
                         console.print("Botão '&Ok' clicado com sucesso.")
                         break
                 except ElementNotFoundError:
-                    pass  # A janela ainda não apareceu
+                    console.print("Janela MsgBox não encontrada ainda.")
                 except Exception as e:
                     print(f"Erro ao tentar clicar no botão: {e}")
 

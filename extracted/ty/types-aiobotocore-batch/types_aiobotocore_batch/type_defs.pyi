@@ -31,6 +31,7 @@ from .literals import (
     DeviceCgroupPermissionType,
     EFSAuthorizationConfigIAMType,
     EFSTransitEncryptionType,
+    FirelensConfigurationTypeType,
     JobDefinitionTypeType,
     JobStatusType,
     JQStateType,
@@ -156,6 +157,8 @@ __all__ = (
     "FairsharePolicyTypeDef",
     "FairsharePolicyUnionTypeDef",
     "FargatePlatformConfigurationTypeDef",
+    "FirelensConfigurationOutputTypeDef",
+    "FirelensConfigurationTypeDef",
     "FrontOfQueueDetailTypeDef",
     "FrontOfQueueJobSummaryTypeDef",
     "GetJobQueueSnapshotRequestTypeDef",
@@ -490,6 +493,21 @@ class EvaluateOnExitTypeDef(TypedDict):
 class ShareAttributesTypeDef(TypedDict):
     shareIdentifier: str
     weightFactor: NotRequired[float]
+
+FirelensConfigurationOutputTypeDef = TypedDict(
+    "FirelensConfigurationOutputTypeDef",
+    {
+        "type": FirelensConfigurationTypeType,
+        "options": NotRequired[Dict[str, str]],
+    },
+)
+FirelensConfigurationTypeDef = TypedDict(
+    "FirelensConfigurationTypeDef",
+    {
+        "type": FirelensConfigurationTypeType,
+        "options": NotRequired[Mapping[str, str]],
+    },
+)
 
 class FrontOfQueueJobSummaryTypeDef(TypedDict):
     jobArn: NotRequired[str]
@@ -1039,6 +1057,7 @@ class TaskContainerDetailsTypeDef(TypedDict):
     dependsOn: NotRequired[List[TaskContainerDependencyTypeDef]]
     environment: NotRequired[List[KeyValuePairTypeDef]]
     essential: NotRequired[bool]
+    firelensConfiguration: NotRequired[FirelensConfigurationOutputTypeDef]
     image: NotRequired[str]
     linuxParameters: NotRequired[LinuxParametersOutputTypeDef]
     logConfiguration: NotRequired[LogConfigurationOutputTypeDef]
@@ -1062,6 +1081,7 @@ class TaskContainerPropertiesOutputTypeDef(TypedDict):
     dependsOn: NotRequired[List[TaskContainerDependencyTypeDef]]
     environment: NotRequired[List[KeyValuePairTypeDef]]
     essential: NotRequired[bool]
+    firelensConfiguration: NotRequired[FirelensConfigurationOutputTypeDef]
     linuxParameters: NotRequired[LinuxParametersOutputTypeDef]
     logConfiguration: NotRequired[LogConfigurationOutputTypeDef]
     mountPoints: NotRequired[List[MountPointTypeDef]]
@@ -1080,6 +1100,7 @@ class TaskContainerPropertiesTypeDef(TypedDict):
     dependsOn: NotRequired[Sequence[TaskContainerDependencyTypeDef]]
     environment: NotRequired[Sequence[KeyValuePairTypeDef]]
     essential: NotRequired[bool]
+    firelensConfiguration: NotRequired[FirelensConfigurationTypeDef]
     linuxParameters: NotRequired[LinuxParametersTypeDef]
     logConfiguration: NotRequired[LogConfigurationTypeDef]
     mountPoints: NotRequired[Sequence[MountPointTypeDef]]
@@ -1137,6 +1158,7 @@ class ContainerDetailTypeDef(TypedDict):
     ephemeralStorage: NotRequired[EphemeralStorageTypeDef]
     runtimePlatform: NotRequired[RuntimePlatformTypeDef]
     repositoryCredentials: NotRequired[RepositoryCredentialsTypeDef]
+    enableExecuteCommand: NotRequired[bool]
 
 class ContainerPropertiesOutputTypeDef(TypedDict):
     image: NotRequired[str]
@@ -1159,6 +1181,7 @@ class ContainerPropertiesOutputTypeDef(TypedDict):
     secrets: NotRequired[List[SecretTypeDef]]
     networkConfiguration: NotRequired[NetworkConfigurationTypeDef]
     fargatePlatformConfiguration: NotRequired[FargatePlatformConfigurationTypeDef]
+    enableExecuteCommand: NotRequired[bool]
     ephemeralStorage: NotRequired[EphemeralStorageTypeDef]
     runtimePlatform: NotRequired[RuntimePlatformTypeDef]
     repositoryCredentials: NotRequired[RepositoryCredentialsTypeDef]
@@ -1184,6 +1207,7 @@ class ContainerPropertiesTypeDef(TypedDict):
     secrets: NotRequired[Sequence[SecretTypeDef]]
     networkConfiguration: NotRequired[NetworkConfigurationTypeDef]
     fargatePlatformConfiguration: NotRequired[FargatePlatformConfigurationTypeDef]
+    enableExecuteCommand: NotRequired[bool]
     ephemeralStorage: NotRequired[EphemeralStorageTypeDef]
     runtimePlatform: NotRequired[RuntimePlatformTypeDef]
     repositoryCredentials: NotRequired[RepositoryCredentialsTypeDef]
@@ -1275,6 +1299,7 @@ class EcsTaskDetailsTypeDef(TypedDict):
     networkConfiguration: NotRequired[NetworkConfigurationTypeDef]
     runtimePlatform: NotRequired[RuntimePlatformTypeDef]
     volumes: NotRequired[List[VolumeTypeDef]]
+    enableExecuteCommand: NotRequired[bool]
 
 class EcsTaskPropertiesOutputTypeDef(TypedDict):
     containers: List[TaskContainerPropertiesOutputTypeDef]
@@ -1287,6 +1312,7 @@ class EcsTaskPropertiesOutputTypeDef(TypedDict):
     networkConfiguration: NotRequired[NetworkConfigurationTypeDef]
     runtimePlatform: NotRequired[RuntimePlatformTypeDef]
     volumes: NotRequired[List[VolumeTypeDef]]
+    enableExecuteCommand: NotRequired[bool]
 
 class EcsTaskPropertiesTypeDef(TypedDict):
     containers: Sequence[TaskContainerPropertiesTypeDef]
@@ -1299,6 +1325,7 @@ class EcsTaskPropertiesTypeDef(TypedDict):
     networkConfiguration: NotRequired[NetworkConfigurationTypeDef]
     runtimePlatform: NotRequired[RuntimePlatformTypeDef]
     volumes: NotRequired[Sequence[VolumeTypeDef]]
+    enableExecuteCommand: NotRequired[bool]
 
 ContainerPropertiesUnionTypeDef = Union[
     ContainerPropertiesTypeDef, ContainerPropertiesOutputTypeDef

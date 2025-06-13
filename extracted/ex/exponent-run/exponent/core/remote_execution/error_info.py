@@ -1,4 +1,4 @@
-from typing import Any, Optional
+from typing import Optional
 
 from pydantic import BaseModel
 import traceback
@@ -8,8 +8,8 @@ class SerializableErrorInfo(BaseModel):
     message: str
     stack: list[str]
     cls_name: Optional[str]
-    cause: Any
-    context: Any
+    cause: Optional["SerializableErrorInfo"]
+    context: Optional["SerializableErrorInfo"]
 
     def __str__(self) -> str:
         return self.to_string()
@@ -30,6 +30,9 @@ class SerializableErrorInfo(BaseModel):
         )
 
         return f"{self.message}{stack_str}{cause_str}{context_str}"
+
+
+SerializableErrorInfo.model_rebuild()
 
 
 def serialize_error_info(error: BaseException) -> SerializableErrorInfo:

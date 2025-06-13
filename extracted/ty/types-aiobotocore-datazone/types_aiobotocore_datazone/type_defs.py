@@ -73,6 +73,7 @@ from .literals import (
     ProjectStatusType,
     ProtocolType,
     RejectRuleBehaviorType,
+    RuleActionType,
     RuleScopeSelectionModeType,
     SearchOutputAdditionalAttributeType,
     SelfGrantStatusType,
@@ -731,6 +732,7 @@ __all__ = (
     "UpdateSubscriptionTargetOutputTypeDef",
     "UpdateUserProfileInputTypeDef",
     "UpdateUserProfileOutputTypeDef",
+    "UseAssetTypePolicyGrantDetailTypeDef",
     "UserDetailsTypeDef",
     "UserPolicyGrantPrincipalOutputTypeDef",
     "UserPolicyGrantPrincipalTypeDef",
@@ -1035,6 +1037,7 @@ class DataSourceErrorMessageTypeDef(TypedDict):
 SingleSignOnTypeDef = TypedDict(
     "SingleSignOnTypeDef",
     {
+        "idcInstanceArn": NotRequired[str],
         "type": NotRequired[AuthTypeType],
         "userAssignment": NotRequired[UserAssignmentType],
     },
@@ -1461,6 +1464,7 @@ EnvironmentSummaryTypeDef = TypedDict(
         "awsAccountRegion": NotRequired[str],
         "createdAt": NotRequired[datetime],
         "description": NotRequired[str],
+        "environmentConfigurationId": NotRequired[str],
         "environmentProfileId": NotRequired[str],
         "id": NotRequired[str],
         "status": NotRequired[EnvironmentStatusType],
@@ -2090,7 +2094,7 @@ class ListRulesInputTypeDef(TypedDict):
     domainIdentifier: str
     targetIdentifier: str
     targetType: Literal["DOMAIN_UNIT"]
-    action: NotRequired[Literal["CREATE_SUBSCRIPTION_REQUEST"]]
+    action: NotRequired[RuleActionType]
     assetTypes: NotRequired[Sequence[str]]
     dataProduct: NotRequired[bool]
     includeCascaded: NotRequired[bool]
@@ -2237,6 +2241,10 @@ class PhysicalConnectionRequirementsTypeDef(TypedDict):
     subnetIdList: NotRequired[Sequence[str]]
 
 
+class UseAssetTypePolicyGrantDetailTypeDef(TypedDict):
+    domainUnitId: NotRequired[str]
+
+
 class UserPolicyGrantPrincipalOutputTypeDef(TypedDict):
     allUsersGrantFilter: NotRequired[Dict[str, Any]]
     userIdentifier: NotRequired[str]
@@ -2374,14 +2382,6 @@ class UpdateDomainUnitInputTypeDef(TypedDict):
     domainIdentifier: str
     identifier: str
     description: NotRequired[str]
-    name: NotRequired[str]
-
-
-class UpdateEnvironmentInputTypeDef(TypedDict):
-    domainIdentifier: str
-    identifier: str
-    description: NotRequired[str]
-    glossaryTerms: NotRequired[Sequence[str]]
     name: NotRequired[str]
 
 
@@ -3001,12 +3001,24 @@ class CreateEnvironmentProfileInputTypeDef(TypedDict):
 
 class EnvironmentConfigurationUserParameterOutputTypeDef(TypedDict):
     environmentConfigurationName: NotRequired[str]
+    environmentId: NotRequired[str]
     environmentParameters: NotRequired[List[EnvironmentParameterTypeDef]]
 
 
 class EnvironmentConfigurationUserParameterTypeDef(TypedDict):
     environmentConfigurationName: NotRequired[str]
+    environmentId: NotRequired[str]
     environmentParameters: NotRequired[Sequence[EnvironmentParameterTypeDef]]
+
+
+class UpdateEnvironmentInputTypeDef(TypedDict):
+    domainIdentifier: str
+    identifier: str
+    blueprintVersion: NotRequired[str]
+    description: NotRequired[str]
+    glossaryTerms: NotRequired[Sequence[str]]
+    name: NotRequired[str]
+    userParameters: NotRequired[Sequence[EnvironmentParameterTypeDef]]
 
 
 class UpdateEnvironmentProfileInputTypeDef(TypedDict):
@@ -3943,7 +3955,7 @@ class ListRulesInputPaginateTypeDef(TypedDict):
     domainIdentifier: str
     targetIdentifier: str
     targetType: Literal["DOMAIN_UNIT"]
-    action: NotRequired[Literal["CREATE_SUBSCRIPTION_REQUEST"]]
+    action: NotRequired[RuleActionType]
     assetTypes: NotRequired[Sequence[str]]
     dataProduct: NotRequired[bool]
     includeCascaded: NotRequired[bool]
@@ -4106,6 +4118,21 @@ class OAuth2PropertiesTypeDef(TypedDict):
     tokenUrlParametersMap: NotRequired[Mapping[str, str]]
 
 
+class OwnerPropertiesOutputTypeDef(TypedDict):
+    group: NotRequired[OwnerGroupPropertiesOutputTypeDef]
+    user: NotRequired[OwnerUserPropertiesOutputTypeDef]
+
+
+class OwnerPropertiesTypeDef(TypedDict):
+    group: NotRequired[OwnerGroupPropertiesTypeDef]
+    user: NotRequired[OwnerUserPropertiesTypeDef]
+
+
+PhysicalConnectionRequirementsUnionTypeDef = Union[
+    PhysicalConnectionRequirementsTypeDef, PhysicalConnectionRequirementsOutputTypeDef
+]
+
+
 class PolicyGrantDetailOutputTypeDef(TypedDict):
     addToProjectMemberPool: NotRequired[AddToProjectMemberPoolPolicyGrantDetailTypeDef]
     createAssetType: NotRequired[CreateAssetTypePolicyGrantDetailTypeDef]
@@ -4122,6 +4149,7 @@ class PolicyGrantDetailOutputTypeDef(TypedDict):
     delegateCreateEnvironmentProfile: NotRequired[Dict[str, Any]]
     overrideDomainUnitOwners: NotRequired[OverrideDomainUnitOwnersPolicyGrantDetailTypeDef]
     overrideProjectOwners: NotRequired[OverrideProjectOwnersPolicyGrantDetailTypeDef]
+    useAssetType: NotRequired[UseAssetTypePolicyGrantDetailTypeDef]
 
 
 class PolicyGrantDetailTypeDef(TypedDict):
@@ -4140,21 +4168,7 @@ class PolicyGrantDetailTypeDef(TypedDict):
     delegateCreateEnvironmentProfile: NotRequired[Mapping[str, Any]]
     overrideDomainUnitOwners: NotRequired[OverrideDomainUnitOwnersPolicyGrantDetailTypeDef]
     overrideProjectOwners: NotRequired[OverrideProjectOwnersPolicyGrantDetailTypeDef]
-
-
-class OwnerPropertiesOutputTypeDef(TypedDict):
-    group: NotRequired[OwnerGroupPropertiesOutputTypeDef]
-    user: NotRequired[OwnerUserPropertiesOutputTypeDef]
-
-
-class OwnerPropertiesTypeDef(TypedDict):
-    group: NotRequired[OwnerGroupPropertiesTypeDef]
-    user: NotRequired[OwnerUserPropertiesTypeDef]
-
-
-PhysicalConnectionRequirementsUnionTypeDef = Union[
-    PhysicalConnectionRequirementsTypeDef, PhysicalConnectionRequirementsOutputTypeDef
-]
+    useAssetType: NotRequired[UseAssetTypePolicyGrantDetailTypeDef]
 
 
 class RuleScopeOutputTypeDef(TypedDict):
@@ -4555,6 +4569,7 @@ CreateEnvironmentOutputTypeDef = TypedDict(
         "domainId": str,
         "environmentActions": List[ConfigurableEnvironmentActionTypeDef],
         "environmentBlueprintId": str,
+        "environmentConfigurationId": str,
         "environmentProfileId": str,
         "glossaryTerms": List[str],
         "id": str,
@@ -4582,6 +4597,7 @@ GetEnvironmentOutputTypeDef = TypedDict(
         "domainId": str,
         "environmentActions": List[ConfigurableEnvironmentActionTypeDef],
         "environmentBlueprintId": str,
+        "environmentConfigurationId": str,
         "environmentProfileId": str,
         "glossaryTerms": List[str],
         "id": str,
@@ -4609,6 +4625,7 @@ UpdateEnvironmentOutputTypeDef = TypedDict(
         "domainId": str,
         "environmentActions": List[ConfigurableEnvironmentActionTypeDef],
         "environmentBlueprintId": str,
+        "environmentConfigurationId": str,
         "environmentProfileId": str,
         "glossaryTerms": List[str],
         "id": str,
@@ -5080,7 +5097,6 @@ class AuthenticationConfigurationTypeDef(TypedDict):
 
 
 OAuth2PropertiesUnionTypeDef = Union[OAuth2PropertiesTypeDef, OAuth2PropertiesOutputTypeDef]
-PolicyGrantDetailUnionTypeDef = Union[PolicyGrantDetailTypeDef, PolicyGrantDetailOutputTypeDef]
 
 
 class ListEntityOwnersOutputTypeDef(TypedDict):
@@ -5105,8 +5121,11 @@ class RemoveEntityOwnerInputTypeDef(TypedDict):
     clientToken: NotRequired[str]
 
 
+PolicyGrantDetailUnionTypeDef = Union[PolicyGrantDetailTypeDef, PolicyGrantDetailOutputTypeDef]
+
+
 class RuleSummaryTypeDef(TypedDict):
-    action: NotRequired[Literal["CREATE_SUBSCRIPTION_REQUEST"]]
+    action: NotRequired[RuleActionType]
     identifier: NotRequired[str]
     lastUpdatedBy: NotRequired[str]
     name: NotRequired[str]
@@ -5300,6 +5319,8 @@ class UpdateProjectInputTypeDef(TypedDict):
     environmentDeploymentDetails: NotRequired[EnvironmentDeploymentDetailsUnionTypeDef]
     glossaryTerms: NotRequired[Sequence[str]]
     name: NotRequired[str]
+    projectProfileVersion: NotRequired[str]
+    userParameters: NotRequired[Sequence[EnvironmentConfigurationUserParameterUnionTypeDef]]
 
 
 class PolicyGrantPrincipalOutputTypeDef(TypedDict):
@@ -5445,7 +5466,7 @@ class ListProjectMembershipsOutputTypeDef(TypedDict):
 
 
 class CreateRuleOutputTypeDef(TypedDict):
-    action: Literal["CREATE_SUBSCRIPTION_REQUEST"]
+    action: RuleActionType
     createdAt: datetime
     createdBy: str
     description: str
@@ -5460,7 +5481,7 @@ class CreateRuleOutputTypeDef(TypedDict):
 
 
 class GetRuleOutputTypeDef(TypedDict):
-    action: Literal["CREATE_SUBSCRIPTION_REQUEST"]
+    action: RuleActionType
     createdAt: datetime
     createdBy: str
     description: str
@@ -5478,7 +5499,7 @@ class GetRuleOutputTypeDef(TypedDict):
 
 
 class UpdateRuleOutputTypeDef(TypedDict):
-    action: Literal["CREATE_SUBSCRIPTION_REQUEST"]
+    action: RuleActionType
     createdAt: datetime
     createdBy: str
     description: str
@@ -5843,7 +5864,7 @@ class PutEnvironmentBlueprintConfigurationInputTypeDef(TypedDict):
 
 
 class CreateRuleInputTypeDef(TypedDict):
-    action: Literal["CREATE_SUBSCRIPTION_REQUEST"]
+    action: RuleActionType
     detail: RuleDetailUnionTypeDef
     domainIdentifier: str
     name: str

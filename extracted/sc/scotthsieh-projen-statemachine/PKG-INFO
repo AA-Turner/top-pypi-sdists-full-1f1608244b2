@@ -1,6 +1,6 @@
 Metadata-Version: 2.1
 Name: scotthsieh_projen_statemachine
-Version: 2.0.760
+Version: 2.0.761
 Summary: An example construct for deploying to npm, PyPi, Maven, and Nuget with Amazon API Gateway and AWS Step Functions.
 Home-page: https://github.com/HsiehShuJeng/projen-simple.git
 Author: Shu-Jeng Hsieh

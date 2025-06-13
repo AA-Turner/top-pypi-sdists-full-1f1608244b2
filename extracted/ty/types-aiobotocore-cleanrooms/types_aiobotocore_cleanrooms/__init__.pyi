@@ -28,6 +28,7 @@ Usage::
         ListMembershipsPaginator,
         ListPrivacyBudgetTemplatesPaginator,
         ListPrivacyBudgetsPaginator,
+        ListProtectedJobsPaginator,
         ListProtectedQueriesPaginator,
         ListSchemasPaginator,
     )
@@ -54,6 +55,7 @@ Usage::
     list_memberships_paginator: ListMembershipsPaginator = client.get_paginator("list_memberships")
     list_privacy_budget_templates_paginator: ListPrivacyBudgetTemplatesPaginator = client.get_paginator("list_privacy_budget_templates")
     list_privacy_budgets_paginator: ListPrivacyBudgetsPaginator = client.get_paginator("list_privacy_budgets")
+    list_protected_jobs_paginator: ListProtectedJobsPaginator = client.get_paginator("list_protected_jobs")
     list_protected_queries_paginator: ListProtectedQueriesPaginator = client.get_paginator("list_protected_queries")
     list_schemas_paginator: ListSchemasPaginator = client.get_paginator("list_schemas")
     ```
@@ -77,6 +79,7 @@ from .paginator import (
     ListMembersPaginator,
     ListPrivacyBudgetsPaginator,
     ListPrivacyBudgetTemplatesPaginator,
+    ListProtectedJobsPaginator,
     ListProtectedQueriesPaginator,
     ListSchemasPaginator,
 )
@@ -102,6 +105,7 @@ __all__ = (
     "ListMembershipsPaginator",
     "ListPrivacyBudgetTemplatesPaginator",
     "ListPrivacyBudgetsPaginator",
+    "ListProtectedJobsPaginator",
     "ListProtectedQueriesPaginator",
     "ListSchemasPaginator",
 )

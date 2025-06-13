@@ -54,6 +54,13 @@ ExprLikeT = TypeVar("ExprLikeT", _isl.Aff, _isl.PwAff,
                    _isl.QPolynomial, _isl.PwQPolynomial
                )
 SetLikeT = TypeVar("SetLikeT", bound=_isl.BasicSet | _isl.Set)
+
+SetOrBasic: TypeAlias = _isl.BasicSet | _isl.Set
+SetOrBasicT = TypeVar("SetOrBasicT", bound=SetOrBasic)
+
+MapOrBasic: TypeAlias = _isl.BasicMap | _isl.Map
+MapOrBasicT = TypeVar("MapOrBasicT", bound=MapOrBasic)
+
 SetOrMap: TypeAlias = _isl.BasicSet | _isl.Set | _isl.BasicMap | _isl.Map
 SetOrMapT = TypeVar("SetOrMapT", bound=SetOrMap)
 
@@ -331,21 +338,100 @@ def space_create_from_names(
     return result
 
 
-def obj_or(self: SetOrMapT, other: object) -> SetOrMapT:
+def set_or(
+            self: _isl.Set,
+            other: _isl.Set | _isl.BasicSet,
+        ) -> _isl.Set:
     try:
         return self.union(other)
     except TypeError:
         return NotImplemented
 
 
-def obj_and(self: SetOrMapT, other: object) -> SetOrMapT:
+def bset_and(
+            self: _isl.BasicSet,
+            other: SetOrBasicT,
+        ) -> SetOrBasicT:
+    if isinstance(other, _isl.Set):
+        try:
+            return self.to_set().intersect(other)
+        except TypeError:
+            return NotImplemented
+    else:
+        try:
+            return self.intersect(other)
+        except TypeError:
+            return NotImplemented
+
+
+def set_and(
+            self: _isl.Set,
+            other: _isl.Set | _isl.BasicSet,
+        ) -> _isl.Set:
+    if isinstance(self, _isl.BasicSet):
+        self = self.to_set()
     try:
         return self.intersect(other)
     except TypeError:
         return NotImplemented
 
 
-def obj_sub(self: SetOrMapT, other: object) -> SetOrMapT:
+def set_sub(
+            self: _isl.Set | _isl.BasicSet,
+            other: _isl.Set | _isl.BasicSet,
+        ) -> _isl.Set:
+    if isinstance(self, _isl.BasicSet):
+        self = self.to_set()
+    try:
+        return self.subtract(other)
+    except TypeError:
+        return NotImplemented
+
+
+def map_or(
+            self: _isl.Map | _isl.BasicMap,
+            other: _isl.Map | _isl.BasicMap,
+        ) -> _isl.Map:
+    if isinstance(self, _isl.BasicMap):
+        self = self.to_map()
+    try:
+        return self.union(other)
+    except TypeError:
+        return NotImplemented
+
+
+def bmap_and(
+            self: _isl.BasicMap,
+            other: MapOrBasicT,
+        ) -> MapOrBasicT:
+    if isinstance(other, _isl.Map):
+        try:
+            return self.to_map().intersect(other)
+        except TypeError:
+            return NotImplemented
+    else:
+        try:
+            return self.intersect(other)
+        except TypeError:
+            return NotImplemented
+
+
+def map_and(
+            self: _isl.Map,
+            other: _isl.Map | _isl.BasicMap,
+        ) -> _isl.Map:
+    try:
+        return self.intersect(other)
+    except TypeError:
+        return NotImplemented
+
+
+def map_sub(
+            self: _isl.Map | _isl.BasicMap,
+            other: _isl.Map | _isl.BasicMap,
+        ) -> _isl.Map:
+    if isinstance(self, _isl.BasicMap):
+        self = self.to_map()
     try:
         return self.subtract(other)
     except TypeError:
@@ -657,7 +743,7 @@ def expr_like_add(self: ExprLikeT, other: ExprLikeT | int | _isl.Val) -> ExprLik
         return NotImplemented
 
 
-def expr_like_sub(self: ExprLikeT, other: ExprLikeT | int | _isl.Val):
+def expr_like_sub(self: ExprLikeT, other: ExprLikeT | int | _isl.Val) -> ExprLikeT:
     if not isinstance(other, ExprLike):
         other = _number_to_expr_like(self, other)
 
@@ -727,19 +813,35 @@ for cls in ALL_CLASSES:
         cls.__ne__ = obj_ne
 
 
-def obj_lt(self: SetOrMapT, other: SetOrMapT) -> bool:
+def set_lt(self: _isl.BasicSet | _isl.Set, other: _isl.BasicSet | _isl.Set) -> bool:
     return self.is_strict_subset(other)
 
 
-def obj_le(self: SetOrMapT, other: SetOrMapT) -> bool:
+def set_le(self: _isl.BasicSet | _isl.Set, other: _isl.BasicSet | _isl.Set) -> bool:
     return self.is_subset(other)
 
 
-def obj_gt(self: SetOrMapT, other: SetOrMapT) -> bool:
+def set_gt(self: _isl.BasicSet | _isl.Set, other: _isl.BasicSet | _isl.Set) -> bool:
     return other.is_strict_subset(self)
 
 
-def obj_ge(self: SetOrMapT, other: SetOrMapT) -> bool:
+def set_ge(self: _isl.BasicSet | _isl.Set, other: _isl.BasicSet | _isl.Set) -> bool:
+    return other.is_subset(self)
+
+
+def map_lt(self: _isl.BasicMap | _isl.Map, other: _isl.BasicMap | _isl.Map) -> bool:
+    return self.is_strict_subset(other)
+
+
+def map_le(self: _isl.BasicMap | _isl.Map, other: _isl.BasicMap | _isl.Map) -> bool:
+    return self.is_subset(other)
+
+
+def map_gt(self: _isl.BasicMap | _isl.Map, other: _isl.BasicMap | _isl.Map) -> bool:
+    return other.is_strict_subset(self)
+
+
+def map_ge(self: _isl.BasicMap | _isl.Map, other: _isl.BasicMap | _isl.Map) -> bool:
     return other.is_subset(self)
 
 
@@ -871,12 +973,23 @@ def _add_functionality() -> None:
 
     # {{{ Python set-like behavior
 
-    for cls in [_isl.BasicSet, _isl.BasicMap, _isl.Set, _isl.Map]:
-        cls.__or__ = obj_or
-        cls.__ror__ = obj_or
-        cls.__and__ = obj_and
-        cls.__rand__ = obj_and
-        cls.__sub__ = obj_sub
+    _isl.BasicSet.__and__ = bset_and
+    _isl.BasicSet.__rand__ = bset_and
+    _isl.Set.__and__ = set_and
+    _isl.Set.__rand__ = set_and
+    for cls in [_isl.BasicSet, _isl.Set]:
+        cls.__or__ = set_or
+        cls.__ror__ = set_or
+        cls.__sub__ = set_sub
+
+    _isl.BasicMap.__and__ = bmap_and
+    _isl.BasicMap.__rand__ = bmap_and
+    _isl.Map.__and__ = map_and
+    _isl.Map.__rand__ = map_and
+    for cls in [_isl.BasicMap, _isl.Map]:
+        cls.__or__ = map_or
+        cls.__ror__ = map_or
+        cls.__sub__ = map_sub
 
     # }}}
 
@@ -1005,11 +1118,17 @@ for cls in ALL_CLASSES:
 
     # {{{ rich comparisons
 
-    for cls in [_isl.BasicSet, _isl.BasicMap, _isl.Set, _isl.Map]:
-        cls.__lt__ = obj_lt
-        cls.__le__ = obj_le
-        cls.__gt__ = obj_gt
-        cls.__ge__ = obj_ge
+    for cls in [_isl.BasicSet, _isl.Set]:
+        cls.__lt__ = set_lt
+        cls.__le__ = set_le
+        cls.__gt__ = set_gt
+        cls.__ge__ = set_ge
+
+    for cls in [_isl.BasicMap, _isl.Map]:
+        cls.__lt__ = map_lt
+        cls.__le__ = map_le
+        cls.__gt__ = map_gt
+        cls.__ge__ = map_ge
 
     # }}}
 

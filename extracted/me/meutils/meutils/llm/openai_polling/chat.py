@@ -73,6 +73,7 @@ class Completions(object):
 
         elif "deepseek-r" in request.model:
             request.separate_reasoning = True  # pp
+            """Error code: 403 - {'code': 403, 'reason': 'NOT_ENOUGH_BALANCE', 'message': 'not enough balance', 'metadata': {}}"""
         ###########################################################################
 
         data = to_openai_params(request)

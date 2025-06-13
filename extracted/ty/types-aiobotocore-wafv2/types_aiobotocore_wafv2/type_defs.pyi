@@ -214,6 +214,7 @@ __all__ = (
     "IPSetTypeDef",
     "ImmunityTimePropertyTypeDef",
     "JA3FingerprintTypeDef",
+    "JA4FingerprintTypeDef",
     "JsonBodyOutputTypeDef",
     "JsonBodyTypeDef",
     "JsonBodyUnionTypeDef",
@@ -295,6 +296,8 @@ __all__ = (
     "RateLimitHeaderOutputTypeDef",
     "RateLimitHeaderTypeDef",
     "RateLimitHeaderUnionTypeDef",
+    "RateLimitJA3FingerprintTypeDef",
+    "RateLimitJA4FingerprintTypeDef",
     "RateLimitLabelNamespaceTypeDef",
     "RateLimitQueryArgumentOutputTypeDef",
     "RateLimitQueryArgumentTypeDef",
@@ -382,6 +385,7 @@ __all__ = (
     "UpdateRuleGroupResponseTypeDef",
     "UpdateWebACLRequestTypeDef",
     "UpdateWebACLResponseTypeDef",
+    "UriFragmentTypeDef",
     "UsernameFieldTypeDef",
     "VersionToPublishTypeDef",
     "VisibilityConfigTypeDef",
@@ -609,11 +613,17 @@ class HeaderOrderTypeDef(TypedDict):
 class JA3FingerprintTypeDef(TypedDict):
     FallbackBehavior: FallbackBehaviorType
 
+class JA4FingerprintTypeDef(TypedDict):
+    FallbackBehavior: FallbackBehaviorType
+
 class SingleHeaderTypeDef(TypedDict):
     Name: str
 
 class SingleQueryArgumentTypeDef(TypedDict):
     Name: str
+
+class UriFragmentTypeDef(TypedDict):
+    FallbackBehavior: NotRequired[FallbackBehaviorType]
 
 class ForwardedIPConfigTypeDef(TypedDict):
     HeaderName: str
@@ -687,9 +697,10 @@ class GetWebACLForResourceRequestTypeDef(TypedDict):
     ResourceArn: str
 
 class GetWebACLRequestTypeDef(TypedDict):
-    Name: str
-    Scope: ScopeType
-    Id: str
+    Name: NotRequired[str]
+    Scope: NotRequired[ScopeType]
+    Id: NotRequired[str]
+    ARN: NotRequired[str]
 
 class HTTPHeaderTypeDef(TypedDict):
     Name: NotRequired[str]
@@ -845,6 +856,12 @@ class VersionToPublishTypeDef(TypedDict):
 class PutPermissionPolicyRequestTypeDef(TypedDict):
     ResourceArn: str
     Policy: str
+
+class RateLimitJA3FingerprintTypeDef(TypedDict):
+    FallbackBehavior: FallbackBehaviorType
+
+class RateLimitJA4FingerprintTypeDef(TypedDict):
+    FallbackBehavior: FallbackBehaviorType
 
 class RateLimitLabelNamespaceTypeDef(TypedDict):
     Namespace: str
@@ -1300,6 +1317,8 @@ class RateBasedStatementCustomKeyOutputTypeDef(TypedDict):
     IP: NotRequired[Dict[str, Any]]
     LabelNamespace: NotRequired[RateLimitLabelNamespaceTypeDef]
     UriPath: NotRequired[RateLimitUriPathOutputTypeDef]
+    JA3Fingerprint: NotRequired[RateLimitJA3FingerprintTypeDef]
+    JA4Fingerprint: NotRequired[RateLimitJA4FingerprintTypeDef]
 
 RateLimitUriPathUnionTypeDef = Union[RateLimitUriPathTypeDef, RateLimitUriPathOutputTypeDef]
 
@@ -1392,6 +1411,8 @@ class FieldToMatchOutputTypeDef(TypedDict):
     Cookies: NotRequired[CookiesOutputTypeDef]
     HeaderOrder: NotRequired[HeaderOrderTypeDef]
     JA3Fingerprint: NotRequired[JA3FingerprintTypeDef]
+    JA4Fingerprint: NotRequired[JA4FingerprintTypeDef]
+    UriFragment: NotRequired[UriFragmentTypeDef]
 
 class JsonBodyTypeDef(TypedDict):
     MatchPattern: JsonMatchPatternUnionTypeDef
@@ -1447,6 +1468,8 @@ class RateBasedStatementCustomKeyTypeDef(TypedDict):
     IP: NotRequired[Mapping[str, Any]]
     LabelNamespace: NotRequired[RateLimitLabelNamespaceTypeDef]
     UriPath: NotRequired[RateLimitUriPathUnionTypeDef]
+    JA3Fingerprint: NotRequired[RateLimitJA3FingerprintTypeDef]
+    JA4Fingerprint: NotRequired[RateLimitJA4FingerprintTypeDef]
 
 class LoggingFilterOutputTypeDef(TypedDict):
     Filters: List[FilterOutputTypeDef]
@@ -1599,6 +1622,8 @@ class FieldToMatchTypeDef(TypedDict):
     Cookies: NotRequired[CookiesUnionTypeDef]
     HeaderOrder: NotRequired[HeaderOrderTypeDef]
     JA3Fingerprint: NotRequired[JA3FingerprintTypeDef]
+    JA4Fingerprint: NotRequired[JA4FingerprintTypeDef]
+    UriFragment: NotRequired[UriFragmentTypeDef]
 
 class AWSManagedRulesACFPRuleSetTypeDef(TypedDict):
     CreationPath: str

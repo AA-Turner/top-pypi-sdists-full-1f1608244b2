@@ -138,6 +138,10 @@ from .type_defs import (
     StartDirectoryListingResponseTypeDef,
     StartFileTransferRequestTypeDef,
     StartFileTransferResponseTypeDef,
+    StartRemoteDeleteRequestTypeDef,
+    StartRemoteDeleteResponseTypeDef,
+    StartRemoteMoveRequestTypeDef,
+    StartRemoteMoveResponseTypeDef,
     StartServerRequestTypeDef,
     StopServerRequestTypeDef,
     TagResourceRequestTypeDef,
@@ -791,6 +795,26 @@ class TransferClient(AioBaseClient):
 
         [Show boto3 documentation](https://boto3.amazonaws.com/v1/documentation/api/latest/reference/services/transfer/client/start_file_transfer.html)
         [Show types-aiobotocore documentation](https://youtype.github.io/types_aiobotocore_docs/types_aiobotocore_transfer/client/#start_file_transfer)
+        """
+
+    async def start_remote_delete(
+        self, **kwargs: Unpack[StartRemoteDeleteRequestTypeDef]
+    ) -> StartRemoteDeleteResponseTypeDef:
+        """
+        Deletes a file or directory on the remote SFTP server.
+
+        [Show boto3 documentation](https://boto3.amazonaws.com/v1/documentation/api/latest/reference/services/transfer/client/start_remote_delete.html)
+        [Show types-aiobotocore documentation](https://youtype.github.io/types_aiobotocore_docs/types_aiobotocore_transfer/client/#start_remote_delete)
+        """
+
+    async def start_remote_move(
+        self, **kwargs: Unpack[StartRemoteMoveRequestTypeDef]
+    ) -> StartRemoteMoveResponseTypeDef:
+        """
+        Moves or renames a file or directory on the remote SFTP server.
+
+        [Show boto3 documentation](https://boto3.amazonaws.com/v1/documentation/api/latest/reference/services/transfer/client/start_remote_move.html)
+        [Show types-aiobotocore documentation](https://youtype.github.io/types_aiobotocore_docs/types_aiobotocore_transfer/client/#start_remote_move)
         """
 
     async def start_server(

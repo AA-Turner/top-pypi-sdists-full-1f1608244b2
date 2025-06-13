@@ -56,6 +56,7 @@ from .literals import (
     Ec2ScanModeStatusType,
     Ec2ScanModeType,
     EcrPullDateRescanDurationType,
+    EcrPullDateRescanModeType,
     EcrRescanDurationStatusType,
     EcrRescanDurationType,
     EcrScanFrequencyType,
@@ -135,6 +136,9 @@ __all__ = (
     "AwsEcrContainerAggregationResponseTypeDef",
     "AwsEcrContainerAggregationTypeDef",
     "AwsEcrContainerImageDetailsTypeDef",
+    "AwsEcsMetadataDetailsTypeDef",
+    "AwsEksMetadataDetailsTypeDef",
+    "AwsEksWorkloadInfoTypeDef",
     "AwsLambdaFunctionDetailsTypeDef",
     "BatchGetAccountStatusRequestTypeDef",
     "BatchGetAccountStatusResponseTypeDef",
@@ -173,6 +177,10 @@ __all__ = (
     "CisTargetStatusReasonFilterTypeDef",
     "CisTargetsTypeDef",
     "CisaDataTypeDef",
+    "ClusterDetailsTypeDef",
+    "ClusterForImageFilterCriteriaTypeDef",
+    "ClusterInformationTypeDef",
+    "ClusterMetadataTypeDef",
     "CodeFilePathTypeDef",
     "CodeLineTypeDef",
     "CodeSnippetErrorTypeDef",
@@ -183,6 +191,7 @@ __all__ = (
     "CoverageDateFilterTypeDef",
     "CoverageFilterCriteriaTypeDef",
     "CoverageMapFilterTypeDef",
+    "CoverageNumberFilterTypeDef",
     "CoverageStringFilterTypeDef",
     "CoveredResourceTypeDef",
     "CreateCisScanConfigurationRequestTypeDef",
@@ -202,6 +211,7 @@ __all__ = (
     "DailyScheduleTypeDef",
     "DateFilterOutputTypeDef",
     "DateFilterTypeDef",
+    "DateFilterUnionTypeDef",
     "DelegatedAdminAccountTypeDef",
     "DelegatedAdminTypeDef",
     "DeleteCisScanConfigurationRequestTypeDef",
@@ -255,6 +265,9 @@ __all__ = (
     "GetCisScanResultDetailsRequestPaginateTypeDef",
     "GetCisScanResultDetailsRequestTypeDef",
     "GetCisScanResultDetailsResponseTypeDef",
+    "GetClustersForImageRequestPaginateTypeDef",
+    "GetClustersForImageRequestTypeDef",
+    "GetClustersForImageResponseTypeDef",
     "GetConfigurationResponseTypeDef",
     "GetDelegatedAdminAccountResponseTypeDef",
     "GetEc2DeepInspectionConfigurationResponseTypeDef",
@@ -491,6 +504,11 @@ AwsEc2InstanceDetailsTypeDef = TypedDict(
 )
 
 
+class NumberFilterTypeDef(TypedDict):
+    lowerInclusive: NotRequired[float]
+    upperInclusive: NotRequired[float]
+
+
 class AwsEcrContainerImageDetailsTypeDef(TypedDict):
     imageHash: str
     registry: str
@@ -498,8 +516,24 @@ class AwsEcrContainerImageDetailsTypeDef(TypedDict):
     architecture: NotRequired[str]
     author: NotRequired[str]
     imageTags: NotRequired[List[str]]
+    inUseCount: NotRequired[int]
+    lastInUseAt: NotRequired[datetime]
     platform: NotRequired[str]
     pushedAt: NotRequired[datetime]
+
+
+class AwsEcsMetadataDetailsTypeDef(TypedDict):
+    detailsGroup: str
+    taskDefinitionArn: str
+
+
+AwsEksWorkloadInfoTypeDef = TypedDict(
+    "AwsEksWorkloadInfoTypeDef",
+    {
+        "name": str,
+        "type": str,
+    },
+)
 
 
 class LambdaVpcConfigTypeDef(TypedDict):
@@ -655,6 +689,10 @@ class CisaDataTypeDef(TypedDict):
     dateDue: NotRequired[datetime]
 
 
+class ClusterForImageFilterCriteriaTypeDef(TypedDict):
+    resourceId: str
+
+
 class CodeFilePathTypeDef(TypedDict):
     endLine: int
     fileName: str
@@ -687,6 +725,11 @@ class CoverageMapFilterTypeDef(TypedDict):
     comparison: Literal["EQUALS"]
     key: str
     value: NotRequired[str]
+
+
+class CoverageNumberFilterTypeDef(TypedDict):
+    lowerInclusive: NotRequired[int]
+    upperInclusive: NotRequired[int]
 
 
 class CoverageStringFilterTypeDef(TypedDict):
@@ -796,6 +839,7 @@ class Ec2MetadataTypeDef(TypedDict):
 
 class EcrRescanDurationStateTypeDef(TypedDict):
     pullDateRescanDuration: NotRequired[EcrPullDateRescanDurationType]
+    pullDateRescanMode: NotRequired[EcrPullDateRescanModeType]
     rescanDuration: NotRequired[EcrRescanDurationType]
     status: NotRequired[EcrRescanDurationStatusType]
     updatedAt: NotRequired[datetime]
@@ -804,10 +848,13 @@ class EcrRescanDurationStateTypeDef(TypedDict):
 class EcrConfigurationTypeDef(TypedDict):
     rescanDuration: EcrRescanDurationType
     pullDateRescanDuration: NotRequired[EcrPullDateRescanDurationType]
+    pullDateRescanMode: NotRequired[EcrPullDateRescanModeType]
 
 
 class EcrContainerImageMetadataTypeDef(TypedDict):
     imagePulledAt: NotRequired[datetime]
+    inUseCount: NotRequired[int]
+    lastInUseAt: NotRequired[datetime]
     tags: NotRequired[List[str]]
 
 
@@ -848,11 +895,6 @@ class ExploitObservedTypeDef(TypedDict):
 
 class ExploitabilityDetailsTypeDef(TypedDict):
     lastKnownExploitAt: NotRequired[datetime]
-
-
-class NumberFilterTypeDef(TypedDict):
-    lowerInclusive: NotRequired[float]
-    upperInclusive: NotRequired[float]
 
 
 class PortRangeFilterTypeDef(TypedDict):
@@ -961,6 +1003,7 @@ class ListUsageTotalsRequestTypeDef(TypedDict):
 class StepTypeDef(TypedDict):
     componentId: str
     componentType: str
+    componentArn: NotRequired[str]
 
 
 class PortRangeTypeDef(TypedDict):
@@ -1088,6 +1131,8 @@ class AwsEcrContainerAggregationResponseTypeDef(TypedDict):
     architecture: NotRequired[str]
     imageSha: NotRequired[str]
     imageTags: NotRequired[List[str]]
+    inUseCount: NotRequired[int]
+    lastInUseAt: NotRequired[datetime]
     repository: NotRequired[str]
     severityCounts: NotRequired[SeverityCountsTypeDef]
 
@@ -1183,16 +1228,6 @@ class FailedAccountTypeDef(TypedDict):
 class AmiAggregationTypeDef(TypedDict):
     amis: NotRequired[Sequence[StringFilterTypeDef]]
     sortBy: NotRequired[AmiSortByType]
-    sortOrder: NotRequired[SortOrderType]
-
-
-class AwsEcrContainerAggregationTypeDef(TypedDict):
-    architectures: NotRequired[Sequence[StringFilterTypeDef]]
-    imageShas: NotRequired[Sequence[StringFilterTypeDef]]
-    imageTags: NotRequired[Sequence[StringFilterTypeDef]]
-    repositories: NotRequired[Sequence[StringFilterTypeDef]]
-    resourceIds: NotRequired[Sequence[StringFilterTypeDef]]
-    sortBy: NotRequired[AwsEcrContainerSortByType]
     sortOrder: NotRequired[SortOrderType]
 
 
@@ -1350,6 +1385,22 @@ class UpdateOrganizationConfigurationResponseTypeDef(TypedDict):
     ResponseMetadata: ResponseMetadataTypeDef
 
 
+class PackageFilterTypeDef(TypedDict):
+    architecture: NotRequired[StringFilterTypeDef]
+    epoch: NotRequired[NumberFilterTypeDef]
+    filePath: NotRequired[StringFilterTypeDef]
+    name: NotRequired[StringFilterTypeDef]
+    release: NotRequired[StringFilterTypeDef]
+    sourceLambdaLayerArn: NotRequired[StringFilterTypeDef]
+    sourceLayerHash: NotRequired[StringFilterTypeDef]
+    version: NotRequired[StringFilterTypeDef]
+
+
+class AwsEksMetadataDetailsTypeDef(TypedDict):
+    namespace: NotRequired[str]
+    workloadInfoList: NotRequired[List[AwsEksWorkloadInfoTypeDef]]
+
+
 class AwsLambdaFunctionDetailsTypeDef(TypedDict):
     codeSha256: str
     executionRoleArn: str
@@ -1474,6 +1525,16 @@ class ListCisScanConfigurationsFilterCriteriaTypeDef(TypedDict):
     scanConfigurationArnFilters: NotRequired[Sequence[CisStringFilterTypeDef]]
     scanNameFilters: NotRequired[Sequence[CisStringFilterTypeDef]]
     targetResourceTagFilters: NotRequired[Sequence[TagFilterTypeDef]]
+
+
+GetClustersForImageRequestTypeDef = TypedDict(
+    "GetClustersForImageRequestTypeDef",
+    {
+        "filter": ClusterForImageFilterCriteriaTypeDef,
+        "maxResults": NotRequired[int],
+        "nextToken": NotRequired[str],
+    },
+)
 
 
 class CodeVulnerabilityDetailsTypeDef(TypedDict):
@@ -1609,20 +1670,18 @@ VulnerabilityTypeDef = TypedDict(
 )
 
 
-class PackageFilterTypeDef(TypedDict):
-    architecture: NotRequired[StringFilterTypeDef]
-    epoch: NotRequired[NumberFilterTypeDef]
-    filePath: NotRequired[StringFilterTypeDef]
-    name: NotRequired[StringFilterTypeDef]
-    release: NotRequired[StringFilterTypeDef]
-    sourceLambdaLayerArn: NotRequired[StringFilterTypeDef]
-    sourceLayerHash: NotRequired[StringFilterTypeDef]
-    version: NotRequired[StringFilterTypeDef]
-
-
 class FreeTrialAccountInfoTypeDef(TypedDict):
     accountId: str
     freeTrialInfo: List[FreeTrialInfoTypeDef]
+
+
+GetClustersForImageRequestPaginateTypeDef = TypedDict(
+    "GetClustersForImageRequestPaginateTypeDef",
+    {
+        "filter": ClusterForImageFilterCriteriaTypeDef,
+        "PaginationConfig": NotRequired[PaginatorConfigTypeDef],
+    },
+)
 
 
 class ListAccountPermissionsRequestPaginateTypeDef(TypedDict):
@@ -1778,6 +1837,58 @@ class EnableResponseTypeDef(TypedDict):
     ResponseMetadata: ResponseMetadataTypeDef
 
 
+class FilterCriteriaOutputTypeDef(TypedDict):
+    awsAccountId: NotRequired[List[StringFilterTypeDef]]
+    codeVulnerabilityDetectorName: NotRequired[List[StringFilterTypeDef]]
+    codeVulnerabilityDetectorTags: NotRequired[List[StringFilterTypeDef]]
+    codeVulnerabilityFilePath: NotRequired[List[StringFilterTypeDef]]
+    componentId: NotRequired[List[StringFilterTypeDef]]
+    componentType: NotRequired[List[StringFilterTypeDef]]
+    ec2InstanceImageId: NotRequired[List[StringFilterTypeDef]]
+    ec2InstanceSubnetId: NotRequired[List[StringFilterTypeDef]]
+    ec2InstanceVpcId: NotRequired[List[StringFilterTypeDef]]
+    ecrImageArchitecture: NotRequired[List[StringFilterTypeDef]]
+    ecrImageHash: NotRequired[List[StringFilterTypeDef]]
+    ecrImageInUseCount: NotRequired[List[NumberFilterTypeDef]]
+    ecrImageLastInUseAt: NotRequired[List[DateFilterOutputTypeDef]]
+    ecrImagePushedAt: NotRequired[List[DateFilterOutputTypeDef]]
+    ecrImageRegistry: NotRequired[List[StringFilterTypeDef]]
+    ecrImageRepositoryName: NotRequired[List[StringFilterTypeDef]]
+    ecrImageTags: NotRequired[List[StringFilterTypeDef]]
+    epssScore: NotRequired[List[NumberFilterTypeDef]]
+    exploitAvailable: NotRequired[List[StringFilterTypeDef]]
+    findingArn: NotRequired[List[StringFilterTypeDef]]
+    findingStatus: NotRequired[List[StringFilterTypeDef]]
+    findingType: NotRequired[List[StringFilterTypeDef]]
+    firstObservedAt: NotRequired[List[DateFilterOutputTypeDef]]
+    fixAvailable: NotRequired[List[StringFilterTypeDef]]
+    inspectorScore: NotRequired[List[NumberFilterTypeDef]]
+    lambdaFunctionExecutionRoleArn: NotRequired[List[StringFilterTypeDef]]
+    lambdaFunctionLastModifiedAt: NotRequired[List[DateFilterOutputTypeDef]]
+    lambdaFunctionLayers: NotRequired[List[StringFilterTypeDef]]
+    lambdaFunctionName: NotRequired[List[StringFilterTypeDef]]
+    lambdaFunctionRuntime: NotRequired[List[StringFilterTypeDef]]
+    lastObservedAt: NotRequired[List[DateFilterOutputTypeDef]]
+    networkProtocol: NotRequired[List[StringFilterTypeDef]]
+    portRange: NotRequired[List[PortRangeFilterTypeDef]]
+    relatedVulnerabilities: NotRequired[List[StringFilterTypeDef]]
+    resourceId: NotRequired[List[StringFilterTypeDef]]
+    resourceTags: NotRequired[List[MapFilterTypeDef]]
+    resourceType: NotRequired[List[StringFilterTypeDef]]
+    severity: NotRequired[List[StringFilterTypeDef]]
+    title: NotRequired[List[StringFilterTypeDef]]
+    updatedAt: NotRequired[List[DateFilterOutputTypeDef]]
+    vendorSeverity: NotRequired[List[StringFilterTypeDef]]
+    vulnerabilityId: NotRequired[List[StringFilterTypeDef]]
+    vulnerabilitySource: NotRequired[List[StringFilterTypeDef]]
+    vulnerablePackages: NotRequired[List[PackageFilterTypeDef]]
+
+
+class ClusterMetadataTypeDef(TypedDict):
+    awsEcsMetadataDetails: NotRequired[AwsEcsMetadataDetailsTypeDef]
+    awsEksMetadataDetails: NotRequired[AwsEksMetadataDetailsTypeDef]
+
+
 class ResourceDetailsTypeDef(TypedDict):
     awsEc2Instance: NotRequired[AwsEc2InstanceDetailsTypeDef]
     awsEcrContainerImage: NotRequired[AwsEcrContainerImageDetailsTypeDef]
@@ -1818,6 +1929,8 @@ class ListCisScansFilterCriteriaTypeDef(TypedDict):
 class CoverageFilterCriteriaTypeDef(TypedDict):
     accountId: NotRequired[Sequence[CoverageStringFilterTypeDef]]
     ec2InstanceTags: NotRequired[Sequence[CoverageMapFilterTypeDef]]
+    ecrImageInUseCount: NotRequired[Sequence[CoverageNumberFilterTypeDef]]
+    ecrImageLastInUseAt: NotRequired[Sequence[CoverageDateFilterTypeDef]]
     ecrImageTags: NotRequired[Sequence[CoverageStringFilterTypeDef]]
     ecrRepositoryName: NotRequired[Sequence[CoverageStringFilterTypeDef]]
     imagePulledAt: NotRequired[Sequence[CoverageDateFilterTypeDef]]
@@ -1831,6 +1944,56 @@ class CoverageFilterCriteriaTypeDef(TypedDict):
     scanStatusCode: NotRequired[Sequence[CoverageStringFilterTypeDef]]
     scanStatusReason: NotRequired[Sequence[CoverageStringFilterTypeDef]]
     scanType: NotRequired[Sequence[CoverageStringFilterTypeDef]]
+
+
+DateFilterUnionTypeDef = Union[DateFilterTypeDef, DateFilterOutputTypeDef]
+
+
+class FilterCriteriaTypeDef(TypedDict):
+    awsAccountId: NotRequired[Sequence[StringFilterTypeDef]]
+    codeVulnerabilityDetectorName: NotRequired[Sequence[StringFilterTypeDef]]
+    codeVulnerabilityDetectorTags: NotRequired[Sequence[StringFilterTypeDef]]
+    codeVulnerabilityFilePath: NotRequired[Sequence[StringFilterTypeDef]]
+    componentId: NotRequired[Sequence[StringFilterTypeDef]]
+    componentType: NotRequired[Sequence[StringFilterTypeDef]]
+    ec2InstanceImageId: NotRequired[Sequence[StringFilterTypeDef]]
+    ec2InstanceSubnetId: NotRequired[Sequence[StringFilterTypeDef]]
+    ec2InstanceVpcId: NotRequired[Sequence[StringFilterTypeDef]]
+    ecrImageArchitecture: NotRequired[Sequence[StringFilterTypeDef]]
+    ecrImageHash: NotRequired[Sequence[StringFilterTypeDef]]
+    ecrImageInUseCount: NotRequired[Sequence[NumberFilterTypeDef]]
+    ecrImageLastInUseAt: NotRequired[Sequence[DateFilterTypeDef]]
+    ecrImagePushedAt: NotRequired[Sequence[DateFilterTypeDef]]
+    ecrImageRegistry: NotRequired[Sequence[StringFilterTypeDef]]
+    ecrImageRepositoryName: NotRequired[Sequence[StringFilterTypeDef]]
+    ecrImageTags: NotRequired[Sequence[StringFilterTypeDef]]
+    epssScore: NotRequired[Sequence[NumberFilterTypeDef]]
+    exploitAvailable: NotRequired[Sequence[StringFilterTypeDef]]
+    findingArn: NotRequired[Sequence[StringFilterTypeDef]]
+    findingStatus: NotRequired[Sequence[StringFilterTypeDef]]
+    findingType: NotRequired[Sequence[StringFilterTypeDef]]
+    firstObservedAt: NotRequired[Sequence[DateFilterTypeDef]]
+    fixAvailable: NotRequired[Sequence[StringFilterTypeDef]]
+    inspectorScore: NotRequired[Sequence[NumberFilterTypeDef]]
+    lambdaFunctionExecutionRoleArn: NotRequired[Sequence[StringFilterTypeDef]]
+    lambdaFunctionLastModifiedAt: NotRequired[Sequence[DateFilterTypeDef]]
+    lambdaFunctionLayers: NotRequired[Sequence[StringFilterTypeDef]]
+    lambdaFunctionName: NotRequired[Sequence[StringFilterTypeDef]]
+    lambdaFunctionRuntime: NotRequired[Sequence[StringFilterTypeDef]]
+    lastObservedAt: NotRequired[Sequence[DateFilterTypeDef]]
+    networkProtocol: NotRequired[Sequence[StringFilterTypeDef]]
+    portRange: NotRequired[Sequence[PortRangeFilterTypeDef]]
+    relatedVulnerabilities: NotRequired[Sequence[StringFilterTypeDef]]
+    resourceId: NotRequired[Sequence[StringFilterTypeDef]]
+    resourceTags: NotRequired[Sequence[MapFilterTypeDef]]
+    resourceType: NotRequired[Sequence[StringFilterTypeDef]]
+    severity: NotRequired[Sequence[StringFilterTypeDef]]
+    title: NotRequired[Sequence[StringFilterTypeDef]]
+    updatedAt: NotRequired[Sequence[DateFilterTypeDef]]
+    vendorSeverity: NotRequired[Sequence[StringFilterTypeDef]]
+    vulnerabilityId: NotRequired[Sequence[StringFilterTypeDef]]
+    vulnerabilitySource: NotRequired[Sequence[StringFilterTypeDef]]
+    vulnerablePackages: NotRequired[Sequence[PackageFilterTypeDef]]
 
 
 class ListCisScansResponseTypeDef(TypedDict):
@@ -1933,20 +2096,6 @@ class ScheduleTypeDef(TypedDict):
     weekly: NotRequired[WeeklyScheduleTypeDef]
 
 
-class AggregationRequestTypeDef(TypedDict):
-    accountAggregation: NotRequired[AccountAggregationTypeDef]
-    amiAggregation: NotRequired[AmiAggregationTypeDef]
-    awsEcrContainerAggregation: NotRequired[AwsEcrContainerAggregationTypeDef]
-    ec2InstanceAggregation: NotRequired[Ec2InstanceAggregationTypeDef]
-    findingTypeAggregation: NotRequired[FindingTypeAggregationTypeDef]
-    imageLayerAggregation: NotRequired[ImageLayerAggregationTypeDef]
-    lambdaFunctionAggregation: NotRequired[LambdaFunctionAggregationTypeDef]
-    lambdaLayerAggregation: NotRequired[LambdaLayerAggregationTypeDef]
-    packageAggregation: NotRequired[PackageAggregationTypeDef]
-    repositoryAggregation: NotRequired[RepositoryAggregationTypeDef]
-    titleAggregation: NotRequired[TitleAggregationTypeDef]
-
-
 class GetConfigurationResponseTypeDef(TypedDict):
     ec2Configuration: Ec2ConfigurationStateTypeDef
     ecrConfiguration: EcrConfigurationStateTypeDef
@@ -1963,96 +2112,6 @@ class SearchVulnerabilitiesResponseTypeDef(TypedDict):
     vulnerabilities: List[VulnerabilityTypeDef]
     ResponseMetadata: ResponseMetadataTypeDef
     nextToken: NotRequired[str]
-
-
-class FilterCriteriaOutputTypeDef(TypedDict):
-    awsAccountId: NotRequired[List[StringFilterTypeDef]]
-    codeVulnerabilityDetectorName: NotRequired[List[StringFilterTypeDef]]
-    codeVulnerabilityDetectorTags: NotRequired[List[StringFilterTypeDef]]
-    codeVulnerabilityFilePath: NotRequired[List[StringFilterTypeDef]]
-    componentId: NotRequired[List[StringFilterTypeDef]]
-    componentType: NotRequired[List[StringFilterTypeDef]]
-    ec2InstanceImageId: NotRequired[List[StringFilterTypeDef]]
-    ec2InstanceSubnetId: NotRequired[List[StringFilterTypeDef]]
-    ec2InstanceVpcId: NotRequired[List[StringFilterTypeDef]]
-    ecrImageArchitecture: NotRequired[List[StringFilterTypeDef]]
-    ecrImageHash: NotRequired[List[StringFilterTypeDef]]
-    ecrImagePushedAt: NotRequired[List[DateFilterOutputTypeDef]]
-    ecrImageRegistry: NotRequired[List[StringFilterTypeDef]]
-    ecrImageRepositoryName: NotRequired[List[StringFilterTypeDef]]
-    ecrImageTags: NotRequired[List[StringFilterTypeDef]]
-    epssScore: NotRequired[List[NumberFilterTypeDef]]
-    exploitAvailable: NotRequired[List[StringFilterTypeDef]]
-    findingArn: NotRequired[List[StringFilterTypeDef]]
-    findingStatus: NotRequired[List[StringFilterTypeDef]]
-    findingType: NotRequired[List[StringFilterTypeDef]]
-    firstObservedAt: NotRequired[List[DateFilterOutputTypeDef]]
-    fixAvailable: NotRequired[List[StringFilterTypeDef]]
-    inspectorScore: NotRequired[List[NumberFilterTypeDef]]
-    lambdaFunctionExecutionRoleArn: NotRequired[List[StringFilterTypeDef]]
-    lambdaFunctionLastModifiedAt: NotRequired[List[DateFilterOutputTypeDef]]
-    lambdaFunctionLayers: NotRequired[List[StringFilterTypeDef]]
-    lambdaFunctionName: NotRequired[List[StringFilterTypeDef]]
-    lambdaFunctionRuntime: NotRequired[List[StringFilterTypeDef]]
-    lastObservedAt: NotRequired[List[DateFilterOutputTypeDef]]
-    networkProtocol: NotRequired[List[StringFilterTypeDef]]
-    portRange: NotRequired[List[PortRangeFilterTypeDef]]
-    relatedVulnerabilities: NotRequired[List[StringFilterTypeDef]]
-    resourceId: NotRequired[List[StringFilterTypeDef]]
-    resourceTags: NotRequired[List[MapFilterTypeDef]]
-    resourceType: NotRequired[List[StringFilterTypeDef]]
-    severity: NotRequired[List[StringFilterTypeDef]]
-    title: NotRequired[List[StringFilterTypeDef]]
-    updatedAt: NotRequired[List[DateFilterOutputTypeDef]]
-    vendorSeverity: NotRequired[List[StringFilterTypeDef]]
-    vulnerabilityId: NotRequired[List[StringFilterTypeDef]]
-    vulnerabilitySource: NotRequired[List[StringFilterTypeDef]]
-    vulnerablePackages: NotRequired[List[PackageFilterTypeDef]]
-
-
-class FilterCriteriaTypeDef(TypedDict):
-    awsAccountId: NotRequired[Sequence[StringFilterTypeDef]]
-    codeVulnerabilityDetectorName: NotRequired[Sequence[StringFilterTypeDef]]
-    codeVulnerabilityDetectorTags: NotRequired[Sequence[StringFilterTypeDef]]
-    codeVulnerabilityFilePath: NotRequired[Sequence[StringFilterTypeDef]]
-    componentId: NotRequired[Sequence[StringFilterTypeDef]]
-    componentType: NotRequired[Sequence[StringFilterTypeDef]]
-    ec2InstanceImageId: NotRequired[Sequence[StringFilterTypeDef]]
-    ec2InstanceSubnetId: NotRequired[Sequence[StringFilterTypeDef]]
-    ec2InstanceVpcId: NotRequired[Sequence[StringFilterTypeDef]]
-    ecrImageArchitecture: NotRequired[Sequence[StringFilterTypeDef]]
-    ecrImageHash: NotRequired[Sequence[StringFilterTypeDef]]
-    ecrImagePushedAt: NotRequired[Sequence[DateFilterTypeDef]]
-    ecrImageRegistry: NotRequired[Sequence[StringFilterTypeDef]]
-    ecrImageRepositoryName: NotRequired[Sequence[StringFilterTypeDef]]
-    ecrImageTags: NotRequired[Sequence[StringFilterTypeDef]]
-    epssScore: NotRequired[Sequence[NumberFilterTypeDef]]
-    exploitAvailable: NotRequired[Sequence[StringFilterTypeDef]]
-    findingArn: NotRequired[Sequence[StringFilterTypeDef]]
-    findingStatus: NotRequired[Sequence[StringFilterTypeDef]]
-    findingType: NotRequired[Sequence[StringFilterTypeDef]]
-    firstObservedAt: NotRequired[Sequence[DateFilterTypeDef]]
-    fixAvailable: NotRequired[Sequence[StringFilterTypeDef]]
-    inspectorScore: NotRequired[Sequence[NumberFilterTypeDef]]
-    lambdaFunctionExecutionRoleArn: NotRequired[Sequence[StringFilterTypeDef]]
-    lambdaFunctionLastModifiedAt: NotRequired[Sequence[DateFilterTypeDef]]
-    lambdaFunctionLayers: NotRequired[Sequence[StringFilterTypeDef]]
-    lambdaFunctionName: NotRequired[Sequence[StringFilterTypeDef]]
-    lambdaFunctionRuntime: NotRequired[Sequence[StringFilterTypeDef]]
-    lastObservedAt: NotRequired[Sequence[DateFilterTypeDef]]
-    networkProtocol: NotRequired[Sequence[StringFilterTypeDef]]
-    portRange: NotRequired[Sequence[PortRangeFilterTypeDef]]
-    relatedVulnerabilities: NotRequired[Sequence[StringFilterTypeDef]]
-    resourceId: NotRequired[Sequence[StringFilterTypeDef]]
-    resourceTags: NotRequired[Sequence[MapFilterTypeDef]]
-    resourceType: NotRequired[Sequence[StringFilterTypeDef]]
-    severity: NotRequired[Sequence[StringFilterTypeDef]]
-    title: NotRequired[Sequence[StringFilterTypeDef]]
-    updatedAt: NotRequired[Sequence[DateFilterTypeDef]]
-    vendorSeverity: NotRequired[Sequence[StringFilterTypeDef]]
-    vulnerabilityId: NotRequired[Sequence[StringFilterTypeDef]]
-    vulnerabilitySource: NotRequired[Sequence[StringFilterTypeDef]]
-    vulnerablePackages: NotRequired[Sequence[PackageFilterTypeDef]]
 
 
 class BatchGetFreeTrialInfoResponseTypeDef(TypedDict):
@@ -2121,6 +2180,36 @@ class BatchGetAccountStatusResponseTypeDef(TypedDict):
     ResponseMetadata: ResponseMetadataTypeDef
 
 
+class FilterTypeDef(TypedDict):
+    action: FilterActionType
+    arn: str
+    createdAt: datetime
+    criteria: FilterCriteriaOutputTypeDef
+    name: str
+    ownerId: str
+    updatedAt: datetime
+    description: NotRequired[str]
+    reason: NotRequired[str]
+    tags: NotRequired[Dict[str, str]]
+
+
+class GetFindingsReportStatusResponseTypeDef(TypedDict):
+    destination: DestinationTypeDef
+    errorCode: ReportingErrorCodeType
+    errorMessage: str
+    filterCriteria: FilterCriteriaOutputTypeDef
+    reportId: str
+    status: ExternalReportStatusType
+    ResponseMetadata: ResponseMetadataTypeDef
+
+
+class ClusterDetailsTypeDef(TypedDict):
+    clusterMetadata: ClusterMetadataTypeDef
+    lastInUse: datetime
+    runningUnitCount: NotRequired[int]
+    stoppedUnitCount: NotRequired[int]
+
+
 ResourceTypeDef = TypedDict(
     "ResourceTypeDef",
     {
@@ -2174,6 +2263,21 @@ class ListCoverageStatisticsRequestTypeDef(TypedDict):
     nextToken: NotRequired[str]
 
 
+class AwsEcrContainerAggregationTypeDef(TypedDict):
+    architectures: NotRequired[Sequence[StringFilterTypeDef]]
+    imageShas: NotRequired[Sequence[StringFilterTypeDef]]
+    imageTags: NotRequired[Sequence[StringFilterTypeDef]]
+    inUseCount: NotRequired[Sequence[NumberFilterTypeDef]]
+    lastInUseAt: NotRequired[Sequence[DateFilterUnionTypeDef]]
+    repositories: NotRequired[Sequence[StringFilterTypeDef]]
+    resourceIds: NotRequired[Sequence[StringFilterTypeDef]]
+    sortBy: NotRequired[AwsEcrContainerSortByType]
+    sortOrder: NotRequired[SortOrderType]
+
+
+FilterCriteriaUnionTypeDef = Union[FilterCriteriaTypeDef, FilterCriteriaOutputTypeDef]
+
+
 class CisScanConfigurationTypeDef(TypedDict):
     scanConfigurationArn: str
     ownerId: NotRequired[str]
@@ -2187,47 +2291,6 @@ class CisScanConfigurationTypeDef(TypedDict):
 ScheduleUnionTypeDef = Union[ScheduleTypeDef, ScheduleOutputTypeDef]
 
 
-class ListFindingAggregationsRequestPaginateTypeDef(TypedDict):
-    aggregationType: AggregationTypeType
-    accountIds: NotRequired[Sequence[StringFilterTypeDef]]
-    aggregationRequest: NotRequired[AggregationRequestTypeDef]
-    PaginationConfig: NotRequired[PaginatorConfigTypeDef]
-
-
-class ListFindingAggregationsRequestTypeDef(TypedDict):
-    aggregationType: AggregationTypeType
-    accountIds: NotRequired[Sequence[StringFilterTypeDef]]
-    aggregationRequest: NotRequired[AggregationRequestTypeDef]
-    maxResults: NotRequired[int]
-    nextToken: NotRequired[str]
-
-
-class FilterTypeDef(TypedDict):
-    action: FilterActionType
-    arn: str
-    createdAt: datetime
-    criteria: FilterCriteriaOutputTypeDef
-    name: str
-    ownerId: str
-    updatedAt: datetime
-    description: NotRequired[str]
-    reason: NotRequired[str]
-    tags: NotRequired[Dict[str, str]]
-
-
-class GetFindingsReportStatusResponseTypeDef(TypedDict):
-    destination: DestinationTypeDef
-    errorCode: ReportingErrorCodeType
-    errorMessage: str
-    filterCriteria: FilterCriteriaOutputTypeDef
-    reportId: str
-    status: ExternalReportStatusType
-    ResponseMetadata: ResponseMetadataTypeDef
-
-
-FilterCriteriaUnionTypeDef = Union[FilterCriteriaTypeDef, FilterCriteriaOutputTypeDef]
-
-
 class ListCoverageResponseTypeDef(TypedDict):
     coveredResources: List[CoveredResourceTypeDef]
     ResponseMetadata: ResponseMetadataTypeDef
@@ -2238,6 +2301,17 @@ class CreateSbomExportRequestTypeDef(TypedDict):
     reportFormat: SbomReportFormatType
     s3Destination: DestinationTypeDef
     resourceFilterCriteria: NotRequired[ResourceFilterCriteriaUnionTypeDef]
+
+
+class ListFiltersResponseTypeDef(TypedDict):
+    filters: List[FilterTypeDef]
+    ResponseMetadata: ResponseMetadataTypeDef
+    nextToken: NotRequired[str]
+
+
+class ClusterInformationTypeDef(TypedDict):
+    clusterArn: str
+    clusterDetails: NotRequired[List[ClusterDetailsTypeDef]]
 
 
 FindingTypeDef = TypedDict(
@@ -2268,32 +2342,18 @@ FindingTypeDef = TypedDict(
 )
 
 
-class ListCisScanConfigurationsResponseTypeDef(TypedDict):
-    scanConfigurations: List[CisScanConfigurationTypeDef]
-    ResponseMetadata: ResponseMetadataTypeDef
-    nextToken: NotRequired[str]
-
-
-class CreateCisScanConfigurationRequestTypeDef(TypedDict):
-    scanName: str
-    schedule: ScheduleUnionTypeDef
-    securityLevel: CisSecurityLevelType
-    targets: CreateCisTargetsTypeDef
-    tags: NotRequired[Mapping[str, str]]
-
-
-class UpdateCisScanConfigurationRequestTypeDef(TypedDict):
-    scanConfigurationArn: str
-    scanName: NotRequired[str]
-    schedule: NotRequired[ScheduleUnionTypeDef]
-    securityLevel: NotRequired[CisSecurityLevelType]
-    targets: NotRequired[UpdateCisTargetsTypeDef]
-
-
-class ListFiltersResponseTypeDef(TypedDict):
-    filters: List[FilterTypeDef]
-    ResponseMetadata: ResponseMetadataTypeDef
-    nextToken: NotRequired[str]
+class AggregationRequestTypeDef(TypedDict):
+    accountAggregation: NotRequired[AccountAggregationTypeDef]
+    amiAggregation: NotRequired[AmiAggregationTypeDef]
+    awsEcrContainerAggregation: NotRequired[AwsEcrContainerAggregationTypeDef]
+    ec2InstanceAggregation: NotRequired[Ec2InstanceAggregationTypeDef]
+    findingTypeAggregation: NotRequired[FindingTypeAggregationTypeDef]
+    imageLayerAggregation: NotRequired[ImageLayerAggregationTypeDef]
+    lambdaFunctionAggregation: NotRequired[LambdaFunctionAggregationTypeDef]
+    lambdaLayerAggregation: NotRequired[LambdaLayerAggregationTypeDef]
+    packageAggregation: NotRequired[PackageAggregationTypeDef]
+    repositoryAggregation: NotRequired[RepositoryAggregationTypeDef]
+    titleAggregation: NotRequired[TitleAggregationTypeDef]
 
 
 class CreateFilterRequestTypeDef(TypedDict):
@@ -2333,7 +2393,50 @@ class UpdateFilterRequestTypeDef(TypedDict):
     reason: NotRequired[str]
 
 
+class ListCisScanConfigurationsResponseTypeDef(TypedDict):
+    scanConfigurations: List[CisScanConfigurationTypeDef]
+    ResponseMetadata: ResponseMetadataTypeDef
+    nextToken: NotRequired[str]
+
+
+class CreateCisScanConfigurationRequestTypeDef(TypedDict):
+    scanName: str
+    schedule: ScheduleUnionTypeDef
+    securityLevel: CisSecurityLevelType
+    targets: CreateCisTargetsTypeDef
+    tags: NotRequired[Mapping[str, str]]
+
+
+class UpdateCisScanConfigurationRequestTypeDef(TypedDict):
+    scanConfigurationArn: str
+    scanName: NotRequired[str]
+    schedule: NotRequired[ScheduleUnionTypeDef]
+    securityLevel: NotRequired[CisSecurityLevelType]
+    targets: NotRequired[UpdateCisTargetsTypeDef]
+
+
+class GetClustersForImageResponseTypeDef(TypedDict):
+    cluster: List[ClusterInformationTypeDef]
+    ResponseMetadata: ResponseMetadataTypeDef
+    nextToken: NotRequired[str]
+
+
 class ListFindingsResponseTypeDef(TypedDict):
     findings: List[FindingTypeDef]
     ResponseMetadata: ResponseMetadataTypeDef
+    nextToken: NotRequired[str]
+
+
+class ListFindingAggregationsRequestPaginateTypeDef(TypedDict):
+    aggregationType: AggregationTypeType
+    accountIds: NotRequired[Sequence[StringFilterTypeDef]]
+    aggregationRequest: NotRequired[AggregationRequestTypeDef]
+    PaginationConfig: NotRequired[PaginatorConfigTypeDef]
+
+
+class ListFindingAggregationsRequestTypeDef(TypedDict):
+    aggregationType: AggregationTypeType
+    accountIds: NotRequired[Sequence[StringFilterTypeDef]]
+    aggregationRequest: NotRequired[AggregationRequestTypeDef]
+    maxResults: NotRequired[int]
     nextToken: NotRequired[str]

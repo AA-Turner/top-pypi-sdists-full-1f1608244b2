@@ -193,6 +193,7 @@ __all__ = (
     "JoinDomainOutputTypeDef",
     "ListAutomaticTapeCreationPoliciesInputTypeDef",
     "ListAutomaticTapeCreationPoliciesOutputTypeDef",
+    "ListCacheReportsInputPaginateTypeDef",
     "ListCacheReportsInputTypeDef",
     "ListCacheReportsOutputTypeDef",
     "ListFileSharesInputPaginateTypeDef",
@@ -1726,6 +1727,10 @@ class DescribeTapesInputPaginateTypeDef(TypedDict):
 class DescribeVTLDevicesInputPaginateTypeDef(TypedDict):
     GatewayARN: str
     VTLDeviceARNs: NotRequired[Sequence[str]]
+    PaginationConfig: NotRequired[PaginatorConfigTypeDef]
+
+
+class ListCacheReportsInputPaginateTypeDef(TypedDict):
     PaginationConfig: NotRequired[PaginatorConfigTypeDef]
 
 

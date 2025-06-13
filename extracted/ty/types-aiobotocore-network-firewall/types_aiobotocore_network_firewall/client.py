@@ -33,9 +33,12 @@ from .paginator import (
     ListAnalysisReportsPaginator,
     ListFirewallPoliciesPaginator,
     ListFirewallsPaginator,
+    ListFlowOperationResultsPaginator,
+    ListFlowOperationsPaginator,
     ListRuleGroupsPaginator,
     ListTagsForResourcePaginator,
     ListTLSInspectionConfigurationsPaginator,
+    ListVpcEndpointAssociationsPaginator,
 )
 from .type_defs import (
     AssociateFirewallPolicyRequestTypeDef,
@@ -50,6 +53,8 @@ from .type_defs import (
     CreateRuleGroupResponseTypeDef,
     CreateTLSInspectionConfigurationRequestTypeDef,
     CreateTLSInspectionConfigurationResponseTypeDef,
+    CreateVpcEndpointAssociationRequestTypeDef,
+    CreateVpcEndpointAssociationResponseTypeDef,
     DeleteFirewallPolicyRequestTypeDef,
     DeleteFirewallPolicyResponseTypeDef,
     DeleteFirewallRequestTypeDef,
@@ -59,10 +64,16 @@ from .type_defs import (
     DeleteRuleGroupResponseTypeDef,
     DeleteTLSInspectionConfigurationRequestTypeDef,
     DeleteTLSInspectionConfigurationResponseTypeDef,
+    DeleteVpcEndpointAssociationRequestTypeDef,
+    DeleteVpcEndpointAssociationResponseTypeDef,
+    DescribeFirewallMetadataRequestTypeDef,
+    DescribeFirewallMetadataResponseTypeDef,
     DescribeFirewallPolicyRequestTypeDef,
     DescribeFirewallPolicyResponseTypeDef,
     DescribeFirewallRequestTypeDef,
     DescribeFirewallResponseTypeDef,
+    DescribeFlowOperationRequestTypeDef,
+    DescribeFlowOperationResponseTypeDef,
     DescribeLoggingConfigurationRequestTypeDef,
     DescribeLoggingConfigurationResponseTypeDef,
     DescribeResourcePolicyRequestTypeDef,
@@ -73,6 +84,8 @@ from .type_defs import (
     DescribeRuleGroupResponseTypeDef,
     DescribeTLSInspectionConfigurationRequestTypeDef,
     DescribeTLSInspectionConfigurationResponseTypeDef,
+    DescribeVpcEndpointAssociationRequestTypeDef,
+    DescribeVpcEndpointAssociationResponseTypeDef,
     DisassociateSubnetsRequestTypeDef,
     DisassociateSubnetsResponseTypeDef,
     GetAnalysisReportResultsRequestTypeDef,
@@ -83,15 +96,25 @@ from .type_defs import (
     ListFirewallPoliciesResponseTypeDef,
     ListFirewallsRequestTypeDef,
     ListFirewallsResponseTypeDef,
+    ListFlowOperationResultsRequestTypeDef,
+    ListFlowOperationResultsResponseTypeDef,
+    ListFlowOperationsRequestTypeDef,
+    ListFlowOperationsResponseTypeDef,
     ListRuleGroupsRequestTypeDef,
     ListRuleGroupsResponseTypeDef,
     ListTagsForResourceRequestTypeDef,
     ListTagsForResourceResponseTypeDef,
     ListTLSInspectionConfigurationsRequestTypeDef,
     ListTLSInspectionConfigurationsResponseTypeDef,
+    ListVpcEndpointAssociationsRequestTypeDef,
+    ListVpcEndpointAssociationsResponseTypeDef,
     PutResourcePolicyRequestTypeDef,
     StartAnalysisReportRequestTypeDef,
     StartAnalysisReportResponseTypeDef,
+    StartFlowCaptureRequestTypeDef,
+    StartFlowCaptureResponseTypeDef,
+    StartFlowFlushRequestTypeDef,
+    StartFlowFlushResponseTypeDef,
     TagResourceRequestTypeDef,
     UntagResourceRequestTypeDef,
     UpdateFirewallAnalysisSettingsRequestTypeDef,
@@ -244,6 +267,16 @@ class NetworkFirewallClient(AioBaseClient):
         [Show types-aiobotocore documentation](https://youtype.github.io/types_aiobotocore_docs/types_aiobotocore_network_firewall/client/#create_tls_inspection_configuration)
         """
 
+    async def create_vpc_endpoint_association(
+        self, **kwargs: Unpack[CreateVpcEndpointAssociationRequestTypeDef]
+    ) -> CreateVpcEndpointAssociationResponseTypeDef:
+        """
+        Creates a firewall endpoint for an Network Firewall firewall.
+
+        [Show boto3 documentation](https://boto3.amazonaws.com/v1/documentation/api/latest/reference/services/network-firewall/client/create_vpc_endpoint_association.html)
+        [Show types-aiobotocore documentation](https://youtype.github.io/types_aiobotocore_docs/types_aiobotocore_network_firewall/client/#create_vpc_endpoint_association)
+        """
+
     async def delete_firewall(
         self, **kwargs: Unpack[DeleteFirewallRequestTypeDef]
     ) -> DeleteFirewallResponseTypeDef:
@@ -295,6 +328,16 @@ class NetworkFirewallClient(AioBaseClient):
         [Show types-aiobotocore documentation](https://youtype.github.io/types_aiobotocore_docs/types_aiobotocore_network_firewall/client/#delete_tls_inspection_configuration)
         """
 
+    async def delete_vpc_endpoint_association(
+        self, **kwargs: Unpack[DeleteVpcEndpointAssociationRequestTypeDef]
+    ) -> DeleteVpcEndpointAssociationResponseTypeDef:
+        """
+        Deletes the specified <a>VpcEndpointAssociation</a>.
+
+        [Show boto3 documentation](https://boto3.amazonaws.com/v1/documentation/api/latest/reference/services/network-firewall/client/delete_vpc_endpoint_association.html)
+        [Show types-aiobotocore documentation](https://youtype.github.io/types_aiobotocore_docs/types_aiobotocore_network_firewall/client/#delete_vpc_endpoint_association)
+        """
+
     async def describe_firewall(
         self, **kwargs: Unpack[DescribeFirewallRequestTypeDef]
     ) -> DescribeFirewallResponseTypeDef:
@@ -305,6 +348,17 @@ class NetworkFirewallClient(AioBaseClient):
         [Show types-aiobotocore documentation](https://youtype.github.io/types_aiobotocore_docs/types_aiobotocore_network_firewall/client/#describe_firewall)
         """
 
+    async def describe_firewall_metadata(
+        self, **kwargs: Unpack[DescribeFirewallMetadataRequestTypeDef]
+    ) -> DescribeFirewallMetadataResponseTypeDef:
+        """
+        Returns the high-level information about a firewall, including the Availability
+        Zones where the Firewall is currently in use.
+
+        [Show boto3 documentation](https://boto3.amazonaws.com/v1/documentation/api/latest/reference/services/network-firewall/client/describe_firewall_metadata.html)
+        [Show types-aiobotocore documentation](https://youtype.github.io/types_aiobotocore_docs/types_aiobotocore_network_firewall/client/#describe_firewall_metadata)
+        """
+
     async def describe_firewall_policy(
         self, **kwargs: Unpack[DescribeFirewallPolicyRequestTypeDef]
     ) -> DescribeFirewallPolicyResponseTypeDef:
@@ -313,6 +367,16 @@ class NetworkFirewallClient(AioBaseClient):
 
         [Show boto3 documentation](https://boto3.amazonaws.com/v1/documentation/api/latest/reference/services/network-firewall/client/describe_firewall_policy.html)
         [Show types-aiobotocore documentation](https://youtype.github.io/types_aiobotocore_docs/types_aiobotocore_network_firewall/client/#describe_firewall_policy)
+        """
+
+    async def describe_flow_operation(
+        self, **kwargs: Unpack[DescribeFlowOperationRequestTypeDef]
+    ) -> DescribeFlowOperationResponseTypeDef:
+        """
+        Returns key information about a specific flow operation.
+
+        [Show boto3 documentation](https://boto3.amazonaws.com/v1/documentation/api/latest/reference/services/network-firewall/client/describe_flow_operation.html)
+        [Show types-aiobotocore documentation](https://youtype.github.io/types_aiobotocore_docs/types_aiobotocore_network_firewall/client/#describe_flow_operation)
         """
 
     async def describe_logging_configuration(
@@ -367,6 +431,16 @@ class NetworkFirewallClient(AioBaseClient):
         [Show types-aiobotocore documentation](https://youtype.github.io/types_aiobotocore_docs/types_aiobotocore_network_firewall/client/#describe_tls_inspection_configuration)
         """
 
+    async def describe_vpc_endpoint_association(
+        self, **kwargs: Unpack[DescribeVpcEndpointAssociationRequestTypeDef]
+    ) -> DescribeVpcEndpointAssociationResponseTypeDef:
+        """
+        Returns the data object for the specified VPC endpoint association.
+
+        [Show boto3 documentation](https://boto3.amazonaws.com/v1/documentation/api/latest/reference/services/network-firewall/client/describe_vpc_endpoint_association.html)
+        [Show types-aiobotocore documentation](https://youtype.github.io/types_aiobotocore_docs/types_aiobotocore_network_firewall/client/#describe_vpc_endpoint_association)
+        """
+
     async def disassociate_subnets(
         self, **kwargs: Unpack[DisassociateSubnetsRequestTypeDef]
     ) -> DisassociateSubnetsResponseTypeDef:
@@ -419,6 +493,26 @@ class NetworkFirewallClient(AioBaseClient):
         [Show types-aiobotocore documentation](https://youtype.github.io/types_aiobotocore_docs/types_aiobotocore_network_firewall/client/#list_firewalls)
         """
 
+    async def list_flow_operation_results(
+        self, **kwargs: Unpack[ListFlowOperationResultsRequestTypeDef]
+    ) -> ListFlowOperationResultsResponseTypeDef:
+        """
+        Returns the results of a specific flow operation.
+
+        [Show boto3 documentation](https://boto3.amazonaws.com/v1/documentation/api/latest/reference/services/network-firewall/client/list_flow_operation_results.html)
+        [Show types-aiobotocore documentation](https://youtype.github.io/types_aiobotocore_docs/types_aiobotocore_network_firewall/client/#list_flow_operation_results)
+        """
+
+    async def list_flow_operations(
+        self, **kwargs: Unpack[ListFlowOperationsRequestTypeDef]
+    ) -> ListFlowOperationsResponseTypeDef:
+        """
+        Returns a list of all flow operations ran in a specific firewall.
+
+        [Show boto3 documentation](https://boto3.amazonaws.com/v1/documentation/api/latest/reference/services/network-firewall/client/list_flow_operations.html)
+        [Show types-aiobotocore documentation](https://youtype.github.io/types_aiobotocore_docs/types_aiobotocore_network_firewall/client/#list_flow_operations)
+        """
+
     async def list_rule_groups(
         self, **kwargs: Unpack[ListRuleGroupsRequestTypeDef]
     ) -> ListRuleGroupsResponseTypeDef:
@@ -450,11 +544,22 @@ class NetworkFirewallClient(AioBaseClient):
         [Show types-aiobotocore documentation](https://youtype.github.io/types_aiobotocore_docs/types_aiobotocore_network_firewall/client/#list_tags_for_resource)
         """
 
+    async def list_vpc_endpoint_associations(
+        self, **kwargs: Unpack[ListVpcEndpointAssociationsRequestTypeDef]
+    ) -> ListVpcEndpointAssociationsResponseTypeDef:
+        """
+        Retrieves the metadata for the VPC endpoint associations that you have defined.
+
+        [Show boto3 documentation](https://boto3.amazonaws.com/v1/documentation/api/latest/reference/services/network-firewall/client/list_vpc_endpoint_associations.html)
+        [Show types-aiobotocore documentation](https://youtype.github.io/types_aiobotocore_docs/types_aiobotocore_network_firewall/client/#list_vpc_endpoint_associations)
+        """
+
     async def put_resource_policy(
         self, **kwargs: Unpack[PutResourcePolicyRequestTypeDef]
     ) -> Dict[str, Any]:
         """
-        Creates or updates an IAM policy for your rule group or firewall policy.
+        Creates or updates an IAM policy for your rule group, firewall policy, or
+        firewall.
 
         [Show boto3 documentation](https://boto3.amazonaws.com/v1/documentation/api/latest/reference/services/network-firewall/client/put_resource_policy.html)
         [Show types-aiobotocore documentation](https://youtype.github.io/types_aiobotocore_docs/types_aiobotocore_network_firewall/client/#put_resource_policy)
@@ -469,6 +574,27 @@ class NetworkFirewallClient(AioBaseClient):
 
         [Show boto3 documentation](https://boto3.amazonaws.com/v1/documentation/api/latest/reference/services/network-firewall/client/start_analysis_report.html)
         [Show types-aiobotocore documentation](https://youtype.github.io/types_aiobotocore_docs/types_aiobotocore_network_firewall/client/#start_analysis_report)
+        """
+
+    async def start_flow_capture(
+        self, **kwargs: Unpack[StartFlowCaptureRequestTypeDef]
+    ) -> StartFlowCaptureResponseTypeDef:
+        """
+        Begins capturing the flows in a firewall, according to the filters you define.
+
+        [Show boto3 documentation](https://boto3.amazonaws.com/v1/documentation/api/latest/reference/services/network-firewall/client/start_flow_capture.html)
+        [Show types-aiobotocore documentation](https://youtype.github.io/types_aiobotocore_docs/types_aiobotocore_network_firewall/client/#start_flow_capture)
+        """
+
+    async def start_flow_flush(
+        self, **kwargs: Unpack[StartFlowFlushRequestTypeDef]
+    ) -> StartFlowFlushResponseTypeDef:
+        """
+        Begins the flushing of traffic from the firewall, according to the filters you
+        define.
+
+        [Show boto3 documentation](https://boto3.amazonaws.com/v1/documentation/api/latest/reference/services/network-firewall/client/start_flow_flush.html)
+        [Show types-aiobotocore documentation](https://youtype.github.io/types_aiobotocore_docs/types_aiobotocore_network_firewall/client/#start_flow_flush)
         """
 
     async def tag_resource(self, **kwargs: Unpack[TagResourceRequestTypeDef]) -> Dict[str, Any]:
@@ -636,6 +762,28 @@ class NetworkFirewallClient(AioBaseClient):
 
     @overload  # type: ignore[override]
     def get_paginator(  # type: ignore[override]
+        self, operation_name: Literal["list_flow_operation_results"]
+    ) -> ListFlowOperationResultsPaginator:
+        """
+        Create a paginator for an operation.
+
+        [Show boto3 documentation](https://boto3.amazonaws.com/v1/documentation/api/latest/reference/services/network-firewall/client/get_paginator.html)
+        [Show types-aiobotocore documentation](https://youtype.github.io/types_aiobotocore_docs/types_aiobotocore_network_firewall/client/#get_paginator)
+        """
+
+    @overload  # type: ignore[override]
+    def get_paginator(  # type: ignore[override]
+        self, operation_name: Literal["list_flow_operations"]
+    ) -> ListFlowOperationsPaginator:
+        """
+        Create a paginator for an operation.
+
+        [Show boto3 documentation](https://boto3.amazonaws.com/v1/documentation/api/latest/reference/services/network-firewall/client/get_paginator.html)
+        [Show types-aiobotocore documentation](https://youtype.github.io/types_aiobotocore_docs/types_aiobotocore_network_firewall/client/#get_paginator)
+        """
+
+    @overload  # type: ignore[override]
+    def get_paginator(  # type: ignore[override]
         self, operation_name: Literal["list_rule_groups"]
     ) -> ListRuleGroupsPaginator:
         """
@@ -660,6 +808,17 @@ class NetworkFirewallClient(AioBaseClient):
     def get_paginator(  # type: ignore[override]
         self, operation_name: Literal["list_tags_for_resource"]
     ) -> ListTagsForResourcePaginator:
+        """
+        Create a paginator for an operation.
+
+        [Show boto3 documentation](https://boto3.amazonaws.com/v1/documentation/api/latest/reference/services/network-firewall/client/get_paginator.html)
+        [Show types-aiobotocore documentation](https://youtype.github.io/types_aiobotocore_docs/types_aiobotocore_network_firewall/client/#get_paginator)
+        """
+
+    @overload  # type: ignore[override]
+    def get_paginator(  # type: ignore[override]
+        self, operation_name: Literal["list_vpc_endpoint_associations"]
+    ) -> ListVpcEndpointAssociationsPaginator:
         """
         Create a paginator for an operation.
 

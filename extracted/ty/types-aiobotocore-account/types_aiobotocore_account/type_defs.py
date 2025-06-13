@@ -17,6 +17,7 @@ Usage::
 from __future__ import annotations
 
 import sys
+from datetime import datetime
 
 from .literals import AlternateContactTypeType, PrimaryEmailUpdateStatusType, RegionOptStatusType
 
@@ -41,6 +42,8 @@ __all__ = (
     "DisableRegionRequestTypeDef",
     "EmptyResponseMetadataTypeDef",
     "EnableRegionRequestTypeDef",
+    "GetAccountInformationRequestTypeDef",
+    "GetAccountInformationResponseTypeDef",
     "GetAlternateContactRequestTypeDef",
     "GetAlternateContactResponseTypeDef",
     "GetContactInformationRequestTypeDef",
@@ -53,6 +56,7 @@ __all__ = (
     "ListRegionsRequestTypeDef",
     "ListRegionsResponseTypeDef",
     "PaginatorConfigTypeDef",
+    "PutAccountNameRequestTypeDef",
     "PutAlternateContactRequestTypeDef",
     "PutContactInformationRequestTypeDef",
     "RegionTypeDef",
@@ -114,6 +118,10 @@ class EnableRegionRequestTypeDef(TypedDict):
     AccountId: NotRequired[str]
 
 
+class GetAccountInformationRequestTypeDef(TypedDict):
+    AccountId: NotRequired[str]
+
+
 class GetAlternateContactRequestTypeDef(TypedDict):
     AlternateContactType: AlternateContactTypeType
     AccountId: NotRequired[str]
@@ -150,6 +158,11 @@ class RegionTypeDef(TypedDict):
     RegionOptStatus: NotRequired[RegionOptStatusType]
 
 
+class PutAccountNameRequestTypeDef(TypedDict):
+    AccountName: str
+    AccountId: NotRequired[str]
+
+
 class PutAlternateContactRequestTypeDef(TypedDict):
     AlternateContactType: AlternateContactTypeType
     EmailAddress: str
@@ -170,6 +183,13 @@ class AcceptPrimaryEmailUpdateResponseTypeDef(TypedDict):
 
 
 class EmptyResponseMetadataTypeDef(TypedDict):
+    ResponseMetadata: ResponseMetadataTypeDef
+
+
+class GetAccountInformationResponseTypeDef(TypedDict):
+    AccountCreatedDate: datetime
+    AccountId: str
+    AccountName: str
     ResponseMetadata: ResponseMetadataTypeDef
 
 

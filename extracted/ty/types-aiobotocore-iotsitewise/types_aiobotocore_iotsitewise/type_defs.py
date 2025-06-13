@@ -39,6 +39,7 @@ from .literals import (
     ColumnNameType,
     ComputeLocationType,
     ConfigurationStateType,
+    CoreDeviceOperatingSystemType,
     DatasetStateType,
     DetailedErrorCodeType,
     DisassociatedDataStorageStateType,
@@ -967,6 +968,7 @@ class GreengrassTypeDef(TypedDict):
 
 class GreengrassV2TypeDef(TypedDict):
     coreDeviceThingName: str
+    coreDeviceOperatingSystem: NotRequired[CoreDeviceOperatingSystemType]
 
 
 class SiemensIETypeDef(TypedDict):
@@ -2174,6 +2176,7 @@ class MeasurementTypeDef(TypedDict):
 class CreateGatewayRequestTypeDef(TypedDict):
     gatewayName: str
     gatewayPlatform: GatewayPlatformTypeDef
+    gatewayVersion: NotRequired[str]
     tags: NotRequired[Mapping[str, str]]
 
 
@@ -2182,6 +2185,7 @@ class DescribeGatewayResponseTypeDef(TypedDict):
     gatewayName: str
     gatewayArn: str
     gatewayPlatform: GatewayPlatformTypeDef
+    gatewayVersion: str
     gatewayCapabilitySummaries: List[GatewayCapabilitySummaryTypeDef]
     creationDate: datetime
     lastUpdateDate: datetime
@@ -2194,6 +2198,7 @@ class GatewaySummaryTypeDef(TypedDict):
     creationDate: datetime
     lastUpdateDate: datetime
     gatewayPlatform: NotRequired[GatewayPlatformTypeDef]
+    gatewayVersion: NotRequired[str]
     gatewayCapabilitySummaries: NotRequired[List[GatewayCapabilitySummaryTypeDef]]
 
 

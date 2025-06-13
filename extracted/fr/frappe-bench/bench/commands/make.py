@@ -248,11 +248,15 @@ def include_app_for_update(app_name):
 def pip(ctx, args):
 	"Run pip commands in bench env"
 	import os
+	import shutil
 
 	from bench.utils.bench import get_env_cmd
 
-	env_py = get_env_cmd("python")
-	os.execv(env_py, (env_py, "-m", "pip") + args)
+	if os.environ.get("BENCH_USE_UV") and (env_uv := shutil.which("uv")):
+		os.execv(env_uv, (env_uv, "pip") + args)
+	else:
+		env_py = get_env_cmd("python")
+		os.execv(env_py, (env_py, "-m", "pip") + args)
 
 
 @click.command(

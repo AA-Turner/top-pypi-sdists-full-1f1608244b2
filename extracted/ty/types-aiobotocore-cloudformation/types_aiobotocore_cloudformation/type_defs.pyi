@@ -65,6 +65,7 @@ from .literals import (
     ResourceScanStatusType,
     ResourceSignalStatusType,
     ResourceStatusType,
+    ScanTypeType,
     StackDriftDetectionStatusType,
     StackDriftStatusType,
     StackInstanceDetailedStatusType,
@@ -314,6 +315,9 @@ __all__ = (
     "RollbackStackInputTypeDef",
     "RollbackStackOutputTypeDef",
     "RollbackTriggerTypeDef",
+    "ScanFilterOutputTypeDef",
+    "ScanFilterTypeDef",
+    "ScanFilterUnionTypeDef",
     "ScannedResourceIdentifierTypeDef",
     "ScannedResourceTypeDef",
     "SetStackPolicyInputTypeDef",
@@ -591,6 +595,9 @@ class DescribePublisherInputTypeDef(TypedDict):
 class DescribeResourceScanInputTypeDef(TypedDict):
     ResourceScanId: str
 
+class ScanFilterOutputTypeDef(TypedDict):
+    Types: NotRequired[List[str]]
+
 class DescribeStackDriftDetectionStatusInputTypeDef(TypedDict):
     StackDriftDetectionId: str
 
@@ -780,6 +787,7 @@ class ListResourceScanResourcesInputTypeDef(TypedDict):
 class ListResourceScansInputTypeDef(TypedDict):
     NextToken: NotRequired[str]
     MaxResults: NotRequired[int]
+    ScanTypeFilter: NotRequired[ScanTypeType]
 
 class ResourceScanSummaryTypeDef(TypedDict):
     ResourceScanId: NotRequired[str]
@@ -788,6 +796,7 @@ class ResourceScanSummaryTypeDef(TypedDict):
     StartTime: NotRequired[datetime]
     EndTime: NotRequired[datetime]
     PercentageCompleted: NotRequired[float]
+    ScanType: NotRequired[ScanTypeType]
 
 class ListStackInstanceResourceDriftsInputTypeDef(TypedDict):
     StackSetName: str
@@ -989,6 +998,9 @@ class RollbackStackInputTypeDef(TypedDict):
     ClientRequestToken: NotRequired[str]
     RetainExceptOnCreate: NotRequired[bool]
 
+class ScanFilterTypeDef(TypedDict):
+    Types: NotRequired[Sequence[str]]
+
 class SetStackPolicyInputTypeDef(TypedDict):
     StackName: str
     StackPolicyBody: NotRequired[str]
@@ -1069,9 +1081,6 @@ class StackSetOperationPreferencesTypeDef(TypedDict):
 
 class StackSetOperationStatusDetailsTypeDef(TypedDict):
     FailedStackInstancesCount: NotRequired[int]
-
-class StartResourceScanInputTypeDef(TypedDict):
-    ClientRequestToken: NotRequired[str]
 
 class StopStackSetOperationInputTypeDef(TypedDict):
     StackSetName: str
@@ -1194,18 +1203,6 @@ class DescribePublisherOutputTypeDef(TypedDict):
     PublisherStatus: PublisherStatusType
     IdentityProvider: IdentityProviderType
     PublisherProfile: str
-    ResponseMetadata: ResponseMetadataTypeDef
-
-class DescribeResourceScanOutputTypeDef(TypedDict):
-    ResourceScanId: str
-    Status: ResourceScanStatusType
-    StatusReason: str
-    StartTime: datetime
-    EndTime: datetime
-    PercentageCompleted: float
-    ResourceTypes: List[str]
-    ResourcesScanned: int
-    ResourcesRead: int
     ResponseMetadata: ResponseMetadataTypeDef
 
 class DescribeStackDriftDetectionStatusOutputTypeDef(TypedDict):
@@ -1432,6 +1429,7 @@ class ListResourceScanResourcesInputPaginateTypeDef(TypedDict):
     PaginationConfig: NotRequired[PaginatorConfigTypeDef]
 
 class ListResourceScansInputPaginateTypeDef(TypedDict):
+    ScanTypeFilter: NotRequired[ScanTypeType]
     PaginationConfig: NotRequired[PaginatorConfigTypeDef]
 
 class ListStackRefactorActionsInputPaginateTypeDef(TypedDict):
@@ -1508,6 +1506,19 @@ class DescribeStacksInputWaitTypeDef(TypedDict):
 class DescribeTypeRegistrationInputWaitTypeDef(TypedDict):
     RegistrationToken: str
     WaiterConfig: NotRequired[WaiterConfigTypeDef]
+
+class DescribeResourceScanOutputTypeDef(TypedDict):
+    ResourceScanId: str
+    Status: ResourceScanStatusType
+    StatusReason: str
+    StartTime: datetime
+    EndTime: datetime
+    PercentageCompleted: float
+    ResourceTypes: List[str]
+    ResourcesScanned: int
+    ResourcesRead: int
+    ScanFilters: List[ScanFilterOutputTypeDef]
+    ResponseMetadata: ResponseMetadataTypeDef
 
 class DescribeStackEventsOutputTypeDef(TypedDict):
     StackEvents: List[StackEventTypeDef]
@@ -1723,6 +1734,8 @@ class RollbackConfigurationOutputTypeDef(TypedDict):
 class RollbackConfigurationTypeDef(TypedDict):
     RollbackTriggers: NotRequired[Sequence[RollbackTriggerTypeDef]]
     MonitoringTimeInMinutes: NotRequired[int]
+
+ScanFilterUnionTypeDef = Union[ScanFilterTypeDef, ScanFilterOutputTypeDef]
 
 class StackSummaryTypeDef(TypedDict):
     StackName: str
@@ -1979,6 +1992,10 @@ class StackTypeDef(TypedDict):
 RollbackConfigurationUnionTypeDef = Union[
     RollbackConfigurationTypeDef, RollbackConfigurationOutputTypeDef
 ]
+
+class StartResourceScanInputTypeDef(TypedDict):
+    ClientRequestToken: NotRequired[str]
+    ScanFilters: NotRequired[Sequence[ScanFilterUnionTypeDef]]
 
 class ListStacksOutputTypeDef(TypedDict):
     StackSummaries: List[StackSummaryTypeDef]

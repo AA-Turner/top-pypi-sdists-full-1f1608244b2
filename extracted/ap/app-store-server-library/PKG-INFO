@@ -1,6 +1,6 @@
-Metadata-Version: 2.2
+Metadata-Version: 2.4
 Name: app-store-server-library
-Version: 1.8.0
+Version: 1.9.0
 Summary: The App Store Server Library
 License: MIT
 Classifier: License :: OSI Approved :: MIT License
@@ -21,6 +21,7 @@ Dynamic: classifier
 Dynamic: description
 Dynamic: description-content-type
 Dynamic: license
+Dynamic: license-file
 Dynamic: provides-extra
 Dynamic: requires-dist
 Dynamic: requires-python

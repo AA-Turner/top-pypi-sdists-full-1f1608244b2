@@ -40,6 +40,7 @@ from .literals import (
     GlobalClusterMemberSynchronizationStatusType,
     IAMAuthModeType,
     IntegrationStatusType,
+    LifecycleSupportNameType,
     LimitlessDatabaseStatusType,
     LocalWriteForwardingStatusType,
     ReplicaModeType,
@@ -171,6 +172,7 @@ __all__ = (
     "DBInstanceRoleTypeDef",
     "DBInstanceStatusInfoTypeDef",
     "DBInstanceTypeDef",
+    "DBMajorEngineVersionTypeDef",
     "DBParameterGroupDetailsTypeDef",
     "DBParameterGroupNameMessageTypeDef",
     "DBParameterGroupStatusTypeDef",
@@ -267,6 +269,9 @@ __all__ = (
     "DescribeDBLogFilesMessagePaginateTypeDef",
     "DescribeDBLogFilesMessageTypeDef",
     "DescribeDBLogFilesResponseTypeDef",
+    "DescribeDBMajorEngineVersionsRequestPaginateTypeDef",
+    "DescribeDBMajorEngineVersionsRequestTypeDef",
+    "DescribeDBMajorEngineVersionsResponseTypeDef",
     "DescribeDBParameterGroupsMessagePaginateTypeDef",
     "DescribeDBParameterGroupsMessageTypeDef",
     "DescribeDBParametersMessagePaginateTypeDef",
@@ -521,6 +526,7 @@ __all__ = (
     "StopDBInstanceMessageTypeDef",
     "StopDBInstanceResultTypeDef",
     "SubnetTypeDef",
+    "SupportedEngineLifecycleTypeDef",
     "SwitchoverBlueGreenDeploymentRequestTypeDef",
     "SwitchoverBlueGreenDeploymentResponseTypeDef",
     "SwitchoverDetailTypeDef",
@@ -938,6 +944,12 @@ class OptionGroupMembershipTypeDef(TypedDict):
     Status: NotRequired[str]
 
 
+class SupportedEngineLifecycleTypeDef(TypedDict):
+    LifecycleSupportName: LifecycleSupportNameType
+    LifecycleSupportStartDate: datetime
+    LifecycleSupportEndDate: datetime
+
+
 class TargetHealthTypeDef(TypedDict):
     State: NotRequired[TargetStateType]
     Reason: NotRequired[TargetHealthReasonType]
@@ -1106,6 +1118,13 @@ class DescribeDBLogFilesDetailsTypeDef(TypedDict):
     LogFileName: NotRequired[str]
     LastWritten: NotRequired[int]
     Size: NotRequired[int]
+
+
+class DescribeDBMajorEngineVersionsRequestTypeDef(TypedDict):
+    Engine: NotRequired[str]
+    MajorEngineVersion: NotRequired[str]
+    Marker: NotRequired[str]
+    MaxRecords: NotRequired[int]
 
 
 class DescribeDBSnapshotAttributesMessageTypeDef(TypedDict):
@@ -1309,6 +1328,9 @@ class ModifyTenantDatabaseMessageTypeDef(TypedDict):
     TenantDBName: str
     MasterUserPassword: NotRequired[str]
     NewTenantDBName: NotRequired[str]
+    ManageMasterUserPassword: NotRequired[bool]
+    RotateMasterUserPassword: NotRequired[bool]
+    MasterUserSecretKmsKeyId: NotRequired[str]
 
 
 class OptionSettingTypeDef(TypedDict):
@@ -1867,9 +1889,11 @@ class CreateTenantDatabaseMessageTypeDef(TypedDict):
     DBInstanceIdentifier: str
     TenantDBName: str
     MasterUsername: str
-    MasterUserPassword: str
+    MasterUserPassword: NotRequired[str]
     CharacterSetName: NotRequired[str]
     NcharCharacterSetName: NotRequired[str]
+    ManageMasterUserPassword: NotRequired[bool]
+    MasterUserSecretKmsKeyId: NotRequired[str]
     Tags: NotRequired[Sequence[TagTypeDef]]
 
 
@@ -2608,6 +2632,8 @@ class RestoreDBInstanceFromDBSnapshotMessageTypeDef(TypedDict):
     DedicatedLogVolume: NotRequired[bool]
     CACertificateIdentifier: NotRequired[str]
     EngineLifecycleSupport: NotRequired[str]
+    ManageMasterUserPassword: NotRequired[bool]
+    MasterUserSecretKmsKeyId: NotRequired[str]
 
 
 class RestoreDBInstanceFromS3MessageTypeDef(TypedDict):
@@ -2712,6 +2738,8 @@ class RestoreDBInstanceToPointInTimeMessageTypeDef(TypedDict):
     DedicatedLogVolume: NotRequired[bool]
     CACertificateIdentifier: NotRequired[str]
     EngineLifecycleSupport: NotRequired[str]
+    ManageMasterUserPassword: NotRequired[bool]
+    MasterUserSecretKmsKeyId: NotRequired[str]
 
 
 class CreateDBProxyEndpointResponseTypeDef(TypedDict):
@@ -2933,6 +2961,12 @@ class DBInstanceAutomatedBackupTypeDef(TypedDict):
     AwsBackupRecoveryPointArn: NotRequired[str]
     DedicatedLogVolume: NotRequired[bool]
     MultiTenant: NotRequired[bool]
+
+
+class DBMajorEngineVersionTypeDef(TypedDict):
+    Engine: NotRequired[str]
+    MajorEngineVersion: NotRequired[str]
+    SupportedEngineLifecycles: NotRequired[List[SupportedEngineLifecycleTypeDef]]
 
 
 DBProxyTargetTypeDef = TypedDict(
@@ -3436,6 +3470,12 @@ class DescribeDBLogFilesMessagePaginateTypeDef(TypedDict):
     FileLastWritten: NotRequired[int]
     FileSize: NotRequired[int]
     Filters: NotRequired[Sequence[FilterTypeDef]]
+    PaginationConfig: NotRequired[PaginatorConfigTypeDef]
+
+
+class DescribeDBMajorEngineVersionsRequestPaginateTypeDef(TypedDict):
+    Engine: NotRequired[str]
+    MajorEngineVersion: NotRequired[str]
     PaginationConfig: NotRequired[PaginatorConfigTypeDef]
 
 
@@ -3961,6 +4001,7 @@ class TenantDatabaseTypeDef(TypedDict):
     NcharCharacterSetName: NotRequired[str]
     DeletionProtection: NotRequired[bool]
     PendingModifiedValues: NotRequired[TenantDatabasePendingModifiedValuesTypeDef]
+    MasterUserSecret: NotRequired[MasterUserSecretTypeDef]
     TagList: NotRequired[List[TagTypeDef]]
 
 
@@ -4201,6 +4242,12 @@ class StartDBInstanceAutomatedBackupsReplicationResultTypeDef(TypedDict):
 
 class StopDBInstanceAutomatedBackupsReplicationResultTypeDef(TypedDict):
     DBInstanceAutomatedBackup: DBInstanceAutomatedBackupTypeDef
+    ResponseMetadata: ResponseMetadataTypeDef
+
+
+class DescribeDBMajorEngineVersionsResponseTypeDef(TypedDict):
+    DBMajorEngineVersions: List[DBMajorEngineVersionTypeDef]
+    Marker: str
     ResponseMetadata: ResponseMetadataTypeDef
 
 

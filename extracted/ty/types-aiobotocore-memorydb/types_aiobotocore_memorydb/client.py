@@ -598,7 +598,7 @@ class MemoryDBClient(AioBaseClient):
         self, **kwargs: Unpack[TagResourceRequestTypeDef]
     ) -> TagResourceResponseTypeDef:
         """
-        A tag is a key-value pair where the key and value are case-sensitive.
+        Use this operation to add tags to a resource.
 
         [Show boto3 documentation](https://boto3.amazonaws.com/v1/documentation/api/latest/reference/services/memorydb/client/tag_resource.html)
         [Show types-aiobotocore documentation](https://youtype.github.io/types_aiobotocore_docs/types_aiobotocore_memorydb/client/#tag_resource)

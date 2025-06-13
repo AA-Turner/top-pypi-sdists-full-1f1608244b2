@@ -9,7 +9,8 @@ __all__ = ['User_CrudError', 'GetUser_Error', 'ResetPassword_PasswordUsed', 'Sea
            'delete_user', 'user_is_allowed_direct_signon']
 
 # %% ../../nbs/routes/user.ipynb 2
-from enum import Enum
+from domolibrary.client.DomoEntity import DomoEnum
+
 from typing import List
 
 import datetime as dt
@@ -64,7 +65,7 @@ class ResetPassword_PasswordUsed(de.RouteError):
         )
 
 
-class SearchUser_NoResults(de.DomoError):
+class SearchUser_NoResults(de.RouteError):
     def __init__(
         self,
         res: rgd.ResponseGetData,
@@ -78,7 +79,7 @@ class SearchUser_NoResults(de.DomoError):
         )
 
 
-class DownloadAvatar_Error(de.DomoError):
+class DownloadAvatar_Error(de.RouteError):
     def __init__(self, user_id, res=rgd.ResponseGetData, response: str = None):
         super().__init__(
             res=res,
@@ -655,7 +656,7 @@ async def request_password_reset(
     return res
 
 # %% ../../nbs/routes/user.ipynb 36
-class UserProperty_Type(Enum):
+class UserProperty_Type(DomoEnum):
     display_name = "displayName"
     email_address = "emailAddress"
     phone_number = "phoneNumber"

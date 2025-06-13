@@ -3,6 +3,12 @@ String and data utils
 """
 import sys
 import os
+import platform
+
+try:
+    from charset_normalizer import from_bytes
+except ImportError:
+    from_bytes = None
 
 IOENCODING =  os.environ.get('PYEPICS_ENCODING',
               os.environ.get('PYTHONIOENCODING',
@@ -19,7 +25,12 @@ def bytes2str(st1):
     if isinstance(st1, str):
         return st1
     elif isinstance(st1, bytes):
-        return str(st1, IOENCODING)
+        try:
+            return str(st1, IOENCODING)
+        except UnicodeDecodeError:
+            if from_bytes is None:
+                raise
+            return str(from_bytes(st1).best())
     else:
         return str(st1)
 
@@ -60,7 +71,6 @@ def clib_search_path(lib):
 
     # determine which libca / libCom dll is appropriate
     try:
-        import platform
         nbits = platform.architecture()[0]
         mach = platform.machine()
     except:

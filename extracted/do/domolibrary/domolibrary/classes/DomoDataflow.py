@@ -62,7 +62,7 @@ class DomoDataflow(DomoEntity_w_Lineage):
             dataflow=self, dataflow_id=self.id, auth=self.auth
         )
 
-        self.Lineage = dmdl.DomoLineage.from_parent(
+        self.Lineage = dmdl.DomoLineage._from_parent(
             auth = self.auth,
             parent = self
         )
@@ -74,6 +74,7 @@ class DomoDataflow(DomoEntity_w_Lineage):
         domo_dataflow = cls(
             auth=auth,
             id=dd.id,
+            raw = obj,
             name=dd.name,
             description=dd.description,
             owner=dd.owner or dd.responsibleUserId,

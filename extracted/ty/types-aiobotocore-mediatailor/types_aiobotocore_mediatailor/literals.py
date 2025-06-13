@@ -25,6 +25,8 @@ else:
 __all__ = (
     "AccessTypeType",
     "AdMarkupTypeType",
+    "AdsInteractionExcludeEventTypeType",
+    "AdsInteractionPublishOptInEventTypeType",
     "AlertCategoryType",
     "ChannelStateType",
     "FillPolicyType",
@@ -34,11 +36,13 @@ __all__ = (
     "ListChannelsPaginatorName",
     "ListLiveSourcesPaginatorName",
     "ListPlaybackConfigurationsPaginatorName",
+    "ListPrefetchScheduleTypeType",
     "ListPrefetchSchedulesPaginatorName",
     "ListSourceLocationsPaginatorName",
     "ListVodSourcesPaginatorName",
     "LogTypeType",
     "LoggingStrategyType",
+    "ManifestServiceExcludeEventTypeType",
     "MediaTailorServiceName",
     "MessageTypeType",
     "ModeType",
@@ -46,6 +50,7 @@ __all__ = (
     "OriginManifestTypeType",
     "PaginatorName",
     "PlaybackModeType",
+    "PrefetchScheduleTypeType",
     "RegionName",
     "RelativePositionType",
     "ResourceServiceName",
@@ -53,12 +58,57 @@ __all__ = (
     "ServiceName",
     "StreamingMediaFileConditioningType",
     "TierType",
+    "TrafficShapingTypeType",
     "TypeType",
 )
 
 
 AccessTypeType = Literal["AUTODETECT_SIGV4", "S3_SIGV4", "SECRETS_MANAGER_ACCESS_TOKEN"]
 AdMarkupTypeType = Literal["DATERANGE", "SCTE35_ENHANCED"]
+AdsInteractionExcludeEventTypeType = Literal[
+    "AD_MARKER_FOUND",
+    "BEACON_FIRED",
+    "EMPTY_VAST_RESPONSE",
+    "EMPTY_VMAP_RESPONSE",
+    "ERROR_ADS_INVALID_RESPONSE",
+    "ERROR_ADS_IO",
+    "ERROR_ADS_RESPONSE_PARSE",
+    "ERROR_ADS_RESPONSE_UNKNOWN_ROOT_ELEMENT",
+    "ERROR_ADS_TIMEOUT",
+    "ERROR_DISALLOWED_HOST",
+    "ERROR_FIRING_BEACON_FAILED",
+    "ERROR_PERSONALIZATION_DISABLED",
+    "ERROR_UNKNOWN",
+    "ERROR_UNKNOWN_HOST",
+    "ERROR_VAST_INVALID_MEDIA_FILE",
+    "ERROR_VAST_INVALID_VAST_AD_TAG_URI",
+    "ERROR_VAST_MISSING_CREATIVES",
+    "ERROR_VAST_MISSING_IMPRESSION",
+    "ERROR_VAST_MISSING_MEDIAFILES",
+    "ERROR_VAST_MISSING_OVERLAYS",
+    "ERROR_VAST_MULTIPLE_LINEAR",
+    "ERROR_VAST_MULTIPLE_TRACKING_EVENTS",
+    "ERROR_VAST_REDIRECT_EMPTY_RESPONSE",
+    "ERROR_VAST_REDIRECT_FAILED",
+    "ERROR_VAST_REDIRECT_MULTIPLE_VAST",
+    "FILLED_AVAIL",
+    "FILLED_OVERLAY_AVAIL",
+    "INTERSTITIAL_VOD_FAILURE",
+    "INTERSTITIAL_VOD_SUCCESS",
+    "MAKING_ADS_REQUEST",
+    "MODIFIED_TARGET_URL",
+    "NON_AD_MARKER_FOUND",
+    "REDIRECTED_VAST_RESPONSE",
+    "VAST_REDIRECT",
+    "VAST_RESPONSE",
+    "VOD_TIME_BASED_AVAIL_PLAN_SUCCESS",
+    "VOD_TIME_BASED_AVAIL_PLAN_VAST_RESPONSE_FOR_OFFSET",
+    "VOD_TIME_BASED_AVAIL_PLAN_WARNING_NO_ADVERTISEMENTS",
+    "WARNING_NO_ADVERTISEMENTS",
+    "WARNING_URL_VARIABLE_SUBSTITUTION_FAILED",
+    "WARNING_VPAID_AD_DROPPED",
+]
+AdsInteractionPublishOptInEventTypeType = Literal["RAW_ADS_RESPONSE"]
 AlertCategoryType = Literal["INFO", "PLAYBACK_WARNING", "SCHEDULING_ERROR"]
 ChannelStateType = Literal["RUNNING", "STOPPED"]
 FillPolicyType = Literal["FULL_AVAIL_ONLY", "PARTIAL_AVAIL"]
@@ -68,20 +118,57 @@ ListAlertsPaginatorName = Literal["list_alerts"]
 ListChannelsPaginatorName = Literal["list_channels"]
 ListLiveSourcesPaginatorName = Literal["list_live_sources"]
 ListPlaybackConfigurationsPaginatorName = Literal["list_playback_configurations"]
+ListPrefetchScheduleTypeType = Literal["ALL", "RECURRING", "SINGLE"]
 ListPrefetchSchedulesPaginatorName = Literal["list_prefetch_schedules"]
 ListSourceLocationsPaginatorName = Literal["list_source_locations"]
 ListVodSourcesPaginatorName = Literal["list_vod_sources"]
 LogTypeType = Literal["AS_RUN"]
 LoggingStrategyType = Literal["LEGACY_CLOUDWATCH", "VENDED_LOGS"]
+ManifestServiceExcludeEventTypeType = Literal[
+    "CONFIG_SECURITY_ERROR",
+    "CONFIG_SYNTAX_ERROR",
+    "CONNECTION_ERROR",
+    "ERROR_ADS_INTERPOLATION",
+    "ERROR_BUMPER_END_INTERPOLATION",
+    "ERROR_BUMPER_START_INTERPOLATION",
+    "ERROR_CDN_AD_SEGMENT_INTERPOLATION",
+    "ERROR_CDN_CONTENT_SEGMENT_INTERPOLATION",
+    "ERROR_LIVE_PRE_ROLL_ADS_INTERPOLATION",
+    "ERROR_ORIGIN_PREFIX_INTERPOLATION",
+    "ERROR_PROFILE_NAME_INTERPOLATION",
+    "ERROR_SLATE_AD_URL_INTERPOLATION",
+    "GENERATED_MANIFEST",
+    "HOST_DISALLOWED",
+    "INCOMPATIBLE_HLS_VERSION",
+    "INVALID_SINGLE_PERIOD_DASH_MANIFEST",
+    "IO_ERROR",
+    "LAST_PERIOD_MISSING_AUDIO",
+    "LAST_PERIOD_MISSING_AUDIO_WARNING",
+    "MANIFEST_ERROR",
+    "NO_MASTER_OR_MEDIA_PLAYLIST",
+    "NO_MASTER_PLAYLIST",
+    "NO_MEDIA_PLAYLIST",
+    "ORIGIN_MANIFEST",
+    "PARSING_ERROR",
+    "SCTE35_PARSING_ERROR",
+    "SESSION_INITIALIZED",
+    "TIMEOUT_ERROR",
+    "TRACKING_RESPONSE",
+    "UNKNOWN_ERROR",
+    "UNKNOWN_HOST",
+    "UNSUPPORTED_SINGLE_PERIOD_DASH_MANIFEST",
+]
 MessageTypeType = Literal["SPLICE_INSERT", "TIME_SIGNAL"]
 ModeType = Literal["AFTER_LIVE_EDGE", "BEHIND_LIVE_EDGE", "OFF"]
 OperatorType = Literal["EQUALS"]
 OriginManifestTypeType = Literal["MULTI_PERIOD", "SINGLE_PERIOD"]
 PlaybackModeType = Literal["LINEAR", "LOOP"]
+PrefetchScheduleTypeType = Literal["RECURRING", "SINGLE"]
 RelativePositionType = Literal["AFTER_PROGRAM", "BEFORE_PROGRAM"]
 ScheduleEntryTypeType = Literal["ALTERNATE_MEDIA", "FILLER_SLATE", "PROGRAM"]
 StreamingMediaFileConditioningType = Literal["NONE", "TRANSCODE"]
 TierType = Literal["BASIC", "STANDARD"]
+TrafficShapingTypeType = Literal["RETRIEVAL_WINDOW"]
 TypeType = Literal["DASH", "HLS"]
 MediaTailorServiceName = Literal["mediatailor"]
 ServiceName = Literal[
@@ -240,6 +327,7 @@ ServiceName = Literal[
     "freetier",
     "fsx",
     "gamelift",
+    "gameliftstreams",
     "geo-maps",
     "geo-places",
     "geo-routes",
@@ -265,6 +353,7 @@ ServiceName = Literal[
     "iot",
     "iot-data",
     "iot-jobs-data",
+    "iot-managed-integrations",
     "iotanalytics",
     "iotdeviceadvisor",
     "iotevents",
@@ -379,7 +468,6 @@ ServiceName = Literal[
     "pipes",
     "polly",
     "pricing",
-    "privatenetworks",
     "proton",
     "qapps",
     "qbusiness",
@@ -440,7 +528,6 @@ ServiceName = Literal[
     "signer",
     "simspaceweaver",
     "sms",
-    "sms-voice",
     "snow-device-management",
     "snowball",
     "sns",
@@ -448,6 +535,7 @@ ServiceName = Literal[
     "sqs",
     "ssm",
     "ssm-contacts",
+    "ssm-guiconnect",
     "ssm-incidents",
     "ssm-quicksetup",
     "ssm-sap",

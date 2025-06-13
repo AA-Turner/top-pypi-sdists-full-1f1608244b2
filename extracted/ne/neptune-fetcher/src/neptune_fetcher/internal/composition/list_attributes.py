@@ -37,7 +37,6 @@ from neptune_fetcher.internal.filters import (
     _AttributeFilter,
     _Filter,
 )
-from neptune_fetcher.internal.retrieval import attribute_definitions as att_defs
 from neptune_fetcher.internal.retrieval import (
     search,
     util,
@@ -45,14 +44,15 @@ from neptune_fetcher.internal.retrieval import (
 
 
 def list_attributes(
+    *,
+    project_identifier: identifiers.ProjectIdentifier,
     filter_: Optional[_Filter],
     attributes: _AttributeFilter,
-    context: Optional[Context],
+    context: Optional[Context] = None,
     container_type: search.ContainerType,
 ) -> list[str]:
     valid_context = validate_context(context or get_context())
-    client = _client.get_client(valid_context)
-    project_identifier = identifiers.ProjectIdentifier(valid_context.project)  # type: ignore
+    client = _client.get_client(context=valid_context)
 
     with (
         concurrency.create_thread_pool_executor() as executor,
@@ -78,7 +78,7 @@ def list_attributes(
             container_type=container_type,
         )
 
-        results: Generator[util.Page[att_defs.AttributeDefinition], None, None] = concurrency.gather_results(output)
+        results: Generator[util.Page[identifiers.AttributeDefinition], None, None] = concurrency.gather_results(output)
         names = set()
         for page in results:
             for item in page.items:

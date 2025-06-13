@@ -65,6 +65,8 @@ from .type_defs import (
     ListStreamConsumersOutputTypeDef,
     ListStreamsInputTypeDef,
     ListStreamsOutputTypeDef,
+    ListTagsForResourceInputTypeDef,
+    ListTagsForResourceOutputTypeDef,
     ListTagsForStreamInputTypeDef,
     ListTagsForStreamOutputTypeDef,
     MergeShardsInputTypeDef,
@@ -81,6 +83,8 @@ from .type_defs import (
     StopStreamEncryptionInputTypeDef,
     SubscribeToShardInputTypeDef,
     SubscribeToShardOutputTypeDef,
+    TagResourceInputTypeDef,
+    UntagResourceInputTypeDef,
     UpdateShardCountInputTypeDef,
     UpdateShardCountOutputTypeDef,
     UpdateStreamModeInputTypeDef,
@@ -349,6 +353,16 @@ class KinesisClient(AioBaseClient):
         [Show types-aiobotocore documentation](https://youtype.github.io/types_aiobotocore_docs/types_aiobotocore_kinesis/client/#list_streams)
         """
 
+    async def list_tags_for_resource(
+        self, **kwargs: Unpack[ListTagsForResourceInputTypeDef]
+    ) -> ListTagsForResourceOutputTypeDef:
+        """
+        List all tags added to the specified Kinesis resource.
+
+        [Show boto3 documentation](https://boto3.amazonaws.com/v1/documentation/api/latest/reference/services/kinesis/client/list_tags_for_resource.html)
+        [Show types-aiobotocore documentation](https://youtype.github.io/types_aiobotocore_docs/types_aiobotocore_kinesis/client/#list_tags_for_resource)
+        """
+
     async def list_tags_for_stream(
         self, **kwargs: Unpack[ListTagsForStreamInputTypeDef]
     ) -> ListTagsForStreamOutputTypeDef:
@@ -461,6 +475,26 @@ class KinesisClient(AioBaseClient):
 
         [Show boto3 documentation](https://boto3.amazonaws.com/v1/documentation/api/latest/reference/services/kinesis/client/subscribe_to_shard.html)
         [Show types-aiobotocore documentation](https://youtype.github.io/types_aiobotocore_docs/types_aiobotocore_kinesis/client/#subscribe_to_shard)
+        """
+
+    async def tag_resource(
+        self, **kwargs: Unpack[TagResourceInputTypeDef]
+    ) -> EmptyResponseMetadataTypeDef:
+        """
+        Adds or updates tags for the specified Kinesis resource.
+
+        [Show boto3 documentation](https://boto3.amazonaws.com/v1/documentation/api/latest/reference/services/kinesis/client/tag_resource.html)
+        [Show types-aiobotocore documentation](https://youtype.github.io/types_aiobotocore_docs/types_aiobotocore_kinesis/client/#tag_resource)
+        """
+
+    async def untag_resource(
+        self, **kwargs: Unpack[UntagResourceInputTypeDef]
+    ) -> EmptyResponseMetadataTypeDef:
+        """
+        Removes tags from the specified Kinesis resource.
+
+        [Show boto3 documentation](https://boto3.amazonaws.com/v1/documentation/api/latest/reference/services/kinesis/client/untag_resource.html)
+        [Show types-aiobotocore documentation](https://youtype.github.io/types_aiobotocore_docs/types_aiobotocore_kinesis/client/#untag_resource)
         """
 
     async def update_shard_count(

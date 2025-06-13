@@ -36,6 +36,8 @@ from .type_defs import (
     DisableRegionRequestTypeDef,
     EmptyResponseMetadataTypeDef,
     EnableRegionRequestTypeDef,
+    GetAccountInformationRequestTypeDef,
+    GetAccountInformationResponseTypeDef,
     GetAlternateContactRequestTypeDef,
     GetAlternateContactResponseTypeDef,
     GetContactInformationRequestTypeDef,
@@ -46,6 +48,7 @@ from .type_defs import (
     GetRegionOptStatusResponseTypeDef,
     ListRegionsRequestTypeDef,
     ListRegionsResponseTypeDef,
+    PutAccountNameRequestTypeDef,
     PutAlternateContactRequestTypeDef,
     PutContactInformationRequestTypeDef,
     StartPrimaryEmailUpdateRequestTypeDef,
@@ -150,6 +153,17 @@ class AccountClient(AioBaseClient):
         [Show types-aiobotocore documentation](https://youtype.github.io/types_aiobotocore_docs/types_aiobotocore_account/client/#enable_region)
         """
 
+    async def get_account_information(
+        self, **kwargs: Unpack[GetAccountInformationRequestTypeDef]
+    ) -> GetAccountInformationResponseTypeDef:
+        """
+        Retrieves information about the specified account including its account name,
+        account ID, and account creation date and time.
+
+        [Show boto3 documentation](https://boto3.amazonaws.com/v1/documentation/api/latest/reference/services/account/client/get_account_information.html)
+        [Show types-aiobotocore documentation](https://youtype.github.io/types_aiobotocore_docs/types_aiobotocore_account/client/#get_account_information)
+        """
+
     async def get_alternate_contact(
         self, **kwargs: Unpack[GetAlternateContactRequestTypeDef]
     ) -> GetAlternateContactResponseTypeDef:
@@ -199,6 +213,16 @@ class AccountClient(AioBaseClient):
 
         [Show boto3 documentation](https://boto3.amazonaws.com/v1/documentation/api/latest/reference/services/account/client/list_regions.html)
         [Show types-aiobotocore documentation](https://youtype.github.io/types_aiobotocore_docs/types_aiobotocore_account/client/#list_regions)
+        """
+
+    async def put_account_name(
+        self, **kwargs: Unpack[PutAccountNameRequestTypeDef]
+    ) -> EmptyResponseMetadataTypeDef:
+        """
+        Updates the account name of the specified account.
+
+        [Show boto3 documentation](https://boto3.amazonaws.com/v1/documentation/api/latest/reference/services/account/client/put_account_name.html)
+        [Show types-aiobotocore documentation](https://youtype.github.io/types_aiobotocore_docs/types_aiobotocore_account/client/#put_account_name)
         """
 
     async def put_alternate_contact(

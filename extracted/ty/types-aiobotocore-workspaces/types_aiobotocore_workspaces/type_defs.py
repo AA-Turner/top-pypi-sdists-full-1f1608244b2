@@ -48,12 +48,14 @@ from .literals import (
     DeletableSamlPropertyType,
     DescribeWorkspaceDirectoriesFilterNameType,
     DescribeWorkspacesPoolsFilterOperatorType,
+    EndpointEncryptionModeType,
     ImageTypeType,
     LogUploadEnumType,
     ModificationResourceEnumType,
     ModificationStateEnumType,
     OperatingSystemNameType,
     OperatingSystemTypeType,
+    PoolsRunningModeType,
     ProtocolType,
     ReconnectEnumType,
     RunningModeType,
@@ -250,6 +252,7 @@ __all__ = (
     "ModifyAccountRequestTypeDef",
     "ModifyCertificateBasedAuthPropertiesRequestTypeDef",
     "ModifyClientPropertiesRequestTypeDef",
+    "ModifyEndpointEncryptionModeRequestTypeDef",
     "ModifySamlPropertiesRequestTypeDef",
     "ModifySelfservicePermissionsRequestTypeDef",
     "ModifyStreamingPropertiesRequestTypeDef",
@@ -511,7 +514,6 @@ class DefaultClientBrandingAttributesTypeDef(TypedDict):
 
 
 class DefaultWorkspaceCreationPropertiesTypeDef(TypedDict):
-    EnableWorkDocs: NotRequired[bool]
     EnableInternetAccess: NotRequired[bool]
     DefaultOu: NotRequired[str]
     CustomSecurityGroupId: NotRequired[str]
@@ -814,6 +816,11 @@ class ModifyAccountRequestTypeDef(TypedDict):
     DedicatedTenancyManagementCidrRange: NotRequired[str]
 
 
+class ModifyEndpointEncryptionModeRequestTypeDef(TypedDict):
+    DirectoryId: str
+    EndpointEncryptionMode: EndpointEncryptionModeType
+
+
 class SamlPropertiesTypeDef(TypedDict):
     Status: NotRequired[SamlStatusEnumType]
     UserAccessUrl: NotRequired[str]
@@ -837,10 +844,10 @@ class WorkspaceAccessPropertiesTypeDef(TypedDict):
     DeviceTypeChromeOs: NotRequired[AccessPropertyValueType]
     DeviceTypeZeroClient: NotRequired[AccessPropertyValueType]
     DeviceTypeLinux: NotRequired[AccessPropertyValueType]
+    DeviceTypeWorkSpacesThinClient: NotRequired[AccessPropertyValueType]
 
 
 class WorkspaceCreationPropertiesTypeDef(TypedDict):
-    EnableWorkDocs: NotRequired[bool]
     EnableInternetAccess: NotRequired[bool]
     DefaultOu: NotRequired[str]
     CustomSecurityGroupId: NotRequired[str]
@@ -1302,6 +1309,7 @@ class CreateWorkspacesPoolRequestTypeDef(TypedDict):
     Tags: NotRequired[Sequence[TagTypeDef]]
     ApplicationSettings: NotRequired[ApplicationSettingsRequestTypeDef]
     TimeoutSettings: NotRequired[TimeoutSettingsTypeDef]
+    RunningMode: NotRequired[PoolsRunningModeType]
 
 
 class UpdateWorkspacesPoolRequestTypeDef(TypedDict):
@@ -1312,6 +1320,7 @@ class UpdateWorkspacesPoolRequestTypeDef(TypedDict):
     Capacity: NotRequired[CapacityTypeDef]
     ApplicationSettings: NotRequired[ApplicationSettingsRequestTypeDef]
     TimeoutSettings: NotRequired[TimeoutSettingsTypeDef]
+    RunningMode: NotRequired[PoolsRunningModeType]
 
 
 class DescribeAccountModificationsRequestPaginateTypeDef(TypedDict):
@@ -1477,7 +1486,6 @@ class WorkspacePropertiesTypeDef(TypedDict):
 class RegisterWorkspaceDirectoryRequestTypeDef(TypedDict):
     DirectoryId: NotRequired[str]
     SubnetIds: NotRequired[Sequence[str]]
-    EnableWorkDocs: NotRequired[bool]
     EnableSelfService: NotRequired[bool]
     Tenancy: NotRequired[TenancyType]
     Tags: NotRequired[Sequence[TagTypeDef]]
@@ -1581,6 +1589,7 @@ class WorkspacesPoolTypeDef(TypedDict):
     CreatedAt: datetime
     BundleId: str
     DirectoryId: str
+    RunningMode: PoolsRunningModeType
     Description: NotRequired[str]
     Errors: NotRequired[List[WorkspacesPoolErrorTypeDef]]
     ApplicationSettings: NotRequired[ApplicationSettingsResponseTypeDef]
@@ -1733,6 +1742,7 @@ class WorkspaceDirectoryTypeDef(TypedDict):
     SelfservicePermissions: NotRequired[SelfservicePermissionsTypeDef]
     SamlProperties: NotRequired[SamlPropertiesTypeDef]
     CertificateBasedAuthProperties: NotRequired[CertificateBasedAuthPropertiesTypeDef]
+    EndpointEncryptionMode: NotRequired[EndpointEncryptionModeType]
     MicrosoftEntraConfig: NotRequired[MicrosoftEntraConfigTypeDef]
     WorkspaceDirectoryName: NotRequired[str]
     WorkspaceDirectoryDescription: NotRequired[str]

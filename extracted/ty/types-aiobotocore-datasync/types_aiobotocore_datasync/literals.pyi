@@ -28,11 +28,6 @@ __all__ = (
     "AzureBlobAuthenticationTypeType",
     "AzureBlobTypeType",
     "DataSyncServiceName",
-    "DescribeStorageSystemResourceMetricsPaginatorName",
-    "DiscoveryJobStatusType",
-    "DiscoveryResourceFilterType",
-    "DiscoveryResourceTypeType",
-    "DiscoverySystemTypeType",
     "EfsInTransitEncryptionType",
     "EndpointTypeType",
     "FilterTypeType",
@@ -41,9 +36,7 @@ __all__ = (
     "HdfsDataTransferProtectionType",
     "HdfsRpcProtectionType",
     "ListAgentsPaginatorName",
-    "ListDiscoveryJobsPaginatorName",
     "ListLocationsPaginatorName",
-    "ListStorageSystemsPaginatorName",
     "ListTagsForResourcePaginatorName",
     "ListTaskExecutionsPaginatorName",
     "ListTasksPaginatorName",
@@ -63,7 +56,6 @@ __all__ = (
     "PosixPermissionsType",
     "PreserveDeletedFilesType",
     "PreserveDevicesType",
-    "RecommendationStatusType",
     "RegionName",
     "ReportLevelType",
     "ReportOutputTypeType",
@@ -75,7 +67,6 @@ __all__ = (
     "SmbAuthenticationTypeType",
     "SmbSecurityDescriptorCopyFlagsType",
     "SmbVersionType",
-    "StorageSystemConnectivityStatusType",
     "TaskExecutionStatusType",
     "TaskFilterNameType",
     "TaskModeType",
@@ -89,17 +80,8 @@ __all__ = (
 AgentStatusType = Literal["OFFLINE", "ONLINE"]
 AtimeType = Literal["BEST_EFFORT", "NONE"]
 AzureAccessTierType = Literal["ARCHIVE", "COOL", "HOT"]
-AzureBlobAuthenticationTypeType = Literal["SAS"]
+AzureBlobAuthenticationTypeType = Literal["NONE", "SAS"]
 AzureBlobTypeType = Literal["BLOCK"]
-DescribeStorageSystemResourceMetricsPaginatorName = Literal[
-    "describe_storage_system_resource_metrics"
-]
-DiscoveryJobStatusType = Literal[
-    "COMPLETED", "COMPLETED_WITH_ISSUES", "FAILED", "RUNNING", "STOPPED", "TERMINATED", "WARNING"
-]
-DiscoveryResourceFilterType = Literal["SVM"]
-DiscoveryResourceTypeType = Literal["CLUSTER", "SVM", "VOLUME"]
-DiscoverySystemTypeType = Literal["NetAppONTAP"]
 EfsInTransitEncryptionType = Literal["NONE", "TLS1_2"]
 EndpointTypeType = Literal["FIPS", "PRIVATE_LINK", "PUBLIC"]
 FilterTypeType = Literal["SIMPLE_PATTERN"]
@@ -108,9 +90,7 @@ HdfsAuthenticationTypeType = Literal["KERBEROS", "SIMPLE"]
 HdfsDataTransferProtectionType = Literal["AUTHENTICATION", "DISABLED", "INTEGRITY", "PRIVACY"]
 HdfsRpcProtectionType = Literal["AUTHENTICATION", "DISABLED", "INTEGRITY", "PRIVACY"]
 ListAgentsPaginatorName = Literal["list_agents"]
-ListDiscoveryJobsPaginatorName = Literal["list_discovery_jobs"]
 ListLocationsPaginatorName = Literal["list_locations"]
-ListStorageSystemsPaginatorName = Literal["list_storage_systems"]
 ListTagsForResourcePaginatorName = Literal["list_tags_for_resource"]
 ListTaskExecutionsPaginatorName = Literal["list_task_executions"]
 ListTasksPaginatorName = Literal["list_tasks"]
@@ -140,7 +120,6 @@ PhaseStatusType = Literal["ERROR", "PENDING", "SUCCESS"]
 PosixPermissionsType = Literal["NONE", "PRESERVE"]
 PreserveDeletedFilesType = Literal["PRESERVE", "REMOVE"]
 PreserveDevicesType = Literal["NONE", "PRESERVE"]
-RecommendationStatusType = Literal["COMPLETED", "FAILED", "IN_PROGRESS", "NONE"]
 ReportLevelType = Literal["ERRORS_ONLY", "SUCCESSES_AND_ERRORS"]
 ReportOutputTypeType = Literal["STANDARD", "SUMMARY_ONLY"]
 S3StorageClassType = Literal[
@@ -158,7 +137,6 @@ ScheduleStatusType = Literal["DISABLED", "ENABLED"]
 SmbAuthenticationTypeType = Literal["KERBEROS", "NTLM"]
 SmbSecurityDescriptorCopyFlagsType = Literal["NONE", "OWNER_DACL", "OWNER_DACL_SACL"]
 SmbVersionType = Literal["AUTOMATIC", "SMB1", "SMB2", "SMB2_0", "SMB3"]
-StorageSystemConnectivityStatusType = Literal["FAIL", "PASS", "UNKNOWN"]
 TaskExecutionStatusType = Literal[
     "CANCELLING",
     "ERROR",
@@ -333,6 +311,7 @@ ServiceName = Literal[
     "freetier",
     "fsx",
     "gamelift",
+    "gameliftstreams",
     "geo-maps",
     "geo-places",
     "geo-routes",
@@ -358,6 +337,7 @@ ServiceName = Literal[
     "iot",
     "iot-data",
     "iot-jobs-data",
+    "iot-managed-integrations",
     "iotanalytics",
     "iotdeviceadvisor",
     "iotevents",
@@ -472,7 +452,6 @@ ServiceName = Literal[
     "pipes",
     "polly",
     "pricing",
-    "privatenetworks",
     "proton",
     "qapps",
     "qbusiness",
@@ -533,7 +512,6 @@ ServiceName = Literal[
     "signer",
     "simspaceweaver",
     "sms",
-    "sms-voice",
     "snow-device-management",
     "snowball",
     "sns",
@@ -541,6 +519,7 @@ ServiceName = Literal[
     "sqs",
     "ssm",
     "ssm-contacts",
+    "ssm-guiconnect",
     "ssm-incidents",
     "ssm-quicksetup",
     "ssm-sap",
@@ -594,14 +573,7 @@ ResourceServiceName = Literal[
     "sqs",
 ]
 PaginatorName = Literal[
-    "describe_storage_system_resource_metrics",
-    "list_agents",
-    "list_discovery_jobs",
-    "list_locations",
-    "list_storage_systems",
-    "list_tags_for_resource",
-    "list_task_executions",
-    "list_tasks",
+    "list_agents", "list_locations", "list_tags_for_resource", "list_task_executions", "list_tasks"
 ]
 RegionName = Literal[
     "af-south-1",

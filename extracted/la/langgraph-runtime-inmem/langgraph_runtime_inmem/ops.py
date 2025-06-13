@@ -911,6 +911,117 @@ class Threads(Authenticated):
         )
 
     @staticmethod
+    async def set_joint_status(
+        conn: InMemConnectionProto,
+        thread_id: UUID,
+        run_id: UUID,
+        run_status: RunStatus | Literal["rollback"],
+        checkpoint: CheckpointPayload | None = None,
+        exception: BaseException | None = None,
+    ) -> None:
+        """Set the status of both thread and run atomically in a single query.
+
+        This is an optimized version that combines the logic from Threads.set_status
+        and Runs.set_status to minimize database round trips and ensure atomicity.
+
+        Args:
+            conn: Database connection
+            thread_id: Thread ID to update
+            run_id: Run ID to update
+            run_status: New status for the run (or "rollback" to delete the run)
+            checkpoint: Checkpoint payload for thread status calculation
+            exception: Exception that occurred (affects thread status)
+        """
+        # No auth since it's internal
+        from langgraph_api.errors import UserInterrupt, UserRollback
+
+        thread_id = _ensure_uuid(thread_id)
+        run_id = _ensure_uuid(run_id)
+
+        def _thread_has_active_runs() -> bool:
+            return any(
+                r["thread_id"] == thread_id and r["status"] in ("pending", "running")
+                for r in conn.store["runs"]
+            )
+
+        thread = next(
+            (t for t in conn.store["threads"] if t["thread_id"] == thread_id), None
+        )
+        if thread is None:
+            raise HTTPException(status_code=404, detail=f"Thread {thread_id} not found")
+
+        run = next(
+            (
+                r
+                for r in conn.store["runs"]
+                if r["run_id"] == run_id and r["thread_id"] == thread_id
+            ),
+            None,
+        )
+        if run is None:
+            raise HTTPException(status_code=404, detail=f"Run {run_id} not found")
+
+        has_next = bool(checkpoint and checkpoint["next"])
+        if exception and not isinstance(exception, UserInterrupt | UserRollback):
+            base_thread_status: ThreadStatus = "error"
+        elif has_next:
+            base_thread_status = "interrupted"
+        else:
+            base_thread_status = "idle"
+
+        interrupts = (
+            {
+                t["id"]: t["interrupts"]
+                for t in checkpoint["tasks"]
+                if t.get("interrupts")
+            }
+            if checkpoint
+            else {}
+        )
+
+        now = datetime.now(UTC)
+
+        if run_status == "rollback":
+            if "checkpoints" in conn.store:
+                cpts_to_del = [
+                    c for c in conn.store["checkpoints"] if c["run_id"] == run_id
+                ]
+                conn.store["checkpoints"] = [
+                    c for c in conn.store["checkpoints"] if c["run_id"] != run_id
+                ]
+
+                if "checkpoint_writes" in conn.store and cpts_to_del:
+                    cpt_ids = {c["checkpoint_id"] for c in cpts_to_del}
+                    conn.store["checkpoint_writes"] = [
+                        cw
+                        for cw in conn.store["checkpoint_writes"]
+                        if cw["checkpoint_id"] not in cpt_ids
+                    ]
+
+            conn.store["runs"].remove(run)
+
+            final_thread_status: ThreadStatus = (
+                "busy" if _thread_has_active_runs() else base_thread_status
+            )
+
+        else:
+            run.update({"status": run_status, "updated_at": now})
+
+            if run_status in ("pending", "running") or _thread_has_active_runs():
+                final_thread_status = "busy"
+            else:
+                final_thread_status = base_thread_status
+
+        thread.update(
+            {
+                "updated_at": now,
+                "values": checkpoint["values"] if checkpoint else None,
+                "interrupts": interrupts,
+                "status": final_thread_status,
+            }
+        )
+
+    @staticmethod
     async def delete(
         conn: InMemConnectionProto,
         thread_id: UUID,
@@ -1002,7 +1113,7 @@ class Threads(Authenticated):
             # Add new thread to store
             conn.store["threads"].append(new_thread)
 
-            checkpointer = Checkpointer(conn)
+            checkpointer = Checkpointer()
             copied_storage = _replace_thread_id(
                 checkpointer.storage[str(thread_id)], new_thread_id, thread_id
             )
@@ -1133,7 +1244,7 @@ class Threads(Authenticated):
                 Auth.types.ThreadsUpdate(thread_id=thread_id),
             )
 
-            checkpointer = Checkpointer(conn)
+            checkpointer = Checkpointer()
 
             thread_iter = await Threads.get(conn, thread_id, ctx=ctx)
             thread = await fetchone(
@@ -1246,7 +1357,7 @@ class Threads(Authenticated):
                 async with get_graph(
                     graph_id,
                     thread_config,
-                    checkpointer=Checkpointer(conn),
+                    checkpointer=Checkpointer(),
                     store=(await get_store()),
                 ) as graph:
                     next_config = await graph.abulk_update_state(
@@ -2250,7 +2361,7 @@ def _delete_checkpoints_for_thread(
     conn: InMemConnectionProto,
     run_id: str | UUID | None = None,
 ):
-    checkpointer = Checkpointer(conn)
+    checkpointer = Checkpointer()
     thread_id = str(thread_id)
     if thread_id not in checkpointer.storage:
         return

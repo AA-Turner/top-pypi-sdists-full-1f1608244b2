@@ -1,6 +1,6 @@
 Metadata-Version: 2.4
 Name: django-admin-interface
-Version: 0.30.0
+Version: 0.30.1
 Summary: django's default admin interface with superpowers - customizable themes, popup windows replaced by modals and many other features.
 Author-email: Fabio Caccamo <fabio.caccamo@gmail.com>
 Maintainer-email: Fabio Caccamo <fabio.caccamo@gmail.com>
@@ -365,7 +365,7 @@ Released under [MIT License](LICENSE.txt).
 
 - :star: Star this project on [GitHub](https://github.com/fabiocaccamo/django-admin-interface)
 - :octocat: Follow me on [GitHub](https://github.com/fabiocaccamo)
-- :blue_heart: Follow me on [Twitter](https://twitter.com/fabiocaccamo)
+- :blue_heart: Follow me on [Bluesky](https://bsky.app/profile/fabiocaccamo.bsky.social)
 - :moneybag: Sponsor me on [Github](https://github.com/sponsors/fabiocaccamo)
 
 ## See also

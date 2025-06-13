@@ -9,27 +9,20 @@ See https://github.com/github/rest-api-description for more information.
 
 from __future__ import annotations
 
-from datetime import datetime
-from typing import Literal, Union
-from typing_extensions import TypedDict
-
-from .group_0003 import SimpleUserType
+from typing_extensions import NotRequired, TypedDict
 
 
-class ReactionType(TypedDict):
-    """Reaction
+class NetworkSettingsType(TypedDict):
+    """Hosted compute network settings resource
 
-    Reactions to conversations provide a way to help people express their feelings
-    more simply and effectively.
+    A hosted compute network settings resource.
     """
 
-    id: int
-    node_id: str
-    user: Union[None, SimpleUserType]
-    content: Literal[
-        "+1", "-1", "laugh", "confused", "heart", "hooray", "rocket", "eyes"
-    ]
-    created_at: datetime
+    id: str
+    network_configuration_id: NotRequired[str]
+    name: str
+    subnet_id: str
+    region: str
 
 
-__all__ = ("ReactionType",)
+__all__ = ("NetworkSettingsType",)

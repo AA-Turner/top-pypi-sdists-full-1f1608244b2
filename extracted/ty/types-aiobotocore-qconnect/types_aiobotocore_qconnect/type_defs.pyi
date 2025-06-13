@@ -207,6 +207,8 @@ __all__ = (
     "ExternalSourceConfigurationTypeDef",
     "FilterTypeDef",
     "FixedSizeChunkingConfigurationTypeDef",
+    "GenerativeChunkDataDetailsPaginatorTypeDef",
+    "GenerativeChunkDataDetailsTypeDef",
     "GenerativeContentFeedbackDataTypeDef",
     "GenerativeDataDetailsPaginatorTypeDef",
     "GenerativeDataDetailsTypeDef",
@@ -319,6 +321,7 @@ __all__ = (
     "ManagedSourceConfigurationTypeDef",
     "ManualSearchAIAgentConfigurationOutputTypeDef",
     "ManualSearchAIAgentConfigurationTypeDef",
+    "MessageConfigurationTypeDef",
     "MessageDataTypeDef",
     "MessageInputTypeDef",
     "MessageOutputTypeDef",
@@ -465,49 +468,49 @@ class AIAgentConfigurationDataTypeDef(TypedDict):
 GuardrailContentFilterConfigTypeDef = TypedDict(
     "GuardrailContentFilterConfigTypeDef",
     {
+        "type": GuardrailContentFilterTypeType,
         "inputStrength": GuardrailFilterStrengthType,
         "outputStrength": GuardrailFilterStrengthType,
-        "type": GuardrailContentFilterTypeType,
     },
 )
 GuardrailContextualGroundingFilterConfigTypeDef = TypedDict(
     "GuardrailContextualGroundingFilterConfigTypeDef",
     {
-        "threshold": float,
         "type": GuardrailContextualGroundingFilterTypeType,
+        "threshold": float,
     },
 )
 GuardrailPiiEntityConfigTypeDef = TypedDict(
     "GuardrailPiiEntityConfigTypeDef",
     {
-        "action": GuardrailSensitiveInformationActionType,
         "type": GuardrailPiiEntityTypeType,
+        "action": GuardrailSensitiveInformationActionType,
     },
 )
 
 class GuardrailRegexConfigTypeDef(TypedDict):
-    action: GuardrailSensitiveInformationActionType
     name: str
     pattern: str
+    action: GuardrailSensitiveInformationActionType
     description: NotRequired[str]
 
 class AIGuardrailSummaryTypeDef(TypedDict):
-    aiGuardrailArn: str
-    aiGuardrailId: str
-    assistantArn: str
-    assistantId: str
     name: str
+    assistantId: str
+    assistantArn: str
+    aiGuardrailId: str
+    aiGuardrailArn: str
     visibilityStatus: VisibilityStatusType
-    description: NotRequired[str]
     modifiedTime: NotRequired[datetime]
+    description: NotRequired[str]
     status: NotRequired[StatusType]
     tags: NotRequired[Dict[str, str]]
 
 GuardrailTopicConfigOutputTypeDef = TypedDict(
     "GuardrailTopicConfigOutputTypeDef",
     {
-        "definition": str,
         "name": str,
+        "definition": str,
         "type": Literal["DENY"],
         "examples": NotRequired[List[str]],
     },
@@ -515,8 +518,8 @@ GuardrailTopicConfigOutputTypeDef = TypedDict(
 GuardrailTopicConfigTypeDef = TypedDict(
     "GuardrailTopicConfigTypeDef",
     {
-        "definition": str,
         "name": str,
+        "definition": str,
         "type": Literal["DENY"],
         "examples": NotRequired[Sequence[str]],
     },
@@ -534,19 +537,19 @@ class GuardrailWordConfigTypeDef(TypedDict):
 AIPromptSummaryTypeDef = TypedDict(
     "AIPromptSummaryTypeDef",
     {
-        "aiPromptArn": str,
-        "aiPromptId": str,
-        "apiFormat": AIPromptAPIFormatType,
-        "assistantArn": str,
-        "assistantId": str,
-        "modelId": str,
         "name": str,
-        "templateType": Literal["TEXT"],
+        "assistantId": str,
+        "assistantArn": str,
+        "aiPromptId": str,
         "type": AIPromptTypeType,
+        "aiPromptArn": str,
+        "templateType": Literal["TEXT"],
+        "modelId": str,
+        "apiFormat": AIPromptAPIFormatType,
         "visibilityStatus": VisibilityStatusType,
-        "description": NotRequired[str],
         "modifiedTime": NotRequired[datetime],
         "origin": NotRequired[OriginType],
+        "description": NotRequired[str],
         "status": NotRequired[StatusType],
         "tags": NotRequired[Dict[str, str]],
     },
@@ -586,8 +589,8 @@ class AssistantAssociationInputDataTypeDef(TypedDict):
     knowledgeBaseId: NotRequired[str]
 
 class KnowledgeBaseAssociationDataTypeDef(TypedDict):
-    knowledgeBaseArn: NotRequired[str]
     knowledgeBaseId: NotRequired[str]
+    knowledgeBaseArn: NotRequired[str]
 
 AssistantCapabilityConfigurationTypeDef = TypedDict(
     "AssistantCapabilityConfigurationTypeDef",
@@ -610,9 +613,9 @@ class FixedSizeChunkingConfigurationTypeDef(TypedDict):
     overlapPercentage: int
 
 class SemanticChunkingConfigurationTypeDef(TypedDict):
-    breakpointPercentileThreshold: int
-    bufferSize: int
     maxTokens: int
+    bufferSize: int
+    breakpointPercentileThreshold: int
 
 class CitationSpanTypeDef(TypedDict):
     beginOffsetInclusive: NotRequired[int]
@@ -622,53 +625,53 @@ class ConnectConfigurationTypeDef(TypedDict):
     instanceId: NotRequired[str]
 
 class RankingDataTypeDef(TypedDict):
-    relevanceLevel: NotRequired[RelevanceLevelType]
     relevanceScore: NotRequired[float]
+    relevanceLevel: NotRequired[RelevanceLevelType]
 
 class ContentDataTypeDef(TypedDict):
     contentArn: str
     contentId: str
-    contentType: str
     knowledgeBaseArn: str
     knowledgeBaseId: str
-    metadata: Dict[str, str]
     name: str
     revisionId: str
-    status: ContentStatusType
     title: str
+    contentType: str
+    status: ContentStatusType
+    metadata: Dict[str, str]
     url: str
     urlExpiry: datetime
-    linkOutUri: NotRequired[str]
     tags: NotRequired[Dict[str, str]]
+    linkOutUri: NotRequired[str]
 
 class GenerativeContentFeedbackDataTypeDef(TypedDict):
     relevance: RelevanceType
 
 class ContentReferenceTypeDef(TypedDict):
-    contentArn: NotRequired[str]
-    contentId: NotRequired[str]
     knowledgeBaseArn: NotRequired[str]
     knowledgeBaseId: NotRequired[str]
-    referenceType: NotRequired[ReferenceTypeType]
+    contentArn: NotRequired[str]
+    contentId: NotRequired[str]
     sourceURL: NotRequired[str]
+    referenceType: NotRequired[ReferenceTypeType]
 
 class ContentSummaryTypeDef(TypedDict):
     contentArn: str
     contentId: str
-    contentType: str
     knowledgeBaseArn: str
     knowledgeBaseId: str
-    metadata: Dict[str, str]
     name: str
     revisionId: str
-    status: ContentStatusType
     title: str
+    contentType: str
+    status: ContentStatusType
+    metadata: Dict[str, str]
     tags: NotRequired[Dict[str, str]]
 
 class SelfServiceConversationHistoryTypeDef(TypedDict):
     turnNumber: int
-    botResponse: NotRequired[str]
     inputTranscript: NotRequired[str]
+    botResponse: NotRequired[str]
 
 class ConversationStateTypeDef(TypedDict):
     status: ConversationStatusType
@@ -680,30 +683,30 @@ class CreateContentRequestTypeDef(TypedDict):
     knowledgeBaseId: str
     name: str
     uploadId: str
-    clientToken: NotRequired[str]
-    metadata: NotRequired[Mapping[str, str]]
-    overrideLinkOutUri: NotRequired[str]
-    tags: NotRequired[Mapping[str, str]]
     title: NotRequired[str]
+    overrideLinkOutUri: NotRequired[str]
+    metadata: NotRequired[Mapping[str, str]]
+    clientToken: NotRequired[str]
+    tags: NotRequired[Mapping[str, str]]
 
 class RenderingConfigurationTypeDef(TypedDict):
     templateUri: NotRequired[str]
 
 class CreateMessageTemplateAttachmentRequestTypeDef(TypedDict):
-    body: str
-    contentDisposition: Literal["ATTACHMENT"]
     knowledgeBaseId: str
     messageTemplateId: str
+    contentDisposition: Literal["ATTACHMENT"]
     name: str
+    body: str
     clientToken: NotRequired[str]
 
 class MessageTemplateAttachmentTypeDef(TypedDict):
-    attachmentId: str
     contentDisposition: Literal["ATTACHMENT"]
     name: str
     uploadedTime: datetime
     url: str
     urlExpiry: datetime
+    attachmentId: str
 
 class CreateMessageTemplateVersionRequestTypeDef(TypedDict):
     knowledgeBaseId: str
@@ -714,132 +717,142 @@ class QuickResponseDataProviderTypeDef(TypedDict):
     content: NotRequired[str]
 
 class CustomerProfileAttributesOutputTypeDef(TypedDict):
+    profileId: NotRequired[str]
+    profileARN: NotRequired[str]
+    firstName: NotRequired[str]
+    middleName: NotRequired[str]
+    lastName: NotRequired[str]
     accountNumber: NotRequired[str]
+    emailAddress: NotRequired[str]
+    phoneNumber: NotRequired[str]
     additionalInformation: NotRequired[str]
+    partyType: NotRequired[str]
+    businessName: NotRequired[str]
+    birthDate: NotRequired[str]
+    gender: NotRequired[str]
+    mobilePhoneNumber: NotRequired[str]
+    homePhoneNumber: NotRequired[str]
+    businessPhoneNumber: NotRequired[str]
+    businessEmailAddress: NotRequired[str]
     address1: NotRequired[str]
     address2: NotRequired[str]
     address3: NotRequired[str]
     address4: NotRequired[str]
-    billingAddress1: NotRequired[str]
-    billingAddress2: NotRequired[str]
-    billingAddress3: NotRequired[str]
-    billingAddress4: NotRequired[str]
-    billingCity: NotRequired[str]
-    billingCountry: NotRequired[str]
-    billingCounty: NotRequired[str]
-    billingPostalCode: NotRequired[str]
-    billingProvince: NotRequired[str]
-    billingState: NotRequired[str]
-    birthDate: NotRequired[str]
-    businessEmailAddress: NotRequired[str]
-    businessName: NotRequired[str]
-    businessPhoneNumber: NotRequired[str]
     city: NotRequired[str]
-    country: NotRequired[str]
     county: NotRequired[str]
-    custom: NotRequired[Dict[str, str]]
-    emailAddress: NotRequired[str]
-    firstName: NotRequired[str]
-    gender: NotRequired[str]
-    homePhoneNumber: NotRequired[str]
-    lastName: NotRequired[str]
-    mailingAddress1: NotRequired[str]
-    mailingAddress2: NotRequired[str]
-    mailingAddress3: NotRequired[str]
-    mailingAddress4: NotRequired[str]
-    mailingCity: NotRequired[str]
-    mailingCountry: NotRequired[str]
-    mailingCounty: NotRequired[str]
-    mailingPostalCode: NotRequired[str]
-    mailingProvince: NotRequired[str]
-    mailingState: NotRequired[str]
-    middleName: NotRequired[str]
-    mobilePhoneNumber: NotRequired[str]
-    partyType: NotRequired[str]
-    phoneNumber: NotRequired[str]
+    country: NotRequired[str]
     postalCode: NotRequired[str]
-    profileARN: NotRequired[str]
-    profileId: NotRequired[str]
     province: NotRequired[str]
+    state: NotRequired[str]
     shippingAddress1: NotRequired[str]
     shippingAddress2: NotRequired[str]
     shippingAddress3: NotRequired[str]
     shippingAddress4: NotRequired[str]
     shippingCity: NotRequired[str]
-    shippingCountry: NotRequired[str]
     shippingCounty: NotRequired[str]
+    shippingCountry: NotRequired[str]
     shippingPostalCode: NotRequired[str]
     shippingProvince: NotRequired[str]
     shippingState: NotRequired[str]
-    state: NotRequired[str]
+    mailingAddress1: NotRequired[str]
+    mailingAddress2: NotRequired[str]
+    mailingAddress3: NotRequired[str]
+    mailingAddress4: NotRequired[str]
+    mailingCity: NotRequired[str]
+    mailingCounty: NotRequired[str]
+    mailingCountry: NotRequired[str]
+    mailingPostalCode: NotRequired[str]
+    mailingProvince: NotRequired[str]
+    mailingState: NotRequired[str]
+    billingAddress1: NotRequired[str]
+    billingAddress2: NotRequired[str]
+    billingAddress3: NotRequired[str]
+    billingAddress4: NotRequired[str]
+    billingCity: NotRequired[str]
+    billingCounty: NotRequired[str]
+    billingCountry: NotRequired[str]
+    billingPostalCode: NotRequired[str]
+    billingProvince: NotRequired[str]
+    billingState: NotRequired[str]
+    custom: NotRequired[Dict[str, str]]
 
 class CustomerProfileAttributesTypeDef(TypedDict):
+    profileId: NotRequired[str]
+    profileARN: NotRequired[str]
+    firstName: NotRequired[str]
+    middleName: NotRequired[str]
+    lastName: NotRequired[str]
     accountNumber: NotRequired[str]
+    emailAddress: NotRequired[str]
+    phoneNumber: NotRequired[str]
     additionalInformation: NotRequired[str]
+    partyType: NotRequired[str]
+    businessName: NotRequired[str]
+    birthDate: NotRequired[str]
+    gender: NotRequired[str]
+    mobilePhoneNumber: NotRequired[str]
+    homePhoneNumber: NotRequired[str]
+    businessPhoneNumber: NotRequired[str]
+    businessEmailAddress: NotRequired[str]
     address1: NotRequired[str]
     address2: NotRequired[str]
     address3: NotRequired[str]
     address4: NotRequired[str]
-    billingAddress1: NotRequired[str]
-    billingAddress2: NotRequired[str]
-    billingAddress3: NotRequired[str]
-    billingAddress4: NotRequired[str]
-    billingCity: NotRequired[str]
-    billingCountry: NotRequired[str]
-    billingCounty: NotRequired[str]
-    billingPostalCode: NotRequired[str]
-    billingProvince: NotRequired[str]
-    billingState: NotRequired[str]
-    birthDate: NotRequired[str]
-    businessEmailAddress: NotRequired[str]
-    businessName: NotRequired[str]
-    businessPhoneNumber: NotRequired[str]
     city: NotRequired[str]
-    country: NotRequired[str]
     county: NotRequired[str]
-    custom: NotRequired[Mapping[str, str]]
-    emailAddress: NotRequired[str]
-    firstName: NotRequired[str]
-    gender: NotRequired[str]
-    homePhoneNumber: NotRequired[str]
-    lastName: NotRequired[str]
-    mailingAddress1: NotRequired[str]
-    mailingAddress2: NotRequired[str]
-    mailingAddress3: NotRequired[str]
-    mailingAddress4: NotRequired[str]
-    mailingCity: NotRequired[str]
-    mailingCountry: NotRequired[str]
-    mailingCounty: NotRequired[str]
-    mailingPostalCode: NotRequired[str]
-    mailingProvince: NotRequired[str]
-    mailingState: NotRequired[str]
-    middleName: NotRequired[str]
-    mobilePhoneNumber: NotRequired[str]
-    partyType: NotRequired[str]
-    phoneNumber: NotRequired[str]
+    country: NotRequired[str]
     postalCode: NotRequired[str]
-    profileARN: NotRequired[str]
-    profileId: NotRequired[str]
     province: NotRequired[str]
+    state: NotRequired[str]
     shippingAddress1: NotRequired[str]
     shippingAddress2: NotRequired[str]
     shippingAddress3: NotRequired[str]
     shippingAddress4: NotRequired[str]
     shippingCity: NotRequired[str]
-    shippingCountry: NotRequired[str]
     shippingCounty: NotRequired[str]
+    shippingCountry: NotRequired[str]
     shippingPostalCode: NotRequired[str]
     shippingProvince: NotRequired[str]
     shippingState: NotRequired[str]
-    state: NotRequired[str]
+    mailingAddress1: NotRequired[str]
+    mailingAddress2: NotRequired[str]
+    mailingAddress3: NotRequired[str]
+    mailingAddress4: NotRequired[str]
+    mailingCity: NotRequired[str]
+    mailingCounty: NotRequired[str]
+    mailingCountry: NotRequired[str]
+    mailingPostalCode: NotRequired[str]
+    mailingProvince: NotRequired[str]
+    mailingState: NotRequired[str]
+    billingAddress1: NotRequired[str]
+    billingAddress2: NotRequired[str]
+    billingAddress3: NotRequired[str]
+    billingAddress4: NotRequired[str]
+    billingCity: NotRequired[str]
+    billingCounty: NotRequired[str]
+    billingCountry: NotRequired[str]
+    billingPostalCode: NotRequired[str]
+    billingProvince: NotRequired[str]
+    billingState: NotRequired[str]
+    custom: NotRequired[Mapping[str, str]]
+
+class GenerativeChunkDataDetailsPaginatorTypeDef(TypedDict):
+    completion: NotRequired[str]
+    references: NotRequired[List[Dict[str, Any]]]
+    nextChunkToken: NotRequired[str]
 
 class IntentDetectedDataDetailsTypeDef(TypedDict):
     intent: str
     intentId: str
 
+class GenerativeChunkDataDetailsTypeDef(TypedDict):
+    completion: NotRequired[str]
+    references: NotRequired[List[Dict[str, Any]]]
+    nextChunkToken: NotRequired[str]
+
 class GenerativeReferenceTypeDef(TypedDict):
-    generationId: NotRequired[str]
     modelId: NotRequired[str]
+    generationId: NotRequired[str]
 
 class DeactivateMessageTemplateRequestTypeDef(TypedDict):
     knowledgeBaseId: str
@@ -847,30 +860,30 @@ class DeactivateMessageTemplateRequestTypeDef(TypedDict):
     versionNumber: int
 
 class DeleteAIAgentRequestTypeDef(TypedDict):
-    aiAgentId: str
     assistantId: str
+    aiAgentId: str
 
 class DeleteAIAgentVersionRequestTypeDef(TypedDict):
-    aiAgentId: str
     assistantId: str
+    aiAgentId: str
     versionNumber: int
 
 class DeleteAIGuardrailRequestTypeDef(TypedDict):
-    aiGuardrailId: str
     assistantId: str
+    aiGuardrailId: str
 
 class DeleteAIGuardrailVersionRequestTypeDef(TypedDict):
-    aiGuardrailId: str
     assistantId: str
+    aiGuardrailId: str
     versionNumber: int
 
 class DeleteAIPromptRequestTypeDef(TypedDict):
-    aiPromptId: str
     assistantId: str
+    aiPromptId: str
 
 class DeleteAIPromptVersionRequestTypeDef(TypedDict):
-    aiPromptId: str
     assistantId: str
+    aiPromptId: str
     versionNumber: int
 
 class DeleteAssistantAssociationRequestTypeDef(TypedDict):
@@ -881,25 +894,25 @@ class DeleteAssistantRequestTypeDef(TypedDict):
     assistantId: str
 
 class DeleteContentAssociationRequestTypeDef(TypedDict):
-    contentAssociationId: str
-    contentId: str
     knowledgeBaseId: str
+    contentId: str
+    contentAssociationId: str
 
 class DeleteContentRequestTypeDef(TypedDict):
-    contentId: str
     knowledgeBaseId: str
+    contentId: str
 
 class DeleteImportJobRequestTypeDef(TypedDict):
-    importJobId: str
     knowledgeBaseId: str
+    importJobId: str
 
 class DeleteKnowledgeBaseRequestTypeDef(TypedDict):
     knowledgeBaseId: str
 
 class DeleteMessageTemplateAttachmentRequestTypeDef(TypedDict):
-    attachmentId: str
     knowledgeBaseId: str
     messageTemplateId: str
+    attachmentId: str
 
 class DeleteMessageTemplateRequestTypeDef(TypedDict):
     knowledgeBaseId: str
@@ -934,16 +947,16 @@ FilterTypeDef = TypedDict(
 )
 
 class GetAIAgentRequestTypeDef(TypedDict):
-    aiAgentId: str
     assistantId: str
+    aiAgentId: str
 
 class GetAIGuardrailRequestTypeDef(TypedDict):
-    aiGuardrailId: str
     assistantId: str
+    aiGuardrailId: str
 
 class GetAIPromptRequestTypeDef(TypedDict):
-    aiPromptId: str
     assistantId: str
+    aiPromptId: str
 
 class GetAssistantAssociationRequestTypeDef(TypedDict):
     assistantAssociationId: str
@@ -953,9 +966,9 @@ class GetAssistantRequestTypeDef(TypedDict):
     assistantId: str
 
 class GetContentAssociationRequestTypeDef(TypedDict):
-    contentAssociationId: str
-    contentId: str
     knowledgeBaseId: str
+    contentId: str
+    contentAssociationId: str
 
 class GetContentRequestTypeDef(TypedDict):
     contentId: str
@@ -973,23 +986,24 @@ class GetKnowledgeBaseRequestTypeDef(TypedDict):
     knowledgeBaseId: str
 
 class GetMessageTemplateRequestTypeDef(TypedDict):
-    knowledgeBaseId: str
     messageTemplateId: str
+    knowledgeBaseId: str
 
 class GetNextMessageRequestTypeDef(TypedDict):
     assistantId: str
-    nextMessageToken: str
     sessionId: str
+    nextMessageToken: str
 
 class GetQuickResponseRequestTypeDef(TypedDict):
-    knowledgeBaseId: str
     quickResponseId: str
+    knowledgeBaseId: str
 
 class GetRecommendationsRequestTypeDef(TypedDict):
     assistantId: str
     sessionId: str
     maxResults: NotRequired[int]
     waitTimeSeconds: NotRequired[int]
+    nextChunkToken: NotRequired[str]
 
 class GetSessionRequestTypeDef(TypedDict):
     assistantId: str
@@ -1011,102 +1025,102 @@ class PaginatorConfigTypeDef(TypedDict):
     StartingToken: NotRequired[str]
 
 class ListAIAgentVersionsRequestTypeDef(TypedDict):
-    aiAgentId: str
     assistantId: str
-    maxResults: NotRequired[int]
+    aiAgentId: str
     nextToken: NotRequired[str]
+    maxResults: NotRequired[int]
     origin: NotRequired[OriginType]
 
 class ListAIAgentsRequestTypeDef(TypedDict):
     assistantId: str
-    maxResults: NotRequired[int]
     nextToken: NotRequired[str]
+    maxResults: NotRequired[int]
     origin: NotRequired[OriginType]
 
 class ListAIGuardrailVersionsRequestTypeDef(TypedDict):
-    aiGuardrailId: str
     assistantId: str
-    maxResults: NotRequired[int]
+    aiGuardrailId: str
     nextToken: NotRequired[str]
+    maxResults: NotRequired[int]
 
 class ListAIGuardrailsRequestTypeDef(TypedDict):
     assistantId: str
-    maxResults: NotRequired[int]
     nextToken: NotRequired[str]
+    maxResults: NotRequired[int]
 
 class ListAIPromptVersionsRequestTypeDef(TypedDict):
-    aiPromptId: str
     assistantId: str
-    maxResults: NotRequired[int]
+    aiPromptId: str
     nextToken: NotRequired[str]
+    maxResults: NotRequired[int]
     origin: NotRequired[OriginType]
 
 class ListAIPromptsRequestTypeDef(TypedDict):
     assistantId: str
-    maxResults: NotRequired[int]
     nextToken: NotRequired[str]
+    maxResults: NotRequired[int]
     origin: NotRequired[OriginType]
 
 class ListAssistantAssociationsRequestTypeDef(TypedDict):
     assistantId: str
-    maxResults: NotRequired[int]
     nextToken: NotRequired[str]
+    maxResults: NotRequired[int]
 
 class ListAssistantsRequestTypeDef(TypedDict):
-    maxResults: NotRequired[int]
     nextToken: NotRequired[str]
+    maxResults: NotRequired[int]
 
 class ListContentAssociationsRequestTypeDef(TypedDict):
-    contentId: str
     knowledgeBaseId: str
-    maxResults: NotRequired[int]
+    contentId: str
     nextToken: NotRequired[str]
+    maxResults: NotRequired[int]
 
 class ListContentsRequestTypeDef(TypedDict):
     knowledgeBaseId: str
-    maxResults: NotRequired[int]
     nextToken: NotRequired[str]
+    maxResults: NotRequired[int]
 
 class ListImportJobsRequestTypeDef(TypedDict):
     knowledgeBaseId: str
-    maxResults: NotRequired[int]
     nextToken: NotRequired[str]
+    maxResults: NotRequired[int]
 
 class ListKnowledgeBasesRequestTypeDef(TypedDict):
-    maxResults: NotRequired[int]
     nextToken: NotRequired[str]
+    maxResults: NotRequired[int]
 
 class ListMessageTemplateVersionsRequestTypeDef(TypedDict):
     knowledgeBaseId: str
     messageTemplateId: str
-    maxResults: NotRequired[int]
     nextToken: NotRequired[str]
+    maxResults: NotRequired[int]
 
 class MessageTemplateVersionSummaryTypeDef(TypedDict):
-    channelSubtype: ChannelSubtypeType
-    isActive: bool
-    knowledgeBaseArn: str
-    knowledgeBaseId: str
     messageTemplateArn: str
     messageTemplateId: str
+    knowledgeBaseArn: str
+    knowledgeBaseId: str
     name: str
+    channelSubtype: ChannelSubtypeType
+    isActive: bool
     versionNumber: int
 
 class ListMessageTemplatesRequestTypeDef(TypedDict):
     knowledgeBaseId: str
-    maxResults: NotRequired[int]
     nextToken: NotRequired[str]
+    maxResults: NotRequired[int]
 
 class MessageTemplateSummaryTypeDef(TypedDict):
-    channelSubtype: ChannelSubtypeType
-    createdTime: datetime
-    knowledgeBaseArn: str
-    knowledgeBaseId: str
-    lastModifiedBy: str
-    lastModifiedTime: datetime
     messageTemplateArn: str
     messageTemplateId: str
+    knowledgeBaseArn: str
+    knowledgeBaseId: str
     name: str
+    channelSubtype: ChannelSubtypeType
+    createdTime: datetime
+    lastModifiedTime: datetime
+    lastModifiedBy: str
     activeVersionNumber: NotRequired[int]
     description: NotRequired[str]
     tags: NotRequired[Dict[str, str]]
@@ -1114,32 +1128,35 @@ class MessageTemplateSummaryTypeDef(TypedDict):
 class ListMessagesRequestTypeDef(TypedDict):
     assistantId: str
     sessionId: str
-    maxResults: NotRequired[int]
     nextToken: NotRequired[str]
+    maxResults: NotRequired[int]
 
 class ListQuickResponsesRequestTypeDef(TypedDict):
     knowledgeBaseId: str
-    maxResults: NotRequired[int]
     nextToken: NotRequired[str]
+    maxResults: NotRequired[int]
 
 class QuickResponseSummaryTypeDef(TypedDict):
-    contentType: str
-    createdTime: datetime
-    knowledgeBaseArn: str
-    knowledgeBaseId: str
-    lastModifiedTime: datetime
-    name: str
     quickResponseArn: str
     quickResponseId: str
+    knowledgeBaseArn: str
+    knowledgeBaseId: str
+    name: str
+    contentType: str
     status: QuickResponseStatusType
-    channels: NotRequired[List[str]]
+    createdTime: datetime
+    lastModifiedTime: datetime
     description: NotRequired[str]
-    isActive: NotRequired[bool]
     lastModifiedBy: NotRequired[str]
+    isActive: NotRequired[bool]
+    channels: NotRequired[List[str]]
     tags: NotRequired[Dict[str, str]]
 
 class ListTagsForResourceRequestTypeDef(TypedDict):
     resourceArn: str
+
+class MessageConfigurationTypeDef(TypedDict):
+    generateFillerMessage: NotRequired[bool]
 
 class TextMessageTypeDef(TypedDict):
     value: NotRequired[str]
@@ -1149,8 +1166,8 @@ MessageTemplateFilterFieldTypeDef = TypedDict(
     {
         "name": str,
         "operator": MessageTemplateFilterOperatorType,
-        "includeNoExistence": NotRequired[bool],
         "values": NotRequired[Sequence[str]],
+        "includeNoExistence": NotRequired[bool],
     },
 )
 
@@ -1162,29 +1179,29 @@ MessageTemplateQueryFieldTypeDef = TypedDict(
     "MessageTemplateQueryFieldTypeDef",
     {
         "name": str,
-        "operator": MessageTemplateQueryOperatorType,
         "values": Sequence[str],
+        "operator": MessageTemplateQueryOperatorType,
         "allowFuzziness": NotRequired[bool],
         "priority": NotRequired[PriorityType],
     },
 )
 
 class NotifyRecommendationsReceivedErrorTypeDef(TypedDict):
-    message: NotRequired[str]
     recommendationId: NotRequired[str]
+    message: NotRequired[str]
 
 class NotifyRecommendationsReceivedRequestTypeDef(TypedDict):
     assistantId: str
-    recommendationIds: Sequence[str]
     sessionId: str
+    recommendationIds: Sequence[str]
 
 class TagConditionTypeDef(TypedDict):
     key: str
     value: NotRequired[str]
 
 class QueryConditionItemTypeDef(TypedDict):
-    comparator: Literal["EQUALS"]
     field: Literal["RESULT_TYPE"]
+    comparator: Literal["EQUALS"]
     value: str
 
 class QueryTextInputDataTypeDef(TypedDict):
@@ -1201,8 +1218,8 @@ QuickResponseFilterFieldTypeDef = TypedDict(
     {
         "name": str,
         "operator": QuickResponseFilterOperatorType,
-        "includeNoExistence": NotRequired[bool],
         "values": NotRequired[Sequence[str]],
+        "includeNoExistence": NotRequired[bool],
     },
 )
 
@@ -1214,16 +1231,16 @@ QuickResponseQueryFieldTypeDef = TypedDict(
     "QuickResponseQueryFieldTypeDef",
     {
         "name": str,
-        "operator": QuickResponseQueryOperatorType,
         "values": Sequence[str],
+        "operator": QuickResponseQueryOperatorType,
         "allowFuzziness": NotRequired[bool],
         "priority": NotRequired[PriorityType],
     },
 )
 
 class RemoveAssistantAIAgentRequestTypeDef(TypedDict):
-    aiAgentType: AIAgentTypeType
     assistantId: str
+    aiAgentType: AIAgentTypeType
 
 class RemoveKnowledgeBaseTemplateUriRequestTypeDef(TypedDict):
     knowledgeBaseId: str
@@ -1232,10 +1249,10 @@ class RuntimeSessionDataValueTypeDef(TypedDict):
     stringValue: NotRequired[str]
 
 class SessionSummaryTypeDef(TypedDict):
-    assistantArn: str
-    assistantId: str
-    sessionArn: str
     sessionId: str
+    sessionArn: str
+    assistantId: str
+    assistantArn: str
 
 class SeedUrlTypeDef(TypedDict):
     url: NotRequired[str]
@@ -1244,8 +1261,8 @@ class SessionIntegrationConfigurationTypeDef(TypedDict):
     topicIntegrationArn: NotRequired[str]
 
 class StartContentUploadRequestTypeDef(TypedDict):
-    contentType: str
     knowledgeBaseId: str
+    contentType: str
     presignedUrlTimeToLive: NotRequired[int]
 
 class SystemEndpointAttributesTypeDef(TypedDict):
@@ -1260,13 +1277,13 @@ class UntagResourceRequestTypeDef(TypedDict):
     tagKeys: Sequence[str]
 
 class UpdateContentRequestTypeDef(TypedDict):
-    contentId: str
     knowledgeBaseId: str
-    metadata: NotRequired[Mapping[str, str]]
-    overrideLinkOutUri: NotRequired[str]
-    removeOverrideLinkOutUri: NotRequired[bool]
+    contentId: str
     revisionId: NotRequired[str]
     title: NotRequired[str]
+    overrideLinkOutUri: NotRequired[str]
+    removeOverrideLinkOutUri: NotRequired[bool]
+    metadata: NotRequired[Mapping[str, str]]
     uploadId: NotRequired[str]
 
 class UpdateKnowledgeBaseTemplateUriRequestTypeDef(TypedDict):
@@ -1277,8 +1294,8 @@ class WebCrawlerLimitsTypeDef(TypedDict):
     rateLimit: NotRequired[int]
 
 class UpdateAssistantAIAgentRequestTypeDef(TypedDict):
-    aiAgentType: AIAgentTypeType
     assistantId: str
+    aiAgentType: AIAgentTypeType
     configuration: AIAgentConfigurationDataTypeDef
 
 class AIGuardrailContentPolicyConfigOutputTypeDef(TypedDict):
@@ -1312,12 +1329,12 @@ class AIGuardrailTopicPolicyConfigTypeDef(TypedDict):
     topicsConfig: Sequence[GuardrailTopicConfigTypeDef]
 
 class AIGuardrailWordPolicyConfigOutputTypeDef(TypedDict):
-    managedWordListsConfig: NotRequired[List[GuardrailManagedWordsConfigTypeDef]]
     wordsConfig: NotRequired[List[GuardrailWordConfigTypeDef]]
+    managedWordListsConfig: NotRequired[List[GuardrailManagedWordsConfigTypeDef]]
 
 class AIGuardrailWordPolicyConfigTypeDef(TypedDict):
-    managedWordListsConfig: NotRequired[Sequence[GuardrailManagedWordsConfigTypeDef]]
     wordsConfig: NotRequired[Sequence[GuardrailWordConfigTypeDef]]
+    managedWordListsConfig: NotRequired[Sequence[GuardrailManagedWordsConfigTypeDef]]
 
 class AIPromptVersionSummaryTypeDef(TypedDict):
     aiPromptSummary: NotRequired[AIPromptSummaryTypeDef]
@@ -1354,16 +1371,11 @@ class ListTagsForResourceResponseTypeDef(TypedDict):
     tags: Dict[str, str]
     ResponseMetadata: ResponseMetadataTypeDef
 
-class SendMessageResponseTypeDef(TypedDict):
-    nextMessageToken: str
-    requestMessageId: str
-    ResponseMetadata: ResponseMetadataTypeDef
-
 class StartContentUploadResponseTypeDef(TypedDict):
-    headersToInclude: Dict[str, str]
     uploadId: str
     url: str
     urlExpiry: datetime
+    headersToInclude: Dict[str, str]
     ResponseMetadata: ResponseMetadataTypeDef
 
 class ContentAssociationContentsTypeDef(TypedDict):
@@ -1371,8 +1383,8 @@ class ContentAssociationContentsTypeDef(TypedDict):
 
 class CreateAssistantAssociationRequestTypeDef(TypedDict):
     assistantId: str
-    association: AssistantAssociationInputDataTypeDef
     associationType: Literal["KNOWLEDGE_BASE"]
+    association: AssistantAssociationInputDataTypeDef
     clientToken: NotRequired[str]
     tags: NotRequired[Mapping[str, str]]
 
@@ -1382,33 +1394,33 @@ class AssistantAssociationOutputDataTypeDef(TypedDict):
 AssistantDataTypeDef = TypedDict(
     "AssistantDataTypeDef",
     {
-        "assistantArn": str,
         "assistantId": str,
+        "assistantArn": str,
         "name": str,
-        "status": AssistantStatusType,
         "type": Literal["AGENT"],
-        "aiAgentConfiguration": NotRequired[Dict[AIAgentTypeType, AIAgentConfigurationDataTypeDef]],
-        "capabilityConfiguration": NotRequired[AssistantCapabilityConfigurationTypeDef],
+        "status": AssistantStatusType,
         "description": NotRequired[str],
-        "integrationConfiguration": NotRequired[AssistantIntegrationConfigurationTypeDef],
-        "serverSideEncryptionConfiguration": NotRequired[ServerSideEncryptionConfigurationTypeDef],
         "tags": NotRequired[Dict[str, str]],
+        "serverSideEncryptionConfiguration": NotRequired[ServerSideEncryptionConfigurationTypeDef],
+        "integrationConfiguration": NotRequired[AssistantIntegrationConfigurationTypeDef],
+        "capabilityConfiguration": NotRequired[AssistantCapabilityConfigurationTypeDef],
+        "aiAgentConfiguration": NotRequired[Dict[AIAgentTypeType, AIAgentConfigurationDataTypeDef]],
     },
 )
 AssistantSummaryTypeDef = TypedDict(
     "AssistantSummaryTypeDef",
     {
-        "assistantArn": str,
         "assistantId": str,
+        "assistantArn": str,
         "name": str,
-        "status": AssistantStatusType,
         "type": Literal["AGENT"],
-        "aiAgentConfiguration": NotRequired[Dict[AIAgentTypeType, AIAgentConfigurationDataTypeDef]],
-        "capabilityConfiguration": NotRequired[AssistantCapabilityConfigurationTypeDef],
+        "status": AssistantStatusType,
         "description": NotRequired[str],
-        "integrationConfiguration": NotRequired[AssistantIntegrationConfigurationTypeDef],
-        "serverSideEncryptionConfiguration": NotRequired[ServerSideEncryptionConfigurationTypeDef],
         "tags": NotRequired[Dict[str, str]],
+        "serverSideEncryptionConfiguration": NotRequired[ServerSideEncryptionConfigurationTypeDef],
+        "integrationConfiguration": NotRequired[AssistantIntegrationConfigurationTypeDef],
+        "capabilityConfiguration": NotRequired[AssistantCapabilityConfigurationTypeDef],
+        "aiAgentConfiguration": NotRequired[Dict[AIAgentTypeType, AIAgentConfigurationDataTypeDef]],
     },
 )
 CreateAssistantRequestTypeDef = TypedDict(
@@ -1418,8 +1430,8 @@ CreateAssistantRequestTypeDef = TypedDict(
         "type": Literal["AGENT"],
         "clientToken": NotRequired[str],
         "description": NotRequired[str],
-        "serverSideEncryptionConfiguration": NotRequired[ServerSideEncryptionConfigurationTypeDef],
         "tags": NotRequired[Mapping[str, str]],
+        "serverSideEncryptionConfiguration": NotRequired[ServerSideEncryptionConfigurationTypeDef],
     },
 )
 
@@ -1432,13 +1444,13 @@ class ConfigurationTypeDef(TypedDict):
 
 class GenerativeDataDetailsPaginatorTypeDef(TypedDict):
     completion: str
-    rankingData: RankingDataTypeDef
     references: List[Dict[str, Any]]
+    rankingData: RankingDataTypeDef
 
 class GenerativeDataDetailsTypeDef(TypedDict):
     completion: str
-    rankingData: RankingDataTypeDef
     references: List[Dict[str, Any]]
+    rankingData: RankingDataTypeDef
 
 class CreateContentResponseTypeDef(TypedDict):
     content: ContentDataTypeDef
@@ -1473,22 +1485,22 @@ class ConversationContextTypeDef(TypedDict):
     selfServiceConversationHistory: Sequence[SelfServiceConversationHistoryTypeDef]
 
 class CreateAIAgentVersionRequestTypeDef(TypedDict):
-    aiAgentId: str
     assistantId: str
-    clientToken: NotRequired[str]
+    aiAgentId: str
     modifiedTime: NotRequired[TimestampTypeDef]
+    clientToken: NotRequired[str]
 
 class CreateAIGuardrailVersionRequestTypeDef(TypedDict):
-    aiGuardrailId: str
     assistantId: str
-    clientToken: NotRequired[str]
+    aiGuardrailId: str
     modifiedTime: NotRequired[TimestampTypeDef]
+    clientToken: NotRequired[str]
 
 class CreateAIPromptVersionRequestTypeDef(TypedDict):
-    aiPromptId: str
     assistantId: str
-    clientToken: NotRequired[str]
+    aiPromptId: str
     modifiedTime: NotRequired[TimestampTypeDef]
+    clientToken: NotRequired[str]
 
 class CreateMessageTemplateAttachmentResponseTypeDef(TypedDict):
     attachment: MessageTemplateAttachmentTypeDef
@@ -1499,32 +1511,32 @@ class DataReferenceTypeDef(TypedDict):
     generativeReference: NotRequired[GenerativeReferenceTypeDef]
 
 class DocumentTextTypeDef(TypedDict):
-    highlights: NotRequired[List[HighlightTypeDef]]
     text: NotRequired[str]
+    highlights: NotRequired[List[HighlightTypeDef]]
 
 class EmailMessageTemplateContentBodyTypeDef(TypedDict):
-    html: NotRequired[MessageTemplateBodyContentProviderTypeDef]
     plainText: NotRequired[MessageTemplateBodyContentProviderTypeDef]
+    html: NotRequired[MessageTemplateBodyContentProviderTypeDef]
 
 class SMSMessageTemplateContentBodyTypeDef(TypedDict):
     plainText: NotRequired[MessageTemplateBodyContentProviderTypeDef]
 
 class MessageTemplateSearchResultDataTypeDef(TypedDict):
-    channelSubtype: ChannelSubtypeType
-    createdTime: datetime
-    knowledgeBaseArn: str
-    knowledgeBaseId: str
-    lastModifiedBy: str
-    lastModifiedTime: datetime
     messageTemplateArn: str
     messageTemplateId: str
+    knowledgeBaseArn: str
+    knowledgeBaseId: str
     name: str
+    channelSubtype: ChannelSubtypeType
+    createdTime: datetime
+    lastModifiedTime: datetime
+    lastModifiedBy: str
+    isActive: NotRequired[bool]
+    versionNumber: NotRequired[int]
     description: NotRequired[str]
     groupingConfiguration: NotRequired[GroupingConfigurationOutputTypeDef]
-    isActive: NotRequired[bool]
     language: NotRequired[str]
     tags: NotRequired[Dict[str, str]]
-    versionNumber: NotRequired[int]
 
 class SearchExpressionTypeDef(TypedDict):
     filters: Sequence[FilterTypeDef]
@@ -1542,8 +1554,8 @@ class HierarchicalChunkingConfigurationTypeDef(TypedDict):
     overlapTokens: int
 
 class ListAIAgentVersionsRequestPaginateTypeDef(TypedDict):
-    aiAgentId: str
     assistantId: str
+    aiAgentId: str
     origin: NotRequired[OriginType]
     PaginationConfig: NotRequired[PaginatorConfigTypeDef]
 
@@ -1553,8 +1565,8 @@ class ListAIAgentsRequestPaginateTypeDef(TypedDict):
     PaginationConfig: NotRequired[PaginatorConfigTypeDef]
 
 class ListAIGuardrailVersionsRequestPaginateTypeDef(TypedDict):
-    aiGuardrailId: str
     assistantId: str
+    aiGuardrailId: str
     PaginationConfig: NotRequired[PaginatorConfigTypeDef]
 
 class ListAIGuardrailsRequestPaginateTypeDef(TypedDict):
@@ -1562,8 +1574,8 @@ class ListAIGuardrailsRequestPaginateTypeDef(TypedDict):
     PaginationConfig: NotRequired[PaginatorConfigTypeDef]
 
 class ListAIPromptVersionsRequestPaginateTypeDef(TypedDict):
-    aiPromptId: str
     assistantId: str
+    aiPromptId: str
     origin: NotRequired[OriginType]
     PaginationConfig: NotRequired[PaginatorConfigTypeDef]
 
@@ -1580,8 +1592,8 @@ class ListAssistantsRequestPaginateTypeDef(TypedDict):
     PaginationConfig: NotRequired[PaginatorConfigTypeDef]
 
 class ListContentAssociationsRequestPaginateTypeDef(TypedDict):
-    contentId: str
     knowledgeBaseId: str
+    contentId: str
     PaginationConfig: NotRequired[PaginatorConfigTypeDef]
 
 class ListContentsRequestPaginateTypeDef(TypedDict):
@@ -1628,17 +1640,23 @@ class ListQuickResponsesResponseTypeDef(TypedDict):
     ResponseMetadata: ResponseMetadataTypeDef
     nextToken: NotRequired[str]
 
+class SendMessageResponseTypeDef(TypedDict):
+    requestMessageId: str
+    configuration: MessageConfigurationTypeDef
+    nextMessageToken: str
+    ResponseMetadata: ResponseMetadataTypeDef
+
 class MessageDataTypeDef(TypedDict):
     text: NotRequired[TextMessageTypeDef]
 
 class MessageTemplateSearchExpressionTypeDef(TypedDict):
+    queries: NotRequired[Sequence[MessageTemplateQueryFieldTypeDef]]
     filters: NotRequired[Sequence[MessageTemplateFilterFieldTypeDef]]
     orderOnField: NotRequired[MessageTemplateOrderFieldTypeDef]
-    queries: NotRequired[Sequence[MessageTemplateQueryFieldTypeDef]]
 
 class NotifyRecommendationsReceivedResponseTypeDef(TypedDict):
-    errors: List[NotifyRecommendationsReceivedErrorTypeDef]
     recommendationIds: List[str]
+    errors: List[NotifyRecommendationsReceivedErrorTypeDef]
     ResponseMetadata: ResponseMetadataTypeDef
 
 class OrConditionOutputTypeDef(TypedDict):
@@ -1653,20 +1671,20 @@ class QueryConditionTypeDef(TypedDict):
     single: NotRequired[QueryConditionItemTypeDef]
 
 class QueryInputDataTypeDef(TypedDict):
-    intentInputData: NotRequired[IntentInputDataTypeDef]
     queryTextInputData: NotRequired[QueryTextInputDataTypeDef]
+    intentInputData: NotRequired[IntentInputDataTypeDef]
 
 class RecommendationTriggerDataTypeDef(TypedDict):
     query: NotRequired[QueryRecommendationTriggerDataTypeDef]
 
 class QuickResponseContentsTypeDef(TypedDict):
-    markdown: NotRequired[QuickResponseContentProviderTypeDef]
     plainText: NotRequired[QuickResponseContentProviderTypeDef]
+    markdown: NotRequired[QuickResponseContentProviderTypeDef]
 
 class QuickResponseSearchExpressionTypeDef(TypedDict):
+    queries: NotRequired[Sequence[QuickResponseQueryFieldTypeDef]]
     filters: NotRequired[Sequence[QuickResponseFilterFieldTypeDef]]
     orderOnField: NotRequired[QuickResponseOrderFieldTypeDef]
-    queries: NotRequired[Sequence[QuickResponseQueryFieldTypeDef]]
 
 class RuntimeSessionDataTypeDef(TypedDict):
     key: str
@@ -1684,8 +1702,8 @@ class UrlConfigurationTypeDef(TypedDict):
     seedUrls: NotRequired[Sequence[SeedUrlTypeDef]]
 
 class SystemAttributesTypeDef(TypedDict):
-    customerEndpoint: NotRequired[SystemEndpointAttributesTypeDef]
     name: NotRequired[str]
+    customerEndpoint: NotRequired[SystemEndpointAttributesTypeDef]
     systemEndpoint: NotRequired[SystemEndpointAttributesTypeDef]
 
 AIGuardrailContentPolicyConfigUnionTypeDef = Union[
@@ -1710,27 +1728,27 @@ AIGuardrailTopicPolicyConfigUnionTypeDef = Union[
 ]
 
 class AIGuardrailDataTypeDef(TypedDict):
+    assistantId: str
+    assistantArn: str
     aiGuardrailArn: str
     aiGuardrailId: str
-    assistantArn: str
-    assistantId: str
-    blockedInputMessaging: str
-    blockedOutputsMessaging: str
     name: str
     visibilityStatus: VisibilityStatusType
-    contentPolicyConfig: NotRequired[AIGuardrailContentPolicyConfigOutputTypeDef]
-    contextualGroundingPolicyConfig: NotRequired[
-        AIGuardrailContextualGroundingPolicyConfigOutputTypeDef
-    ]
+    blockedInputMessaging: str
+    blockedOutputsMessaging: str
     description: NotRequired[str]
-    modifiedTime: NotRequired[datetime]
+    topicPolicyConfig: NotRequired[AIGuardrailTopicPolicyConfigOutputTypeDef]
+    contentPolicyConfig: NotRequired[AIGuardrailContentPolicyConfigOutputTypeDef]
+    wordPolicyConfig: NotRequired[AIGuardrailWordPolicyConfigOutputTypeDef]
     sensitiveInformationPolicyConfig: NotRequired[
         AIGuardrailSensitiveInformationPolicyConfigOutputTypeDef
     ]
-    status: NotRequired[StatusType]
+    contextualGroundingPolicyConfig: NotRequired[
+        AIGuardrailContextualGroundingPolicyConfigOutputTypeDef
+    ]
     tags: NotRequired[Dict[str, str]]
-    topicPolicyConfig: NotRequired[AIGuardrailTopicPolicyConfigOutputTypeDef]
-    wordPolicyConfig: NotRequired[AIGuardrailWordPolicyConfigOutputTypeDef]
+    status: NotRequired[StatusType]
+    modifiedTime: NotRequired[datetime]
 
 AIGuardrailWordPolicyConfigUnionTypeDef = Union[
     AIGuardrailWordPolicyConfigTypeDef, AIGuardrailWordPolicyConfigOutputTypeDef
@@ -1744,95 +1762,95 @@ class ListAIPromptVersionsResponseTypeDef(TypedDict):
 AIPromptDataTypeDef = TypedDict(
     "AIPromptDataTypeDef",
     {
-        "aiPromptArn": str,
-        "aiPromptId": str,
-        "apiFormat": AIPromptAPIFormatType,
-        "assistantArn": str,
         "assistantId": str,
-        "modelId": str,
+        "assistantArn": str,
+        "aiPromptId": str,
+        "aiPromptArn": str,
         "name": str,
-        "templateConfiguration": AIPromptTemplateConfigurationTypeDef,
-        "templateType": Literal["TEXT"],
         "type": AIPromptTypeType,
+        "templateType": Literal["TEXT"],
+        "modelId": str,
+        "apiFormat": AIPromptAPIFormatType,
+        "templateConfiguration": AIPromptTemplateConfigurationTypeDef,
         "visibilityStatus": VisibilityStatusType,
-        "description": NotRequired[str],
         "modifiedTime": NotRequired[datetime],
+        "description": NotRequired[str],
+        "tags": NotRequired[Dict[str, str]],
         "origin": NotRequired[OriginType],
         "status": NotRequired[StatusType],
-        "tags": NotRequired[Dict[str, str]],
     },
 )
 CreateAIPromptRequestTypeDef = TypedDict(
     "CreateAIPromptRequestTypeDef",
     {
-        "apiFormat": AIPromptAPIFormatType,
         "assistantId": str,
-        "modelId": str,
         "name": str,
-        "templateConfiguration": AIPromptTemplateConfigurationTypeDef,
-        "templateType": Literal["TEXT"],
         "type": AIPromptTypeType,
+        "templateConfiguration": AIPromptTemplateConfigurationTypeDef,
         "visibilityStatus": VisibilityStatusType,
+        "templateType": Literal["TEXT"],
+        "modelId": str,
+        "apiFormat": AIPromptAPIFormatType,
         "clientToken": NotRequired[str],
-        "description": NotRequired[str],
         "tags": NotRequired[Mapping[str, str]],
+        "description": NotRequired[str],
     },
 )
 
 class UpdateAIPromptRequestTypeDef(TypedDict):
-    aiPromptId: str
     assistantId: str
+    aiPromptId: str
     visibilityStatus: VisibilityStatusType
     clientToken: NotRequired[str]
-    description: NotRequired[str]
     templateConfiguration: NotRequired[AIPromptTemplateConfigurationTypeDef]
+    description: NotRequired[str]
 
 class ContentAssociationDataTypeDef(TypedDict):
-    associationData: ContentAssociationContentsTypeDef
-    associationType: Literal["AMAZON_CONNECT_GUIDE"]
-    contentArn: str
-    contentAssociationArn: str
-    contentAssociationId: str
-    contentId: str
-    knowledgeBaseArn: str
     knowledgeBaseId: str
+    knowledgeBaseArn: str
+    contentId: str
+    contentArn: str
+    contentAssociationId: str
+    contentAssociationArn: str
+    associationType: Literal["AMAZON_CONNECT_GUIDE"]
+    associationData: ContentAssociationContentsTypeDef
     tags: NotRequired[Dict[str, str]]
 
 class ContentAssociationSummaryTypeDef(TypedDict):
-    associationData: ContentAssociationContentsTypeDef
-    associationType: Literal["AMAZON_CONNECT_GUIDE"]
-    contentArn: str
-    contentAssociationArn: str
-    contentAssociationId: str
-    contentId: str
-    knowledgeBaseArn: str
     knowledgeBaseId: str
+    knowledgeBaseArn: str
+    contentId: str
+    contentArn: str
+    contentAssociationId: str
+    contentAssociationArn: str
+    associationType: Literal["AMAZON_CONNECT_GUIDE"]
+    associationData: ContentAssociationContentsTypeDef
     tags: NotRequired[Dict[str, str]]
 
 class CreateContentAssociationRequestTypeDef(TypedDict):
-    association: ContentAssociationContentsTypeDef
-    associationType: Literal["AMAZON_CONNECT_GUIDE"]
-    contentId: str
     knowledgeBaseId: str
+    contentId: str
+    associationType: Literal["AMAZON_CONNECT_GUIDE"]
+    association: ContentAssociationContentsTypeDef
     clientToken: NotRequired[str]
     tags: NotRequired[Mapping[str, str]]
 
 class AssistantAssociationDataTypeDef(TypedDict):
-    assistantArn: str
-    assistantAssociationArn: str
     assistantAssociationId: str
+    assistantAssociationArn: str
     assistantId: str
-    associationData: AssistantAssociationOutputDataTypeDef
+    assistantArn: str
     associationType: Literal["KNOWLEDGE_BASE"]
+    associationData: AssistantAssociationOutputDataTypeDef
     tags: NotRequired[Dict[str, str]]
 
 class AssistantAssociationSummaryTypeDef(TypedDict):
-    assistantArn: str
-    assistantAssociationArn: str
     assistantAssociationId: str
+    assistantAssociationArn: str
     assistantId: str
-    associationData: AssistantAssociationOutputDataTypeDef
+    assistantArn: str
     associationType: Literal["KNOWLEDGE_BASE"]
+    associationData: AssistantAssociationOutputDataTypeDef
     tags: NotRequired[Dict[str, str]]
 
 class CreateAssistantResponseTypeDef(TypedDict):
@@ -1859,41 +1877,41 @@ class ParsingConfigurationTypeDef(TypedDict):
     ]
 
 class ExternalSourceConfigurationTypeDef(TypedDict):
-    configuration: ConfigurationTypeDef
     source: Literal["AMAZON_CONNECT"]
+    configuration: ConfigurationTypeDef
 
 class PutFeedbackRequestTypeDef(TypedDict):
     assistantId: str
-    contentFeedback: ContentFeedbackDataTypeDef
     targetId: str
     targetType: TargetTypeType
+    contentFeedback: ContentFeedbackDataTypeDef
 
 class PutFeedbackResponseTypeDef(TypedDict):
-    assistantArn: str
     assistantId: str
-    contentFeedback: ContentFeedbackDataTypeDef
+    assistantArn: str
     targetId: str
     targetType: TargetTypeType
+    contentFeedback: ContentFeedbackDataTypeDef
     ResponseMetadata: ResponseMetadataTypeDef
 
 class DocumentTypeDef(TypedDict):
     contentReference: ContentReferenceTypeDef
-    excerpt: NotRequired[DocumentTextTypeDef]
     title: NotRequired[DocumentTextTypeDef]
+    excerpt: NotRequired[DocumentTextTypeDef]
 
 class TextDataTypeDef(TypedDict):
-    excerpt: NotRequired[DocumentTextTypeDef]
     title: NotRequired[DocumentTextTypeDef]
+    excerpt: NotRequired[DocumentTextTypeDef]
 
 class EmailMessageTemplateContentOutputTypeDef(TypedDict):
+    subject: NotRequired[str]
     body: NotRequired[EmailMessageTemplateContentBodyTypeDef]
     headers: NotRequired[List[EmailHeaderTypeDef]]
-    subject: NotRequired[str]
 
 class EmailMessageTemplateContentTypeDef(TypedDict):
+    subject: NotRequired[str]
     body: NotRequired[EmailMessageTemplateContentBodyTypeDef]
     headers: NotRequired[Sequence[EmailHeaderTypeDef]]
-    subject: NotRequired[str]
 
 class SMSMessageTemplateContentTypeDef(TypedDict):
     body: NotRequired[SMSMessageTemplateContentBodyTypeDef]
@@ -1911,8 +1929,8 @@ class SearchContentRequestPaginateTypeDef(TypedDict):
 class SearchContentRequestTypeDef(TypedDict):
     knowledgeBaseId: str
     searchExpression: SearchExpressionTypeDef
-    maxResults: NotRequired[int]
     nextToken: NotRequired[str]
+    maxResults: NotRequired[int]
 
 class SearchSessionsRequestPaginateTypeDef(TypedDict):
     assistantId: str
@@ -1922,45 +1940,45 @@ class SearchSessionsRequestPaginateTypeDef(TypedDict):
 class SearchSessionsRequestTypeDef(TypedDict):
     assistantId: str
     searchExpression: SearchExpressionTypeDef
-    maxResults: NotRequired[int]
     nextToken: NotRequired[str]
+    maxResults: NotRequired[int]
 
 class CreateQuickResponseRequestTypeDef(TypedDict):
-    content: QuickResponseDataProviderTypeDef
     knowledgeBaseId: str
     name: str
-    channels: NotRequired[Sequence[str]]
-    clientToken: NotRequired[str]
+    content: QuickResponseDataProviderTypeDef
     contentType: NotRequired[str]
-    description: NotRequired[str]
     groupingConfiguration: NotRequired[GroupingConfigurationUnionTypeDef]
-    isActive: NotRequired[bool]
-    language: NotRequired[str]
+    description: NotRequired[str]
     shortcutKey: NotRequired[str]
+    isActive: NotRequired[bool]
+    channels: NotRequired[Sequence[str]]
+    language: NotRequired[str]
+    clientToken: NotRequired[str]
     tags: NotRequired[Mapping[str, str]]
 
 class UpdateMessageTemplateMetadataRequestTypeDef(TypedDict):
     knowledgeBaseId: str
     messageTemplateId: str
+    name: NotRequired[str]
     description: NotRequired[str]
     groupingConfiguration: NotRequired[GroupingConfigurationUnionTypeDef]
-    name: NotRequired[str]
 
 class UpdateQuickResponseRequestTypeDef(TypedDict):
     knowledgeBaseId: str
     quickResponseId: str
-    channels: NotRequired[Sequence[str]]
+    name: NotRequired[str]
     content: NotRequired[QuickResponseDataProviderTypeDef]
     contentType: NotRequired[str]
-    description: NotRequired[str]
     groupingConfiguration: NotRequired[GroupingConfigurationUnionTypeDef]
-    isActive: NotRequired[bool]
-    language: NotRequired[str]
-    name: NotRequired[str]
-    removeDescription: NotRequired[bool]
     removeGroupingConfiguration: NotRequired[bool]
-    removeShortcutKey: NotRequired[bool]
+    description: NotRequired[str]
+    removeDescription: NotRequired[bool]
     shortcutKey: NotRequired[str]
+    removeShortcutKey: NotRequired[bool]
+    isActive: NotRequired[bool]
+    channels: NotRequired[Sequence[str]]
+    language: NotRequired[str]
 
 class ChunkingConfigurationOutputTypeDef(TypedDict):
     chunkingStrategy: ChunkingStrategyType
@@ -1978,10 +1996,10 @@ class MessageInputTypeDef(TypedDict):
     value: MessageDataTypeDef
 
 class MessageOutputTypeDef(TypedDict):
+    value: MessageDataTypeDef
     messageId: str
     participant: ParticipantType
     timestamp: datetime
-    value: MessageDataTypeDef
 
 class SearchMessageTemplatesRequestPaginateTypeDef(TypedDict):
     knowledgeBaseId: str
@@ -1991,89 +2009,89 @@ class SearchMessageTemplatesRequestPaginateTypeDef(TypedDict):
 class SearchMessageTemplatesRequestTypeDef(TypedDict):
     knowledgeBaseId: str
     searchExpression: MessageTemplateSearchExpressionTypeDef
-    maxResults: NotRequired[int]
     nextToken: NotRequired[str]
+    maxResults: NotRequired[int]
 
 class TagFilterOutputTypeDef(TypedDict):
+    tagCondition: NotRequired[TagConditionTypeDef]
     andConditions: NotRequired[List[TagConditionTypeDef]]
     orConditions: NotRequired[List[OrConditionOutputTypeDef]]
-    tagCondition: NotRequired[TagConditionTypeDef]
 
 class TagFilterTypeDef(TypedDict):
+    tagCondition: NotRequired[TagConditionTypeDef]
     andConditions: NotRequired[Sequence[TagConditionTypeDef]]
     orConditions: NotRequired[Sequence[OrConditionTypeDef]]
-    tagCondition: NotRequired[TagConditionTypeDef]
 
 class QueryAssistantRequestPaginateTypeDef(TypedDict):
     assistantId: str
-    overrideKnowledgeBaseSearchType: NotRequired[KnowledgeBaseSearchTypeType]
-    queryCondition: NotRequired[Sequence[QueryConditionTypeDef]]
-    queryInputData: NotRequired[QueryInputDataTypeDef]
     queryText: NotRequired[str]
     sessionId: NotRequired[str]
+    queryCondition: NotRequired[Sequence[QueryConditionTypeDef]]
+    queryInputData: NotRequired[QueryInputDataTypeDef]
+    overrideKnowledgeBaseSearchType: NotRequired[KnowledgeBaseSearchTypeType]
     PaginationConfig: NotRequired[PaginatorConfigTypeDef]
 
 class QueryAssistantRequestTypeDef(TypedDict):
     assistantId: str
-    maxResults: NotRequired[int]
+    queryText: NotRequired[str]
     nextToken: NotRequired[str]
-    overrideKnowledgeBaseSearchType: NotRequired[KnowledgeBaseSearchTypeType]
+    maxResults: NotRequired[int]
+    sessionId: NotRequired[str]
     queryCondition: NotRequired[Sequence[QueryConditionTypeDef]]
     queryInputData: NotRequired[QueryInputDataTypeDef]
-    queryText: NotRequired[str]
-    sessionId: NotRequired[str]
+    overrideKnowledgeBaseSearchType: NotRequired[KnowledgeBaseSearchTypeType]
 
 RecommendationTriggerTypeDef = TypedDict(
     "RecommendationTriggerTypeDef",
     {
-        "data": RecommendationTriggerDataTypeDef,
         "id": str,
-        "recommendationIds": List[str],
-        "source": RecommendationSourceTypeType,
         "type": RecommendationTriggerTypeType,
+        "source": RecommendationSourceTypeType,
+        "data": RecommendationTriggerDataTypeDef,
+        "recommendationIds": List[str],
     },
 )
 
 class QuickResponseDataTypeDef(TypedDict):
-    contentType: str
-    createdTime: datetime
-    knowledgeBaseArn: str
-    knowledgeBaseId: str
-    lastModifiedTime: datetime
-    name: str
     quickResponseArn: str
     quickResponseId: str
+    knowledgeBaseArn: str
+    knowledgeBaseId: str
+    name: str
+    contentType: str
     status: QuickResponseStatusType
-    channels: NotRequired[List[str]]
+    createdTime: datetime
+    lastModifiedTime: datetime
     contents: NotRequired[QuickResponseContentsTypeDef]
     description: NotRequired[str]
     groupingConfiguration: NotRequired[GroupingConfigurationOutputTypeDef]
-    isActive: NotRequired[bool]
-    language: NotRequired[str]
-    lastModifiedBy: NotRequired[str]
     shortcutKey: NotRequired[str]
+    lastModifiedBy: NotRequired[str]
+    isActive: NotRequired[bool]
+    channels: NotRequired[List[str]]
+    language: NotRequired[str]
     tags: NotRequired[Dict[str, str]]
 
 class QuickResponseSearchResultDataTypeDef(TypedDict):
-    contentType: str
-    contents: QuickResponseContentsTypeDef
-    createdTime: datetime
-    isActive: bool
-    knowledgeBaseArn: str
-    knowledgeBaseId: str
-    lastModifiedTime: datetime
-    name: str
     quickResponseArn: str
     quickResponseId: str
+    knowledgeBaseArn: str
+    knowledgeBaseId: str
+    name: str
+    contentType: str
     status: QuickResponseStatusType
-    attributesInterpolated: NotRequired[List[str]]
-    attributesNotInterpolated: NotRequired[List[str]]
-    channels: NotRequired[List[str]]
+    contents: QuickResponseContentsTypeDef
+    createdTime: datetime
+    lastModifiedTime: datetime
+    isActive: bool
     description: NotRequired[str]
     groupingConfiguration: NotRequired[GroupingConfigurationOutputTypeDef]
-    language: NotRequired[str]
-    lastModifiedBy: NotRequired[str]
     shortcutKey: NotRequired[str]
+    lastModifiedBy: NotRequired[str]
+    channels: NotRequired[List[str]]
+    language: NotRequired[str]
+    attributesNotInterpolated: NotRequired[List[str]]
+    attributesInterpolated: NotRequired[List[str]]
     tags: NotRequired[Dict[str, str]]
 
 class SearchQuickResponsesRequestPaginateTypeDef(TypedDict):
@@ -2085,48 +2103,48 @@ class SearchQuickResponsesRequestPaginateTypeDef(TypedDict):
 class SearchQuickResponsesRequestTypeDef(TypedDict):
     knowledgeBaseId: str
     searchExpression: QuickResponseSearchExpressionTypeDef
-    attributes: NotRequired[Mapping[str, str]]
-    maxResults: NotRequired[int]
     nextToken: NotRequired[str]
+    maxResults: NotRequired[int]
+    attributes: NotRequired[Mapping[str, str]]
 
 class UpdateSessionDataRequestTypeDef(TypedDict):
     assistantId: str
-    data: Sequence[RuntimeSessionDataTypeDef]
     sessionId: str
+    data: Sequence[RuntimeSessionDataTypeDef]
     namespace: NotRequired[Literal["Custom"]]
 
 class UpdateSessionDataResponseTypeDef(TypedDict):
-    data: List[RuntimeSessionDataTypeDef]
-    namespace: Literal["Custom"]
     sessionArn: str
     sessionId: str
+    namespace: Literal["Custom"]
+    data: List[RuntimeSessionDataTypeDef]
     ResponseMetadata: ResponseMetadataTypeDef
 
 class WebCrawlerConfigurationOutputTypeDef(TypedDict):
     urlConfiguration: UrlConfigurationOutputTypeDef
     crawlerLimits: NotRequired[WebCrawlerLimitsTypeDef]
-    exclusionFilters: NotRequired[List[str]]
     inclusionFilters: NotRequired[List[str]]
+    exclusionFilters: NotRequired[List[str]]
     scope: NotRequired[WebScopeTypeType]
 
 class WebCrawlerConfigurationTypeDef(TypedDict):
     urlConfiguration: UrlConfigurationTypeDef
     crawlerLimits: NotRequired[WebCrawlerLimitsTypeDef]
-    exclusionFilters: NotRequired[Sequence[str]]
     inclusionFilters: NotRequired[Sequence[str]]
+    exclusionFilters: NotRequired[Sequence[str]]
     scope: NotRequired[WebScopeTypeType]
 
 class MessageTemplateAttributesOutputTypeDef(TypedDict):
-    agentAttributes: NotRequired[AgentAttributesTypeDef]
-    customAttributes: NotRequired[Dict[str, str]]
-    customerProfileAttributes: NotRequired[CustomerProfileAttributesOutputTypeDef]
     systemAttributes: NotRequired[SystemAttributesTypeDef]
+    agentAttributes: NotRequired[AgentAttributesTypeDef]
+    customerProfileAttributes: NotRequired[CustomerProfileAttributesOutputTypeDef]
+    customAttributes: NotRequired[Dict[str, str]]
 
 class MessageTemplateAttributesTypeDef(TypedDict):
-    agentAttributes: NotRequired[AgentAttributesTypeDef]
-    customAttributes: NotRequired[Mapping[str, str]]
-    customerProfileAttributes: NotRequired[CustomerProfileAttributesTypeDef]
     systemAttributes: NotRequired[SystemAttributesTypeDef]
+    agentAttributes: NotRequired[AgentAttributesTypeDef]
+    customerProfileAttributes: NotRequired[CustomerProfileAttributesTypeDef]
+    customAttributes: NotRequired[Mapping[str, str]]
 
 class CreateAIGuardrailResponseTypeDef(TypedDict):
     aiGuardrail: AIGuardrailDataTypeDef
@@ -2148,40 +2166,40 @@ class UpdateAIGuardrailResponseTypeDef(TypedDict):
 
 class CreateAIGuardrailRequestTypeDef(TypedDict):
     assistantId: str
+    name: str
     blockedInputMessaging: str
     blockedOutputsMessaging: str
-    name: str
     visibilityStatus: VisibilityStatusType
     clientToken: NotRequired[str]
-    contentPolicyConfig: NotRequired[AIGuardrailContentPolicyConfigUnionTypeDef]
-    contextualGroundingPolicyConfig: NotRequired[
-        AIGuardrailContextualGroundingPolicyConfigUnionTypeDef
-    ]
     description: NotRequired[str]
+    topicPolicyConfig: NotRequired[AIGuardrailTopicPolicyConfigUnionTypeDef]
+    contentPolicyConfig: NotRequired[AIGuardrailContentPolicyConfigUnionTypeDef]
+    wordPolicyConfig: NotRequired[AIGuardrailWordPolicyConfigUnionTypeDef]
     sensitiveInformationPolicyConfig: NotRequired[
         AIGuardrailSensitiveInformationPolicyConfigUnionTypeDef
+    ]
+    contextualGroundingPolicyConfig: NotRequired[
+        AIGuardrailContextualGroundingPolicyConfigUnionTypeDef
     ]
     tags: NotRequired[Mapping[str, str]]
-    topicPolicyConfig: NotRequired[AIGuardrailTopicPolicyConfigUnionTypeDef]
-    wordPolicyConfig: NotRequired[AIGuardrailWordPolicyConfigUnionTypeDef]
 
 class UpdateAIGuardrailRequestTypeDef(TypedDict):
-    aiGuardrailId: str
     assistantId: str
+    aiGuardrailId: str
+    visibilityStatus: VisibilityStatusType
     blockedInputMessaging: str
     blockedOutputsMessaging: str
-    visibilityStatus: VisibilityStatusType
     clientToken: NotRequired[str]
-    contentPolicyConfig: NotRequired[AIGuardrailContentPolicyConfigUnionTypeDef]
-    contextualGroundingPolicyConfig: NotRequired[
-        AIGuardrailContextualGroundingPolicyConfigUnionTypeDef
-    ]
     description: NotRequired[str]
+    topicPolicyConfig: NotRequired[AIGuardrailTopicPolicyConfigUnionTypeDef]
+    contentPolicyConfig: NotRequired[AIGuardrailContentPolicyConfigUnionTypeDef]
+    wordPolicyConfig: NotRequired[AIGuardrailWordPolicyConfigUnionTypeDef]
     sensitiveInformationPolicyConfig: NotRequired[
         AIGuardrailSensitiveInformationPolicyConfigUnionTypeDef
     ]
-    topicPolicyConfig: NotRequired[AIGuardrailTopicPolicyConfigUnionTypeDef]
-    wordPolicyConfig: NotRequired[AIGuardrailWordPolicyConfigUnionTypeDef]
+    contextualGroundingPolicyConfig: NotRequired[
+        AIGuardrailContextualGroundingPolicyConfigUnionTypeDef
+    ]
 
 class CreateAIPromptResponseTypeDef(TypedDict):
     aiPrompt: AIPromptDataTypeDef
@@ -2228,51 +2246,51 @@ class ListAssistantAssociationsResponseTypeDef(TypedDict):
     nextToken: NotRequired[str]
 
 class ImportJobDataTypeDef(TypedDict):
-    createdTime: datetime
     importJobId: str
-    importJobType: Literal["QUICK_RESPONSES"]
-    knowledgeBaseArn: str
     knowledgeBaseId: str
-    lastModifiedTime: datetime
-    status: ImportJobStatusType
     uploadId: str
+    knowledgeBaseArn: str
+    importJobType: Literal["QUICK_RESPONSES"]
+    status: ImportJobStatusType
     url: str
     urlExpiry: datetime
-    externalSourceConfiguration: NotRequired[ExternalSourceConfigurationTypeDef]
+    createdTime: datetime
+    lastModifiedTime: datetime
     failedRecordReport: NotRequired[str]
     metadata: NotRequired[Dict[str, str]]
+    externalSourceConfiguration: NotRequired[ExternalSourceConfigurationTypeDef]
 
 class ImportJobSummaryTypeDef(TypedDict):
-    createdTime: datetime
     importJobId: str
-    importJobType: Literal["QUICK_RESPONSES"]
-    knowledgeBaseArn: str
     knowledgeBaseId: str
-    lastModifiedTime: datetime
-    status: ImportJobStatusType
     uploadId: str
-    externalSourceConfiguration: NotRequired[ExternalSourceConfigurationTypeDef]
+    knowledgeBaseArn: str
+    importJobType: Literal["QUICK_RESPONSES"]
+    status: ImportJobStatusType
+    createdTime: datetime
+    lastModifiedTime: datetime
     metadata: NotRequired[Dict[str, str]]
+    externalSourceConfiguration: NotRequired[ExternalSourceConfigurationTypeDef]
 
 class StartImportJobRequestTypeDef(TypedDict):
-    importJobType: Literal["QUICK_RESPONSES"]
     knowledgeBaseId: str
+    importJobType: Literal["QUICK_RESPONSES"]
     uploadId: str
     clientToken: NotRequired[str]
-    externalSourceConfiguration: NotRequired[ExternalSourceConfigurationTypeDef]
     metadata: NotRequired[Mapping[str, str]]
+    externalSourceConfiguration: NotRequired[ExternalSourceConfigurationTypeDef]
 
 class ContentDataDetailsTypeDef(TypedDict):
-    rankingData: RankingDataTypeDef
     textData: TextDataTypeDef
+    rankingData: RankingDataTypeDef
 
 SourceContentDataDetailsTypeDef = TypedDict(
     "SourceContentDataDetailsTypeDef",
     {
         "id": str,
-        "rankingData": RankingDataTypeDef,
-        "textData": TextDataTypeDef,
         "type": Literal["KNOWLEDGE_CONTENT"],
+        "textData": TextDataTypeDef,
+        "rankingData": RankingDataTypeDef,
         "citationSpan": NotRequired[CitationSpanTypeDef],
     },
 )
@@ -2297,22 +2315,23 @@ SendMessageRequestTypeDef = TypedDict(
     "SendMessageRequestTypeDef",
     {
         "assistantId": str,
-        "message": MessageInputTypeDef,
         "sessionId": str,
         "type": Literal["TEXT"],
-        "clientToken": NotRequired[str],
+        "message": MessageInputTypeDef,
         "conversationContext": NotRequired[ConversationContextTypeDef],
+        "configuration": NotRequired[MessageConfigurationTypeDef],
+        "clientToken": NotRequired[str],
     },
 )
 GetNextMessageResponseTypeDef = TypedDict(
     "GetNextMessageResponseTypeDef",
     {
-        "conversationSessionData": List[RuntimeSessionDataTypeDef],
+        "type": Literal["TEXT"],
+        "response": MessageOutputTypeDef,
+        "requestMessageId": str,
         "conversationState": ConversationStateTypeDef,
         "nextMessageToken": str,
-        "requestMessageId": str,
-        "response": MessageOutputTypeDef,
-        "type": Literal["TEXT"],
+        "conversationSessionData": List[RuntimeSessionDataTypeDef],
         "ResponseMetadata": ResponseMetadataTypeDef,
     },
 )
@@ -2328,14 +2347,15 @@ class KnowledgeBaseAssociationConfigurationDataOutputTypeDef(TypedDict):
     overrideKnowledgeBaseSearchType: NotRequired[KnowledgeBaseSearchTypeType]
 
 class SessionDataTypeDef(TypedDict):
-    name: str
     sessionArn: str
     sessionId: str
-    aiAgentConfiguration: NotRequired[Dict[AIAgentTypeType, AIAgentConfigurationDataTypeDef]]
+    name: str
     description: NotRequired[str]
+    tags: NotRequired[Dict[str, str]]
     integrationConfiguration: NotRequired[SessionIntegrationConfigurationTypeDef]
     tagFilter: NotRequired[TagFilterOutputTypeDef]
-    tags: NotRequired[Dict[str, str]]
+    aiAgentConfiguration: NotRequired[Dict[AIAgentTypeType, AIAgentConfigurationDataTypeDef]]
+    origin: NotRequired[OriginType]
 
 class KnowledgeBaseAssociationConfigurationDataTypeDef(TypedDict):
     contentTagFilter: NotRequired[TagFilterTypeDef]
@@ -2389,58 +2409,60 @@ class DataDetailsPaginatorTypeDef(TypedDict):
     generativeData: NotRequired[GenerativeDataDetailsPaginatorTypeDef]
     intentDetectedData: NotRequired[IntentDetectedDataDetailsTypeDef]
     sourceContentData: NotRequired[SourceContentDataDetailsTypeDef]
+    generativeChunkData: NotRequired[GenerativeChunkDataDetailsPaginatorTypeDef]
 
 class DataDetailsTypeDef(TypedDict):
     contentData: NotRequired[ContentDataDetailsTypeDef]
     generativeData: NotRequired[GenerativeDataDetailsTypeDef]
     intentDetectedData: NotRequired[IntentDetectedDataDetailsTypeDef]
     sourceContentData: NotRequired[SourceContentDataDetailsTypeDef]
+    generativeChunkData: NotRequired[GenerativeChunkDataDetailsTypeDef]
 
 class ExtendedMessageTemplateDataTypeDef(TypedDict):
-    channelSubtype: ChannelSubtypeType
-    content: MessageTemplateContentProviderOutputTypeDef
-    createdTime: datetime
+    messageTemplateArn: str
+    messageTemplateId: str
     knowledgeBaseArn: str
     knowledgeBaseId: str
-    lastModifiedBy: str
-    lastModifiedTime: datetime
-    messageTemplateArn: str
-    messageTemplateContentSha256: str
-    messageTemplateId: str
     name: str
-    attachments: NotRequired[List[MessageTemplateAttachmentTypeDef]]
-    attributeTypes: NotRequired[List[MessageTemplateAttributeTypeType]]
-    defaultAttributes: NotRequired[MessageTemplateAttributesOutputTypeDef]
+    channelSubtype: ChannelSubtypeType
+    createdTime: datetime
+    lastModifiedTime: datetime
+    lastModifiedBy: str
+    content: MessageTemplateContentProviderOutputTypeDef
+    messageTemplateContentSha256: str
     description: NotRequired[str]
-    groupingConfiguration: NotRequired[GroupingConfigurationOutputTypeDef]
-    isActive: NotRequired[bool]
     language: NotRequired[str]
-    tags: NotRequired[Dict[str, str]]
+    groupingConfiguration: NotRequired[GroupingConfigurationOutputTypeDef]
+    defaultAttributes: NotRequired[MessageTemplateAttributesOutputTypeDef]
+    attributeTypes: NotRequired[List[MessageTemplateAttributeTypeType]]
+    attachments: NotRequired[List[MessageTemplateAttachmentTypeDef]]
+    isActive: NotRequired[bool]
     versionNumber: NotRequired[int]
+    tags: NotRequired[Dict[str, str]]
 
 class MessageTemplateDataTypeDef(TypedDict):
-    channelSubtype: ChannelSubtypeType
-    content: MessageTemplateContentProviderOutputTypeDef
-    createdTime: datetime
+    messageTemplateArn: str
+    messageTemplateId: str
     knowledgeBaseArn: str
     knowledgeBaseId: str
-    lastModifiedBy: str
-    lastModifiedTime: datetime
-    messageTemplateArn: str
-    messageTemplateContentSha256: str
-    messageTemplateId: str
     name: str
-    attributeTypes: NotRequired[List[MessageTemplateAttributeTypeType]]
-    defaultAttributes: NotRequired[MessageTemplateAttributesOutputTypeDef]
+    channelSubtype: ChannelSubtypeType
+    createdTime: datetime
+    lastModifiedTime: datetime
+    lastModifiedBy: str
+    content: MessageTemplateContentProviderOutputTypeDef
+    messageTemplateContentSha256: str
     description: NotRequired[str]
-    groupingConfiguration: NotRequired[GroupingConfigurationOutputTypeDef]
     language: NotRequired[str]
+    groupingConfiguration: NotRequired[GroupingConfigurationOutputTypeDef]
+    defaultAttributes: NotRequired[MessageTemplateAttributesOutputTypeDef]
+    attributeTypes: NotRequired[List[MessageTemplateAttributeTypeType]]
     tags: NotRequired[Dict[str, str]]
 
 class RenderMessageTemplateResponseTypeDef(TypedDict):
-    attachments: List[MessageTemplateAttachmentTypeDef]
-    attributesNotInterpolated: List[str]
     content: MessageTemplateContentProviderOutputTypeDef
+    attributesNotInterpolated: List[str]
+    attachments: List[MessageTemplateAttachmentTypeDef]
     ResponseMetadata: ResponseMetadataTypeDef
 
 MessageTemplateContentProviderUnionTypeDef = Union[
@@ -2475,18 +2497,18 @@ class AssociationConfigurationDataTypeDef(TypedDict):
 class CreateSessionRequestTypeDef(TypedDict):
     assistantId: str
     name: str
-    aiAgentConfiguration: NotRequired[Mapping[AIAgentTypeType, AIAgentConfigurationDataTypeDef]]
     clientToken: NotRequired[str]
     description: NotRequired[str]
-    tagFilter: NotRequired[TagFilterUnionTypeDef]
     tags: NotRequired[Mapping[str, str]]
+    tagFilter: NotRequired[TagFilterUnionTypeDef]
+    aiAgentConfiguration: NotRequired[Mapping[AIAgentTypeType, AIAgentConfigurationDataTypeDef]]
 
 class UpdateSessionRequestTypeDef(TypedDict):
     assistantId: str
     sessionId: str
-    aiAgentConfiguration: NotRequired[Mapping[AIAgentTypeType, AIAgentConfigurationDataTypeDef]]
     description: NotRequired[str]
     tagFilter: NotRequired[TagFilterUnionTypeDef]
+    aiAgentConfiguration: NotRequired[Mapping[AIAgentTypeType, AIAgentConfigurationDataTypeDef]]
 
 class SourceConfigurationOutputTypeDef(TypedDict):
     appIntegrations: NotRequired[AppIntegrationsConfigurationOutputTypeDef]
@@ -2497,17 +2519,17 @@ class SourceConfigurationTypeDef(TypedDict):
     managedSourceConfiguration: NotRequired[ManagedSourceConfigurationTypeDef]
 
 class RenderMessageTemplateRequestTypeDef(TypedDict):
-    attributes: MessageTemplateAttributesUnionTypeDef
     knowledgeBaseId: str
     messageTemplateId: str
+    attributes: MessageTemplateAttributesUnionTypeDef
 
 class DataSummaryPaginatorTypeDef(TypedDict):
-    details: DataDetailsPaginatorTypeDef
     reference: DataReferenceTypeDef
+    details: DataDetailsPaginatorTypeDef
 
 class DataSummaryTypeDef(TypedDict):
-    details: DataDetailsTypeDef
     reference: DataReferenceTypeDef
+    details: DataDetailsTypeDef
 
 class CreateMessageTemplateVersionResponseTypeDef(TypedDict):
     messageTemplate: ExtendedMessageTemplateDataTypeDef
@@ -2530,62 +2552,62 @@ class UpdateMessageTemplateResponseTypeDef(TypedDict):
     ResponseMetadata: ResponseMetadataTypeDef
 
 class CreateMessageTemplateRequestTypeDef(TypedDict):
-    channelSubtype: ChannelSubtypeType
-    content: MessageTemplateContentProviderUnionTypeDef
     knowledgeBaseId: str
     name: str
-    clientToken: NotRequired[str]
-    defaultAttributes: NotRequired[MessageTemplateAttributesUnionTypeDef]
+    content: MessageTemplateContentProviderUnionTypeDef
+    channelSubtype: ChannelSubtypeType
     description: NotRequired[str]
-    groupingConfiguration: NotRequired[GroupingConfigurationUnionTypeDef]
     language: NotRequired[str]
+    defaultAttributes: NotRequired[MessageTemplateAttributesUnionTypeDef]
+    groupingConfiguration: NotRequired[GroupingConfigurationUnionTypeDef]
+    clientToken: NotRequired[str]
     tags: NotRequired[Mapping[str, str]]
 
 class UpdateMessageTemplateRequestTypeDef(TypedDict):
     knowledgeBaseId: str
     messageTemplateId: str
     content: NotRequired[MessageTemplateContentProviderUnionTypeDef]
-    defaultAttributes: NotRequired[MessageTemplateAttributesUnionTypeDef]
     language: NotRequired[str]
+    defaultAttributes: NotRequired[MessageTemplateAttributesUnionTypeDef]
 
 class AssociationConfigurationOutputTypeDef(TypedDict):
-    associationConfigurationData: NotRequired[AssociationConfigurationDataOutputTypeDef]
     associationId: NotRequired[str]
     associationType: NotRequired[Literal["KNOWLEDGE_BASE"]]
+    associationConfigurationData: NotRequired[AssociationConfigurationDataOutputTypeDef]
 
 class AssociationConfigurationTypeDef(TypedDict):
-    associationConfigurationData: NotRequired[AssociationConfigurationDataTypeDef]
     associationId: NotRequired[str]
     associationType: NotRequired[Literal["KNOWLEDGE_BASE"]]
+    associationConfigurationData: NotRequired[AssociationConfigurationDataTypeDef]
 
 class KnowledgeBaseDataTypeDef(TypedDict):
-    knowledgeBaseArn: str
     knowledgeBaseId: str
-    knowledgeBaseType: KnowledgeBaseTypeType
+    knowledgeBaseArn: str
     name: str
+    knowledgeBaseType: KnowledgeBaseTypeType
     status: KnowledgeBaseStatusType
-    description: NotRequired[str]
-    ingestionFailureReasons: NotRequired[List[str]]
-    ingestionStatus: NotRequired[SyncStatusType]
     lastContentModificationTime: NotRequired[datetime]
+    vectorIngestionConfiguration: NotRequired[VectorIngestionConfigurationOutputTypeDef]
+    sourceConfiguration: NotRequired[SourceConfigurationOutputTypeDef]
     renderingConfiguration: NotRequired[RenderingConfigurationTypeDef]
     serverSideEncryptionConfiguration: NotRequired[ServerSideEncryptionConfigurationTypeDef]
-    sourceConfiguration: NotRequired[SourceConfigurationOutputTypeDef]
+    description: NotRequired[str]
     tags: NotRequired[Dict[str, str]]
-    vectorIngestionConfiguration: NotRequired[VectorIngestionConfigurationOutputTypeDef]
+    ingestionStatus: NotRequired[SyncStatusType]
+    ingestionFailureReasons: NotRequired[List[str]]
 
 class KnowledgeBaseSummaryTypeDef(TypedDict):
-    knowledgeBaseArn: str
     knowledgeBaseId: str
-    knowledgeBaseType: KnowledgeBaseTypeType
+    knowledgeBaseArn: str
     name: str
+    knowledgeBaseType: KnowledgeBaseTypeType
     status: KnowledgeBaseStatusType
-    description: NotRequired[str]
+    sourceConfiguration: NotRequired[SourceConfigurationOutputTypeDef]
+    vectorIngestionConfiguration: NotRequired[VectorIngestionConfigurationOutputTypeDef]
     renderingConfiguration: NotRequired[RenderingConfigurationTypeDef]
     serverSideEncryptionConfiguration: NotRequired[ServerSideEncryptionConfigurationTypeDef]
-    sourceConfiguration: NotRequired[SourceConfigurationOutputTypeDef]
+    description: NotRequired[str]
     tags: NotRequired[Dict[str, str]]
-    vectorIngestionConfiguration: NotRequired[VectorIngestionConfigurationOutputTypeDef]
 
 SourceConfigurationUnionTypeDef = Union[
     SourceConfigurationTypeDef, SourceConfigurationOutputTypeDef
@@ -2594,9 +2616,9 @@ ResultDataPaginatorTypeDef = TypedDict(
     "ResultDataPaginatorTypeDef",
     {
         "resultId": str,
-        "data": NotRequired[DataSummaryPaginatorTypeDef],
         "document": NotRequired[DocumentTypeDef],
         "relevanceScore": NotRequired[float],
+        "data": NotRequired[DataSummaryPaginatorTypeDef],
         "type": NotRequired[QueryResultTypeType],
     },
 )
@@ -2604,63 +2626,63 @@ RecommendationDataTypeDef = TypedDict(
     "RecommendationDataTypeDef",
     {
         "recommendationId": str,
-        "data": NotRequired[DataSummaryTypeDef],
         "document": NotRequired[DocumentTypeDef],
-        "relevanceLevel": NotRequired[RelevanceLevelType],
         "relevanceScore": NotRequired[float],
+        "relevanceLevel": NotRequired[RelevanceLevelType],
         "type": NotRequired[RecommendationTypeType],
+        "data": NotRequired[DataSummaryTypeDef],
     },
 )
 ResultDataTypeDef = TypedDict(
     "ResultDataTypeDef",
     {
         "resultId": str,
-        "data": NotRequired[DataSummaryTypeDef],
         "document": NotRequired[DocumentTypeDef],
         "relevanceScore": NotRequired[float],
+        "data": NotRequired[DataSummaryTypeDef],
         "type": NotRequired[QueryResultTypeType],
     },
 )
 
 class AnswerRecommendationAIAgentConfigurationOutputTypeDef(TypedDict):
-    answerGenerationAIGuardrailId: NotRequired[str]
-    answerGenerationAIPromptId: NotRequired[str]
-    associationConfigurations: NotRequired[List[AssociationConfigurationOutputTypeDef]]
     intentLabelingGenerationAIPromptId: NotRequired[str]
-    locale: NotRequired[str]
     queryReformulationAIPromptId: NotRequired[str]
+    answerGenerationAIPromptId: NotRequired[str]
+    answerGenerationAIGuardrailId: NotRequired[str]
+    associationConfigurations: NotRequired[List[AssociationConfigurationOutputTypeDef]]
+    locale: NotRequired[str]
 
 class ManualSearchAIAgentConfigurationOutputTypeDef(TypedDict):
-    answerGenerationAIGuardrailId: NotRequired[str]
     answerGenerationAIPromptId: NotRequired[str]
+    answerGenerationAIGuardrailId: NotRequired[str]
     associationConfigurations: NotRequired[List[AssociationConfigurationOutputTypeDef]]
     locale: NotRequired[str]
 
 class SelfServiceAIAgentConfigurationOutputTypeDef(TypedDict):
-    associationConfigurations: NotRequired[List[AssociationConfigurationOutputTypeDef]]
-    selfServiceAIGuardrailId: NotRequired[str]
-    selfServiceAnswerGenerationAIPromptId: NotRequired[str]
     selfServicePreProcessingAIPromptId: NotRequired[str]
+    selfServiceAnswerGenerationAIPromptId: NotRequired[str]
+    selfServiceAIGuardrailId: NotRequired[str]
+    associationConfigurations: NotRequired[List[AssociationConfigurationOutputTypeDef]]
 
 class AnswerRecommendationAIAgentConfigurationTypeDef(TypedDict):
-    answerGenerationAIGuardrailId: NotRequired[str]
-    answerGenerationAIPromptId: NotRequired[str]
-    associationConfigurations: NotRequired[Sequence[AssociationConfigurationTypeDef]]
     intentLabelingGenerationAIPromptId: NotRequired[str]
-    locale: NotRequired[str]
     queryReformulationAIPromptId: NotRequired[str]
+    answerGenerationAIPromptId: NotRequired[str]
+    answerGenerationAIGuardrailId: NotRequired[str]
+    associationConfigurations: NotRequired[Sequence[AssociationConfigurationTypeDef]]
+    locale: NotRequired[str]
 
 class ManualSearchAIAgentConfigurationTypeDef(TypedDict):
-    answerGenerationAIGuardrailId: NotRequired[str]
     answerGenerationAIPromptId: NotRequired[str]
+    answerGenerationAIGuardrailId: NotRequired[str]
     associationConfigurations: NotRequired[Sequence[AssociationConfigurationTypeDef]]
     locale: NotRequired[str]
 
 class SelfServiceAIAgentConfigurationTypeDef(TypedDict):
-    associationConfigurations: NotRequired[Sequence[AssociationConfigurationTypeDef]]
-    selfServiceAIGuardrailId: NotRequired[str]
-    selfServiceAnswerGenerationAIPromptId: NotRequired[str]
     selfServicePreProcessingAIPromptId: NotRequired[str]
+    selfServiceAnswerGenerationAIPromptId: NotRequired[str]
+    selfServiceAIGuardrailId: NotRequired[str]
+    associationConfigurations: NotRequired[Sequence[AssociationConfigurationTypeDef]]
 
 class CreateKnowledgeBaseResponseTypeDef(TypedDict):
     knowledgeBase: KnowledgeBaseDataTypeDef
@@ -2680,15 +2702,15 @@ class ListKnowledgeBasesResponseTypeDef(TypedDict):
     nextToken: NotRequired[str]
 
 class CreateKnowledgeBaseRequestTypeDef(TypedDict):
-    knowledgeBaseType: KnowledgeBaseTypeType
     name: str
+    knowledgeBaseType: KnowledgeBaseTypeType
     clientToken: NotRequired[str]
-    description: NotRequired[str]
-    renderingConfiguration: NotRequired[RenderingConfigurationTypeDef]
-    serverSideEncryptionConfiguration: NotRequired[ServerSideEncryptionConfigurationTypeDef]
     sourceConfiguration: NotRequired[SourceConfigurationUnionTypeDef]
-    tags: NotRequired[Mapping[str, str]]
+    renderingConfiguration: NotRequired[RenderingConfigurationTypeDef]
     vectorIngestionConfiguration: NotRequired[VectorIngestionConfigurationUnionTypeDef]
+    serverSideEncryptionConfiguration: NotRequired[ServerSideEncryptionConfigurationTypeDef]
+    description: NotRequired[str]
+    tags: NotRequired[Mapping[str, str]]
 
 class QueryAssistantResponsePaginatorTypeDef(TypedDict):
     results: List[ResultDataPaginatorTypeDef]
@@ -2706,51 +2728,51 @@ class QueryAssistantResponseTypeDef(TypedDict):
     nextToken: NotRequired[str]
 
 class AIAgentConfigurationOutputTypeDef(TypedDict):
+    manualSearchAIAgentConfiguration: NotRequired[ManualSearchAIAgentConfigurationOutputTypeDef]
     answerRecommendationAIAgentConfiguration: NotRequired[
         AnswerRecommendationAIAgentConfigurationOutputTypeDef
     ]
-    manualSearchAIAgentConfiguration: NotRequired[ManualSearchAIAgentConfigurationOutputTypeDef]
     selfServiceAIAgentConfiguration: NotRequired[SelfServiceAIAgentConfigurationOutputTypeDef]
 
 class AIAgentConfigurationTypeDef(TypedDict):
+    manualSearchAIAgentConfiguration: NotRequired[ManualSearchAIAgentConfigurationTypeDef]
     answerRecommendationAIAgentConfiguration: NotRequired[
         AnswerRecommendationAIAgentConfigurationTypeDef
     ]
-    manualSearchAIAgentConfiguration: NotRequired[ManualSearchAIAgentConfigurationTypeDef]
     selfServiceAIAgentConfiguration: NotRequired[SelfServiceAIAgentConfigurationTypeDef]
 
 AIAgentDataTypeDef = TypedDict(
     "AIAgentDataTypeDef",
     {
-        "aiAgentArn": str,
-        "aiAgentId": str,
-        "assistantArn": str,
         "assistantId": str,
-        "configuration": AIAgentConfigurationOutputTypeDef,
+        "assistantArn": str,
+        "aiAgentId": str,
+        "aiAgentArn": str,
         "name": str,
         "type": AIAgentTypeType,
+        "configuration": AIAgentConfigurationOutputTypeDef,
         "visibilityStatus": VisibilityStatusType,
-        "description": NotRequired[str],
         "modifiedTime": NotRequired[datetime],
+        "description": NotRequired[str],
+        "tags": NotRequired[Dict[str, str]],
         "origin": NotRequired[OriginType],
         "status": NotRequired[StatusType],
-        "tags": NotRequired[Dict[str, str]],
     },
 )
 AIAgentSummaryTypeDef = TypedDict(
     "AIAgentSummaryTypeDef",
     {
-        "aiAgentArn": str,
-        "aiAgentId": str,
-        "assistantArn": str,
-        "assistantId": str,
         "name": str,
+        "assistantId": str,
+        "assistantArn": str,
+        "aiAgentId": str,
         "type": AIAgentTypeType,
+        "aiAgentArn": str,
         "visibilityStatus": VisibilityStatusType,
-        "configuration": NotRequired[AIAgentConfigurationOutputTypeDef],
-        "description": NotRequired[str],
         "modifiedTime": NotRequired[datetime],
+        "configuration": NotRequired[AIAgentConfigurationOutputTypeDef],
         "origin": NotRequired[OriginType],
+        "description": NotRequired[str],
         "status": NotRequired[StatusType],
         "tags": NotRequired[Dict[str, str]],
     },
@@ -2790,19 +2812,19 @@ CreateAIAgentRequestTypeDef = TypedDict(
     "CreateAIAgentRequestTypeDef",
     {
         "assistantId": str,
-        "configuration": AIAgentConfigurationUnionTypeDef,
         "name": str,
         "type": AIAgentTypeType,
+        "configuration": AIAgentConfigurationUnionTypeDef,
         "visibilityStatus": VisibilityStatusType,
         "clientToken": NotRequired[str],
-        "description": NotRequired[str],
         "tags": NotRequired[Mapping[str, str]],
+        "description": NotRequired[str],
     },
 )
 
 class UpdateAIAgentRequestTypeDef(TypedDict):
-    aiAgentId: str
     assistantId: str
+    aiAgentId: str
     visibilityStatus: VisibilityStatusType
     clientToken: NotRequired[str]
     configuration: NotRequired[AIAgentConfigurationUnionTypeDef]

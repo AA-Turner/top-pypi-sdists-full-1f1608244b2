@@ -187,6 +187,7 @@ class Exceptions(BaseClientExceptions):
     ClientException: Type[BotocoreClientError]
     InvalidParameterException: Type[BotocoreClientError]
     InvalidRequestException: Type[BotocoreClientError]
+    InvalidStateException: Type[BotocoreClientError]
     NotFoundException: Type[BotocoreClientError]
     ResourceInUseException: Type[BotocoreClientError]
     ResourceLimitExceededException: Type[BotocoreClientError]
@@ -194,6 +195,7 @@ class Exceptions(BaseClientExceptions):
     ResourcePropagationDelayException: Type[BotocoreClientError]
     ServerException: Type[BotocoreClientError]
     ServiceUnavailableException: Type[BotocoreClientError]
+    ThrottlingException: Type[BotocoreClientError]
     UnsupportedAvailabilityZoneException: Type[BotocoreClientError]
 
 class EKSClient(AioBaseClient):

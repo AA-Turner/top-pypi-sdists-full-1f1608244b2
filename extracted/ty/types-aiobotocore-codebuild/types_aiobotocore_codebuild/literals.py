@@ -34,6 +34,7 @@ __all__ = (
     "CacheModeType",
     "CacheTypeType",
     "CodeBuildServiceName",
+    "CommandTypeType",
     "ComputeTypeType",
     "CredentialProviderTypeType",
     "DescribeCodeCoveragesPaginatorName",
@@ -56,10 +57,13 @@ __all__ = (
     "ListBuildBatchesPaginatorName",
     "ListBuildsForProjectPaginatorName",
     "ListBuildsPaginatorName",
+    "ListCommandExecutionsForSandboxPaginatorName",
     "ListProjectsPaginatorName",
     "ListReportGroupsPaginatorName",
     "ListReportsForReportGroupPaginatorName",
     "ListReportsPaginatorName",
+    "ListSandboxesForProjectPaginatorName",
+    "ListSandboxesPaginatorName",
     "ListSharedProjectsPaginatorName",
     "ListSharedReportGroupsPaginatorName",
     "LogsConfigStatusTypeType",
@@ -125,6 +129,7 @@ BuildPhaseTypeType = Literal[
 ]
 CacheModeType = Literal["LOCAL_CUSTOM_CACHE", "LOCAL_DOCKER_LAYER_CACHE", "LOCAL_SOURCE_CACHE"]
 CacheTypeType = Literal["LOCAL", "NO_CACHE", "S3"]
+CommandTypeType = Literal["SHELL"]
 ComputeTypeType = Literal[
     "ATTRIBUTE_BASED_COMPUTE",
     "BUILD_GENERAL1_2XLARGE",
@@ -137,6 +142,7 @@ ComputeTypeType = Literal[
     "BUILD_LAMBDA_2GB",
     "BUILD_LAMBDA_4GB",
     "BUILD_LAMBDA_8GB",
+    "CUSTOM_INSTANCE_TYPE",
 ]
 CredentialProviderTypeType = Literal["SECRETS_MANAGER"]
 DescribeCodeCoveragesPaginatorName = Literal["describe_code_coverages"]
@@ -153,6 +159,7 @@ EnvironmentTypeType = Literal[
     "WINDOWS_CONTAINER",
     "WINDOWS_EC2",
     "WINDOWS_SERVER_2019_CONTAINER",
+    "WINDOWS_SERVER_2022_CONTAINER",
 ]
 EnvironmentVariableTypeType = Literal["PARAMETER_STORE", "PLAINTEXT", "SECRETS_MANAGER"]
 FileSystemTypeType = Literal["EFS"]
@@ -184,10 +191,13 @@ ListBuildBatchesForProjectPaginatorName = Literal["list_build_batches_for_projec
 ListBuildBatchesPaginatorName = Literal["list_build_batches"]
 ListBuildsForProjectPaginatorName = Literal["list_builds_for_project"]
 ListBuildsPaginatorName = Literal["list_builds"]
+ListCommandExecutionsForSandboxPaginatorName = Literal["list_command_executions_for_sandbox"]
 ListProjectsPaginatorName = Literal["list_projects"]
 ListReportGroupsPaginatorName = Literal["list_report_groups"]
 ListReportsForReportGroupPaginatorName = Literal["list_reports_for_report_group"]
 ListReportsPaginatorName = Literal["list_reports"]
+ListSandboxesForProjectPaginatorName = Literal["list_sandboxes_for_project"]
+ListSandboxesPaginatorName = Literal["list_sandboxes"]
 ListSharedProjectsPaginatorName = Literal["list_shared_projects"]
 ListSharedReportGroupsPaginatorName = Literal["list_shared_report_groups"]
 LogsConfigStatusTypeType = Literal["DISABLED", "ENABLED"]
@@ -240,6 +250,7 @@ WebhookFilterTypeType = Literal[
     "EVENT",
     "FILE_PATH",
     "HEAD_REF",
+    "ORGANIZATION_NAME",
     "RELEASE_NAME",
     "REPOSITORY_NAME",
     "TAG_NAME",
@@ -404,6 +415,7 @@ ServiceName = Literal[
     "freetier",
     "fsx",
     "gamelift",
+    "gameliftstreams",
     "geo-maps",
     "geo-places",
     "geo-routes",
@@ -429,6 +441,7 @@ ServiceName = Literal[
     "iot",
     "iot-data",
     "iot-jobs-data",
+    "iot-managed-integrations",
     "iotanalytics",
     "iotdeviceadvisor",
     "iotevents",
@@ -543,7 +556,6 @@ ServiceName = Literal[
     "pipes",
     "polly",
     "pricing",
-    "privatenetworks",
     "proton",
     "qapps",
     "qbusiness",
@@ -604,7 +616,6 @@ ServiceName = Literal[
     "signer",
     "simspaceweaver",
     "sms",
-    "sms-voice",
     "snow-device-management",
     "snowball",
     "sns",
@@ -612,6 +623,7 @@ ServiceName = Literal[
     "sqs",
     "ssm",
     "ssm-contacts",
+    "ssm-guiconnect",
     "ssm-incidents",
     "ssm-quicksetup",
     "ssm-sap",
@@ -671,10 +683,13 @@ PaginatorName = Literal[
     "list_build_batches_for_project",
     "list_builds",
     "list_builds_for_project",
+    "list_command_executions_for_sandbox",
     "list_projects",
     "list_report_groups",
     "list_reports",
     "list_reports_for_report_group",
+    "list_sandboxes",
+    "list_sandboxes_for_project",
     "list_shared_projects",
     "list_shared_report_groups",
 ]

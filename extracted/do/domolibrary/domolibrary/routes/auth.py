@@ -2,10 +2,10 @@
 
 # %% auto 0
 __all__ = ['AuthError', 'InvalidCredentialsError', 'AccountLockedError', 'InvalidAuthTypeError', 'InvalidInstanceError',
-           'NoAccessTokenReturned', 'get_full_auth', 'get_developer_auth', 'who_am_i']
+           'NoAccessTokenReturned', 'get_full_auth', 'get_developer_auth', 'who_am_i', 'elevate_otp']
 
 # %% ../../nbs/routes/auth.ipynb 2
-from typing import Optional, Any
+from typing import Optional, Any, List
 
 import httpx
 
@@ -15,48 +15,23 @@ import domolibrary.client.DomoError as dmde
 import domolibrary.utils.chunk_execution as dmce
 
 # %% ../../nbs/routes/auth.ipynb 5
-class AuthError(dmde.DomoError):
+class AuthError(dmde.RouteError):
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
+
 
 class InvalidCredentialsError(AuthError):
     """return invalid credentials sent to API"""
 
-    def __init__(
-        self,
-        function_name: Optional[str] = None,
-        parent_class: str = None,
-        status: Optional[int] = None,  # API request status
-        message="invalid credentials",
-        domo_instance: Optional[str] = None,
-    ):
-        super().__init__(
-            status=status,
-            message=message,
-            domo_instance=domo_instance,
-            function_name=function_name,
-            parent_class=parent_class,
-        )
+    def __init__(self, res, domo_instance: Optional[str] = None):
+        super().__init__(res=res, domo_instance=domo_instance)
 
 
 class AccountLockedError(AuthError):
     """return invalid credentials sent to API"""
 
-    def __init__(
-        self,
-        function_name: Optional[str] = None,
-        status: Optional[int] = None,  # API request status
-        message="invalid credentials",
-        domo_instance: Optional[str] = None,
-        parent_class: str = None,
-    ):
-        super().__init__(
-            status=status,
-            message=message,
-            domo_instance=domo_instance,
-            function_name=function_name,
-            parent_class=parent_class,
-        )
+    def __init__(self, res):
+        super().__init__(res=res, domo_instance=None)
 
 
 class InvalidAuthTypeError(AuthError):
@@ -64,58 +39,29 @@ class InvalidAuthTypeError(AuthError):
 
     def __init__(
         self,
-        required_auth_type: dict = None,
-        required_auth_type_ls: list = None,
-        function_name: Optional[str] = None,
-        parent_class: str = None,
+        res = None,
+        required_auth_type: Optional[Any] = None,
+        required_auth_type_ls: Optional[List[Any]] = None,
         domo_instance: Optional[str] = None,
+        **kwargs
     ):
+
         message = f"This API rquires {required_auth_type.__name__ if required_auth_type else ', '.join([auth_type.__name__ for auth_type in required_auth_type_ls])}"
 
-        super().__init__(
-            message=message,
-            domo_instance=domo_instance,
-            function_name=function_name,
-            parent_class=parent_class,
-        )
+        super().__init__(message=message, res=res, domo_instance=domo_instance, **kwargs)
 
 
 class InvalidInstanceError(AuthError):
     """return if invalid domo_instance sent to API"""
 
-    def __init__(
-        self,
-        function_name: Optional[str] = None,
-        parent_class: str = None,
-        status: Optional[int] = None,
-        message="invalid instance",
-        domo_instance: Optional[str] = None,
-    ):
-        super().__init__(
-            status=status,
-            message=message,
-            domo_instance=domo_instance,
-            parent_class=parent_class,
-            function_name=function_name,
-        )
+    def __init__(self, res, domo_instance: Optional[str] = None):
+        super().__init__(res=res, domo_instance=domo_instance)
 
 
 class NoAccessTokenReturned(AuthError):
-    def __init__(
-        self,
-        function_name: Optional[str] = None,
-        status: Optional[int] = None,
-        message: str = "No AccessToken returned",
-        domo_instance: Optional[str] = None,
-        parent_class: str = None,
-    ):
-        super().__init__(
-            status=status,
-            message=message,
-            domo_instance=domo_instance,
-            function_name=function_name,
-            parent_class=parent_class,
-        )
+    def __init__(self, res, domo_instance: Optional[str] = None):
+
+        super().__init__(res=res, domo_instance=domo_instance)
 
 # %% ../../nbs/routes/auth.ipynb 7
 async def get_full_auth(
@@ -132,6 +78,8 @@ async def get_full_auth(
     """uses username and password authentication to retrieve a full_auth access token"""
 
     import domolibrary.client.get_data as gd
+
+    domo_instance = domo_instance or auth.domo_instance
 
     url = f"https://{domo_instance}.domo.com/api/content/v2/authentication"
 
@@ -158,11 +106,8 @@ async def get_full_auth(
 
     if res.status == 403 and res.response == "Forbidden":
         raise InvalidInstanceError(
-            function_name=res.traceback_details.function_name,
-            parent_class=parent_class,
-            status=res.status,
-            message=res.response,
-            domo_instance=domo_instance,
+            res = res,
+            domo_instance = domo_instance
         )
 
     if res.is_success and isinstance(res.response, dict):
@@ -171,43 +116,33 @@ async def get_full_auth(
             res.is_success = False
 
             raise InvalidCredentialsError(
-                function_name=res.traceback_details.function_name,
-                parent_class=parent_class,
-                status=res.status,
-                message=res.response["reason"],
-                domo_instance=domo_instance,
+                domo_instance = domo_instance,
+                res = res
+
             )
 
         if res.response.get("reason") == "ACCOUNT_LOCKED":
             res.is_success = False
 
             raise AccountLockedError(
-                function_name=res.traceback_details.function_name,
-                parent_class=parent_class,
-                status=res.status,
-                message=str(res.response.get("reason")),
-                domo_instance=domo_instance,
+                domo_instance = domo_instance,
+                res =res
             )
 
         if res.response == {} or res.response == "":  # no access token
             res.is_success = False
 
             raise NoAccessTokenReturned(
-                function_name=res.traceback_details.function_name,
-                parent_class=parent_class,
-                status=res.status,
-                domo_instance=domo_instance,
+                domo_instance= domo_instance,
+                res = res
             )
 
     if not res.response.get("sessionToken"):
         res.is_success = True
 
         raise InvalidCredentialsError(
-            function_name=res.traceback_details.function_name,
-            parent_class=parent_class,
-            status=res.status,
-            message=res.response,
-            domo_instance=domo_instance,
+            domo_instance = domo_instance,
+            res = res
         )
 
     return res
@@ -261,9 +196,7 @@ async def get_developer_auth(
     if res.status == 401 and res.response == "Unauthorized":
         res.is_success = False
         raise InvalidCredentialsError(
-            function_name=res.traceback_details.function_name,
-            status=res.status,
-            message=res.response,
+            res = res,
         )
 
     return res
@@ -271,8 +204,6 @@ async def get_developer_auth(
 # %% ../../nbs/routes/auth.ipynb 19
 async def who_am_i(
     auth: Any,
-    domo_instance: str,  # <domo_instance>.domo.com
-    auth_header: dict = None,
     session: httpx.AsyncClient = None,
     parent_class: str = None,
     debug_num_stacks_to_drop=0,
@@ -286,11 +217,10 @@ async def who_am_i(
 
     import domolibrary.client.get_data as gd
 
-    url = f"https://{domo_instance}.domo.com/api/content/v2/users/me"
+    url = f"https://{auth.domo_instance}.domo.com/api/content/v2/users/me"
 
     res = await gd.get_data(
         auth=auth,
-        headers=auth_header,
         url=url,
         method="GET",
         debug_api=debug_api,
@@ -305,22 +235,50 @@ async def who_am_i(
 
     if res.status == 403 and res.response == "Forbidden":
         raise InvalidInstanceError(
-            function_name=res.traceback_details.function_name,
-            parent_class=parent_class,
-            status=res.status,
-            message=res.response,
-            domo_instance=domo_instance,
+            res = res
         )
 
     if res.status == 401 and res.response == "Unauthorized":
         res.is_sucess = False
 
         raise InvalidCredentialsError(
-            function_name=res.traceback_details.function_name,
-            parent_class=parent_class,
-            status=res.status,
-            message=res.response,
-            domo_instance=domo_instance,
+            res = res,
         )
 
+    return res
+
+# %% ../../nbs/routes/auth.ipynb 21
+async def elevate_otp(
+    auth,
+    one_time_password: str,
+    debug_api: bool = False,
+    debug_num_stacks_to_drop=1,
+    session: httpx.AsyncClient = None,
+    parent_class: str = None,
+):
+    import domolibrary.client.get_data as gd
+
+    if not auth.user_id:
+        await auth.who_am_i()
+    
+    url = f"https://{auth.domo_instance}.domo.com/api/identity/v1/authentication/elevations/{auth.user_id}"
+
+    body = {"timeBasedOneTimePassword": one_time_password}
+
+    res = await gd.get_data(
+        auth=auth,
+        method="PUT",
+        url=url,
+        body=body,
+        debug_api=debug_api,
+        num_stacks_to_drop=debug_num_stacks_to_drop,
+        parent_class=parent_class,
+        session = session
+    )
+
+    if not res.is_success:
+        raise InvalidCredentialsError(
+            res=res
+        )
+    
     return res

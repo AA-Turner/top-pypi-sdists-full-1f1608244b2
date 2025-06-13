@@ -8,9 +8,9 @@ Copyright 2025 Vlad Emelianov
 Usage::
 
     ```python
-    from types_aiobotocore_network_firewall.type_defs import AddressTypeDef
+    from types_aiobotocore_network_firewall.type_defs import AttachmentTypeDef
 
-    data: AddressTypeDef = ...
+    data: AttachmentTypeDef = ...
     ```
 """
 
@@ -26,6 +26,8 @@ from .literals import (
     EnabledAnalysisTypeType,
     EncryptionTypeType,
     FirewallStatusValueType,
+    FlowOperationStatusType,
+    FlowOperationTypeType,
     GeneratedRulesTypeType,
     IdentifiedTypeType,
     IPAddressTypeType,
@@ -58,6 +60,7 @@ else:
     from typing_extensions import Literal, NotRequired, TypedDict
 
 __all__ = (
+    "AZSyncStateTypeDef",
     "ActionDefinitionOutputTypeDef",
     "ActionDefinitionTypeDef",
     "AddressTypeDef",
@@ -69,6 +72,7 @@ __all__ = (
     "AssociateSubnetsRequestTypeDef",
     "AssociateSubnetsResponseTypeDef",
     "AttachmentTypeDef",
+    "AvailabilityZoneMetadataTypeDef",
     "CIDRSummaryTypeDef",
     "CapacityUsageSummaryTypeDef",
     "CheckCertificateRevocationStatusActionsTypeDef",
@@ -80,6 +84,8 @@ __all__ = (
     "CreateRuleGroupResponseTypeDef",
     "CreateTLSInspectionConfigurationRequestTypeDef",
     "CreateTLSInspectionConfigurationResponseTypeDef",
+    "CreateVpcEndpointAssociationRequestTypeDef",
+    "CreateVpcEndpointAssociationResponseTypeDef",
     "CustomActionOutputTypeDef",
     "CustomActionTypeDef",
     "DeleteFirewallPolicyRequestTypeDef",
@@ -91,10 +97,16 @@ __all__ = (
     "DeleteRuleGroupResponseTypeDef",
     "DeleteTLSInspectionConfigurationRequestTypeDef",
     "DeleteTLSInspectionConfigurationResponseTypeDef",
+    "DeleteVpcEndpointAssociationRequestTypeDef",
+    "DeleteVpcEndpointAssociationResponseTypeDef",
+    "DescribeFirewallMetadataRequestTypeDef",
+    "DescribeFirewallMetadataResponseTypeDef",
     "DescribeFirewallPolicyRequestTypeDef",
     "DescribeFirewallPolicyResponseTypeDef",
     "DescribeFirewallRequestTypeDef",
     "DescribeFirewallResponseTypeDef",
+    "DescribeFlowOperationRequestTypeDef",
+    "DescribeFlowOperationResponseTypeDef",
     "DescribeLoggingConfigurationRequestTypeDef",
     "DescribeLoggingConfigurationResponseTypeDef",
     "DescribeResourcePolicyRequestTypeDef",
@@ -105,6 +117,8 @@ __all__ = (
     "DescribeRuleGroupResponseTypeDef",
     "DescribeTLSInspectionConfigurationRequestTypeDef",
     "DescribeTLSInspectionConfigurationResponseTypeDef",
+    "DescribeVpcEndpointAssociationRequestTypeDef",
+    "DescribeVpcEndpointAssociationResponseTypeDef",
     "DimensionTypeDef",
     "DisassociateSubnetsRequestTypeDef",
     "DisassociateSubnetsResponseTypeDef",
@@ -117,7 +131,13 @@ __all__ = (
     "FirewallPolicyUnionTypeDef",
     "FirewallStatusTypeDef",
     "FirewallTypeDef",
+    "FlowFilterOutputTypeDef",
+    "FlowFilterTypeDef",
+    "FlowFilterUnionTypeDef",
+    "FlowOperationMetadataTypeDef",
+    "FlowOperationTypeDef",
     "FlowTimeoutsTypeDef",
+    "FlowTypeDef",
     "GetAnalysisReportResultsRequestPaginateTypeDef",
     "GetAnalysisReportResultsRequestTypeDef",
     "GetAnalysisReportResultsResponseTypeDef",
@@ -136,6 +156,12 @@ __all__ = (
     "ListFirewallsRequestPaginateTypeDef",
     "ListFirewallsRequestTypeDef",
     "ListFirewallsResponseTypeDef",
+    "ListFlowOperationResultsRequestPaginateTypeDef",
+    "ListFlowOperationResultsRequestTypeDef",
+    "ListFlowOperationResultsResponseTypeDef",
+    "ListFlowOperationsRequestPaginateTypeDef",
+    "ListFlowOperationsRequestTypeDef",
+    "ListFlowOperationsResponseTypeDef",
     "ListRuleGroupsRequestPaginateTypeDef",
     "ListRuleGroupsRequestTypeDef",
     "ListRuleGroupsResponseTypeDef",
@@ -145,6 +171,9 @@ __all__ = (
     "ListTagsForResourceRequestPaginateTypeDef",
     "ListTagsForResourceRequestTypeDef",
     "ListTagsForResourceResponseTypeDef",
+    "ListVpcEndpointAssociationsRequestPaginateTypeDef",
+    "ListVpcEndpointAssociationsRequestTypeDef",
+    "ListVpcEndpointAssociationsResponseTypeDef",
     "LogDestinationConfigOutputTypeDef",
     "LogDestinationConfigTypeDef",
     "LoggingConfigurationOutputTypeDef",
@@ -188,6 +217,10 @@ __all__ = (
     "SourceMetadataTypeDef",
     "StartAnalysisReportRequestTypeDef",
     "StartAnalysisReportResponseTypeDef",
+    "StartFlowCaptureRequestTypeDef",
+    "StartFlowCaptureResponseTypeDef",
+    "StartFlowFlushRequestTypeDef",
+    "StartFlowFlushResponseTypeDef",
     "StatefulEngineOptionsTypeDef",
     "StatefulRuleGroupOverrideTypeDef",
     "StatefulRuleGroupReferenceTypeDef",
@@ -233,7 +266,16 @@ __all__ = (
     "UpdateSubnetChangeProtectionResponseTypeDef",
     "UpdateTLSInspectionConfigurationRequestTypeDef",
     "UpdateTLSInspectionConfigurationResponseTypeDef",
+    "VpcEndpointAssociationMetadataTypeDef",
+    "VpcEndpointAssociationStatusTypeDef",
+    "VpcEndpointAssociationTypeDef",
 )
+
+class AttachmentTypeDef(TypedDict):
+    SubnetId: NotRequired[str]
+    EndpointId: NotRequired[str]
+    Status: NotRequired[AttachmentStatusType]
+    StatusMessage: NotRequired[str]
 
 class AddressTypeDef(TypedDict):
     AddressDefinition: str
@@ -272,11 +314,8 @@ class SubnetMappingTypeDef(TypedDict):
     SubnetId: str
     IPAddressType: NotRequired[IPAddressTypeType]
 
-class AttachmentTypeDef(TypedDict):
-    SubnetId: NotRequired[str]
-    EndpointId: NotRequired[str]
-    Status: NotRequired[AttachmentStatusType]
-    StatusMessage: NotRequired[str]
+class AvailabilityZoneMetadataTypeDef(TypedDict):
+    IPAddressType: NotRequired[IPAddressTypeType]
 
 class IPSetMetadataTypeDef(TypedDict):
     ResolvedCIDRCount: NotRequired[int]
@@ -325,6 +364,12 @@ class DeleteTLSInspectionConfigurationRequestTypeDef(TypedDict):
     TLSInspectionConfigurationArn: NotRequired[str]
     TLSInspectionConfigurationName: NotRequired[str]
 
+class DeleteVpcEndpointAssociationRequestTypeDef(TypedDict):
+    VpcEndpointAssociationArn: str
+
+class DescribeFirewallMetadataRequestTypeDef(TypedDict):
+    FirewallArn: NotRequired[str]
+
 class DescribeFirewallPolicyRequestTypeDef(TypedDict):
     FirewallPolicyName: NotRequired[str]
     FirewallPolicyArn: NotRequired[str]
@@ -332,6 +377,13 @@ class DescribeFirewallPolicyRequestTypeDef(TypedDict):
 class DescribeFirewallRequestTypeDef(TypedDict):
     FirewallName: NotRequired[str]
     FirewallArn: NotRequired[str]
+
+class DescribeFlowOperationRequestTypeDef(TypedDict):
+    FirewallArn: str
+    FlowOperationId: str
+    AvailabilityZone: NotRequired[str]
+    VpcEndpointAssociationArn: NotRequired[str]
+    VpcEndpointId: NotRequired[str]
 
 class DescribeLoggingConfigurationRequestTypeDef(TypedDict):
     FirewallArn: NotRequired[str]
@@ -366,6 +418,9 @@ class DescribeTLSInspectionConfigurationRequestTypeDef(TypedDict):
     TLSInspectionConfigurationArn: NotRequired[str]
     TLSInspectionConfigurationName: NotRequired[str]
 
+class DescribeVpcEndpointAssociationRequestTypeDef(TypedDict):
+    VpcEndpointAssociationArn: str
+
 class DimensionTypeDef(TypedDict):
     Value: str
 
@@ -386,6 +441,12 @@ class FirewallPolicyMetadataTypeDef(TypedDict):
 class StatelessRuleGroupReferenceTypeDef(TypedDict):
     ResourceArn: str
     Priority: int
+
+class FlowOperationMetadataTypeDef(TypedDict):
+    FlowOperationId: NotRequired[str]
+    FlowOperationType: NotRequired[FlowOperationTypeType]
+    FlowRequestTimestamp: NotRequired[datetime]
+    FlowOperationStatus: NotRequired[FlowOperationStatusType]
 
 class FlowTimeoutsTypeDef(TypedDict):
     TcpIdleTimeoutSeconds: NotRequired[int]
@@ -438,6 +499,24 @@ class ListFirewallsRequestTypeDef(TypedDict):
     VpcIds: NotRequired[Sequence[str]]
     MaxResults: NotRequired[int]
 
+class ListFlowOperationResultsRequestTypeDef(TypedDict):
+    FirewallArn: str
+    FlowOperationId: str
+    NextToken: NotRequired[str]
+    MaxResults: NotRequired[int]
+    AvailabilityZone: NotRequired[str]
+    VpcEndpointId: NotRequired[str]
+    VpcEndpointAssociationArn: NotRequired[str]
+
+class ListFlowOperationsRequestTypeDef(TypedDict):
+    FirewallArn: str
+    AvailabilityZone: NotRequired[str]
+    VpcEndpointAssociationArn: NotRequired[str]
+    VpcEndpointId: NotRequired[str]
+    FlowOperationType: NotRequired[FlowOperationTypeType]
+    NextToken: NotRequired[str]
+    MaxResults: NotRequired[int]
+
 ListRuleGroupsRequestTypeDef = TypedDict(
     "ListRuleGroupsRequestTypeDef",
     {
@@ -465,6 +544,14 @@ class ListTagsForResourceRequestTypeDef(TypedDict):
     ResourceArn: str
     NextToken: NotRequired[str]
     MaxResults: NotRequired[int]
+
+class ListVpcEndpointAssociationsRequestTypeDef(TypedDict):
+    NextToken: NotRequired[str]
+    MaxResults: NotRequired[int]
+    FirewallArn: NotRequired[str]
+
+class VpcEndpointAssociationMetadataTypeDef(TypedDict):
+    VpcEndpointAssociationArn: NotRequired[str]
 
 class LogDestinationConfigOutputTypeDef(TypedDict):
     LogType: LogTypeType
@@ -571,6 +658,36 @@ class UpdateSubnetChangeProtectionRequestTypeDef(TypedDict):
     FirewallArn: NotRequired[str]
     FirewallName: NotRequired[str]
 
+class AZSyncStateTypeDef(TypedDict):
+    Attachment: NotRequired[AttachmentTypeDef]
+
+class FlowFilterOutputTypeDef(TypedDict):
+    SourceAddress: NotRequired[AddressTypeDef]
+    DestinationAddress: NotRequired[AddressTypeDef]
+    SourcePort: NotRequired[str]
+    DestinationPort: NotRequired[str]
+    Protocols: NotRequired[List[str]]
+
+class FlowFilterTypeDef(TypedDict):
+    SourceAddress: NotRequired[AddressTypeDef]
+    DestinationAddress: NotRequired[AddressTypeDef]
+    SourcePort: NotRequired[str]
+    DestinationPort: NotRequired[str]
+    Protocols: NotRequired[Sequence[str]]
+
+FlowTypeDef = TypedDict(
+    "FlowTypeDef",
+    {
+        "SourceAddress": NotRequired[AddressTypeDef],
+        "DestinationAddress": NotRequired[AddressTypeDef],
+        "SourcePort": NotRequired[str],
+        "DestinationPort": NotRequired[str],
+        "Protocol": NotRequired[str],
+        "Age": NotRequired[int],
+        "PacketCount": NotRequired[int],
+        "ByteCount": NotRequired[int],
+    },
+)
 AnalysisTypeReportResultTypeDef = TypedDict(
     "AnalysisTypeReportResultTypeDef",
     {
@@ -601,6 +718,18 @@ class ListAnalysisReportsResponseTypeDef(TypedDict):
 
 class StartAnalysisReportResponseTypeDef(TypedDict):
     AnalysisReportId: str
+    ResponseMetadata: ResponseMetadataTypeDef
+
+class StartFlowCaptureResponseTypeDef(TypedDict):
+    FirewallArn: str
+    FlowOperationId: str
+    FlowOperationStatus: FlowOperationStatusType
+    ResponseMetadata: ResponseMetadataTypeDef
+
+class StartFlowFlushResponseTypeDef(TypedDict):
+    FirewallArn: str
+    FlowOperationId: str
+    FlowOperationStatus: FlowOperationStatusType
     ResponseMetadata: ResponseMetadataTypeDef
 
 class UpdateFirewallAnalysisSettingsResponseTypeDef(TypedDict):
@@ -658,6 +787,14 @@ class DisassociateSubnetsResponseTypeDef(TypedDict):
     UpdateToken: str
     ResponseMetadata: ResponseMetadataTypeDef
 
+class DescribeFirewallMetadataResponseTypeDef(TypedDict):
+    FirewallArn: str
+    FirewallPolicyArn: str
+    Description: str
+    Status: FirewallStatusValueType
+    SupportedAvailabilityZones: Dict[str, AvailabilityZoneMetadataTypeDef]
+    ResponseMetadata: ResponseMetadataTypeDef
+
 class CIDRSummaryTypeDef(TypedDict):
     AvailableCIDRCount: NotRequired[int]
     UtilizedCIDRCount: NotRequired[int]
@@ -689,6 +826,13 @@ class CreateFirewallRequestTypeDef(TypedDict):
     EncryptionConfiguration: NotRequired[EncryptionConfigurationTypeDef]
     EnabledAnalysisTypes: NotRequired[Sequence[EnabledAnalysisTypeType]]
 
+class CreateVpcEndpointAssociationRequestTypeDef(TypedDict):
+    FirewallArn: str
+    VpcId: str
+    SubnetMapping: SubnetMappingTypeDef
+    Description: NotRequired[str]
+    Tags: NotRequired[Sequence[TagTypeDef]]
+
 class FirewallPolicyResponseTypeDef(TypedDict):
     FirewallPolicyName: str
     FirewallPolicyArn: str
@@ -715,6 +859,7 @@ class FirewallTypeDef(TypedDict):
     Description: NotRequired[str]
     Tags: NotRequired[List[TagTypeDef]]
     EncryptionConfiguration: NotRequired[EncryptionConfigurationTypeDef]
+    NumberOfAssociations: NotRequired[int]
     EnabledAnalysisTypes: NotRequired[List[EnabledAnalysisTypeType]]
 
 class ListTagsForResourceResponseTypeDef(TypedDict):
@@ -725,6 +870,15 @@ class ListTagsForResourceResponseTypeDef(TypedDict):
 class TagResourceRequestTypeDef(TypedDict):
     ResourceArn: str
     Tags: Sequence[TagTypeDef]
+
+class VpcEndpointAssociationTypeDef(TypedDict):
+    VpcEndpointAssociationArn: str
+    FirewallArn: str
+    VpcId: str
+    SubnetMapping: SubnetMappingTypeDef
+    VpcEndpointAssociationId: NotRequired[str]
+    Description: NotRequired[str]
+    Tags: NotRequired[List[TagTypeDef]]
 
 RuleGroupResponseTypeDef = TypedDict(
     "RuleGroupResponseTypeDef",
@@ -776,6 +930,11 @@ class ListFirewallPoliciesResponseTypeDef(TypedDict):
     ResponseMetadata: ResponseMetadataTypeDef
     NextToken: NotRequired[str]
 
+class ListFlowOperationsResponseTypeDef(TypedDict):
+    FlowOperations: List[FlowOperationMetadataTypeDef]
+    ResponseMetadata: ResponseMetadataTypeDef
+    NextToken: NotRequired[str]
+
 class StatefulEngineOptionsTypeDef(TypedDict):
     RuleOrder: NotRequired[RuleOrderType]
     StreamExceptionPolicy: NotRequired[StreamExceptionPolicyType]
@@ -799,6 +958,22 @@ class ListFirewallsRequestPaginateTypeDef(TypedDict):
     VpcIds: NotRequired[Sequence[str]]
     PaginationConfig: NotRequired[PaginatorConfigTypeDef]
 
+class ListFlowOperationResultsRequestPaginateTypeDef(TypedDict):
+    FirewallArn: str
+    FlowOperationId: str
+    AvailabilityZone: NotRequired[str]
+    VpcEndpointId: NotRequired[str]
+    VpcEndpointAssociationArn: NotRequired[str]
+    PaginationConfig: NotRequired[PaginatorConfigTypeDef]
+
+class ListFlowOperationsRequestPaginateTypeDef(TypedDict):
+    FirewallArn: str
+    AvailabilityZone: NotRequired[str]
+    VpcEndpointAssociationArn: NotRequired[str]
+    VpcEndpointId: NotRequired[str]
+    FlowOperationType: NotRequired[FlowOperationTypeType]
+    PaginationConfig: NotRequired[PaginatorConfigTypeDef]
+
 ListRuleGroupsRequestPaginateTypeDef = TypedDict(
     "ListRuleGroupsRequestPaginateTypeDef",
     {
@@ -814,6 +989,10 @@ class ListTLSInspectionConfigurationsRequestPaginateTypeDef(TypedDict):
 
 class ListTagsForResourceRequestPaginateTypeDef(TypedDict):
     ResourceArn: str
+    PaginationConfig: NotRequired[PaginatorConfigTypeDef]
+
+class ListVpcEndpointAssociationsRequestPaginateTypeDef(TypedDict):
+    FirewallArn: NotRequired[str]
     PaginationConfig: NotRequired[PaginatorConfigTypeDef]
 
 class PolicyVariablesOutputTypeDef(TypedDict):
@@ -835,6 +1014,11 @@ class ListRuleGroupsResponseTypeDef(TypedDict):
 
 class ListTLSInspectionConfigurationsResponseTypeDef(TypedDict):
     TLSInspectionConfigurations: List[TLSInspectionConfigurationMetadataTypeDef]
+    ResponseMetadata: ResponseMetadataTypeDef
+    NextToken: NotRequired[str]
+
+class ListVpcEndpointAssociationsResponseTypeDef(TypedDict):
+    VpcEndpointAssociations: List[VpcEndpointAssociationMetadataTypeDef]
     ResponseMetadata: ResponseMetadataTypeDef
     NextToken: NotRequired[str]
 
@@ -913,6 +1097,29 @@ class TLSInspectionConfigurationResponseTypeDef(TypedDict):
     EncryptionConfiguration: NotRequired[EncryptionConfigurationTypeDef]
     Certificates: NotRequired[List[TlsCertificateDataTypeDef]]
     CertificateAuthority: NotRequired[TlsCertificateDataTypeDef]
+
+class VpcEndpointAssociationStatusTypeDef(TypedDict):
+    Status: FirewallStatusValueType
+    AssociationSyncState: NotRequired[Dict[str, AZSyncStateTypeDef]]
+
+class FlowOperationTypeDef(TypedDict):
+    MinimumFlowAgeInSeconds: NotRequired[int]
+    FlowFilters: NotRequired[List[FlowFilterOutputTypeDef]]
+
+FlowFilterUnionTypeDef = Union[FlowFilterTypeDef, FlowFilterOutputTypeDef]
+
+class ListFlowOperationResultsResponseTypeDef(TypedDict):
+    FirewallArn: str
+    AvailabilityZone: str
+    VpcEndpointAssociationArn: str
+    VpcEndpointId: str
+    FlowOperationId: str
+    FlowOperationStatus: FlowOperationStatusType
+    StatusMessage: str
+    FlowRequestTimestamp: datetime
+    Flows: List[FlowTypeDef]
+    ResponseMetadata: ResponseMetadataTypeDef
+    NextToken: NotRequired[str]
 
 class GetAnalysisReportResultsResponseTypeDef(TypedDict):
     Status: str
@@ -1009,6 +1216,50 @@ class UpdateTLSInspectionConfigurationResponseTypeDef(TypedDict):
     UpdateToken: str
     TLSInspectionConfigurationResponse: TLSInspectionConfigurationResponseTypeDef
     ResponseMetadata: ResponseMetadataTypeDef
+
+class CreateVpcEndpointAssociationResponseTypeDef(TypedDict):
+    VpcEndpointAssociation: VpcEndpointAssociationTypeDef
+    VpcEndpointAssociationStatus: VpcEndpointAssociationStatusTypeDef
+    ResponseMetadata: ResponseMetadataTypeDef
+
+class DeleteVpcEndpointAssociationResponseTypeDef(TypedDict):
+    VpcEndpointAssociation: VpcEndpointAssociationTypeDef
+    VpcEndpointAssociationStatus: VpcEndpointAssociationStatusTypeDef
+    ResponseMetadata: ResponseMetadataTypeDef
+
+class DescribeVpcEndpointAssociationResponseTypeDef(TypedDict):
+    VpcEndpointAssociation: VpcEndpointAssociationTypeDef
+    VpcEndpointAssociationStatus: VpcEndpointAssociationStatusTypeDef
+    ResponseMetadata: ResponseMetadataTypeDef
+
+class DescribeFlowOperationResponseTypeDef(TypedDict):
+    FirewallArn: str
+    AvailabilityZone: str
+    VpcEndpointAssociationArn: str
+    VpcEndpointId: str
+    FlowOperationId: str
+    FlowOperationType: FlowOperationTypeType
+    FlowOperationStatus: FlowOperationStatusType
+    StatusMessage: str
+    FlowRequestTimestamp: datetime
+    FlowOperation: FlowOperationTypeDef
+    ResponseMetadata: ResponseMetadataTypeDef
+
+class StartFlowCaptureRequestTypeDef(TypedDict):
+    FirewallArn: str
+    FlowFilters: Sequence[FlowFilterUnionTypeDef]
+    AvailabilityZone: NotRequired[str]
+    VpcEndpointAssociationArn: NotRequired[str]
+    VpcEndpointId: NotRequired[str]
+    MinimumFlowAgeInSeconds: NotRequired[int]
+
+class StartFlowFlushRequestTypeDef(TypedDict):
+    FirewallArn: str
+    FlowFilters: Sequence[FlowFilterUnionTypeDef]
+    AvailabilityZone: NotRequired[str]
+    VpcEndpointAssociationArn: NotRequired[str]
+    VpcEndpointId: NotRequired[str]
+    MinimumFlowAgeInSeconds: NotRequired[int]
 
 class FirewallStatusTypeDef(TypedDict):
     Status: FirewallStatusValueType

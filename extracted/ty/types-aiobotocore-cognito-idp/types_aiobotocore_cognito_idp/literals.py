@@ -53,6 +53,7 @@ __all__ = (
     "EventSourceNameType",
     "EventTypeType",
     "ExplicitAuthFlowsTypeType",
+    "FeatureTypeType",
     "FeedbackValueTypeType",
     "IdentityProviderTypeTypeType",
     "ListGroupsPaginatorName",
@@ -170,6 +171,7 @@ ExplicitAuthFlowsTypeType = Literal[
     "CUSTOM_AUTH_FLOW_ONLY",
     "USER_PASSWORD_AUTH",
 ]
+FeatureTypeType = Literal["DISABLED", "ENABLED"]
 FeedbackValueTypeType = Literal["Invalid", "Valid"]
 IdentityProviderTypeTypeType = Literal[
     "Facebook", "Google", "LoginWithAmazon", "OIDC", "SAML", "SignInWithApple"
@@ -184,7 +186,7 @@ ListUsersPaginatorName = Literal["list_users"]
 LogLevelType = Literal["ERROR", "INFO"]
 MessageActionTypeType = Literal["RESEND", "SUPPRESS"]
 OAuthFlowTypeType = Literal["client_credentials", "code", "implicit"]
-PreTokenGenerationLambdaVersionTypeType = Literal["V1_0", "V2_0"]
+PreTokenGenerationLambdaVersionTypeType = Literal["V1_0", "V2_0", "V3_0"]
 PreventUserExistenceErrorTypesType = Literal["ENABLED", "LEGACY"]
 RecoveryOptionNameTypeType = Literal["admin_only", "verified_email", "verified_phone_number"]
 RiskDecisionTypeType = Literal["AccountTakeover", "Block", "NoRisk"]
@@ -367,6 +369,7 @@ ServiceName = Literal[
     "freetier",
     "fsx",
     "gamelift",
+    "gameliftstreams",
     "geo-maps",
     "geo-places",
     "geo-routes",
@@ -392,6 +395,7 @@ ServiceName = Literal[
     "iot",
     "iot-data",
     "iot-jobs-data",
+    "iot-managed-integrations",
     "iotanalytics",
     "iotdeviceadvisor",
     "iotevents",
@@ -506,7 +510,6 @@ ServiceName = Literal[
     "pipes",
     "polly",
     "pricing",
-    "privatenetworks",
     "proton",
     "qapps",
     "qbusiness",
@@ -567,7 +570,6 @@ ServiceName = Literal[
     "signer",
     "simspaceweaver",
     "sms",
-    "sms-voice",
     "snow-device-management",
     "snowball",
     "sns",
@@ -575,6 +577,7 @@ ServiceName = Literal[
     "sqs",
     "ssm",
     "ssm-contacts",
+    "ssm-guiconnect",
     "ssm-incidents",
     "ssm-quicksetup",
     "ssm-sap",
@@ -650,6 +653,7 @@ RegionName = Literal[
     "ap-southeast-2",
     "ap-southeast-3",
     "ap-southeast-4",
+    "ap-southeast-5",
     "ca-central-1",
     "ca-west-1",
     "eu-central-1",

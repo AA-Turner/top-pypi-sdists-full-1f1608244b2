@@ -45,6 +45,7 @@ from .paginator import (
     ListMembersPaginator,
     ListPrivacyBudgetsPaginator,
     ListPrivacyBudgetTemplatesPaginator,
+    ListProtectedJobsPaginator,
     ListProtectedQueriesPaginator,
     ListSchemasPaginator,
 )
@@ -119,6 +120,8 @@ from .type_defs import (
     GetMembershipOutputTypeDef,
     GetPrivacyBudgetTemplateInputTypeDef,
     GetPrivacyBudgetTemplateOutputTypeDef,
+    GetProtectedJobInputTypeDef,
+    GetProtectedJobOutputTypeDef,
     GetProtectedQueryInputTypeDef,
     GetProtectedQueryOutputTypeDef,
     GetSchemaAnalysisRuleInputTypeDef,
@@ -157,6 +160,8 @@ from .type_defs import (
     ListPrivacyBudgetsOutputTypeDef,
     ListPrivacyBudgetTemplatesInputTypeDef,
     ListPrivacyBudgetTemplatesOutputTypeDef,
+    ListProtectedJobsInputTypeDef,
+    ListProtectedJobsOutputTypeDef,
     ListProtectedQueriesInputTypeDef,
     ListProtectedQueriesOutputTypeDef,
     ListSchemasInputTypeDef,
@@ -167,6 +172,8 @@ from .type_defs import (
     PopulateIdMappingTableOutputTypeDef,
     PreviewPrivacyImpactInputTypeDef,
     PreviewPrivacyImpactOutputTypeDef,
+    StartProtectedJobInputTypeDef,
+    StartProtectedJobOutputTypeDef,
     StartProtectedQueryInputTypeDef,
     StartProtectedQueryOutputTypeDef,
     TagResourceInputTypeDef,
@@ -193,6 +200,8 @@ from .type_defs import (
     UpdateMembershipOutputTypeDef,
     UpdatePrivacyBudgetTemplateInputTypeDef,
     UpdatePrivacyBudgetTemplateOutputTypeDef,
+    UpdateProtectedJobInputTypeDef,
+    UpdateProtectedJobOutputTypeDef,
     UpdateProtectedQueryInputTypeDef,
     UpdateProtectedQueryOutputTypeDef,
 )
@@ -667,6 +676,16 @@ class CleanRoomsServiceClient(AioBaseClient):
         [Show types-aiobotocore documentation](https://youtype.github.io/types_aiobotocore_docs/types_aiobotocore_cleanrooms/client/#get_privacy_budget_template)
         """
 
+    async def get_protected_job(
+        self, **kwargs: Unpack[GetProtectedJobInputTypeDef]
+    ) -> GetProtectedJobOutputTypeDef:
+        """
+        Returns job processing metadata.
+
+        [Show boto3 documentation](https://boto3.amazonaws.com/v1/documentation/api/latest/reference/services/cleanrooms/client/get_protected_job.html)
+        [Show types-aiobotocore documentation](https://youtype.github.io/types_aiobotocore_docs/types_aiobotocore_cleanrooms/client/#get_protected_job)
+        """
+
     async def get_protected_query(
         self, **kwargs: Unpack[GetProtectedQueryInputTypeDef]
     ) -> GetProtectedQueryOutputTypeDef:
@@ -859,6 +878,16 @@ class CleanRoomsServiceClient(AioBaseClient):
         [Show types-aiobotocore documentation](https://youtype.github.io/types_aiobotocore_docs/types_aiobotocore_cleanrooms/client/#list_privacy_budgets)
         """
 
+    async def list_protected_jobs(
+        self, **kwargs: Unpack[ListProtectedJobsInputTypeDef]
+    ) -> ListProtectedJobsOutputTypeDef:
+        """
+        Lists protected jobs, sorted by most recent job.
+
+        [Show boto3 documentation](https://boto3.amazonaws.com/v1/documentation/api/latest/reference/services/cleanrooms/client/list_protected_jobs.html)
+        [Show types-aiobotocore documentation](https://youtype.github.io/types_aiobotocore_docs/types_aiobotocore_cleanrooms/client/#list_protected_jobs)
+        """
+
     async def list_protected_queries(
         self, **kwargs: Unpack[ListProtectedQueriesInputTypeDef]
     ) -> ListProtectedQueriesOutputTypeDef:
@@ -908,6 +937,16 @@ class CleanRoomsServiceClient(AioBaseClient):
 
         [Show boto3 documentation](https://boto3.amazonaws.com/v1/documentation/api/latest/reference/services/cleanrooms/client/preview_privacy_impact.html)
         [Show types-aiobotocore documentation](https://youtype.github.io/types_aiobotocore_docs/types_aiobotocore_cleanrooms/client/#preview_privacy_impact)
+        """
+
+    async def start_protected_job(
+        self, **kwargs: Unpack[StartProtectedJobInputTypeDef]
+    ) -> StartProtectedJobOutputTypeDef:
+        """
+        Creates a protected job that is started by Clean Rooms.
+
+        [Show boto3 documentation](https://boto3.amazonaws.com/v1/documentation/api/latest/reference/services/cleanrooms/client/start_protected_job.html)
+        [Show types-aiobotocore documentation](https://youtype.github.io/types_aiobotocore_docs/types_aiobotocore_cleanrooms/client/#start_protected_job)
         """
 
     async def start_protected_query(
@@ -1046,6 +1085,16 @@ class CleanRoomsServiceClient(AioBaseClient):
 
         [Show boto3 documentation](https://boto3.amazonaws.com/v1/documentation/api/latest/reference/services/cleanrooms/client/update_privacy_budget_template.html)
         [Show types-aiobotocore documentation](https://youtype.github.io/types_aiobotocore_docs/types_aiobotocore_cleanrooms/client/#update_privacy_budget_template)
+        """
+
+    async def update_protected_job(
+        self, **kwargs: Unpack[UpdateProtectedJobInputTypeDef]
+    ) -> UpdateProtectedJobOutputTypeDef:
+        """
+        Updates the processing of a currently running job.
+
+        [Show boto3 documentation](https://boto3.amazonaws.com/v1/documentation/api/latest/reference/services/cleanrooms/client/update_protected_job.html)
+        [Show types-aiobotocore documentation](https://youtype.github.io/types_aiobotocore_docs/types_aiobotocore_cleanrooms/client/#update_protected_job)
         """
 
     async def update_protected_query(
@@ -1227,6 +1276,17 @@ class CleanRoomsServiceClient(AioBaseClient):
     def get_paginator(  # type: ignore[override]
         self, operation_name: Literal["list_privacy_budgets"]
     ) -> ListPrivacyBudgetsPaginator:
+        """
+        Create a paginator for an operation.
+
+        [Show boto3 documentation](https://boto3.amazonaws.com/v1/documentation/api/latest/reference/services/cleanrooms/client/get_paginator.html)
+        [Show types-aiobotocore documentation](https://youtype.github.io/types_aiobotocore_docs/types_aiobotocore_cleanrooms/client/#get_paginator)
+        """
+
+    @overload  # type: ignore[override]
+    def get_paginator(  # type: ignore[override]
+        self, operation_name: Literal["list_protected_jobs"]
+    ) -> ListProtectedJobsPaginator:
         """
         Create a paginator for an operation.
 

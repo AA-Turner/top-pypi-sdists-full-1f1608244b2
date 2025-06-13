@@ -21,7 +21,7 @@ from typing_extensions import Self
 
 class DowngradeLicense(BaseModel):
     """
-    Request payload for releasing resources
+    Request payload for downgrading the license of a user
     """
 
     account_id: StrictStr = Field(

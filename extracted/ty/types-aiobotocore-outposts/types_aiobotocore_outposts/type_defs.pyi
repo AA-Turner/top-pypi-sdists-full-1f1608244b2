@@ -212,6 +212,7 @@ class CapacityTaskSummaryTypeDef(TypedDict):
     CapacityTaskId: NotRequired[str]
     OutpostId: NotRequired[str]
     OrderId: NotRequired[str]
+    AssetId: NotRequired[str]
     CapacityTaskStatus: NotRequired[CapacityTaskStatusType]
     CreationDate: NotRequired[datetime]
     CompletionDate: NotRequired[datetime]
@@ -323,6 +324,7 @@ class InstanceTypeItemTypeDef(TypedDict):
 class GetOutpostSupportedInstanceTypesInputTypeDef(TypedDict):
     OutpostIdentifier: str
     OrderId: NotRequired[str]
+    AssetId: NotRequired[str]
     MaxResults: NotRequired[int]
     NextToken: NotRequired[str]
 
@@ -560,6 +562,7 @@ class GetCapacityTaskOutputTypeDef(TypedDict):
     CapacityTaskId: str
     OutpostId: str
     OrderId: str
+    AssetId: str
     RequestedInstancePools: List[InstanceTypeCapacityTypeDef]
     InstancesToExclude: InstancesToExcludeOutputTypeDef
     DryRun: bool
@@ -575,6 +578,7 @@ class StartCapacityTaskOutputTypeDef(TypedDict):
     CapacityTaskId: str
     OutpostId: str
     OrderId: str
+    AssetId: str
     RequestedInstancePools: List[InstanceTypeCapacityTypeDef]
     InstancesToExclude: InstancesToExcludeOutputTypeDef
     DryRun: bool
@@ -593,6 +597,7 @@ class GetOutpostInstanceTypesInputPaginateTypeDef(TypedDict):
 class GetOutpostSupportedInstanceTypesInputPaginateTypeDef(TypedDict):
     OutpostIdentifier: str
     OrderId: NotRequired[str]
+    AssetId: NotRequired[str]
     PaginationConfig: NotRequired[PaginatorConfigTypeDef]
 
 class ListAssetInstancesInputPaginateTypeDef(TypedDict):
@@ -711,6 +716,7 @@ class StartCapacityTaskInputTypeDef(TypedDict):
     OutpostIdentifier: str
     InstancePools: Sequence[InstanceTypeCapacityTypeDef]
     OrderId: NotRequired[str]
+    AssetId: NotRequired[str]
     InstancesToExclude: NotRequired[InstancesToExcludeUnionTypeDef]
     DryRun: NotRequired[bool]
     TaskActionOnBlockingInstances: NotRequired[TaskActionOnBlockingInstancesType]

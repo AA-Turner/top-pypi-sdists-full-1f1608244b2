@@ -144,6 +144,8 @@ from .type_defs import (
     GetLogDeliveryConfigurationResponseTypeDef,
     GetSigningCertificateRequestTypeDef,
     GetSigningCertificateResponseTypeDef,
+    GetTokensFromRefreshTokenRequestTypeDef,
+    GetTokensFromRefreshTokenResponseTypeDef,
     GetUICustomizationRequestTypeDef,
     GetUICustomizationResponseTypeDef,
     GetUserAttributeVerificationCodeRequestTypeDef,
@@ -245,6 +247,7 @@ class Exceptions(BaseClientExceptions):
     CodeDeliveryFailureException: Type[BotocoreClientError]
     CodeMismatchException: Type[BotocoreClientError]
     ConcurrentModificationException: Type[BotocoreClientError]
+    DeviceKeyExistsException: Type[BotocoreClientError]
     DuplicateProviderException: Type[BotocoreClientError]
     EnableSoftwareTokenMFAException: Type[BotocoreClientError]
     ExpiredCodeException: Type[BotocoreClientError]
@@ -267,6 +270,7 @@ class Exceptions(BaseClientExceptions):
     PasswordHistoryPolicyViolationException: Type[BotocoreClientError]
     PasswordResetRequiredException: Type[BotocoreClientError]
     PreconditionNotMetException: Type[BotocoreClientError]
+    RefreshTokenReuseException: Type[BotocoreClientError]
     ResourceNotFoundException: Type[BotocoreClientError]
     ScopeDoesNotExistException: Type[BotocoreClientError]
     SoftwareTokenMFANotFoundException: Type[BotocoreClientError]
@@ -414,7 +418,8 @@ class CognitoIdentityProviderClient(AioBaseClient):
         self, **kwargs: Unpack[AdminEnableUserRequestTypeDef]
     ) -> Dict[str, Any]:
         """
-        Activate sign-in for a user profile that previously had sign-in access disabled.
+        Activates sign-in for a user profile that previously had sign-in access
+        disabled.
 
         [Show boto3 documentation](https://boto3.amazonaws.com/v1/documentation/api/latest/reference/services/cognito-idp/client/admin_enable_user.html)
         [Show types-aiobotocore documentation](https://youtype.github.io/types_aiobotocore_docs/types_aiobotocore_cognito_idp/client/#admin_enable_user)
@@ -434,7 +439,7 @@ class CognitoIdentityProviderClient(AioBaseClient):
         self, **kwargs: Unpack[AdminGetDeviceRequestTypeDef]
     ) -> AdminGetDeviceResponseTypeDef:
         """
-        Given the device key, returns details for a user' device.
+        Given the device key, returns details for a user's device.
 
         [Show boto3 documentation](https://boto3.amazonaws.com/v1/documentation/api/latest/reference/services/cognito-idp/client/admin_get_device.html)
         [Show types-aiobotocore documentation](https://youtype.github.io/types_aiobotocore_docs/types_aiobotocore_cognito_idp/client/#admin_get_device)
@@ -444,7 +449,7 @@ class CognitoIdentityProviderClient(AioBaseClient):
         self, **kwargs: Unpack[AdminGetUserRequestTypeDef]
     ) -> AdminGetUserResponseTypeDef:
         """
-        Given the username, returns details about a user profile in a user pool.
+        Given a username, returns details about a user profile in a user pool.
 
         [Show boto3 documentation](https://boto3.amazonaws.com/v1/documentation/api/latest/reference/services/cognito-idp/client/admin_get_user.html)
         [Show types-aiobotocore documentation](https://youtype.github.io/types_aiobotocore_docs/types_aiobotocore_cognito_idp/client/#admin_get_user)
@@ -465,9 +470,9 @@ class CognitoIdentityProviderClient(AioBaseClient):
         self, **kwargs: Unpack[AdminLinkProviderForUserRequestTypeDef]
     ) -> Dict[str, Any]:
         """
-        Links an existing user account in a user pool (<code>DestinationUser</code>) to
-        an identity from an external IdP (<code>SourceUser</code>) based on a specified
-        attribute name and value from the external IdP.
+        Links an existing user account in a user pool, or <code>DestinationUser</code>,
+        to an identity from an external IdP, or <code>SourceUser</code>, based on a
+        specified attribute name and value from the external IdP.
 
         [Show boto3 documentation](https://boto3.amazonaws.com/v1/documentation/api/latest/reference/services/cognito-idp/client/admin_link_provider_for_user.html)
         [Show types-aiobotocore documentation](https://youtype.github.io/types_aiobotocore_docs/types_aiobotocore_cognito_idp/client/#admin_link_provider_for_user)
@@ -508,7 +513,7 @@ class CognitoIdentityProviderClient(AioBaseClient):
         self, **kwargs: Unpack[AdminRemoveUserFromGroupRequestTypeDef]
     ) -> EmptyResponseMetadataTypeDef:
         """
-        Given a username and a group name.
+        Given a username and a group name, removes them from the group.
 
         [Show boto3 documentation](https://boto3.amazonaws.com/v1/documentation/api/latest/reference/services/cognito-idp/client/admin_remove_user_from_group.html)
         [Show types-aiobotocore documentation](https://youtype.github.io/types_aiobotocore_docs/types_aiobotocore_cognito_idp/client/#admin_remove_user_from_group)
@@ -572,8 +577,8 @@ class CognitoIdentityProviderClient(AioBaseClient):
         self, **kwargs: Unpack[AdminUpdateAuthEventFeedbackRequestTypeDef]
     ) -> Dict[str, Any]:
         """
-        Provides feedback for an authentication event indicating if it was from a valid
-        user.
+        Provides the feedback for an authentication event generated by threat
+        protection features.
 
         [Show boto3 documentation](https://boto3.amazonaws.com/v1/documentation/api/latest/reference/services/cognito-idp/client/admin_update_auth_event_feedback.html)
         [Show types-aiobotocore documentation](https://youtype.github.io/types_aiobotocore_docs/types_aiobotocore_cognito_idp/client/#admin_update_auth_event_feedback)
@@ -594,7 +599,7 @@ class CognitoIdentityProviderClient(AioBaseClient):
         self, **kwargs: Unpack[AdminUpdateUserAttributesRequestTypeDef]
     ) -> Dict[str, Any]:
         """
-        This action might generate an SMS text message.
+        Updates the specified user's attributes.
 
         [Show boto3 documentation](https://boto3.amazonaws.com/v1/documentation/api/latest/reference/services/cognito-idp/client/admin_update_user_attributes.html)
         [Show types-aiobotocore documentation](https://youtype.github.io/types_aiobotocore_docs/types_aiobotocore_cognito_idp/client/#admin_update_user_attributes)
@@ -627,7 +632,7 @@ class CognitoIdentityProviderClient(AioBaseClient):
         self, **kwargs: Unpack[ChangePasswordRequestTypeDef]
     ) -> Dict[str, Any]:
         """
-        Changes the password for a specified user in a user pool.
+        Changes the password for the currently signed-in user.
 
         [Show boto3 documentation](https://boto3.amazonaws.com/v1/documentation/api/latest/reference/services/cognito-idp/client/change_password.html)
         [Show types-aiobotocore documentation](https://youtype.github.io/types_aiobotocore_docs/types_aiobotocore_cognito_idp/client/#change_password)
@@ -637,7 +642,8 @@ class CognitoIdentityProviderClient(AioBaseClient):
         self, **kwargs: Unpack[CompleteWebAuthnRegistrationRequestTypeDef]
     ) -> Dict[str, Any]:
         """
-        Completes registration of a passkey authenticator for the current user.
+        Completes registration of a passkey authenticator for the currently signed-in
+        user.
 
         [Show boto3 documentation](https://boto3.amazonaws.com/v1/documentation/api/latest/reference/services/cognito-idp/client/complete_web_authn_registration.html)
         [Show types-aiobotocore documentation](https://youtype.github.io/types_aiobotocore_docs/types_aiobotocore_cognito_idp/client/#complete_web_authn_registration)
@@ -668,10 +674,7 @@ class CognitoIdentityProviderClient(AioBaseClient):
         self, **kwargs: Unpack[ConfirmSignUpRequestTypeDef]
     ) -> ConfirmSignUpResponseTypeDef:
         """
-        This public API operation submits a code that Amazon Cognito sent to your user
-        when they signed up in your user pool via the <a
-        href="https://docs.aws.amazon.com/cognito-user-identity-pools/latest/APIReference/API_SignUp.html">SignUp</a>
-        API operation.
+        Confirms the account of a new user.
 
         [Show boto3 documentation](https://boto3.amazonaws.com/v1/documentation/api/latest/reference/services/cognito-idp/client/confirm_sign_up.html)
         [Show types-aiobotocore documentation](https://youtype.github.io/types_aiobotocore_docs/types_aiobotocore_cognito_idp/client/#confirm_sign_up)
@@ -733,7 +736,7 @@ class CognitoIdentityProviderClient(AioBaseClient):
         self, **kwargs: Unpack[CreateUserPoolRequestTypeDef]
     ) -> CreateUserPoolResponseTypeDef:
         """
-        This action might generate an SMS text message.
+        Creates a new Amazon Cognito user pool.
 
         [Show boto3 documentation](https://boto3.amazonaws.com/v1/documentation/api/latest/reference/services/cognito-idp/client/create_user_pool.html)
         [Show types-aiobotocore documentation](https://youtype.github.io/types_aiobotocore_docs/types_aiobotocore_cognito_idp/client/#create_user_pool)
@@ -804,7 +807,7 @@ class CognitoIdentityProviderClient(AioBaseClient):
         self, **kwargs: Unpack[DeleteUserRequestTypeDef]
     ) -> EmptyResponseMetadataTypeDef:
         """
-        Self-deletes a user profile.
+        Deletes the profile of the currently signed-in user.
 
         [Show boto3 documentation](https://boto3.amazonaws.com/v1/documentation/api/latest/reference/services/cognito-idp/client/delete_user.html)
         [Show types-aiobotocore documentation](https://youtype.github.io/types_aiobotocore_docs/types_aiobotocore_cognito_idp/client/#delete_user)
@@ -814,7 +817,7 @@ class CognitoIdentityProviderClient(AioBaseClient):
         self, **kwargs: Unpack[DeleteUserAttributesRequestTypeDef]
     ) -> Dict[str, Any]:
         """
-        Self-deletes attributes for a user.
+        Deletes attributes from the currently signed-in user.
 
         [Show boto3 documentation](https://boto3.amazonaws.com/v1/documentation/api/latest/reference/services/cognito-idp/client/delete_user_attributes.html)
         [Show types-aiobotocore documentation](https://youtype.github.io/types_aiobotocore_docs/types_aiobotocore_cognito_idp/client/#delete_user_attributes)
@@ -854,7 +857,7 @@ class CognitoIdentityProviderClient(AioBaseClient):
         self, **kwargs: Unpack[DeleteWebAuthnCredentialRequestTypeDef]
     ) -> Dict[str, Any]:
         """
-        Deletes a registered passkey, or webauthN, authenticator for the currently
+        Deletes a registered passkey, or WebAuthn, authenticator for the currently
         signed-in user.
 
         [Show boto3 documentation](https://boto3.amazonaws.com/v1/documentation/api/latest/reference/services/cognito-idp/client/delete_web_authn_credential.html)
@@ -960,7 +963,7 @@ class CognitoIdentityProviderClient(AioBaseClient):
         self, **kwargs: Unpack[ForgetDeviceRequestTypeDef]
     ) -> EmptyResponseMetadataTypeDef:
         """
-        Forgets the specified device.
+        Given a device key, deletes a remembered device as the currently signed-in user.
 
         [Show boto3 documentation](https://boto3.amazonaws.com/v1/documentation/api/latest/reference/services/cognito-idp/client/forget_device.html)
         [Show types-aiobotocore documentation](https://youtype.github.io/types_aiobotocore_docs/types_aiobotocore_cognito_idp/client/#forget_device)
@@ -970,8 +973,7 @@ class CognitoIdentityProviderClient(AioBaseClient):
         self, **kwargs: Unpack[ForgotPasswordRequestTypeDef]
     ) -> ForgotPasswordResponseTypeDef:
         """
-        Calling this API causes a message to be sent to the end user with a
-        confirmation code that is required to change the user's password.
+        Sends a password-reset confirmation code for the currently signed-in user.
 
         [Show boto3 documentation](https://boto3.amazonaws.com/v1/documentation/api/latest/reference/services/cognito-idp/client/forgot_password.html)
         [Show types-aiobotocore documentation](https://youtype.github.io/types_aiobotocore_docs/types_aiobotocore_cognito_idp/client/#forgot_password)
@@ -981,8 +983,8 @@ class CognitoIdentityProviderClient(AioBaseClient):
         self, **kwargs: Unpack[GetCSVHeaderRequestTypeDef]
     ) -> GetCSVHeaderResponseTypeDef:
         """
-        Gets the header information for the comma-separated value (CSV) file to be used
-        as input for the user import job.
+        Given a user pool ID, generates a comma-separated value (CSV) list populated
+        with available user attributes in the user pool.
 
         [Show boto3 documentation](https://boto3.amazonaws.com/v1/documentation/api/latest/reference/services/cognito-idp/client/get_csv_header.html)
         [Show types-aiobotocore documentation](https://youtype.github.io/types_aiobotocore_docs/types_aiobotocore_cognito_idp/client/#get_csv_header)
@@ -992,7 +994,8 @@ class CognitoIdentityProviderClient(AioBaseClient):
         self, **kwargs: Unpack[GetDeviceRequestTypeDef]
     ) -> GetDeviceResponseTypeDef:
         """
-        Gets the device.
+        Given a device key, returns information about a remembered device for the
+        current user.
 
         [Show boto3 documentation](https://boto3.amazonaws.com/v1/documentation/api/latest/reference/services/cognito-idp/client/get_device.html)
         [Show types-aiobotocore documentation](https://youtype.github.io/types_aiobotocore_docs/types_aiobotocore_cognito_idp/client/#get_device)
@@ -1000,7 +1003,7 @@ class CognitoIdentityProviderClient(AioBaseClient):
 
     async def get_group(self, **kwargs: Unpack[GetGroupRequestTypeDef]) -> GetGroupResponseTypeDef:
         """
-        Gets a group.
+        Given a user pool ID and a group name, returns information about the user group.
 
         [Show boto3 documentation](https://boto3.amazonaws.com/v1/documentation/api/latest/reference/services/cognito-idp/client/get_group.html)
         [Show types-aiobotocore documentation](https://youtype.github.io/types_aiobotocore_docs/types_aiobotocore_cognito_idp/client/#get_group)
@@ -1010,7 +1013,9 @@ class CognitoIdentityProviderClient(AioBaseClient):
         self, **kwargs: Unpack[GetIdentityProviderByIdentifierRequestTypeDef]
     ) -> GetIdentityProviderByIdentifierResponseTypeDef:
         """
-        Gets the specified IdP.
+        Given the identifier of an identity provider (IdP), for example
+        <code>examplecorp</code>, returns information about the user pool configuration
+        for that IdP.
 
         [Show boto3 documentation](https://boto3.amazonaws.com/v1/documentation/api/latest/reference/services/cognito-idp/client/get_identity_provider_by_identifier.html)
         [Show types-aiobotocore documentation](https://youtype.github.io/types_aiobotocore_docs/types_aiobotocore_cognito_idp/client/#get_identity_provider_by_identifier)
@@ -1020,7 +1025,7 @@ class CognitoIdentityProviderClient(AioBaseClient):
         self, **kwargs: Unpack[GetLogDeliveryConfigurationRequestTypeDef]
     ) -> GetLogDeliveryConfigurationResponseTypeDef:
         """
-        Gets the logging configuration of a user pool.
+        Given a user pool ID, returns the logging configuration.
 
         [Show boto3 documentation](https://boto3.amazonaws.com/v1/documentation/api/latest/reference/services/cognito-idp/client/get_log_delivery_configuration.html)
         [Show types-aiobotocore documentation](https://youtype.github.io/types_aiobotocore_docs/types_aiobotocore_cognito_idp/client/#get_log_delivery_configuration)
@@ -1030,18 +1035,29 @@ class CognitoIdentityProviderClient(AioBaseClient):
         self, **kwargs: Unpack[GetSigningCertificateRequestTypeDef]
     ) -> GetSigningCertificateResponseTypeDef:
         """
-        This method takes a user pool ID, and returns the signing certificate.
+        Given a user pool ID, returns the signing certificate for SAML 2.0 federation.
 
         [Show boto3 documentation](https://boto3.amazonaws.com/v1/documentation/api/latest/reference/services/cognito-idp/client/get_signing_certificate.html)
         [Show types-aiobotocore documentation](https://youtype.github.io/types_aiobotocore_docs/types_aiobotocore_cognito_idp/client/#get_signing_certificate)
+        """
+
+    async def get_tokens_from_refresh_token(
+        self, **kwargs: Unpack[GetTokensFromRefreshTokenRequestTypeDef]
+    ) -> GetTokensFromRefreshTokenResponseTypeDef:
+        """
+        Given a refresh token, issues new ID, access, and optionally refresh tokens for
+        the user who owns the submitted token.
+
+        [Show boto3 documentation](https://boto3.amazonaws.com/v1/documentation/api/latest/reference/services/cognito-idp/client/get_tokens_from_refresh_token.html)
+        [Show types-aiobotocore documentation](https://youtype.github.io/types_aiobotocore_docs/types_aiobotocore_cognito_idp/client/#get_tokens_from_refresh_token)
         """
 
     async def get_ui_customization(
         self, **kwargs: Unpack[GetUICustomizationRequestTypeDef]
     ) -> GetUICustomizationResponseTypeDef:
         """
-        Gets the user interface (UI) Customization information for a particular app
-        client's app UI, if any such information exists for the client.
+        Given a user pool ID or app client, returns information about classic hosted UI
+        branding that you applied, if any.
 
         [Show boto3 documentation](https://boto3.amazonaws.com/v1/documentation/api/latest/reference/services/cognito-idp/client/get_ui_customization.html)
         [Show types-aiobotocore documentation](https://youtype.github.io/types_aiobotocore_docs/types_aiobotocore_cognito_idp/client/#get_ui_customization)
@@ -1049,7 +1065,7 @@ class CognitoIdentityProviderClient(AioBaseClient):
 
     async def get_user(self, **kwargs: Unpack[GetUserRequestTypeDef]) -> GetUserResponseTypeDef:
         """
-        Gets the user attributes and metadata for a user.
+        Gets user attributes and and MFA settings for the currently signed-in user.
 
         [Show boto3 documentation](https://boto3.amazonaws.com/v1/documentation/api/latest/reference/services/cognito-idp/client/get_user.html)
         [Show types-aiobotocore documentation](https://youtype.github.io/types_aiobotocore_docs/types_aiobotocore_cognito_idp/client/#get_user)
@@ -1059,7 +1075,8 @@ class CognitoIdentityProviderClient(AioBaseClient):
         self, **kwargs: Unpack[GetUserAttributeVerificationCodeRequestTypeDef]
     ) -> GetUserAttributeVerificationCodeResponseTypeDef:
         """
-        Generates a user attribute verification code for the specified attribute name.
+        Given an attribute name, sends a user attribute verification code for the
+        specified attribute name to the currently signed-in user.
 
         [Show boto3 documentation](https://boto3.amazonaws.com/v1/documentation/api/latest/reference/services/cognito-idp/client/get_user_attribute_verification_code.html)
         [Show types-aiobotocore documentation](https://youtype.github.io/types_aiobotocore_docs/types_aiobotocore_cognito_idp/client/#get_user_attribute_verification_code)
@@ -1079,7 +1096,8 @@ class CognitoIdentityProviderClient(AioBaseClient):
         self, **kwargs: Unpack[GetUserPoolMfaConfigRequestTypeDef]
     ) -> GetUserPoolMfaConfigResponseTypeDef:
         """
-        Gets the user pool multi-factor authentication (MFA) configuration.
+        Given a user pool ID, returns configuration for sign-in with WebAuthn
+        authenticators and for multi-factor authentication (MFA).
 
         [Show boto3 documentation](https://boto3.amazonaws.com/v1/documentation/api/latest/reference/services/cognito-idp/client/get_user_pool_mfa_config.html)
         [Show types-aiobotocore documentation](https://youtype.github.io/types_aiobotocore_docs/types_aiobotocore_cognito_idp/client/#get_user_pool_mfa_config)
@@ -1100,7 +1118,8 @@ class CognitoIdentityProviderClient(AioBaseClient):
         self, **kwargs: Unpack[InitiateAuthRequestTypeDef]
     ) -> InitiateAuthResponseTypeDef:
         """
-        Initiates sign-in for a user in the Amazon Cognito user directory.
+        Declares an authentication flow and initiates sign-in for a user in the Amazon
+        Cognito user directory.
 
         [Show boto3 documentation](https://boto3.amazonaws.com/v1/documentation/api/latest/reference/services/cognito-idp/client/initiate_auth.html)
         [Show types-aiobotocore documentation](https://youtype.github.io/types_aiobotocore_docs/types_aiobotocore_cognito_idp/client/#initiate_auth)
@@ -1110,7 +1129,7 @@ class CognitoIdentityProviderClient(AioBaseClient):
         self, **kwargs: Unpack[ListDevicesRequestTypeDef]
     ) -> ListDevicesResponseTypeDef:
         """
-        Lists the sign-in devices that Amazon Cognito has registered to the current
+        Lists the devices that Amazon Cognito has registered to the currently signed-in
         user.
 
         [Show boto3 documentation](https://boto3.amazonaws.com/v1/documentation/api/latest/reference/services/cognito-idp/client/list_devices.html)
@@ -1121,7 +1140,7 @@ class CognitoIdentityProviderClient(AioBaseClient):
         self, **kwargs: Unpack[ListGroupsRequestTypeDef]
     ) -> ListGroupsResponseTypeDef:
         """
-        Lists the groups associated with a user pool.
+        Given a user pool ID, returns user pool groups and their details.
 
         [Show boto3 documentation](https://boto3.amazonaws.com/v1/documentation/api/latest/reference/services/cognito-idp/client/list_groups.html)
         [Show types-aiobotocore documentation](https://youtype.github.io/types_aiobotocore_docs/types_aiobotocore_cognito_idp/client/#list_groups)
@@ -1131,7 +1150,8 @@ class CognitoIdentityProviderClient(AioBaseClient):
         self, **kwargs: Unpack[ListIdentityProvidersRequestTypeDef]
     ) -> ListIdentityProvidersResponseTypeDef:
         """
-        Lists information about all IdPs for a user pool.
+        Given a user pool ID, returns information about configured identity providers
+        (IdPs).
 
         [Show boto3 documentation](https://boto3.amazonaws.com/v1/documentation/api/latest/reference/services/cognito-idp/client/list_identity_providers.html)
         [Show types-aiobotocore documentation](https://youtype.github.io/types_aiobotocore_docs/types_aiobotocore_cognito_idp/client/#list_identity_providers)
@@ -1141,7 +1161,7 @@ class CognitoIdentityProviderClient(AioBaseClient):
         self, **kwargs: Unpack[ListResourceServersRequestTypeDef]
     ) -> ListResourceServersResponseTypeDef:
         """
-        Lists the resource servers for a user pool.
+        Given a user pool ID, returns all resource servers and their details.
 
         [Show boto3 documentation](https://boto3.amazonaws.com/v1/documentation/api/latest/reference/services/cognito-idp/client/list_resource_servers.html)
         [Show types-aiobotocore documentation](https://youtype.github.io/types_aiobotocore_docs/types_aiobotocore_cognito_idp/client/#list_resource_servers)
@@ -1161,7 +1181,7 @@ class CognitoIdentityProviderClient(AioBaseClient):
         self, **kwargs: Unpack[ListUserImportJobsRequestTypeDef]
     ) -> ListUserImportJobsResponseTypeDef:
         """
-        Lists user import jobs for a user pool.
+        Given a user pool ID, returns user import jobs and their details.
 
         [Show boto3 documentation](https://boto3.amazonaws.com/v1/documentation/api/latest/reference/services/cognito-idp/client/list_user_import_jobs.html)
         [Show types-aiobotocore documentation](https://youtype.github.io/types_aiobotocore_docs/types_aiobotocore_cognito_idp/client/#list_user_import_jobs)
@@ -1171,7 +1191,7 @@ class CognitoIdentityProviderClient(AioBaseClient):
         self, **kwargs: Unpack[ListUserPoolClientsRequestTypeDef]
     ) -> ListUserPoolClientsResponseTypeDef:
         """
-        Lists the clients that have been created for the specified user pool.
+        Given a user pool ID, lists app clients.
 
         [Show boto3 documentation](https://boto3.amazonaws.com/v1/documentation/api/latest/reference/services/cognito-idp/client/list_user_pool_clients.html)
         [Show types-aiobotocore documentation](https://youtype.github.io/types_aiobotocore_docs/types_aiobotocore_cognito_idp/client/#list_user_pool_clients)
@@ -1181,7 +1201,7 @@ class CognitoIdentityProviderClient(AioBaseClient):
         self, **kwargs: Unpack[ListUserPoolsRequestTypeDef]
     ) -> ListUserPoolsResponseTypeDef:
         """
-        Lists the user pools associated with an Amazon Web Services account.
+        Lists user pools and their details in the current Amazon Web Services account.
 
         [Show boto3 documentation](https://boto3.amazonaws.com/v1/documentation/api/latest/reference/services/cognito-idp/client/list_user_pools.html)
         [Show types-aiobotocore documentation](https://youtype.github.io/types_aiobotocore_docs/types_aiobotocore_cognito_idp/client/#list_user_pools)
@@ -1191,7 +1211,8 @@ class CognitoIdentityProviderClient(AioBaseClient):
         self, **kwargs: Unpack[ListUsersRequestTypeDef]
     ) -> ListUsersResponseTypeDef:
         """
-        Lists users and their basic details in a user pool.
+        Given a user pool ID, returns a list of users and their basic details in a user
+        pool.
 
         [Show boto3 documentation](https://boto3.amazonaws.com/v1/documentation/api/latest/reference/services/cognito-idp/client/list_users.html)
         [Show types-aiobotocore documentation](https://youtype.github.io/types_aiobotocore_docs/types_aiobotocore_cognito_idp/client/#list_users)
@@ -1201,7 +1222,7 @@ class CognitoIdentityProviderClient(AioBaseClient):
         self, **kwargs: Unpack[ListUsersInGroupRequestTypeDef]
     ) -> ListUsersInGroupResponseTypeDef:
         """
-        Lists the users in the specified group.
+        Given a user pool ID and a group name, returns a list of users in the group.
 
         [Show boto3 documentation](https://boto3.amazonaws.com/v1/documentation/api/latest/reference/services/cognito-idp/client/list_users_in_group.html)
         [Show types-aiobotocore documentation](https://youtype.github.io/types_aiobotocore_docs/types_aiobotocore_cognito_idp/client/#list_users_in_group)
@@ -1211,8 +1232,8 @@ class CognitoIdentityProviderClient(AioBaseClient):
         self, **kwargs: Unpack[ListWebAuthnCredentialsRequestTypeDef]
     ) -> ListWebAuthnCredentialsResponseTypeDef:
         """
-        Generates a list of the current user's registered passkey, or webauthN,
-        credentials.
+        Generates a list of the currently signed-in user's registered passkey, or
+        WebAuthn, credentials.
 
         [Show boto3 documentation](https://boto3.amazonaws.com/v1/documentation/api/latest/reference/services/cognito-idp/client/list_web_authn_credentials.html)
         [Show types-aiobotocore documentation](https://youtype.github.io/types_aiobotocore_docs/types_aiobotocore_cognito_idp/client/#list_web_authn_credentials)
@@ -1222,8 +1243,8 @@ class CognitoIdentityProviderClient(AioBaseClient):
         self, **kwargs: Unpack[ResendConfirmationCodeRequestTypeDef]
     ) -> ResendConfirmationCodeResponseTypeDef:
         """
-        Resends the confirmation (for confirmation of registration) to a specific user
-        in the user pool.
+        Resends the code that confirms a new account for a user who has signed up in
+        your user pool.
 
         [Show boto3 documentation](https://boto3.amazonaws.com/v1/documentation/api/latest/reference/services/cognito-idp/client/resend_confirmation_code.html)
         [Show types-aiobotocore documentation](https://youtype.github.io/types_aiobotocore_docs/types_aiobotocore_cognito_idp/client/#resend_confirmation_code)
@@ -1264,7 +1285,7 @@ class CognitoIdentityProviderClient(AioBaseClient):
         self, **kwargs: Unpack[SetRiskConfigurationRequestTypeDef]
     ) -> SetRiskConfigurationResponseTypeDef:
         """
-        Configures actions on detected risks.
+        Configures threat protection for a user pool or app client.
 
         [Show boto3 documentation](https://boto3.amazonaws.com/v1/documentation/api/latest/reference/services/cognito-idp/client/set_risk_configuration.html)
         [Show types-aiobotocore documentation](https://youtype.github.io/types_aiobotocore_docs/types_aiobotocore_cognito_idp/client/#set_risk_configuration)
@@ -1274,8 +1295,8 @@ class CognitoIdentityProviderClient(AioBaseClient):
         self, **kwargs: Unpack[SetUICustomizationRequestTypeDef]
     ) -> SetUICustomizationResponseTypeDef:
         """
-        Sets the user interface (UI) customization information for a user pool's
-        built-in app UI.
+        Configures UI branding settings for domains with the hosted UI (classic)
+        branding version.
 
         [Show boto3 documentation](https://boto3.amazonaws.com/v1/documentation/api/latest/reference/services/cognito-idp/client/set_ui_customization.html)
         [Show types-aiobotocore documentation](https://youtype.github.io/types_aiobotocore_docs/types_aiobotocore_cognito_idp/client/#set_ui_customization)
@@ -1296,7 +1317,7 @@ class CognitoIdentityProviderClient(AioBaseClient):
         self, **kwargs: Unpack[SetUserPoolMfaConfigRequestTypeDef]
     ) -> SetUserPoolMfaConfigResponseTypeDef:
         """
-        Sets the user pool multi-factor authentication (MFA) and passkey configuration.
+        Sets user pool multi-factor authentication (MFA) and passkey configuration.
 
         [Show boto3 documentation](https://boto3.amazonaws.com/v1/documentation/api/latest/reference/services/cognito-idp/client/set_user_pool_mfa_config.html)
         [Show types-aiobotocore documentation](https://youtype.github.io/types_aiobotocore_docs/types_aiobotocore_cognito_idp/client/#set_user_pool_mfa_config)
@@ -1315,8 +1336,8 @@ class CognitoIdentityProviderClient(AioBaseClient):
 
     async def sign_up(self, **kwargs: Unpack[SignUpRequestTypeDef]) -> SignUpResponseTypeDef:
         """
-        Registers the user in the specified user pool and creates a user name,
-        password, and user attributes.
+        Registers a user with an app client and requests a user name, password, and
+        user attributes in the user pool.
 
         [Show boto3 documentation](https://boto3.amazonaws.com/v1/documentation/api/latest/reference/services/cognito-idp/client/sign_up.html)
         [Show types-aiobotocore documentation](https://youtype.github.io/types_aiobotocore_docs/types_aiobotocore_cognito_idp/client/#sign_up)
@@ -1326,7 +1347,8 @@ class CognitoIdentityProviderClient(AioBaseClient):
         self, **kwargs: Unpack[StartUserImportJobRequestTypeDef]
     ) -> StartUserImportJobResponseTypeDef:
         """
-        Starts the user import.
+        Instructs your user pool to start importing users from a CSV file that contains
+        their usernames and attributes.
 
         [Show boto3 documentation](https://boto3.amazonaws.com/v1/documentation/api/latest/reference/services/cognito-idp/client/start_user_import_job.html)
         [Show types-aiobotocore documentation](https://youtype.github.io/types_aiobotocore_docs/types_aiobotocore_cognito_idp/client/#start_user_import_job)
@@ -1336,8 +1358,8 @@ class CognitoIdentityProviderClient(AioBaseClient):
         self, **kwargs: Unpack[StartWebAuthnRegistrationRequestTypeDef]
     ) -> StartWebAuthnRegistrationResponseTypeDef:
         """
-        Requests credential creation options from your user pool for registration of a
-        passkey authenticator.
+        Requests credential creation options from your user pool for the currently
+        signed-in user.
 
         [Show boto3 documentation](https://boto3.amazonaws.com/v1/documentation/api/latest/reference/services/cognito-idp/client/start_web_authn_registration.html)
         [Show types-aiobotocore documentation](https://youtype.github.io/types_aiobotocore_docs/types_aiobotocore_cognito_idp/client/#start_web_authn_registration)
@@ -1347,7 +1369,8 @@ class CognitoIdentityProviderClient(AioBaseClient):
         self, **kwargs: Unpack[StopUserImportJobRequestTypeDef]
     ) -> StopUserImportJobResponseTypeDef:
         """
-        Stops the user import job.
+        Instructs your user pool to stop a running job that's importing users from a
+        CSV file that contains their usernames and attributes.
 
         [Show boto3 documentation](https://boto3.amazonaws.com/v1/documentation/api/latest/reference/services/cognito-idp/client/stop_user_import_job.html)
         [Show types-aiobotocore documentation](https://youtype.github.io/types_aiobotocore_docs/types_aiobotocore_cognito_idp/client/#stop_user_import_job)
@@ -1363,7 +1386,7 @@ class CognitoIdentityProviderClient(AioBaseClient):
 
     async def untag_resource(self, **kwargs: Unpack[UntagResourceRequestTypeDef]) -> Dict[str, Any]:
         """
-        Removes the specified tags from an Amazon Cognito user pool.
+        Given tag IDs that you previously assigned to a user pool, removes them.
 
         [Show boto3 documentation](https://boto3.amazonaws.com/v1/documentation/api/latest/reference/services/cognito-idp/client/untag_resource.html)
         [Show types-aiobotocore documentation](https://youtype.github.io/types_aiobotocore_docs/types_aiobotocore_cognito_idp/client/#untag_resource)
@@ -1373,8 +1396,8 @@ class CognitoIdentityProviderClient(AioBaseClient):
         self, **kwargs: Unpack[UpdateAuthEventFeedbackRequestTypeDef]
     ) -> Dict[str, Any]:
         """
-        Provides the feedback for an authentication event, whether it was from a valid
-        user or not.
+        Provides the feedback for an authentication event generated by threat
+        protection features.
 
         [Show boto3 documentation](https://boto3.amazonaws.com/v1/documentation/api/latest/reference/services/cognito-idp/client/update_auth_event_feedback.html)
         [Show types-aiobotocore documentation](https://youtype.github.io/types_aiobotocore_docs/types_aiobotocore_cognito_idp/client/#update_auth_event_feedback)
@@ -1384,7 +1407,9 @@ class CognitoIdentityProviderClient(AioBaseClient):
         self, **kwargs: Unpack[UpdateDeviceStatusRequestTypeDef]
     ) -> Dict[str, Any]:
         """
-        Updates the device status.
+        Updates the status of a the currently signed-in user's device so that it is
+        marked as remembered or not remembered for the purpose of device
+        authentication.
 
         [Show boto3 documentation](https://boto3.amazonaws.com/v1/documentation/api/latest/reference/services/cognito-idp/client/update_device_status.html)
         [Show types-aiobotocore documentation](https://youtype.github.io/types_aiobotocore_docs/types_aiobotocore_cognito_idp/client/#update_device_status)
@@ -1394,7 +1419,8 @@ class CognitoIdentityProviderClient(AioBaseClient):
         self, **kwargs: Unpack[UpdateGroupRequestTypeDef]
     ) -> UpdateGroupResponseTypeDef:
         """
-        Updates the specified group with the specified attributes.
+        Given the name of a user pool group, updates any of the properties for
+        precedence, IAM role, or description.
 
         [Show boto3 documentation](https://boto3.amazonaws.com/v1/documentation/api/latest/reference/services/cognito-idp/client/update_group.html)
         [Show types-aiobotocore documentation](https://youtype.github.io/types_aiobotocore_docs/types_aiobotocore_cognito_idp/client/#update_group)
@@ -1404,7 +1430,8 @@ class CognitoIdentityProviderClient(AioBaseClient):
         self, **kwargs: Unpack[UpdateIdentityProviderRequestTypeDef]
     ) -> UpdateIdentityProviderResponseTypeDef:
         """
-        Updates IdP information for a user pool.
+        Modifies the configuration and trust relationship between a third-party
+        identity provider (IdP) and a user pool.
 
         [Show boto3 documentation](https://boto3.amazonaws.com/v1/documentation/api/latest/reference/services/cognito-idp/client/update_identity_provider.html)
         [Show types-aiobotocore documentation](https://youtype.github.io/types_aiobotocore_docs/types_aiobotocore_cognito_idp/client/#update_identity_provider)
@@ -1424,7 +1451,7 @@ class CognitoIdentityProviderClient(AioBaseClient):
         self, **kwargs: Unpack[UpdateResourceServerRequestTypeDef]
     ) -> UpdateResourceServerResponseTypeDef:
         """
-        Updates the name and scopes of resource server.
+        Updates the name and scopes of a resource server.
 
         [Show boto3 documentation](https://boto3.amazonaws.com/v1/documentation/api/latest/reference/services/cognito-idp/client/update_resource_server.html)
         [Show types-aiobotocore documentation](https://youtype.github.io/types_aiobotocore_docs/types_aiobotocore_cognito_idp/client/#update_resource_server)
@@ -1434,8 +1461,7 @@ class CognitoIdentityProviderClient(AioBaseClient):
         self, **kwargs: Unpack[UpdateUserAttributesRequestTypeDef]
     ) -> UpdateUserAttributesResponseTypeDef:
         """
-        With this operation, your users can update one or more of their attributes with
-        their own credentials.
+        Updates the currently signed-in user's attributes.
 
         [Show boto3 documentation](https://boto3.amazonaws.com/v1/documentation/api/latest/reference/services/cognito-idp/client/update_user_attributes.html)
         [Show types-aiobotocore documentation](https://youtype.github.io/types_aiobotocore_docs/types_aiobotocore_cognito_idp/client/#update_user_attributes)
@@ -1445,7 +1471,7 @@ class CognitoIdentityProviderClient(AioBaseClient):
         self, **kwargs: Unpack[UpdateUserPoolRequestTypeDef]
     ) -> Dict[str, Any]:
         """
-        This action might generate an SMS text message.
+        Updates the configuration of a user pool.
 
         [Show boto3 documentation](https://boto3.amazonaws.com/v1/documentation/api/latest/reference/services/cognito-idp/client/update_user_pool.html)
         [Show types-aiobotocore documentation](https://youtype.github.io/types_aiobotocore_docs/types_aiobotocore_cognito_idp/client/#update_user_pool)
@@ -1455,7 +1481,7 @@ class CognitoIdentityProviderClient(AioBaseClient):
         self, **kwargs: Unpack[UpdateUserPoolClientRequestTypeDef]
     ) -> UpdateUserPoolClientResponseTypeDef:
         """
-        Updates the specified user pool app client with the specified attributes.
+        Given a user pool app client ID, updates the configuration.
 
         [Show boto3 documentation](https://boto3.amazonaws.com/v1/documentation/api/latest/reference/services/cognito-idp/client/update_user_pool_client.html)
         [Show types-aiobotocore documentation](https://youtype.github.io/types_aiobotocore_docs/types_aiobotocore_cognito_idp/client/#update_user_pool_client)
@@ -1476,8 +1502,9 @@ class CognitoIdentityProviderClient(AioBaseClient):
         self, **kwargs: Unpack[VerifySoftwareTokenRequestTypeDef]
     ) -> VerifySoftwareTokenResponseTypeDef:
         """
-        Use this API to register a user's entered time-based one-time password (TOTP)
-        code and mark the user's software token MFA status as "verified" if successful.
+        Registers the current user's time-based one-time password (TOTP) authenticator
+        with a code generated in their authenticator app from a private key that's
+        supplied by your user pool.
 
         [Show boto3 documentation](https://boto3.amazonaws.com/v1/documentation/api/latest/reference/services/cognito-idp/client/verify_software_token.html)
         [Show types-aiobotocore documentation](https://youtype.github.io/types_aiobotocore_docs/types_aiobotocore_cognito_idp/client/#verify_software_token)
@@ -1487,7 +1514,8 @@ class CognitoIdentityProviderClient(AioBaseClient):
         self, **kwargs: Unpack[VerifyUserAttributeRequestTypeDef]
     ) -> Dict[str, Any]:
         """
-        Verifies the specified user attributes in the user pool.
+        Submits a verification code for a signed-in user who has added or changed a
+        value of an auto-verified attribute.
 
         [Show boto3 documentation](https://boto3.amazonaws.com/v1/documentation/api/latest/reference/services/cognito-idp/client/verify_user_attribute.html)
         [Show types-aiobotocore documentation](https://youtype.github.io/types_aiobotocore_docs/types_aiobotocore_cognito_idp/client/#verify_user_attribute)

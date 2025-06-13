@@ -99,12 +99,20 @@ def install_python_dev_dependencies(bench_path=".", apps=None, verbose=False):
 		if os.path.exists(pyproject_path):
 			pyproject_deps = _generate_dev_deps_pattern(pyproject_path)
 			if pyproject_deps:
-				bench.run(f"{bench.python} -m pip install {quiet_flag} --upgrade {pyproject_deps}")
+				if os.environ.get("BENCH_USE_UV"):
+					bench.run(f"uv pip install {quiet_flag} --upgrade {pyproject_deps} --python {bench.python}")
+				else:
+					bench.run(f"{bench.python} -m pip install {quiet_flag} --upgrade {pyproject_deps}")
 
 		if not pyproject_deps and os.path.exists(dev_requirements_path):
-			bench.run(
-				f"{bench.python} -m pip install {quiet_flag} --upgrade -r {dev_requirements_path}"
-			)
+			if os.environ.get("BENCH_USE_UV"):
+				bench.run(
+					f"uv pip install {quiet_flag} --upgrade -r {dev_requirements_path} --python {bench.python}"
+				)
+			else:
+				bench.run(
+					f"{bench.python} -m pip install {quiet_flag} --upgrade -r {dev_requirements_path}"
+				)
 
 
 def _generate_dev_deps_pattern(pyproject_path):
@@ -240,11 +248,17 @@ def migrate_env(python, backup=False):
 	# Create virtualenv using specified python
 	def _install_app(app):
 		app_path = f"-e {os.path.join('apps', app)}"
-		exec_cmd(f"{pvenv}/bin/python -m pip install --upgrade {app_path}")
+		if os.environ.get("BENCH_USE_UV"):
+			exec_cmd(f"uv pip install --upgrade {app_path} --python {pyenv}/bin/python")
+		else:
+			exec_cmd(f"{pyenv}/bin/python -m pip install --upgrade {app_path}")
 
 	try:
 		logger.log(f"Setting up a New Virtual {python} Environment")
-		exec_cmd(f"{python} -m venv {pvenv}")
+		if os.environ.get("BENCH_USE_UV"):
+			exec_cmd(f"uv venv {pvenv} --seed")
+		else:
+			exec_cmd(f"{python} -m venv {pvenv}")
 
 		# Install frappe first
 		_install_app("frappe")

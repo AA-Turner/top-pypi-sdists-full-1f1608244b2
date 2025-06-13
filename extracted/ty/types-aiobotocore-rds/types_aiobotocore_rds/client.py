@@ -42,6 +42,7 @@ from .paginator import (
     DescribeDBInstanceAutomatedBackupsPaginator,
     DescribeDBInstancesPaginator,
     DescribeDBLogFilesPaginator,
+    DescribeDBMajorEngineVersionsPaginator,
     DescribeDBParameterGroupsPaginator,
     DescribeDBParametersPaginator,
     DescribeDBProxiesPaginator,
@@ -206,6 +207,8 @@ from .type_defs import (
     DescribeDBInstancesMessageTypeDef,
     DescribeDBLogFilesMessageTypeDef,
     DescribeDBLogFilesResponseTypeDef,
+    DescribeDBMajorEngineVersionsRequestTypeDef,
+    DescribeDBMajorEngineVersionsResponseTypeDef,
     DescribeDBParameterGroupsMessageTypeDef,
     DescribeDBParametersMessageTypeDef,
     DescribeDBProxiesRequestTypeDef,
@@ -1294,6 +1297,16 @@ class RDSClient(AioBaseClient):
 
         [Show boto3 documentation](https://boto3.amazonaws.com/v1/documentation/api/latest/reference/services/rds/client/describe_db_log_files.html)
         [Show types-aiobotocore documentation](https://youtype.github.io/types_aiobotocore_docs/types_aiobotocore_rds/client/#describe_db_log_files)
+        """
+
+    async def describe_db_major_engine_versions(
+        self, **kwargs: Unpack[DescribeDBMajorEngineVersionsRequestTypeDef]
+    ) -> DescribeDBMajorEngineVersionsResponseTypeDef:
+        """
+        Describes the properties of specific major versions of DB engines.
+
+        [Show boto3 documentation](https://boto3.amazonaws.com/v1/documentation/api/latest/reference/services/rds/client/describe_db_major_engine_versions.html)
+        [Show types-aiobotocore documentation](https://youtype.github.io/types_aiobotocore_docs/types_aiobotocore_rds/client/#describe_db_major_engine_versions)
         """
 
     async def describe_db_parameter_groups(
@@ -2400,6 +2413,17 @@ class RDSClient(AioBaseClient):
     def get_paginator(  # type: ignore[override]
         self, operation_name: Literal["describe_db_log_files"]
     ) -> DescribeDBLogFilesPaginator:
+        """
+        Create a paginator for an operation.
+
+        [Show boto3 documentation](https://boto3.amazonaws.com/v1/documentation/api/latest/reference/services/rds/client/get_paginator.html)
+        [Show types-aiobotocore documentation](https://youtype.github.io/types_aiobotocore_docs/types_aiobotocore_rds/client/#get_paginator)
+        """
+
+    @overload  # type: ignore[override]
+    def get_paginator(  # type: ignore[override]
+        self, operation_name: Literal["describe_db_major_engine_versions"]
+    ) -> DescribeDBMajorEngineVersionsPaginator:
         """
         Create a paginator for an operation.
 

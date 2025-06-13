@@ -62,12 +62,19 @@ def run_cli() -> None:
     hidden=True,
     required=False,
 )
+@click.option(
+    "--database-config-name",
+    help="Start a chat with a given database config name.",
+    required=False,
+    hidden=True,
+)
 @use_settings
 def run(
     settings: Settings,
     chat_id: Optional[str] = None,
     prompt: Optional[str] = None,
     workflow_id: Optional[str] = None,
+    database_config_name: Optional[str] = None,
 ) -> None:
     """Start or reconnect to an Exponent session."""
     check_exponent_version_and_upgrade(settings)
@@ -88,7 +95,13 @@ def run(
     base_ws_url = settings.get_base_ws_url()
 
     chat_uuid = chat_id or loop.run_until_complete(
-        create_chat(api_key, base_api_url, base_ws_url, ChatSource.CLI_RUN)
+        create_chat(
+            api_key,
+            base_api_url,
+            base_ws_url,
+            ChatSource.CLI_RUN,
+            database_config_name=database_config_name,
+        )
     )
 
     if chat_uuid is None:

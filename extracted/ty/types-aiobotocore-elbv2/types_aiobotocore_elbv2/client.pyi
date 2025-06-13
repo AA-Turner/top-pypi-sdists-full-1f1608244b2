@@ -100,6 +100,8 @@ from .type_defs import (
     GetTrustStoreRevocationContentOutputTypeDef,
     ModifyCapacityReservationInputTypeDef,
     ModifyCapacityReservationOutputTypeDef,
+    ModifyIpPoolsInputTypeDef,
+    ModifyIpPoolsOutputTypeDef,
     ModifyListenerAttributesInputTypeDef,
     ModifyListenerAttributesOutputTypeDef,
     ModifyListenerInputTypeDef,
@@ -593,6 +595,16 @@ class ElasticLoadBalancingv2Client(AioBaseClient):
 
         [Show boto3 documentation](https://boto3.amazonaws.com/v1/documentation/api/latest/reference/services/elbv2/client/modify_capacity_reservation.html)
         [Show types-aiobotocore documentation](https://youtype.github.io/types_aiobotocore_docs/types_aiobotocore_elbv2/client/#modify_capacity_reservation)
+        """
+
+    async def modify_ip_pools(
+        self, **kwargs: Unpack[ModifyIpPoolsInputTypeDef]
+    ) -> ModifyIpPoolsOutputTypeDef:
+        """
+        [Application Load Balancers] Modify the IP pool associated to a load balancer.
+
+        [Show boto3 documentation](https://boto3.amazonaws.com/v1/documentation/api/latest/reference/services/elbv2/client/modify_ip_pools.html)
+        [Show types-aiobotocore documentation](https://youtype.github.io/types_aiobotocore_docs/types_aiobotocore_elbv2/client/#modify_ip_pools)
         """
 
     async def modify_listener(

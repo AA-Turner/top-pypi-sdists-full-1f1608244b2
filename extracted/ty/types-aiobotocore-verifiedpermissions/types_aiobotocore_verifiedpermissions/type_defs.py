@@ -22,7 +22,9 @@ from typing import Any, Union
 
 from .literals import (
     BatchGetPolicyErrorCodeType,
+    CedarVersionType,
     DecisionType,
+    DeletionProtectionType,
     PolicyEffectType,
     PolicyTypeType,
     ValidationModeType,
@@ -122,6 +124,8 @@ __all__ = (
     "ListPolicyTemplatesInputPaginateTypeDef",
     "ListPolicyTemplatesInputTypeDef",
     "ListPolicyTemplatesOutputTypeDef",
+    "ListTagsForResourceInputTypeDef",
+    "ListTagsForResourceOutputTypeDef",
     "OpenIdConnectAccessTokenConfigurationDetailTypeDef",
     "OpenIdConnectAccessTokenConfigurationItemTypeDef",
     "OpenIdConnectAccessTokenConfigurationTypeDef",
@@ -152,9 +156,11 @@ __all__ = (
     "StaticPolicyDefinitionDetailTypeDef",
     "StaticPolicyDefinitionItemTypeDef",
     "StaticPolicyDefinitionTypeDef",
+    "TagResourceInputTypeDef",
     "TemplateLinkedPolicyDefinitionDetailTypeDef",
     "TemplateLinkedPolicyDefinitionItemTypeDef",
     "TemplateLinkedPolicyDefinitionTypeDef",
+    "UntagResourceInputTypeDef",
     "UpdateCognitoGroupConfigurationTypeDef",
     "UpdateCognitoUserPoolConfigurationTypeDef",
     "UpdateConfigurationTypeDef",
@@ -276,6 +282,7 @@ class GetPolicyInputTypeDef(TypedDict):
 
 class GetPolicyStoreInputTypeDef(TypedDict):
     policyStoreId: str
+    tags: NotRequired[bool]
 
 
 class GetPolicyTemplateInputTypeDef(TypedDict):
@@ -329,6 +336,10 @@ class PolicyTemplateItemTypeDef(TypedDict):
     createdDate: datetime
     lastUpdatedDate: datetime
     description: NotRequired[str]
+
+
+class ListTagsForResourceInputTypeDef(TypedDict):
+    resourceArn: str
 
 
 class OpenIdConnectAccessTokenConfigurationDetailTypeDef(TypedDict):
@@ -392,6 +403,16 @@ class StaticPolicyDefinitionTypeDef(TypedDict):
 
 class SchemaDefinitionTypeDef(TypedDict):
     cedarJson: NotRequired[str]
+
+
+class TagResourceInputTypeDef(TypedDict):
+    resourceArn: str
+    tags: Mapping[str, str]
+
+
+class UntagResourceInputTypeDef(TypedDict):
+    resourceArn: str
+    tagKeys: Sequence[str]
 
 
 class UpdateCognitoGroupConfigurationTypeDef(TypedDict):
@@ -536,6 +557,11 @@ class GetSchemaOutputTypeDef(TypedDict):
     ResponseMetadata: ResponseMetadataTypeDef
 
 
+class ListTagsForResourceOutputTypeDef(TypedDict):
+    tags: Dict[str, str]
+    ResponseMetadata: ResponseMetadataTypeDef
+
+
 class PutSchemaOutputTypeDef(TypedDict):
     policyStoreId: str
     namespaces: List[str]
@@ -620,6 +646,8 @@ class CreatePolicyStoreInputTypeDef(TypedDict):
     validationSettings: ValidationSettingsTypeDef
     clientToken: NotRequired[str]
     description: NotRequired[str]
+    deletionProtection: NotRequired[DeletionProtectionType]
+    tags: NotRequired[Mapping[str, str]]
 
 
 class GetPolicyStoreOutputTypeDef(TypedDict):
@@ -629,12 +657,16 @@ class GetPolicyStoreOutputTypeDef(TypedDict):
     createdDate: datetime
     lastUpdatedDate: datetime
     description: str
+    deletionProtection: DeletionProtectionType
+    cedarVersion: CedarVersionType
+    tags: Dict[str, str]
     ResponseMetadata: ResponseMetadataTypeDef
 
 
 class UpdatePolicyStoreInputTypeDef(TypedDict):
     policyStoreId: str
     validationSettings: ValidationSettingsTypeDef
+    deletionProtection: NotRequired[DeletionProtectionType]
     description: NotRequired[str]
 
 

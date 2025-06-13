@@ -13,6 +13,8 @@ Usage::
     from types_aiobotocore_bedrock_agent_runtime.client import AgentsforBedrockRuntimeClient
     from types_aiobotocore_bedrock_agent_runtime.paginator import (
         GetAgentMemoryPaginator,
+        ListFlowExecutionEventsPaginator,
+        ListFlowExecutionsPaginator,
         ListInvocationStepsPaginator,
         ListInvocationsPaginator,
         ListSessionsPaginator,
@@ -25,6 +27,8 @@ Usage::
         client: AgentsforBedrockRuntimeClient
 
         get_agent_memory_paginator: GetAgentMemoryPaginator = client.get_paginator("get_agent_memory")
+        list_flow_execution_events_paginator: ListFlowExecutionEventsPaginator = client.get_paginator("list_flow_execution_events")
+        list_flow_executions_paginator: ListFlowExecutionsPaginator = client.get_paginator("list_flow_executions")
         list_invocation_steps_paginator: ListInvocationStepsPaginator = client.get_paginator("list_invocation_steps")
         list_invocations_paginator: ListInvocationsPaginator = client.get_paginator("list_invocations")
         list_sessions_paginator: ListSessionsPaginator = client.get_paginator("list_sessions")
@@ -43,6 +47,10 @@ from aiobotocore.paginate import AioPageIterator, AioPaginator
 from .type_defs import (
     GetAgentMemoryRequestPaginateTypeDef,
     GetAgentMemoryResponseTypeDef,
+    ListFlowExecutionEventsRequestPaginateTypeDef,
+    ListFlowExecutionEventsResponseTypeDef,
+    ListFlowExecutionsRequestPaginateTypeDef,
+    ListFlowExecutionsResponseTypeDef,
     ListInvocationsRequestPaginateTypeDef,
     ListInvocationsResponseTypeDef,
     ListInvocationStepsRequestPaginateTypeDef,
@@ -63,6 +71,8 @@ else:
 
 __all__ = (
     "GetAgentMemoryPaginator",
+    "ListFlowExecutionEventsPaginator",
+    "ListFlowExecutionsPaginator",
     "ListInvocationStepsPaginator",
     "ListInvocationsPaginator",
     "ListSessionsPaginator",
@@ -89,6 +99,48 @@ class GetAgentMemoryPaginator(_GetAgentMemoryPaginatorBase):
         """
         [Show boto3 documentation](https://boto3.amazonaws.com/v1/documentation/api/latest/reference/services/bedrock-agent-runtime/paginator/GetAgentMemory.html#AgentsforBedrockRuntime.Paginator.GetAgentMemory.paginate)
         [Show types-aiobotocore documentation](https://youtype.github.io/types_aiobotocore_docs/types_aiobotocore_bedrock_agent_runtime/paginators/#getagentmemorypaginator)
+        """
+
+
+if TYPE_CHECKING:
+    _ListFlowExecutionEventsPaginatorBase = AioPaginator[ListFlowExecutionEventsResponseTypeDef]
+else:
+    _ListFlowExecutionEventsPaginatorBase = AioPaginator  # type: ignore[assignment]
+
+
+class ListFlowExecutionEventsPaginator(_ListFlowExecutionEventsPaginatorBase):
+    """
+    [Show boto3 documentation](https://boto3.amazonaws.com/v1/documentation/api/latest/reference/services/bedrock-agent-runtime/paginator/ListFlowExecutionEvents.html#AgentsforBedrockRuntime.Paginator.ListFlowExecutionEvents)
+    [Show types-aiobotocore documentation](https://youtype.github.io/types_aiobotocore_docs/types_aiobotocore_bedrock_agent_runtime/paginators/#listflowexecutioneventspaginator)
+    """
+
+    def paginate(  # type: ignore[override]
+        self, **kwargs: Unpack[ListFlowExecutionEventsRequestPaginateTypeDef]
+    ) -> AioPageIterator[ListFlowExecutionEventsResponseTypeDef]:
+        """
+        [Show boto3 documentation](https://boto3.amazonaws.com/v1/documentation/api/latest/reference/services/bedrock-agent-runtime/paginator/ListFlowExecutionEvents.html#AgentsforBedrockRuntime.Paginator.ListFlowExecutionEvents.paginate)
+        [Show types-aiobotocore documentation](https://youtype.github.io/types_aiobotocore_docs/types_aiobotocore_bedrock_agent_runtime/paginators/#listflowexecutioneventspaginator)
+        """
+
+
+if TYPE_CHECKING:
+    _ListFlowExecutionsPaginatorBase = AioPaginator[ListFlowExecutionsResponseTypeDef]
+else:
+    _ListFlowExecutionsPaginatorBase = AioPaginator  # type: ignore[assignment]
+
+
+class ListFlowExecutionsPaginator(_ListFlowExecutionsPaginatorBase):
+    """
+    [Show boto3 documentation](https://boto3.amazonaws.com/v1/documentation/api/latest/reference/services/bedrock-agent-runtime/paginator/ListFlowExecutions.html#AgentsforBedrockRuntime.Paginator.ListFlowExecutions)
+    [Show types-aiobotocore documentation](https://youtype.github.io/types_aiobotocore_docs/types_aiobotocore_bedrock_agent_runtime/paginators/#listflowexecutionspaginator)
+    """
+
+    def paginate(  # type: ignore[override]
+        self, **kwargs: Unpack[ListFlowExecutionsRequestPaginateTypeDef]
+    ) -> AioPageIterator[ListFlowExecutionsResponseTypeDef]:
+        """
+        [Show boto3 documentation](https://boto3.amazonaws.com/v1/documentation/api/latest/reference/services/bedrock-agent-runtime/paginator/ListFlowExecutions.html#AgentsforBedrockRuntime.Paginator.ListFlowExecutions.paginate)
+        [Show types-aiobotocore documentation](https://youtype.github.io/types_aiobotocore_docs/types_aiobotocore_bedrock_agent_runtime/paginators/#listflowexecutionspaginator)
         """
 
 

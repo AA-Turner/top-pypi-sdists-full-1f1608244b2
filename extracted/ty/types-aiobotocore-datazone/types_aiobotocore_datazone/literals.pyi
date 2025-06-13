@@ -332,6 +332,7 @@ ManagedPolicyTypeType = Literal[
     "DELEGATE_CREATE_ENVIRONMENT_PROFILE",
     "OVERRIDE_DOMAIN_UNIT_OWNERS",
     "OVERRIDE_PROJECT_OWNERS",
+    "USE_ASSET_TYPE",
 ]
 MetadataGenerationRunStatusType = Literal[
     "CANCELED", "FAILED", "IN_PROGRESS", "SUBMITTED", "SUCCEEDED"
@@ -349,12 +350,12 @@ OverallDeploymentStatusType = Literal[
     "FAILED_DEPLOYMENT", "FAILED_VALIDATION", "IN_PROGRESS", "PENDING_DEPLOYMENT", "SUCCESSFUL"
 ]
 ProjectDesignationType = Literal["CONTRIBUTOR", "OWNER", "PROJECT_CATALOG_STEWARD"]
-ProjectStatusType = Literal["ACTIVE", "DELETE_FAILED", "DELETING"]
+ProjectStatusType = Literal["ACTIVE", "DELETE_FAILED", "DELETING", "UPDATE_FAILED", "UPDATING"]
 ProtocolType = Literal[
     "ATHENA", "GLUE_INTERACTIVE_SESSION", "HTTPS", "JDBC", "LIVY", "ODBC", "PRISM"
 ]
 RejectRuleBehaviorType = Literal["ALL", "NONE"]
-RuleActionType = Literal["CREATE_SUBSCRIPTION_REQUEST"]
+RuleActionType = Literal["CREATE_LISTING_CHANGE_SET", "CREATE_SUBSCRIPTION_REQUEST"]
 RuleScopeSelectionModeType = Literal["ALL", "SPECIFIC"]
 RuleTargetTypeType = Literal["DOMAIN_UNIT"]
 RuleTypeType = Literal["METADATA_FORM_ENFORCEMENT"]
@@ -400,7 +401,7 @@ SubscriptionGrantStatusType = Literal[
 SubscriptionRequestStatusType = Literal["ACCEPTED", "PENDING", "REJECTED"]
 SubscriptionStatusType = Literal["APPROVED", "CANCELLED", "REVOKED"]
 TargetEntityTypeType = Literal[
-    "DOMAIN_UNIT", "ENVIRONMENT_BLUEPRINT_CONFIGURATION", "ENVIRONMENT_PROFILE"
+    "ASSET_TYPE", "DOMAIN_UNIT", "ENVIRONMENT_BLUEPRINT_CONFIGURATION", "ENVIRONMENT_PROFILE"
 ]
 TaskStatusType = Literal["ACTIVE", "INACTIVE"]
 TimeSeriesEntityTypeType = Literal["ASSET", "LISTING"]
@@ -640,6 +641,7 @@ ServiceName = Literal[
     "freetier",
     "fsx",
     "gamelift",
+    "gameliftstreams",
     "geo-maps",
     "geo-places",
     "geo-routes",
@@ -665,6 +667,7 @@ ServiceName = Literal[
     "iot",
     "iot-data",
     "iot-jobs-data",
+    "iot-managed-integrations",
     "iotanalytics",
     "iotdeviceadvisor",
     "iotevents",
@@ -779,7 +782,6 @@ ServiceName = Literal[
     "pipes",
     "polly",
     "pricing",
-    "privatenetworks",
     "proton",
     "qapps",
     "qbusiness",
@@ -840,7 +842,6 @@ ServiceName = Literal[
     "signer",
     "simspaceweaver",
     "sms",
-    "sms-voice",
     "snow-device-management",
     "snowball",
     "sns",
@@ -848,6 +849,7 @@ ServiceName = Literal[
     "sqs",
     "ssm",
     "ssm-contacts",
+    "ssm-guiconnect",
     "ssm-incidents",
     "ssm-quicksetup",
     "ssm-sap",
@@ -941,6 +943,7 @@ RegionName = Literal[
     "ap-northeast-1",
     "ap-northeast-2",
     "ap-northeast-3",
+    "ap-south-1",
     "ap-south-2",
     "ap-southeast-1",
     "ap-southeast-2",
@@ -959,6 +962,7 @@ RegionName = Literal[
     "il-central-1",
     "me-central-1",
     "me-south-1",
+    "mx-central-1",
     "sa-east-1",
     "us-east-1",
     "us-east-2",

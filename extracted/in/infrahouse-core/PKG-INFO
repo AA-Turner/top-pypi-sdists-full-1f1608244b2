@@ -1,6 +1,6 @@
-Metadata-Version: 2.2
+Metadata-Version: 2.4
 Name: infrahouse-core
-Version: 0.16.1
+Version: 0.17.1
 Summary: Lightweight Python library with AWS and other general purpose classes.
 Author-email: "InfraHouse Inc." <aleks@infrahouse.com>
 Maintainer-email: Oleksandr Kuzminskyi <aleks@infrahouse.com>
@@ -32,7 +32,7 @@ Requires-Dist: diskcache~=5.6
 Requires-Dist: ec2-metadata~=2.13
 Requires-Dist: PyGithub~=2.4
 Provides-Extra: dev
-Requires-Dist: black~=24.10; extra == "dev"
+Requires-Dist: black~=25.1; extra == "dev"
 Requires-Dist: build~=1.2; extra == "dev"
 Requires-Dist: bump2version~=1.0; extra == "dev"
 Requires-Dist: mdformat~=0.7; extra == "dev"
@@ -41,6 +41,7 @@ Requires-Dist: pytest-cov~=6.0; extra == "dev"
 Requires-Dist: pylint~=3.3; extra == "dev"
 Provides-Extra: doc
 Requires-Dist: Sphinx~=8.1; extra == "doc"
+Dynamic: license-file
 
 ===============
 InfraHouse Core

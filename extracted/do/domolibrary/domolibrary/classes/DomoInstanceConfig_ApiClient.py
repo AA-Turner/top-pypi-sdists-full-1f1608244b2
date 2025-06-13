@@ -23,6 +23,7 @@ from dataclasses import dataclass, field
 import domolibrary.client.DomoAuth as dmda
 import domolibrary.utils.chunk_execution as dmce 
 import domolibrary.client.DomoError as dmde
+from domolibrary.client.DomoEntity import DomoEntity
 
 import domolibrary.routes.instance_config_api_client as client_routes
 
@@ -31,26 +32,25 @@ import domolibrary.classes.DomoUser as dmdu
 
 # %% ../../nbs/classes/50_DomoInstanceConfig_ApiClient.ipynb 6
 @dataclass
-class ApiClient:
+class ApiClient(DomoEntity):
     auth: dmda.DomoAuth = field(repr=False)
     id: int
+    
     name: str
     client_id: str  # will be masked in UI
     owner_id: str
     domo_user: dmdu.DomoUser
 
-    authorization_grant_types: List[str]
+    # authorization_grant_types: List[str] # no longer part of API 6/10/2025
 
-    scope: List[ApiClient_ScopeEnum]
+    scopes: List[ApiClient_ScopeEnum]
     description: str = None
 
     is_invalid: bool = False
 
-    def __eq__(self, other):
-        if self.__class__.__name__ != other.__class__.__name__:
-            return False
-
-        return self.id == other.id
+    def display_url(self):
+        return f"https://{self.auth.domo_instance}.domo.com/admin/api-clients"
+    
 
     @classmethod
     async def _from_json(cls, auth: dmda.DomoAuth, obj):
@@ -58,7 +58,7 @@ class ApiClient:
         domo_user = None
         is_invalid = False
         try:
-            domo_user = await dmdu.DomoUser.get_by_id(auth=auth, user_id=obj["user"])
+            domo_user = await dmdu.DomoUser.get_by_id(auth=auth, user_id=obj["userId"])
 
         except dmde.DomoError as e:
             is_invalid = True
@@ -66,12 +66,13 @@ class ApiClient:
         return cls(
             auth=auth,
             id=obj["id"],
+            raw = obj,
             name=obj["name"],
             client_id=obj["clientId"],
-            owner_id=obj["user"],
+            owner_id=obj["userId"],
             domo_user=domo_user,
-            authorization_grant_types=obj["authorizedGrantTypes"],
-            scope=[ApiClient_ScopeEnum[sc.upper()] for sc in obj["scope"]],
+            # authorization_grant_types=obj["authorizedGrantTypes"],
+            scopes=[ApiClient_ScopeEnum[sc.upper()] for sc in obj["scopes"]],
             description=obj.get("description"),
             is_invalid=is_invalid,
         )
@@ -99,6 +100,9 @@ class ApiClient:
             return res
 
         return await cls._from_json(auth=auth, obj=res.response)
+
+    async def _get_by_id(self, **kwargs):
+        self.get_by_id(**kwargs)
 
     async def revoke(
         self,

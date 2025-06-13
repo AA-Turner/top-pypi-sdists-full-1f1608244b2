@@ -16,6 +16,8 @@ Usage::
         ListManagedWorkgroupsPaginator,
         ListNamespacesPaginator,
         ListRecoveryPointsPaginator,
+        ListReservationOfferingsPaginator,
+        ListReservationsPaginator,
         ListScheduledActionsPaginator,
         ListSnapshotCopyConfigurationsPaginator,
         ListSnapshotsPaginator,
@@ -37,6 +39,8 @@ Usage::
     list_managed_workgroups_paginator: ListManagedWorkgroupsPaginator = client.get_paginator("list_managed_workgroups")
     list_namespaces_paginator: ListNamespacesPaginator = client.get_paginator("list_namespaces")
     list_recovery_points_paginator: ListRecoveryPointsPaginator = client.get_paginator("list_recovery_points")
+    list_reservation_offerings_paginator: ListReservationOfferingsPaginator = client.get_paginator("list_reservation_offerings")
+    list_reservations_paginator: ListReservationsPaginator = client.get_paginator("list_reservations")
     list_scheduled_actions_paginator: ListScheduledActionsPaginator = client.get_paginator("list_scheduled_actions")
     list_snapshot_copy_configurations_paginator: ListSnapshotCopyConfigurationsPaginator = client.get_paginator("list_snapshot_copy_configurations")
     list_snapshots_paginator: ListSnapshotsPaginator = client.get_paginator("list_snapshots")
@@ -54,6 +58,8 @@ from .paginator import (
     ListManagedWorkgroupsPaginator,
     ListNamespacesPaginator,
     ListRecoveryPointsPaginator,
+    ListReservationOfferingsPaginator,
+    ListReservationsPaginator,
     ListScheduledActionsPaginator,
     ListSnapshotCopyConfigurationsPaginator,
     ListSnapshotsPaginator,
@@ -72,6 +78,8 @@ __all__ = (
     "ListManagedWorkgroupsPaginator",
     "ListNamespacesPaginator",
     "ListRecoveryPointsPaginator",
+    "ListReservationOfferingsPaginator",
+    "ListReservationsPaginator",
     "ListScheduledActionsPaginator",
     "ListSnapshotCopyConfigurationsPaginator",
     "ListSnapshotsPaginator",

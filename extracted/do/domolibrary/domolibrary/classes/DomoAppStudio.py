@@ -16,6 +16,10 @@ import httpx
 import domolibrary.client.Logger as lg
 import domolibrary.client.DomoError as de
 import domolibrary.client.DomoAuth as dmda
+
+from domolibrary.client.DomoEntity import NotImplemented,DomoEntity_w_Lineage
+from domolibrary.classes.DomoLineage import DomoLineage
+
 import domolibrary.classes.DomoPage_Content as dmpg_c
 import domolibrary.routes.appstudio as appstudio_routes
 
@@ -24,15 +28,18 @@ import domolibrary.utils.chunk_execution as ce
 
 # %% ../../nbs/classes/50_DomoAppStudio.ipynb 6
 @dataclass
-class DomoAppStudio:
+class DomoAppStudio(DomoEntity_w_Lineage):
     id: int
+    auth: dmda.DomoAuth = field(repr=False)
+
     title: str = None
-    auth: dmda.DomoAuth = field(default=None, repr=False)
     is_locked: bool = None
 
     owners: list = field(default_factory=list)
 
     custom_attributes: dict = field(default_factory=dict)
+
+    Lineage : DomoLineage = None
 
     @classmethod
     async def _from_content_stacks_v3(cls, page_obj, auth: dmda.DomoAuth = None):
@@ -46,6 +53,7 @@ class DomoAppStudio:
             title=dd.title or dd.Title,
             is_locked=dd.locked,
             auth=auth,
+            raw = page_obj
         )
 
         if dd.owners and len(dd.owners) > 0:
@@ -78,23 +86,16 @@ class DomoAppStudio:
         return await cls._from_content_stacks_v3(page_obj=res.response, auth=auth)
 
     @classmethod
-    async def _get_by_id(
+    async def _get_entity_by_id(
         cls,
-        id: str,
-        auth: dmda.DomoAuth,
-        return_raw: bool = False,
-        debug_api: bool = False,
-        session: httpx.AsyncClient = None,
-        debug_num_stacks_to_drop: int = 2,
+        entity_id: str,
+        **kwargs
     ):
 
         return await cls.get_by_id(
             auth=auth,
-            appstudio_id=id,
-            debug_api=debug_api,
-            session=session,
-            debug_num_stacks_to_drop=debug_num_stacks_to_drop,
-            return_raw = return_raw,
+            appstudio_id=entity_id,
+            **kwargs
         )
 
     def display_url(self):
@@ -157,6 +158,7 @@ async def _from_adminsummary(cls, appstudio_obj, auth: dmda.DomoAuth):
         title=dd.title or dd.Title,
         is_locked=dd.locked,
         auth=auth,
+        raw = appstudio_obj
     )
 
     if dd.owners and len(dd.owners) > 0:

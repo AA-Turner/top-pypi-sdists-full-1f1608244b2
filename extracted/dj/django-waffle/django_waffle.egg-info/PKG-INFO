@@ -1,6 +1,6 @@
-Metadata-Version: 2.1
+Metadata-Version: 2.4
 Name: django-waffle
-Version: 4.2.0
+Version: 5.0.0
 Summary: A feature flipper for Django.
 Author-email: James Socol <me@jamessocol.com>
 License: BSD
@@ -12,26 +12,25 @@ Classifier: Intended Audience :: Developers
 Classifier: License :: OSI Approved :: BSD License
 Classifier: Operating System :: OS Independent
 Classifier: Framework :: Django
-Classifier: Framework :: Django :: 3.2
-Classifier: Framework :: Django :: 4.0
-Classifier: Framework :: Django :: 4.1
 Classifier: Framework :: Django :: 4.2
 Classifier: Framework :: Django :: 5.0
 Classifier: Framework :: Django :: 5.1
+Classifier: Framework :: Django :: 5.2
 Classifier: Programming Language :: Python
 Classifier: Programming Language :: Python :: 3
 Classifier: Programming Language :: Python :: 3 :: Only
-Classifier: Programming Language :: Python :: 3.8
 Classifier: Programming Language :: Python :: 3.9
 Classifier: Programming Language :: Python :: 3.10
 Classifier: Programming Language :: Python :: 3.11
 Classifier: Programming Language :: Python :: 3.12
 Classifier: Programming Language :: Python :: 3.13
 Classifier: Topic :: Software Development :: Libraries :: Python Modules
-Requires-Python: >=3.8
+Requires-Python: >=3.9
 Description-Content-Type: text/x-rst
-License-File: LICENSE
-Requires-Dist: django>=3.2
+Requires-Dist: django>=4.2
+Provides-Extra: docs
+Requires-Dist: sphinx; extra == "docs"
+Requires-Dist: sphinx-rtd-theme; extra == "docs"
 
 ======
 README
@@ -41,17 +40,20 @@ Django Waffle is (yet another) feature flipper for Django. You can
 define the conditions for which a flag should be active, and use it in
 a number of ways.
 
-.. image:: https://jazzband.co/static/img/badge.svg
-   :target: https://jazzband.co/
-   :alt: Jazzband
-.. image:: https://github.com/jazzband/django-waffle/workflows/Python%20package/badge.svg?branch=master
-   :target: https://github.com/jazzband/django-waffle/actions
+.. image:: https://github.com/django-waffle/django-waffle/actions/workflows/python-package.yml/badge.svg
+   :target: https://github.com/django-waffle/django-waffle/actions/workflows/python-package.yml
    :alt: Build Status
 .. image:: https://badge.fury.io/py/django-waffle.svg
    :target: https://badge.fury.io/py/django-waffle
    :alt: PyPI status badge
+.. image:: https://img.shields.io/readthedocs/waffle
+   :target: https://app.readthedocs.org/projects/waffle
+   :alt: Read the Docs
+.. image:: https://codecov.io/gh/django-waffle/django-waffle/branch/master/graph/badge.svg
+   :target: https://codecov.io/gh/django-waffle/django-waffle
+   :alt: Codecov
 
-:Code:          https://github.com/jazzband/django-waffle
+:Code:          https://github.com/django-waffle/django-waffle
 :License:       BSD; see LICENSE file
-:Issues:        https://github.com/jazzband/django-waffle/issues
+:Issues:        https://github.com/django-waffle/django-waffle/issues
 :Documentation: https://waffle.readthedocs.io/

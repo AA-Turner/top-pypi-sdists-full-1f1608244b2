@@ -460,6 +460,56 @@ def partial_ratio(a: Underscore | Any, b: Underscore | Any):
     return UnderscoreFunction("partial_ratio", a, b)
 
 
+def token_set_ratio(a: Underscore | Any, b: Underscore | Any):
+    """
+    Compute the Fuzzy Wuzzy token set ratio between two strings. Returns a value in the range `[0, 100]`.
+
+    Parameters
+    ----------
+    a
+        The first string.
+    b
+        The second string.
+
+    Examples
+    --------
+    >>> import chalk.functions as F
+    >>> from chalk.features import _, features
+    >>> @features
+    ... class User:
+    ...    id: str
+    ...    name: str
+    ...    email: str
+    ...    name_email_sim: int = F.token_set_ratio(_.name, _.email)
+    """
+    return UnderscoreFunction("token_set_ratio", a, b)
+
+
+def token_sort_ratio(a: Underscore | Any, b: Underscore | Any):
+    """
+    Compute the Fuzzy Wuzzy token sort ratio between two strings. Returns a value in the range `[0, 100]`.
+
+    Parameters
+    ----------
+    a
+        The first string.
+    b
+        The second string.
+
+    Examples
+    --------
+    >>> import chalk.functions as F
+    >>> from chalk.features import _, features
+    >>> @features
+    ... class User:
+    ...    id: str
+    ...    name: str
+    ...    email: str
+    ...    name_email_sim: int = F.token_sort_ratio(_.name, _.email)
+    """
+    return UnderscoreFunction("token_sort_ratio", a, b)
+
+
 def sequence_matcher_ratio(a: Underscore | Any, b: Underscore | Any):
     """
     Measure the similarity of two strings as by Python `difflib`.
@@ -2928,7 +2978,7 @@ def array_distinct(arr: Underscore):
     return UnderscoreFunction("array_distinct", arr)
 
 
-def contains(arr: Underscore | list[Any], value: Any):
+def contains(arr: Underscore | list[Any] | set[Any], value: Any):
     """
     Returns whether the array contains the value.
 
@@ -3803,6 +3853,8 @@ __all__ = (
     "struct_pack",
     "substr",
     "to_iso8601",
+    "token_set_ratio",
+    "token_sort_ratio",
     "total_seconds",
     "trim",
     "unix_milliseconds",

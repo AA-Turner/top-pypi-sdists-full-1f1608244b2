@@ -1,25 +1,49 @@
 import ast
+import sys
 from collections import namedtuple
 from enum import IntEnum
 
-from flake8_import_order.__about__ import (
-    __author__, __copyright__, __email__, __license__, __summary__, __title__,
-    __uri__, __version__,
-)
-from flake8_import_order.stdlib_list import STDLIB_NAMES
+if sys.version_info >= (3, 10):
+    STDLIB_NAMES = sys.stdlib_module_names | {"__main__", "test"}
+else:
+    from .stdlib_list import STDLIB_NAMES
+
+from .__about__ import __author__
+from .__about__ import __copyright__
+from .__about__ import __email__
+from .__about__ import __license__
+from .__about__ import __summary__
+from .__about__ import __title__
+from .__about__ import __uri__
+from .__about__ import __version__
 
 __all__ = [
-    "__title__", "__summary__", "__uri__", "__version__", "__author__",
-    "__email__", "__license__", "__copyright__",
+    "__title__",
+    "__summary__",
+    "__uri__",
+    "__version__",
+    "__author__",
+    "__email__",
+    "__license__",
+    "__copyright__",
 ]
 
-DEFAULT_IMPORT_ORDER_STYLE = 'cryptography'
+DEFAULT_IMPORT_ORDER_STYLE = "cryptography"
 
 ClassifiedImport = namedtuple(
-    'ClassifiedImport',
-    ['type', 'is_from', 'modules', 'names', 'lineno', 'level', 'package'],
+    "ClassifiedImport",
+    [
+        "type",
+        "is_from",
+        "modules",
+        "names",
+        "lineno",
+        "level",
+        "package",
+        "type_checking",
+    ],
 )
-NewLine = namedtuple('NewLine', ['lineno'])
+NewLine = namedtuple("NewLine", ["lineno"])
 
 
 class ImportType(IntEnum):
@@ -48,7 +72,7 @@ def get_package_names(name):
     package_names = [last_package_name]
 
     for part in reversed(parts):
-        last_package_name = '%s.%s' % (last_package_name, part)
+        last_package_name = f"{last_package_name}.{part}"
         package_names.append(last_package_name)
 
     return package_names
@@ -70,8 +94,13 @@ class ImportVisitor(ast.NodeVisitor):
         self.application_import_names = frozenset(application_import_names)
         self.application_package_names = frozenset(application_package_names)
 
+    def generic_visit(self, node):
+        for child in ast.iter_child_nodes(node):
+            child.parent = node
+        return super().generic_visit(node)
+
     def visit_Import(self, node):  # noqa: N802
-        if node.col_offset == 0:
+        if node.col_offset == 0 or self._type_checking_import(node):
             modules = [alias.name for alias in node.names]
             types_ = {self._classify_type(module) for module in modules}
             if len(types_) == 1:
@@ -79,25 +108,50 @@ class ImportVisitor(ast.NodeVisitor):
             else:
                 type_ = ImportType.MIXED
             classified_import = ClassifiedImport(
-                type_, False, modules, [], node.lineno, 0,
+                type_,
+                False,
+                modules,
+                [],
+                node.lineno,
+                0,
                 root_package_name(modules[0]),
+                self._type_checking_import(node),
             )
             self.imports.append(classified_import)
 
     def visit_ImportFrom(self, node):  # noqa: N802
-        if node.col_offset == 0:
-            module = node.module or ''
+        if node.col_offset == 0 or self._type_checking_import(node):
+            module = node.module or ""
             if node.level > 0:
                 type_ = ImportType.APPLICATION_RELATIVE
             else:
                 type_ = self._classify_type(module)
             names = [alias.name for alias in node.names]
             classified_import = ClassifiedImport(
-                type_, True, [module], names,
-                node.lineno, node.level,
+                type_,
+                True,
+                [module],
+                names,
+                node.lineno,
+                node.level,
                 root_package_name(module),
+                self._type_checking_import(node),
             )
             self.imports.append(classified_import)
+
+    def _type_checking_import(self, node):
+        return (
+            isinstance(node.parent, ast.If)
+            and isinstance(node.parent.test, ast.Name)
+            and (
+                node.parent.test.id == "TYPE_CHECKING"
+                or (
+                    node.parent.test.value.id in {"t", "typing"}
+                    and getattr(node.parent.test, "attr", "")
+                    == "TYPE_CHECKING"
+                )
+            )
+        )
 
     def _classify_type(self, module):
         package_names = get_package_names(module)

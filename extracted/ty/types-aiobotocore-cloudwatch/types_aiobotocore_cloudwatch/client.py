@@ -119,6 +119,7 @@ __all__ = ("CloudWatchClient",)
 class Exceptions(BaseClientExceptions):
     ClientError: Type[BotocoreClientError]
     ConcurrentModificationException: Type[BotocoreClientError]
+    ConflictException: Type[BotocoreClientError]
     DashboardInvalidInputError: Type[BotocoreClientError]
     DashboardNotFoundError: Type[BotocoreClientError]
     InternalServiceFault: Type[BotocoreClientError]

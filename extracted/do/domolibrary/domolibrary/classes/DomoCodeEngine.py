@@ -23,7 +23,7 @@ from nbdev.showdoc import patch_to
 import domolibrary.client.DomoAuth as dmda
 
 import domolibrary.routes.codeengine as codeengine_routes
-import domolibrary.client.DomoError as de
+import domolibrary.client.DomoError as dmde
 import domolibrary.utils.files as dmuf
 from domolibrary.utils.convert import convert_string_to_datetime
 import domolibrary.classes.DomoUser as dmdu
@@ -33,7 +33,7 @@ class ExportExtension(Enum):
     JAVASCRIPT = "js"
     PYTHON = "py"
     
-class DomoCodeEngine_ConfigError(de.DomoError):
+class DomoCodeEngine_ConfigError(dmde.DomoError):
     def __init__(
         self,
         domo_instance,
@@ -174,7 +174,7 @@ class DomoCodeEngine_PackageVersion:
             raise DomoCodeEngine_ConfigError(
                 package_id=self.package_id,
                 version=self.version,
-                message="unable to set functions",
+                message="API did not return code, configuration or language -- unable to set functions",
                 domo_instance=self.auth.domo_instance,
             )
         try:
@@ -210,7 +210,7 @@ class DomoCodeEngine_PackageVersion:
         package_id,
         auth: dmda.DomoAuth,
         language: str,
-        supress_error: bool = True,
+        is_supress_error: bool = True,
     ):
 
         domo_version = cls(
@@ -230,14 +230,16 @@ class DomoCodeEngine_PackageVersion:
             domo_version._set_configuration()
 
         except DomoCodeEngine_ConfigError as e:
-            if not supress_error:
-                print(e)
+            print(e)
+            if not is_supress_error:
+                raise e from e
 
         try:
             domo_version.set_functions()
         except DomoCodeEngine_ConfigError as e:
-            if not supress_error:
-                print(e)
+            print(e)
+            if not is_supress_error:
+                raise e from e
 
         return domo_version
 
@@ -451,6 +453,14 @@ async def get_current_version_by_id(
     )
 
     current_version = domo_package.current_version
+
+    if not domo_package.current_version:
+        raise DomoCodeEngine_ConfigError(
+            package_id=package_id,
+            version=None,
+            message="No current version found for the package",
+            domo_instance=auth.domo_instance,
+        )
 
     domo_version = await DomoCodeEngine_PackageVersion.get_by_id_and_version(
         package_id=package_id,

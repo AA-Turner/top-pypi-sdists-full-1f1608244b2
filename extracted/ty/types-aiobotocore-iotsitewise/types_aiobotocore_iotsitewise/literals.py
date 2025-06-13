@@ -44,6 +44,7 @@ __all__ = (
     "ColumnNameType",
     "ComputeLocationType",
     "ConfigurationStateType",
+    "CoreDeviceOperatingSystemType",
     "DatasetSourceFormatType",
     "DatasetSourceTypeType",
     "DatasetStateType",
@@ -158,6 +159,7 @@ ColumnNameType = Literal[
 ]
 ComputeLocationType = Literal["CLOUD", "EDGE"]
 ConfigurationStateType = Literal["ACTIVE", "UPDATE_FAILED", "UPDATE_IN_PROGRESS"]
+CoreDeviceOperatingSystemType = Literal["LINUX_AARCH64", "LINUX_AMD64", "WINDOWS_AMD64"]
 DatasetSourceFormatType = Literal["KNOWLEDGE_BASE"]
 DatasetSourceTypeType = Literal["KENDRA"]
 DatasetStateType = Literal["ACTIVE", "CREATING", "DELETING", "FAILED", "UPDATING"]
@@ -378,6 +380,7 @@ ServiceName = Literal[
     "freetier",
     "fsx",
     "gamelift",
+    "gameliftstreams",
     "geo-maps",
     "geo-places",
     "geo-routes",
@@ -403,6 +406,7 @@ ServiceName = Literal[
     "iot",
     "iot-data",
     "iot-jobs-data",
+    "iot-managed-integrations",
     "iotanalytics",
     "iotdeviceadvisor",
     "iotevents",
@@ -517,7 +521,6 @@ ServiceName = Literal[
     "pipes",
     "polly",
     "pricing",
-    "privatenetworks",
     "proton",
     "qapps",
     "qbusiness",
@@ -578,7 +581,6 @@ ServiceName = Literal[
     "signer",
     "simspaceweaver",
     "sms",
-    "sms-voice",
     "snow-device-management",
     "snowball",
     "sns",
@@ -586,6 +588,7 @@ ServiceName = Literal[
     "sqs",
     "ssm",
     "ssm-contacts",
+    "ssm-guiconnect",
     "ssm-incidents",
     "ssm-quicksetup",
     "ssm-sap",

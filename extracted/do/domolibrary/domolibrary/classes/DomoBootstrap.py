@@ -5,6 +5,8 @@ __all__ = ['DomoBootstrap_Feature', 'DomoBootstrap']
 
 # %% ../../nbs/classes/50_DomoBootstrap.ipynb 2
 from ..routes.bootstrap import InvalidAuthTypeError
+from ..client.DomoAuth import DomoAuth, DomoTokenAuth, DomoFullAuth
+from ..client.DomoError import DomoError
 
 # %% ../../nbs/classes/50_DomoBootstrap.ipynb 3
 from dataclasses import dataclass, field

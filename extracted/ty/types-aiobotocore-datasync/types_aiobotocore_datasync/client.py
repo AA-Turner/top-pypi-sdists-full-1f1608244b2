@@ -29,18 +29,13 @@ from botocore.errorfactory import BaseClientExceptions
 from botocore.exceptions import ClientError as BotocoreClientError
 
 from .paginator import (
-    DescribeStorageSystemResourceMetricsPaginator,
     ListAgentsPaginator,
-    ListDiscoveryJobsPaginator,
     ListLocationsPaginator,
-    ListStorageSystemsPaginator,
     ListTagsForResourcePaginator,
     ListTaskExecutionsPaginator,
     ListTasksPaginator,
 )
 from .type_defs import (
-    AddStorageSystemRequestTypeDef,
-    AddStorageSystemResponseTypeDef,
     CancelTaskExecutionRequestTypeDef,
     CreateAgentRequestTypeDef,
     CreateAgentResponseTypeDef,
@@ -73,8 +68,6 @@ from .type_defs import (
     DeleteTaskRequestTypeDef,
     DescribeAgentRequestTypeDef,
     DescribeAgentResponseTypeDef,
-    DescribeDiscoveryJobRequestTypeDef,
-    DescribeDiscoveryJobResponseTypeDef,
     DescribeLocationAzureBlobRequestTypeDef,
     DescribeLocationAzureBlobResponseTypeDef,
     DescribeLocationEfsRequestTypeDef,
@@ -97,41 +90,25 @@ from .type_defs import (
     DescribeLocationS3ResponseTypeDef,
     DescribeLocationSmbRequestTypeDef,
     DescribeLocationSmbResponseTypeDef,
-    DescribeStorageSystemRequestTypeDef,
-    DescribeStorageSystemResourceMetricsRequestTypeDef,
-    DescribeStorageSystemResourceMetricsResponseTypeDef,
-    DescribeStorageSystemResourcesRequestTypeDef,
-    DescribeStorageSystemResourcesResponseTypeDef,
-    DescribeStorageSystemResponseTypeDef,
     DescribeTaskExecutionRequestTypeDef,
     DescribeTaskExecutionResponseTypeDef,
     DescribeTaskRequestTypeDef,
     DescribeTaskResponseTypeDef,
-    GenerateRecommendationsRequestTypeDef,
     ListAgentsRequestTypeDef,
     ListAgentsResponseTypeDef,
-    ListDiscoveryJobsRequestTypeDef,
-    ListDiscoveryJobsResponseTypeDef,
     ListLocationsRequestTypeDef,
     ListLocationsResponseTypeDef,
-    ListStorageSystemsRequestTypeDef,
-    ListStorageSystemsResponseTypeDef,
     ListTagsForResourceRequestTypeDef,
     ListTagsForResourceResponseTypeDef,
     ListTaskExecutionsRequestTypeDef,
     ListTaskExecutionsResponseTypeDef,
     ListTasksRequestTypeDef,
     ListTasksResponseTypeDef,
-    RemoveStorageSystemRequestTypeDef,
-    StartDiscoveryJobRequestTypeDef,
-    StartDiscoveryJobResponseTypeDef,
     StartTaskExecutionRequestTypeDef,
     StartTaskExecutionResponseTypeDef,
-    StopDiscoveryJobRequestTypeDef,
     TagResourceRequestTypeDef,
     UntagResourceRequestTypeDef,
     UpdateAgentRequestTypeDef,
-    UpdateDiscoveryJobRequestTypeDef,
     UpdateLocationAzureBlobRequestTypeDef,
     UpdateLocationEfsRequestTypeDef,
     UpdateLocationFsxLustreRequestTypeDef,
@@ -143,7 +120,6 @@ from .type_defs import (
     UpdateLocationObjectStorageRequestTypeDef,
     UpdateLocationS3RequestTypeDef,
     UpdateLocationSmbRequestTypeDef,
-    UpdateStorageSystemRequestTypeDef,
     UpdateTaskExecutionRequestTypeDef,
     UpdateTaskRequestTypeDef,
 )
@@ -202,17 +178,6 @@ class DataSyncClient(AioBaseClient):
         """
         [Show boto3 documentation](https://boto3.amazonaws.com/v1/documentation/api/latest/reference/services/datasync/client/generate_presigned_url.html)
         [Show types-aiobotocore documentation](https://youtype.github.io/types_aiobotocore_docs/types_aiobotocore_datasync/client/#generate_presigned_url)
-        """
-
-    async def add_storage_system(
-        self, **kwargs: Unpack[AddStorageSystemRequestTypeDef]
-    ) -> AddStorageSystemResponseTypeDef:
-        """
-        Creates an Amazon Web Services resource for an on-premises storage system that
-        you want DataSync Discovery to collect information about.
-
-        [Show boto3 documentation](https://boto3.amazonaws.com/v1/documentation/api/latest/reference/services/datasync/client/add_storage_system.html)
-        [Show types-aiobotocore documentation](https://youtype.github.io/types_aiobotocore_docs/types_aiobotocore_datasync/client/#add_storage_system)
         """
 
     async def cancel_task_execution(
@@ -395,16 +360,6 @@ class DataSyncClient(AioBaseClient):
         [Show types-aiobotocore documentation](https://youtype.github.io/types_aiobotocore_docs/types_aiobotocore_datasync/client/#describe_agent)
         """
 
-    async def describe_discovery_job(
-        self, **kwargs: Unpack[DescribeDiscoveryJobRequestTypeDef]
-    ) -> DescribeDiscoveryJobResponseTypeDef:
-        """
-        Returns information about a DataSync discovery job.
-
-        [Show boto3 documentation](https://boto3.amazonaws.com/v1/documentation/api/latest/reference/services/datasync/client/describe_discovery_job.html)
-        [Show types-aiobotocore documentation](https://youtype.github.io/types_aiobotocore_docs/types_aiobotocore_datasync/client/#describe_discovery_job)
-        """
-
     async def describe_location_azure_blob(
         self, **kwargs: Unpack[DescribeLocationAzureBlobRequestTypeDef]
     ) -> DescribeLocationAzureBlobResponseTypeDef:
@@ -526,40 +481,6 @@ class DataSyncClient(AioBaseClient):
         [Show types-aiobotocore documentation](https://youtype.github.io/types_aiobotocore_docs/types_aiobotocore_datasync/client/#describe_location_smb)
         """
 
-    async def describe_storage_system(
-        self, **kwargs: Unpack[DescribeStorageSystemRequestTypeDef]
-    ) -> DescribeStorageSystemResponseTypeDef:
-        """
-        Returns information about an on-premises storage system that you're using with
-        DataSync Discovery.
-
-        [Show boto3 documentation](https://boto3.amazonaws.com/v1/documentation/api/latest/reference/services/datasync/client/describe_storage_system.html)
-        [Show types-aiobotocore documentation](https://youtype.github.io/types_aiobotocore_docs/types_aiobotocore_datasync/client/#describe_storage_system)
-        """
-
-    async def describe_storage_system_resource_metrics(
-        self, **kwargs: Unpack[DescribeStorageSystemResourceMetricsRequestTypeDef]
-    ) -> DescribeStorageSystemResourceMetricsResponseTypeDef:
-        """
-        Returns information, including performance data and capacity usage, which
-        DataSync Discovery collects about a specific resource in your-premises storage
-        system.
-
-        [Show boto3 documentation](https://boto3.amazonaws.com/v1/documentation/api/latest/reference/services/datasync/client/describe_storage_system_resource_metrics.html)
-        [Show types-aiobotocore documentation](https://youtype.github.io/types_aiobotocore_docs/types_aiobotocore_datasync/client/#describe_storage_system_resource_metrics)
-        """
-
-    async def describe_storage_system_resources(
-        self, **kwargs: Unpack[DescribeStorageSystemResourcesRequestTypeDef]
-    ) -> DescribeStorageSystemResourcesResponseTypeDef:
-        """
-        Returns information that DataSync Discovery collects about resources in your
-        on-premises storage system.
-
-        [Show boto3 documentation](https://boto3.amazonaws.com/v1/documentation/api/latest/reference/services/datasync/client/describe_storage_system_resources.html)
-        [Show types-aiobotocore documentation](https://youtype.github.io/types_aiobotocore_docs/types_aiobotocore_datasync/client/#describe_storage_system_resources)
-        """
-
     async def describe_task(
         self, **kwargs: Unpack[DescribeTaskRequestTypeDef]
     ) -> DescribeTaskResponseTypeDef:
@@ -581,17 +502,6 @@ class DataSyncClient(AioBaseClient):
         [Show types-aiobotocore documentation](https://youtype.github.io/types_aiobotocore_docs/types_aiobotocore_datasync/client/#describe_task_execution)
         """
 
-    async def generate_recommendations(
-        self, **kwargs: Unpack[GenerateRecommendationsRequestTypeDef]
-    ) -> Dict[str, Any]:
-        """
-        Creates recommendations about where to migrate your data to in Amazon Web
-        Services.
-
-        [Show boto3 documentation](https://boto3.amazonaws.com/v1/documentation/api/latest/reference/services/datasync/client/generate_recommendations.html)
-        [Show types-aiobotocore documentation](https://youtype.github.io/types_aiobotocore_docs/types_aiobotocore_datasync/client/#generate_recommendations)
-        """
-
     async def list_agents(
         self, **kwargs: Unpack[ListAgentsRequestTypeDef]
     ) -> ListAgentsResponseTypeDef:
@@ -603,17 +513,6 @@ class DataSyncClient(AioBaseClient):
         [Show types-aiobotocore documentation](https://youtype.github.io/types_aiobotocore_docs/types_aiobotocore_datasync/client/#list_agents)
         """
 
-    async def list_discovery_jobs(
-        self, **kwargs: Unpack[ListDiscoveryJobsRequestTypeDef]
-    ) -> ListDiscoveryJobsResponseTypeDef:
-        """
-        Provides a list of the existing discovery jobs in the Amazon Web Services
-        Region and Amazon Web Services account where you're using DataSync Discovery.
-
-        [Show boto3 documentation](https://boto3.amazonaws.com/v1/documentation/api/latest/reference/services/datasync/client/list_discovery_jobs.html)
-        [Show types-aiobotocore documentation](https://youtype.github.io/types_aiobotocore_docs/types_aiobotocore_datasync/client/#list_discovery_jobs)
-        """
-
     async def list_locations(
         self, **kwargs: Unpack[ListLocationsRequestTypeDef]
     ) -> ListLocationsResponseTypeDef:
@@ -622,16 +521,6 @@ class DataSyncClient(AioBaseClient):
 
         [Show boto3 documentation](https://boto3.amazonaws.com/v1/documentation/api/latest/reference/services/datasync/client/list_locations.html)
         [Show types-aiobotocore documentation](https://youtype.github.io/types_aiobotocore_docs/types_aiobotocore_datasync/client/#list_locations)
-        """
-
-    async def list_storage_systems(
-        self, **kwargs: Unpack[ListStorageSystemsRequestTypeDef]
-    ) -> ListStorageSystemsResponseTypeDef:
-        """
-        Lists the on-premises storage systems that you're using with DataSync Discovery.
-
-        [Show boto3 documentation](https://boto3.amazonaws.com/v1/documentation/api/latest/reference/services/datasync/client/list_storage_systems.html)
-        [Show types-aiobotocore documentation](https://youtype.github.io/types_aiobotocore_docs/types_aiobotocore_datasync/client/#list_storage_systems)
         """
 
     async def list_tags_for_resource(
@@ -664,27 +553,6 @@ class DataSyncClient(AioBaseClient):
         [Show types-aiobotocore documentation](https://youtype.github.io/types_aiobotocore_docs/types_aiobotocore_datasync/client/#list_tasks)
         """
 
-    async def remove_storage_system(
-        self, **kwargs: Unpack[RemoveStorageSystemRequestTypeDef]
-    ) -> Dict[str, Any]:
-        """
-        Permanently removes a storage system resource from DataSync Discovery,
-        including the associated discovery jobs, collected data, and recommendations.
-
-        [Show boto3 documentation](https://boto3.amazonaws.com/v1/documentation/api/latest/reference/services/datasync/client/remove_storage_system.html)
-        [Show types-aiobotocore documentation](https://youtype.github.io/types_aiobotocore_docs/types_aiobotocore_datasync/client/#remove_storage_system)
-        """
-
-    async def start_discovery_job(
-        self, **kwargs: Unpack[StartDiscoveryJobRequestTypeDef]
-    ) -> StartDiscoveryJobResponseTypeDef:
-        """
-        Runs a DataSync discovery job on your on-premises storage system.
-
-        [Show boto3 documentation](https://boto3.amazonaws.com/v1/documentation/api/latest/reference/services/datasync/client/start_discovery_job.html)
-        [Show types-aiobotocore documentation](https://youtype.github.io/types_aiobotocore_docs/types_aiobotocore_datasync/client/#start_discovery_job)
-        """
-
     async def start_task_execution(
         self, **kwargs: Unpack[StartTaskExecutionRequestTypeDef]
     ) -> StartTaskExecutionResponseTypeDef:
@@ -693,16 +561,6 @@ class DataSyncClient(AioBaseClient):
 
         [Show boto3 documentation](https://boto3.amazonaws.com/v1/documentation/api/latest/reference/services/datasync/client/start_task_execution.html)
         [Show types-aiobotocore documentation](https://youtype.github.io/types_aiobotocore_docs/types_aiobotocore_datasync/client/#start_task_execution)
-        """
-
-    async def stop_discovery_job(
-        self, **kwargs: Unpack[StopDiscoveryJobRequestTypeDef]
-    ) -> Dict[str, Any]:
-        """
-        Stops a running DataSync discovery job.
-
-        [Show boto3 documentation](https://boto3.amazonaws.com/v1/documentation/api/latest/reference/services/datasync/client/stop_discovery_job.html)
-        [Show types-aiobotocore documentation](https://youtype.github.io/types_aiobotocore_docs/types_aiobotocore_datasync/client/#stop_discovery_job)
         """
 
     async def tag_resource(self, **kwargs: Unpack[TagResourceRequestTypeDef]) -> Dict[str, Any]:
@@ -727,16 +585,6 @@ class DataSyncClient(AioBaseClient):
 
         [Show boto3 documentation](https://boto3.amazonaws.com/v1/documentation/api/latest/reference/services/datasync/client/update_agent.html)
         [Show types-aiobotocore documentation](https://youtype.github.io/types_aiobotocore_docs/types_aiobotocore_datasync/client/#update_agent)
-        """
-
-    async def update_discovery_job(
-        self, **kwargs: Unpack[UpdateDiscoveryJobRequestTypeDef]
-    ) -> Dict[str, Any]:
-        """
-        Edits a DataSync discovery job configuration.
-
-        [Show boto3 documentation](https://boto3.amazonaws.com/v1/documentation/api/latest/reference/services/datasync/client/update_discovery_job.html)
-        [Show types-aiobotocore documentation](https://youtype.github.io/types_aiobotocore_docs/types_aiobotocore_datasync/client/#update_discovery_job)
         """
 
     async def update_location_azure_blob(
@@ -860,17 +708,6 @@ class DataSyncClient(AioBaseClient):
         [Show types-aiobotocore documentation](https://youtype.github.io/types_aiobotocore_docs/types_aiobotocore_datasync/client/#update_location_smb)
         """
 
-    async def update_storage_system(
-        self, **kwargs: Unpack[UpdateStorageSystemRequestTypeDef]
-    ) -> Dict[str, Any]:
-        """
-        Modifies some configurations of an on-premises storage system resource that
-        you're using with DataSync Discovery.
-
-        [Show boto3 documentation](https://boto3.amazonaws.com/v1/documentation/api/latest/reference/services/datasync/client/update_storage_system.html)
-        [Show types-aiobotocore documentation](https://youtype.github.io/types_aiobotocore_docs/types_aiobotocore_datasync/client/#update_storage_system)
-        """
-
     async def update_task(self, **kwargs: Unpack[UpdateTaskRequestTypeDef]) -> Dict[str, Any]:
         """
         Updates the configuration of a <i>task</i>, which defines where and how
@@ -892,17 +729,6 @@ class DataSyncClient(AioBaseClient):
 
     @overload  # type: ignore[override]
     def get_paginator(  # type: ignore[override]
-        self, operation_name: Literal["describe_storage_system_resource_metrics"]
-    ) -> DescribeStorageSystemResourceMetricsPaginator:
-        """
-        Create a paginator for an operation.
-
-        [Show boto3 documentation](https://boto3.amazonaws.com/v1/documentation/api/latest/reference/services/datasync/client/get_paginator.html)
-        [Show types-aiobotocore documentation](https://youtype.github.io/types_aiobotocore_docs/types_aiobotocore_datasync/client/#get_paginator)
-        """
-
-    @overload  # type: ignore[override]
-    def get_paginator(  # type: ignore[override]
         self, operation_name: Literal["list_agents"]
     ) -> ListAgentsPaginator:
         """
@@ -914,30 +740,8 @@ class DataSyncClient(AioBaseClient):
 
     @overload  # type: ignore[override]
     def get_paginator(  # type: ignore[override]
-        self, operation_name: Literal["list_discovery_jobs"]
-    ) -> ListDiscoveryJobsPaginator:
-        """
-        Create a paginator for an operation.
-
-        [Show boto3 documentation](https://boto3.amazonaws.com/v1/documentation/api/latest/reference/services/datasync/client/get_paginator.html)
-        [Show types-aiobotocore documentation](https://youtype.github.io/types_aiobotocore_docs/types_aiobotocore_datasync/client/#get_paginator)
-        """
-
-    @overload  # type: ignore[override]
-    def get_paginator(  # type: ignore[override]
         self, operation_name: Literal["list_locations"]
     ) -> ListLocationsPaginator:
-        """
-        Create a paginator for an operation.
-
-        [Show boto3 documentation](https://boto3.amazonaws.com/v1/documentation/api/latest/reference/services/datasync/client/get_paginator.html)
-        [Show types-aiobotocore documentation](https://youtype.github.io/types_aiobotocore_docs/types_aiobotocore_datasync/client/#get_paginator)
-        """
-
-    @overload  # type: ignore[override]
-    def get_paginator(  # type: ignore[override]
-        self, operation_name: Literal["list_storage_systems"]
-    ) -> ListStorageSystemsPaginator:
         """
         Create a paginator for an operation.
 

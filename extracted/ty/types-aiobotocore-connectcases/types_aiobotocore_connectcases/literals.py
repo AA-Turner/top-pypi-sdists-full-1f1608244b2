@@ -39,6 +39,8 @@ __all__ = (
     "SearchCasesPaginatorName",
     "SearchRelatedItemsPaginatorName",
     "ServiceName",
+    "SlaStatusType",
+    "SlaTypeType",
     "TemplateStatusType",
 )
 
@@ -50,10 +52,12 @@ FieldNamespaceType = Literal["Custom", "System"]
 FieldTypeType = Literal["Boolean", "DateTime", "Number", "SingleSelect", "Text", "Url", "User"]
 ListCaseRulesPaginatorName = Literal["list_case_rules"]
 OrderType = Literal["Asc", "Desc"]
-RelatedItemTypeType = Literal["Comment", "Contact", "File"]
+RelatedItemTypeType = Literal["Comment", "Contact", "File", "Sla"]
 RuleTypeType = Literal["Required"]
 SearchCasesPaginatorName = Literal["search_cases"]
 SearchRelatedItemsPaginatorName = Literal["search_related_items"]
+SlaStatusType = Literal["Active", "Met", "NotMet", "Overdue"]
+SlaTypeType = Literal["CaseField"]
 TemplateStatusType = Literal["Active", "Inactive"]
 ConnectCasesServiceName = Literal["connectcases"]
 ServiceName = Literal[
@@ -212,6 +216,7 @@ ServiceName = Literal[
     "freetier",
     "fsx",
     "gamelift",
+    "gameliftstreams",
     "geo-maps",
     "geo-places",
     "geo-routes",
@@ -237,6 +242,7 @@ ServiceName = Literal[
     "iot",
     "iot-data",
     "iot-jobs-data",
+    "iot-managed-integrations",
     "iotanalytics",
     "iotdeviceadvisor",
     "iotevents",
@@ -351,7 +357,6 @@ ServiceName = Literal[
     "pipes",
     "polly",
     "pricing",
-    "privatenetworks",
     "proton",
     "qapps",
     "qbusiness",
@@ -412,7 +417,6 @@ ServiceName = Literal[
     "signer",
     "simspaceweaver",
     "sms",
-    "sms-voice",
     "snow-device-management",
     "snowball",
     "sns",
@@ -420,6 +424,7 @@ ServiceName = Literal[
     "sqs",
     "ssm",
     "ssm-contacts",
+    "ssm-guiconnect",
     "ssm-incidents",
     "ssm-quicksetup",
     "ssm-sap",

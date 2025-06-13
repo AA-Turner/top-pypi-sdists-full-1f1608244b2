@@ -4,7 +4,7 @@
 __all__ = ['App_API_Exception', 'get_all_designs', 'get_design_by_id', 'get_design_versions', 'Design_GET_Assets',
            'get_design_source_code_by_version', 'get_design_permissions', 'set_design_admins', 'add_design_admin']
 
-# %% ../../nbs/routes/enterprise_apps.ipynb 2
+# %% ../../nbs/routes/enterprise_apps.ipynb 3
 from typing import List
 import os
 import httpx
@@ -16,7 +16,7 @@ import domolibrary.client.DomoError as dmde
 
 import domolibrary.utils.files as dmfi
 
-# %% ../../nbs/routes/enterprise_apps.ipynb 6
+# %% ../../nbs/routes/enterprise_apps.ipynb 7
 class App_API_Exception(dmde.RouteError):
     def __init__(self, res: rgd.ResponseGetData):
         super().__init__(res=res)
@@ -26,6 +26,8 @@ class App_API_Exception(dmde.RouteError):
 async def get_all_designs(
     auth: dmda.DomoAuth,
     parts: str = "owners,creator,thumbnail,versions,cards",
+    return_raw: bool = False,
+    debug_loop: bool = False,
     debug_api: bool = False,
     debug_num_stacks_to_drop: int = 1,
     session: httpx.AsyncClient = None,
@@ -43,14 +45,25 @@ async def get_all_designs(
         "withPermission": "ADMIN",
     }
 
-    res = await gd.get_data(
+    offset_paramse = {
+        "limit": "limit",
+        "offset": "offset",
+    }
+
+    res = await gd.looper(
         url=url,
         method="get",
-        params=params,
+        fixed_params=params,
+        offset_params=offset_paramse,
+        offset_params_in_body=False,
         auth=auth,
         debug_api=debug_api,
+        debug_loop=debug_loop,
         timeout=10,
-        num_stacks_to_drop=debug_num_stacks_to_drop,
+        limit=30,
+        return_raw=return_raw,
+        arr_fn=lambda x: x.response,
+        debug_num_stacks_to_drop=debug_num_stacks_to_drop,
         session=session,
         parent_class=parent_class,
     )
@@ -58,9 +71,12 @@ async def get_all_designs(
     if not res.is_success:
         raise App_API_Exception(res=res)
 
+    if return_raw:
+        return res
+
     return res
 
-# %% ../../nbs/routes/enterprise_apps.ipynb 9
+# %% ../../nbs/routes/enterprise_apps.ipynb 10
 @gd.route_function
 async def get_design_by_id(
     auth: dmda.DomoAuth,
@@ -90,7 +106,7 @@ async def get_design_by_id(
 
     return res
 
-# %% ../../nbs/routes/enterprise_apps.ipynb 11
+# %% ../../nbs/routes/enterprise_apps.ipynb 12
 @gd.route_function
 async def get_design_versions(
     auth: dmda.DomoAuth,
@@ -118,7 +134,7 @@ async def get_design_versions(
 
     return res
 
-# %% ../../nbs/routes/enterprise_apps.ipynb 14
+# %% ../../nbs/routes/enterprise_apps.ipynb 15
 class Design_GET_Assets(dmde.DomoError):
     def __init__(self, res, design_id, message=None):
         message = message or f"unable to download assets for {design_id}"
@@ -178,7 +194,7 @@ async def get_design_source_code_by_version(
 
     return res
 
-# %% ../../nbs/routes/enterprise_apps.ipynb 16
+# %% ../../nbs/routes/enterprise_apps.ipynb 17
 @gd.route_function
 async def get_design_permissions(
     design_id: str,

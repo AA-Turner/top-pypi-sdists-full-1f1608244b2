@@ -11,6 +11,7 @@ from domolibrary.routes.user import (
     SearchUser_NoResults,
     User_CrudError,
     ResetPassword_PasswordUsed,
+    DeleteUser_Error,
     DownloadAvatar_Error,
     UserProperty_Type
 )

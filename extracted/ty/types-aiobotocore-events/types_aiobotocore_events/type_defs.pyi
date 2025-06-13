@@ -371,6 +371,7 @@ class CreateArchiveRequestTypeDef(TypedDict):
     Description: NotRequired[str]
     EventPattern: NotRequired[str]
     RetentionDays: NotRequired[int]
+    KmsKeyIdentifier: NotRequired[str]
 
 class CreateConnectionApiKeyAuthRequestParametersTypeDef(TypedDict):
     ApiKeyName: str
@@ -739,6 +740,7 @@ class UpdateArchiveRequestTypeDef(TypedDict):
     Description: NotRequired[str]
     EventPattern: NotRequired[str]
     RetentionDays: NotRequired[int]
+    KmsKeyIdentifier: NotRequired[str]
 
 class UpdateConnectionApiKeyAuthRequestParametersTypeDef(TypedDict):
     ApiKeyName: NotRequired[str]
@@ -833,6 +835,7 @@ class DescribeArchiveResponseTypeDef(TypedDict):
     EventPattern: str
     State: ArchiveStateType
     StateReason: str
+    KmsKeyIdentifier: str
     RetentionDays: int
     SizeBytes: int
     EventCount: int
@@ -1327,6 +1330,7 @@ class DescribeConnectionResponseTypeDef(TypedDict):
     StateReason: str
     AuthorizationType: ConnectionAuthorizationTypeType
     SecretArn: str
+    KmsKeyIdentifier: str
     AuthParameters: ConnectionAuthResponseParametersTypeDef
     CreationTime: datetime
     LastModifiedTime: datetime
@@ -1360,6 +1364,7 @@ class CreateConnectionRequestTypeDef(TypedDict):
     AuthParameters: CreateConnectionAuthRequestParametersTypeDef
     Description: NotRequired[str]
     InvocationConnectivityParameters: NotRequired[ConnectivityResourceParametersTypeDef]
+    KmsKeyIdentifier: NotRequired[str]
 
 class UpdateConnectionRequestTypeDef(TypedDict):
     Name: str
@@ -1367,6 +1372,7 @@ class UpdateConnectionRequestTypeDef(TypedDict):
     AuthorizationType: NotRequired[ConnectionAuthorizationTypeType]
     AuthParameters: NotRequired[UpdateConnectionAuthRequestParametersTypeDef]
     InvocationConnectivityParameters: NotRequired[ConnectivityResourceParametersTypeDef]
+    KmsKeyIdentifier: NotRequired[str]
 
 class TargetTypeDef(TypedDict):
     Id: str

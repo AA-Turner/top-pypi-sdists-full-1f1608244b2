@@ -1121,7 +1121,7 @@ class LteLocalIdTypeDef(TypedDict):
 class LteNmrObjTypeDef(TypedDict):
     Pci: int
     Earfcn: int
-    EutranCid: int
+    EutranCid: NotRequired[int]
     Rsrp: NotRequired[int]
     Rsrq: NotRequired[float]
 

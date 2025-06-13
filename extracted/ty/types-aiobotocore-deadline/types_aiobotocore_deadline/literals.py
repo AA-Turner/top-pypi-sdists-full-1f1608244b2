@@ -97,6 +97,7 @@ __all__ = (
     "QueueStatusType",
     "ResourceServiceName",
     "RunAsType",
+    "SearchTermMatchingTypeType",
     "ServiceManagedFleetOperatingSystemFamilyType",
     "ServiceName",
     "SessionActionStatusType",
@@ -108,6 +109,7 @@ __all__ = (
     "StepParameterTypeType",
     "StepTargetTaskRunStatusType",
     "StorageProfileOperatingSystemFamilyType",
+    "TagPropagationModeType",
     "TaskRunStatusType",
     "TaskTargetRunStatusType",
     "UpdateJobLifecycleStatusType",
@@ -226,6 +228,7 @@ QueueSchedulingBlockedWaiterName = Literal["queue_scheduling_blocked"]
 QueueSchedulingWaiterName = Literal["queue_scheduling"]
 QueueStatusType = Literal["IDLE", "SCHEDULING", "SCHEDULING_BLOCKED"]
 RunAsType = Literal["QUEUE_CONFIGURED_USER", "WORKER_AGENT_USER"]
+SearchTermMatchingTypeType = Literal["CONTAINS", "FUZZY_MATCH"]
 ServiceManagedFleetOperatingSystemFamilyType = Literal["LINUX", "WINDOWS"]
 SessionActionStatusType = Literal[
     "ASSIGNED",
@@ -254,6 +257,7 @@ StepTargetTaskRunStatusType = Literal[
     "CANCELED", "FAILED", "PENDING", "READY", "SUCCEEDED", "SUSPENDED"
 ]
 StorageProfileOperatingSystemFamilyType = Literal["LINUX", "MACOS", "WINDOWS"]
+TagPropagationModeType = Literal["NO_PROPAGATION", "PROPAGATE_TAGS_TO_WORKERS_AT_LAUNCH"]
 TaskRunStatusType = Literal[
     "ASSIGNED",
     "CANCELED",
@@ -451,6 +455,7 @@ ServiceName = Literal[
     "freetier",
     "fsx",
     "gamelift",
+    "gameliftstreams",
     "geo-maps",
     "geo-places",
     "geo-routes",
@@ -476,6 +481,7 @@ ServiceName = Literal[
     "iot",
     "iot-data",
     "iot-jobs-data",
+    "iot-managed-integrations",
     "iotanalytics",
     "iotdeviceadvisor",
     "iotevents",
@@ -590,7 +596,6 @@ ServiceName = Literal[
     "pipes",
     "polly",
     "pricing",
-    "privatenetworks",
     "proton",
     "qapps",
     "qbusiness",
@@ -651,7 +656,6 @@ ServiceName = Literal[
     "signer",
     "simspaceweaver",
     "sms",
-    "sms-voice",
     "snow-device-management",
     "snowball",
     "sns",
@@ -659,6 +663,7 @@ ServiceName = Literal[
     "sqs",
     "ssm",
     "ssm-contacts",
+    "ssm-guiconnect",
     "ssm-incidents",
     "ssm-quicksetup",
     "ssm-sap",

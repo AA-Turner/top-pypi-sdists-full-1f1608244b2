@@ -32,6 +32,7 @@ __all__ = (
     "DirectoryRegistrationStatusReasonType",
     "DirectoryRegistrationStatusType",
     "HashAlgorithmType",
+    "IpAddressTypeType",
     "KeySpecType",
     "KeyUsagePropertyTypeType",
     "ListConnectorsPaginatorName",
@@ -139,8 +140,11 @@ ClientCompatibilityV4Type = Literal[
     "WINDOWS_SERVER_2012", "WINDOWS_SERVER_2012_R2", "WINDOWS_SERVER_2016"
 ]
 ConnectorStatusReasonType = Literal[
+    "CA_CERTIFICATE_REGISTRATION_FAILED",
     "DIRECTORY_ACCESS_DENIED",
+    "INSUFFICIENT_FREE_ADDRESSES",
     "INTERNAL_FAILURE",
+    "INVALID_SUBNET_IP_PROTOCOL",
     "PRIVATECA_ACCESS_DENIED",
     "PRIVATECA_RESOURCE_NOT_FOUND",
     "SECURITY_GROUP_NOT_IN_VPC",
@@ -159,6 +163,7 @@ DirectoryRegistrationStatusReasonType = Literal[
 ]
 DirectoryRegistrationStatusType = Literal["ACTIVE", "CREATING", "DELETING", "FAILED"]
 HashAlgorithmType = Literal["SHA256", "SHA384", "SHA512"]
+IpAddressTypeType = Literal["DUALSTACK", "IPV4"]
 KeySpecType = Literal["KEY_EXCHANGE", "SIGNATURE"]
 KeyUsagePropertyTypeType = Literal["ALL"]
 ListConnectorsPaginatorName = Literal["list_connectors"]
@@ -175,6 +180,7 @@ ServicePrincipalNameStatusReasonType = Literal[
     "DIRECTORY_RESOURCE_NOT_FOUND",
     "INTERNAL_FAILURE",
     "SPN_EXISTS_ON_DIFFERENT_AD_OBJECT",
+    "SPN_LIMIT_EXCEEDED",
 ]
 ServicePrincipalNameStatusType = Literal["ACTIVE", "CREATING", "DELETING", "FAILED"]
 TemplateStatusType = Literal["ACTIVE", "DELETING"]
@@ -336,6 +342,7 @@ ServiceName = Literal[
     "freetier",
     "fsx",
     "gamelift",
+    "gameliftstreams",
     "geo-maps",
     "geo-places",
     "geo-routes",
@@ -361,6 +368,7 @@ ServiceName = Literal[
     "iot",
     "iot-data",
     "iot-jobs-data",
+    "iot-managed-integrations",
     "iotanalytics",
     "iotdeviceadvisor",
     "iotevents",
@@ -475,7 +483,6 @@ ServiceName = Literal[
     "pipes",
     "polly",
     "pricing",
-    "privatenetworks",
     "proton",
     "qapps",
     "qbusiness",
@@ -536,7 +543,6 @@ ServiceName = Literal[
     "signer",
     "simspaceweaver",
     "sms",
-    "sms-voice",
     "snow-device-management",
     "snowball",
     "sns",
@@ -544,6 +550,7 @@ ServiceName = Literal[
     "sqs",
     "ssm",
     "ssm-contacts",
+    "ssm-guiconnect",
     "ssm-incidents",
     "ssm-quicksetup",
     "ssm-sap",

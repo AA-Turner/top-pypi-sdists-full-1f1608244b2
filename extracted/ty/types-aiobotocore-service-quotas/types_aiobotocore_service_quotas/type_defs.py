@@ -8,9 +8,9 @@ Copyright 2025 Vlad Emelianov
 Usage::
 
     ```python
-    from types_aiobotocore_service_quotas.type_defs import DeleteServiceQuotaIncreaseRequestFromTemplateRequestTypeDef
+    from types_aiobotocore_service_quotas.type_defs import CreateSupportCaseRequestTypeDef
 
-    data: DeleteServiceQuotaIncreaseRequestFromTemplateRequestTypeDef = ...
+    data: CreateSupportCaseRequestTypeDef = ...
     ```
 """
 
@@ -41,6 +41,7 @@ else:
 
 
 __all__ = (
+    "CreateSupportCaseRequestTypeDef",
     "DeleteServiceQuotaIncreaseRequestFromTemplateRequestTypeDef",
     "ErrorReasonTypeDef",
     "GetAWSDefaultServiceQuotaRequestTypeDef",
@@ -89,6 +90,10 @@ __all__ = (
     "TagTypeDef",
     "UntagResourceRequestTypeDef",
 )
+
+
+class CreateSupportCaseRequestTypeDef(TypedDict):
+    RequestId: str
 
 
 class DeleteServiceQuotaIncreaseRequestFromTemplateRequestTypeDef(TypedDict):
@@ -243,6 +248,7 @@ class RequestServiceQuotaIncreaseRequestTypeDef(TypedDict):
     QuotaCode: str
     DesiredValue: float
     ContextId: NotRequired[str]
+    SupportCaseAllowed: NotRequired[bool]
 
 
 class UntagResourceRequestTypeDef(TypedDict):
@@ -362,6 +368,7 @@ ServiceQuotaTypeDef = TypedDict(
         "ErrorReason": NotRequired[ErrorReasonTypeDef],
         "QuotaAppliedAtLevel": NotRequired[AppliedLevelEnumType],
         "QuotaContext": NotRequired[QuotaContextInfoTypeDef],
+        "Description": NotRequired[str],
     },
 )
 

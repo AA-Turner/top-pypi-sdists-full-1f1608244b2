@@ -33,9 +33,9 @@ import constructs._jsii
 
 __jsii_assembly__ = jsii.JSIIAssembly.load(
     "cdk-aurora-globaldatabase",
-    "2.3.864",
+    "2.3.865",
     __name__[0:-6],
-    "cdk-aurora-globaldatabase@2.3.864.jsii.tgz",
+    "cdk-aurora-globaldatabase@2.3.865.jsii.tgz",
 )
 
 __all__ = [

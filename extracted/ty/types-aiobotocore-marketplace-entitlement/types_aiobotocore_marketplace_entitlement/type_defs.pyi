@@ -70,6 +70,7 @@ class EntitlementTypeDef(TypedDict):
     ProductCode: NotRequired[str]
     Dimension: NotRequired[str]
     CustomerIdentifier: NotRequired[str]
+    CustomerAWSAccountId: NotRequired[str]
     Value: NotRequired[EntitlementValueTypeDef]
     ExpirationDate: NotRequired[datetime]
 

@@ -28,6 +28,7 @@ dependencies = [
     "semantic-version~=2.10.0",
     "setuptools>=71.0.0",
     "tomli;python_version<'3.11'",
+    "uv~=0.7.12"
 ]
 dynamic = [
     "version",

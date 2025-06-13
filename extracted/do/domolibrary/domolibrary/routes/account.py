@@ -11,7 +11,6 @@ __all__ = ['Account_GET_Error', 'get_available_data_providers', 'get_accounts', 
            'Account_AlreadyShared_Error', 'share_account', 'share_oauth_account', 'share_account_v1']
 
 # %% ../../nbs/routes/account.ipynb 3
-from enum import Enum
 from abc import abstractmethod
 import httpx
 
@@ -19,6 +18,7 @@ import domolibrary.client.get_data as gd
 import domolibrary.client.ResponseGetData as rgd
 import domolibrary.client.DomoAuth as dmda
 import domolibrary.client.DomoError as dmde
+from domolibrary.client.DomoEntity import DomoEnum
 
 # %% ../../nbs/routes/account.ipynb 8
 class Account_GET_Error(dmde.RouteError):
@@ -771,40 +771,26 @@ async def get_oauth_account_accesslist(
     return res
 
 # %% ../../nbs/routes/account.ipynb 39
-class ShareAccount:
-    pass
-
+class ShareAccount(DomoEnum):
     @abstractmethod
     def generate_payload(self):
         pass
 
 
-class ShareAccount_V1_AccessLevel(ShareAccount, Enum):
+class ShareAccount_V1_AccessLevel(ShareAccount):
     CAN_VIEW = "READ"
     CAN_EDIT = "WRITE"
     OWNER = "OWNER"
     default = "READ"
 
-    @classmethod
-    def _missing_(cls, value):
-        value = value.lower()
+    def generate_payload(self, user_id: int, **kwargs):
 
-        for member in cls:
-            if member.value == value:
-                return member
-        return cls.default
-
-    def generate_payload(
-        self,
-        user_id: int,
-        **kwargs
-        ):
-        
         return {"type": "USER", "id": int(user_id), "permissions": [self.value]}
-    
 
-class ShareAccount_AccessLevel(ShareAccount, Enum):
+
+class ShareAccount_AccessLevel(ShareAccount):
     """Enum that correlates to the v2 API which should also be the current version"""
+
     CAN_VIEW = "CAN_VIEW"
     CAN_EDIT = "CAN_EDIT"
     CAN_SHARE = "CAN_SHARE"
@@ -812,30 +798,15 @@ class ShareAccount_AccessLevel(ShareAccount, Enum):
     NO_ACCESS = "NONE"
     default = "CAN_VIEW"
 
-    @classmethod
-    def _missing_(cls, value):
-        value = value.lower()
-
-        for member in cls:
-            if member.value == value:
-                return member
-        return cls.default
-
-    def generate_payload(
-        self,
-        user_id: int = None,
-        group_id: int = None,
-        **kwargs
-    ):
+    
+    def generate_payload(self, user_id: int = None, group_id: int = None, **kwargs):
         if user_id:
             return {"type": "USER", "id": str(user_id), "accessLevel": self.value}
 
         if group_id:
             return {"type": "GROUP", "id": str(group_id), "accessLevel": self.value}
 
-
-
-# %% ../../nbs/routes/account.ipynb 40
+# %% ../../nbs/routes/account.ipynb 41
 class Account_Share_Error(dmde.RouteError):
     def __init__(
         self, res: rgd.ResponseGetData, account_id: int = None, message: str = None
@@ -935,7 +906,7 @@ async def share_oauth_account(
 
     return res
 
-# %% ../../nbs/routes/account.ipynb 42
+# %% ../../nbs/routes/account.ipynb 43
 # v1 may have been deprecated.  used to be tied to group beta
 @gd.route_function
 async def share_account_v1(

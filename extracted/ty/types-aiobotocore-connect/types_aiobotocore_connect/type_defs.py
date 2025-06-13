@@ -67,6 +67,7 @@ from .literals import (
     IntervalPeriodType,
     LexVersionType,
     ListFlowAssociationResourceTypeType,
+    MediaStreamTypeType,
     MeetingFeatureStatusType,
     MonitorCapabilityType,
     NumberComparisonTypeType,
@@ -74,7 +75,9 @@ from .literals import (
     OutboundMessageSourceTypeType,
     OverrideDaysType,
     ParticipantRoleType,
+    ParticipantStateType,
     ParticipantTimerTypeType,
+    ParticipantTypeType,
     PhoneNumberCountryCodeType,
     PhoneNumberTypeType,
     PhoneNumberWorkflowStatusType,
@@ -89,6 +92,7 @@ from .literals import (
     RealTimeContactAnalysisSentimentLabelType,
     RealTimeContactAnalysisStatusType,
     RealTimeContactAnalysisSupportedChannelType,
+    RecordingStatusType,
     ReferenceStatusType,
     ReferenceTypeType,
     RehydrationTypeType,
@@ -101,6 +105,7 @@ from .literals import (
     SortOrderType,
     SourceTypeType,
     StatisticType,
+    StatusType,
     StorageTypeType,
     StringComparisonTypeType,
     TaskTemplateFieldTypeType,
@@ -158,6 +163,9 @@ __all__ = (
     "ApplicationOutputTypeDef",
     "ApplicationTypeDef",
     "ApplicationUnionTypeDef",
+    "AssignSlaActionDefinitionOutputTypeDef",
+    "AssignSlaActionDefinitionTypeDef",
+    "AssignSlaActionDefinitionUnionTypeDef",
     "AssociateAnalyticsDataSetRequestTypeDef",
     "AssociateAnalyticsDataSetResponseTypeDef",
     "AssociateApprovedOriginRequestTypeDef",
@@ -201,6 +209,9 @@ __all__ = (
     "BatchPutContactRequestTypeDef",
     "BatchPutContactResponseTypeDef",
     "CampaignTypeDef",
+    "CaseSlaConfigurationOutputTypeDef",
+    "CaseSlaConfigurationTypeDef",
+    "CaseSlaConfigurationUnionTypeDef",
     "ChatEventTypeDef",
     "ChatMessageTypeDef",
     "ChatParticipantRoleConfigTypeDef",
@@ -215,6 +226,8 @@ __all__ = (
     "ContactAnalysisTypeDef",
     "ContactConfigurationTypeDef",
     "ContactDataRequestTypeDef",
+    "ContactDetailsTypeDef",
+    "ContactEvaluationTypeDef",
     "ContactFilterTypeDef",
     "ContactFlowModuleSearchCriteriaPaginatorTypeDef",
     "ContactFlowModuleSearchCriteriaTypeDef",
@@ -782,6 +795,7 @@ __all__ = (
     "RealTimeContactAnalysisTranscriptItemWithCharacterOffsetsTypeDef",
     "RealTimeContactAnalysisTranscriptItemWithContentTypeDef",
     "RealtimeContactAnalysisSegmentTypeDef",
+    "RecordingInfoTypeDef",
     "ReferenceSummaryTypeDef",
     "ReferenceTypeDef",
     "ReleasePhoneNumberRequestTypeDef",
@@ -918,6 +932,7 @@ __all__ = (
     "StartTaskContactResponseTypeDef",
     "StartWebRTCContactRequestTypeDef",
     "StartWebRTCContactResponseTypeDef",
+    "StateTransitionTypeDef",
     "StepTypeDef",
     "StopContactRecordingRequestTypeDef",
     "StopContactRequestTypeDef",
@@ -1116,6 +1131,12 @@ class DeviceInfoTypeDef(TypedDict):
 class ParticipantCapabilitiesTypeDef(TypedDict):
     Video: NotRequired[Literal["SEND"]]
     ScreenShare: NotRequired[Literal["SEND"]]
+
+
+class StateTransitionTypeDef(TypedDict):
+    State: NotRequired[ParticipantStateType]
+    StateStartTimestamp: NotRequired[datetime]
+    StateEndTimestamp: NotRequired[datetime]
 
 
 class AudioQualityMetricsInfoTypeDef(TypedDict):
@@ -1410,6 +1431,13 @@ class CampaignTypeDef(TypedDict):
     CampaignId: NotRequired[str]
 
 
+class FieldValueUnionOutputTypeDef(TypedDict):
+    BooleanValue: NotRequired[bool]
+    DoubleValue: NotRequired[float]
+    EmptyValue: NotRequired[Dict[str, Any]]
+    StringValue: NotRequired[str]
+
+
 ChatEventTypeDef = TypedDict(
     "ChatEventTypeDef",
     {
@@ -1473,6 +1501,21 @@ EndpointTypeDef = TypedDict(
         "Address": NotRequired[str],
     },
 )
+
+
+class ContactDetailsTypeDef(TypedDict):
+    Name: NotRequired[str]
+    Description: NotRequired[str]
+
+
+class ContactEvaluationTypeDef(TypedDict):
+    FormId: NotRequired[str]
+    EvaluationArn: NotRequired[str]
+    Status: NotRequired[StatusType]
+    StartTimestamp: NotRequired[datetime]
+    EndTimestamp: NotRequired[datetime]
+    DeleteTimestamp: NotRequired[datetime]
+    ExportLocation: NotRequired[str]
 
 
 class ContactFilterTypeDef(TypedDict):
@@ -1569,6 +1612,19 @@ EndpointInfoTypeDef = TypedDict(
 class QueueInfoTypeDef(TypedDict):
     Id: NotRequired[str]
     EnqueueTimestamp: NotRequired[datetime]
+
+
+class RecordingInfoTypeDef(TypedDict):
+    StorageType: NotRequired[StorageTypeType]
+    Location: NotRequired[str]
+    MediaStreamType: NotRequired[MediaStreamTypeType]
+    ParticipantType: NotRequired[ParticipantTypeType]
+    FragmentStartNumber: NotRequired[str]
+    FragmentStopNumber: NotRequired[str]
+    StartTimestamp: NotRequired[datetime]
+    StopTimestamp: NotRequired[datetime]
+    Status: NotRequired[RecordingStatusType]
+    DeletionReason: NotRequired[str]
 
 
 class SegmentAttributeValueOutputTypeDef(TypedDict):
@@ -2350,13 +2406,6 @@ class EventBridgeActionDefinitionTypeDef(TypedDict):
 class ExpiryTypeDef(TypedDict):
     DurationInSeconds: NotRequired[int]
     ExpiryTimestamp: NotRequired[datetime]
-
-
-class FieldValueUnionOutputTypeDef(TypedDict):
-    BooleanValue: NotRequired[bool]
-    DoubleValue: NotRequired[float]
-    EmptyValue: NotRequired[Dict[str, Any]]
-    StringValue: NotRequired[str]
 
 
 class FieldValueUnionTypeDef(TypedDict):
@@ -4354,6 +4403,23 @@ class BatchPutContactResponseTypeDef(TypedDict):
     ResponseMetadata: ResponseMetadataTypeDef
 
 
+CaseSlaConfigurationOutputTypeDef = TypedDict(
+    "CaseSlaConfigurationOutputTypeDef",
+    {
+        "Name": str,
+        "Type": Literal["CaseField"],
+        "TargetSlaMinutes": int,
+        "FieldId": NotRequired[str],
+        "TargetFieldValues": NotRequired[List[FieldValueUnionOutputTypeDef]],
+    },
+)
+
+
+class FieldValueOutputTypeDef(TypedDict):
+    Id: str
+    Value: FieldValueUnionOutputTypeDef
+
+
 class StartContactStreamingRequestTypeDef(TypedDict):
     InstanceId: str
     ContactId: str
@@ -4820,11 +4886,6 @@ class EvaluationSummaryTypeDef(TypedDict):
     CreatedTime: datetime
     LastModifiedTime: datetime
     Score: NotRequired[EvaluationScoreTypeDef]
-
-
-class FieldValueOutputTypeDef(TypedDict):
-    Id: str
-    Value: FieldValueUnionOutputTypeDef
 
 
 FieldValueUnionUnionTypeDef = Union[FieldValueUnionTypeDef, FieldValueUnionOutputTypeDef]
@@ -5591,6 +5652,11 @@ class AgentInfoTypeDef(TypedDict):
     HierarchyGroups: NotRequired[HierarchyGroupsTypeDef]
     DeviceInfo: NotRequired[DeviceInfoTypeDef]
     Capabilities: NotRequired[ParticipantCapabilitiesTypeDef]
+    AfterContactWorkDuration: NotRequired[int]
+    AfterContactWorkStartTimestamp: NotRequired[datetime]
+    AfterContactWorkEndTimestamp: NotRequired[datetime]
+    AgentInitiatedHoldDuration: NotRequired[int]
+    StateTransitions: NotRequired[List[StateTransitionTypeDef]]
 
 
 class StartWebRTCContactRequestTypeDef(TypedDict):
@@ -5727,6 +5793,20 @@ class MeetingTypeDef(TypedDict):
     MediaPlacement: NotRequired[MediaPlacementTypeDef]
     MeetingFeatures: NotRequired[MeetingFeaturesConfigurationTypeDef]
     MeetingId: NotRequired[str]
+
+
+class AssignSlaActionDefinitionOutputTypeDef(TypedDict):
+    SlaAssignmentType: Literal["CASES"]
+    CaseSlaConfiguration: NotRequired[CaseSlaConfigurationOutputTypeDef]
+
+
+class CreateCaseActionDefinitionOutputTypeDef(TypedDict):
+    Fields: List[FieldValueOutputTypeDef]
+    TemplateId: str
+
+
+class UpdateCaseActionDefinitionOutputTypeDef(TypedDict):
+    Fields: List[FieldValueOutputTypeDef]
 
 
 class DescribePhoneNumberResponseTypeDef(TypedDict):
@@ -5899,13 +5979,16 @@ class ListContactEvaluationsResponseTypeDef(TypedDict):
     NextToken: NotRequired[str]
 
 
-class CreateCaseActionDefinitionOutputTypeDef(TypedDict):
-    Fields: List[FieldValueOutputTypeDef]
-    TemplateId: str
-
-
-class UpdateCaseActionDefinitionOutputTypeDef(TypedDict):
-    Fields: List[FieldValueOutputTypeDef]
+CaseSlaConfigurationTypeDef = TypedDict(
+    "CaseSlaConfigurationTypeDef",
+    {
+        "Name": str,
+        "Type": Literal["CaseField"],
+        "TargetSlaMinutes": int,
+        "FieldId": NotRequired[str],
+        "TargetFieldValues": NotRequired[Sequence[FieldValueUnionUnionTypeDef]],
+    },
+)
 
 
 class FieldValueTypeDef(TypedDict):
@@ -6205,6 +6288,7 @@ class CreateContactRequestTypeDef(TypedDict):
     Name: NotRequired[str]
     Description: NotRequired[str]
     SegmentAttributes: NotRequired[Mapping[str, SegmentAttributeValueUnionTypeDef]]
+    PreviousContactId: NotRequired[str]
 
 
 class StartChatContactRequestTypeDef(TypedDict):
@@ -6503,6 +6587,19 @@ class ConnectionDataTypeDef(TypedDict):
     Meeting: NotRequired[MeetingTypeDef]
 
 
+class RuleActionOutputTypeDef(TypedDict):
+    ActionType: ActionTypeType
+    TaskAction: NotRequired[TaskActionDefinitionOutputTypeDef]
+    EventBridgeAction: NotRequired[EventBridgeActionDefinitionTypeDef]
+    AssignContactCategoryAction: NotRequired[Dict[str, Any]]
+    SendNotificationAction: NotRequired[SendNotificationActionDefinitionOutputTypeDef]
+    CreateCaseAction: NotRequired[CreateCaseActionDefinitionOutputTypeDef]
+    UpdateCaseAction: NotRequired[UpdateCaseActionDefinitionOutputTypeDef]
+    AssignSlaAction: NotRequired[AssignSlaActionDefinitionOutputTypeDef]
+    EndAssociatedTasksAction: NotRequired[Dict[str, Any]]
+    SubmitAutoEvaluationAction: NotRequired[SubmitAutoEvaluationActionDefinitionTypeDef]
+
+
 class UserSearchCriteriaPaginatorTypeDef(TypedDict):
     OrConditions: NotRequired[Sequence[Mapping[str, Any]]]
     AndConditions: NotRequired[Sequence[Mapping[str, Any]]]
@@ -6581,20 +6678,9 @@ EvaluationFormSingleSelectQuestionAutomationUnionTypeDef = Union[
     EvaluationFormSingleSelectQuestionAutomationTypeDef,
     EvaluationFormSingleSelectQuestionAutomationOutputTypeDef,
 ]
-
-
-class RuleActionOutputTypeDef(TypedDict):
-    ActionType: ActionTypeType
-    TaskAction: NotRequired[TaskActionDefinitionOutputTypeDef]
-    EventBridgeAction: NotRequired[EventBridgeActionDefinitionTypeDef]
-    AssignContactCategoryAction: NotRequired[Dict[str, Any]]
-    SendNotificationAction: NotRequired[SendNotificationActionDefinitionOutputTypeDef]
-    CreateCaseAction: NotRequired[CreateCaseActionDefinitionOutputTypeDef]
-    UpdateCaseAction: NotRequired[UpdateCaseActionDefinitionOutputTypeDef]
-    EndAssociatedTasksAction: NotRequired[Dict[str, Any]]
-    SubmitAutoEvaluationAction: NotRequired[SubmitAutoEvaluationActionDefinitionTypeDef]
-
-
+CaseSlaConfigurationUnionTypeDef = Union[
+    CaseSlaConfigurationTypeDef, CaseSlaConfigurationOutputTypeDef
+]
 FieldValueUnionExtraTypeDef = Union[FieldValueTypeDef, FieldValueOutputTypeDef]
 
 
@@ -6833,6 +6919,20 @@ class StartWebRTCContactResponseTypeDef(TypedDict):
     ResponseMetadata: ResponseMetadataTypeDef
 
 
+class RuleTypeDef(TypedDict):
+    Name: str
+    RuleId: str
+    RuleArn: str
+    TriggerEventSource: RuleTriggerEventSourceTypeDef
+    Function: str
+    Actions: List[RuleActionOutputTypeDef]
+    PublishStatus: RulePublishStatusType
+    CreatedTime: datetime
+    LastUpdatedTime: datetime
+    LastUpdatedBy: str
+    Tags: NotRequired[Dict[str, str]]
+
+
 class SearchUsersRequestPaginateTypeDef(TypedDict):
     InstanceId: str
     SearchFilter: NotRequired[UserSearchFilterTypeDef]
@@ -6859,18 +6959,9 @@ class EvaluationFormSingleSelectQuestionPropertiesTypeDef(TypedDict):
     Automation: NotRequired[EvaluationFormSingleSelectQuestionAutomationUnionTypeDef]
 
 
-class RuleTypeDef(TypedDict):
-    Name: str
-    RuleId: str
-    RuleArn: str
-    TriggerEventSource: RuleTriggerEventSourceTypeDef
-    Function: str
-    Actions: List[RuleActionOutputTypeDef]
-    PublishStatus: RulePublishStatusType
-    CreatedTime: datetime
-    LastUpdatedTime: datetime
-    LastUpdatedBy: str
-    Tags: NotRequired[Dict[str, str]]
+class AssignSlaActionDefinitionTypeDef(TypedDict):
+    SlaAssignmentType: Literal["CASES"]
+    CaseSlaConfiguration: NotRequired[CaseSlaConfigurationUnionTypeDef]
 
 
 class CreateCaseActionDefinitionTypeDef(TypedDict):
@@ -6968,6 +7059,11 @@ class RoutingCriteriaTypeDef(TypedDict):
 AttributeConditionUnionTypeDef = Union[AttributeConditionTypeDef, AttributeConditionOutputTypeDef]
 
 
+class DescribeRuleResponseTypeDef(TypedDict):
+    Rule: RuleTypeDef
+    ResponseMetadata: ResponseMetadataTypeDef
+
+
 class EvaluationFormQuestionOutputTypeDef(TypedDict):
     Title: str
     RefId: str
@@ -6982,13 +7078,9 @@ EvaluationFormSingleSelectQuestionPropertiesUnionTypeDef = Union[
     EvaluationFormSingleSelectQuestionPropertiesTypeDef,
     EvaluationFormSingleSelectQuestionPropertiesOutputTypeDef,
 ]
-
-
-class DescribeRuleResponseTypeDef(TypedDict):
-    Rule: RuleTypeDef
-    ResponseMetadata: ResponseMetadataTypeDef
-
-
+AssignSlaActionDefinitionUnionTypeDef = Union[
+    AssignSlaActionDefinitionTypeDef, AssignSlaActionDefinitionOutputTypeDef
+]
 CreateCaseActionDefinitionUnionTypeDef = Union[
     CreateCaseActionDefinitionTypeDef, CreateCaseActionDefinitionOutputTypeDef
 ]
@@ -7044,6 +7136,11 @@ class ContactTypeDef(TypedDict):
     DisconnectDetails: NotRequired[DisconnectDetailsTypeDef]
     AdditionalEmailRecipients: NotRequired[AdditionalEmailRecipientsTypeDef]
     SegmentAttributes: NotRequired[Dict[str, SegmentAttributeValueOutputTypeDef]]
+    Recordings: NotRequired[List[RecordingInfoTypeDef]]
+    DisconnectReason: NotRequired[str]
+    ContactEvaluations: NotRequired[Dict[str, ContactEvaluationTypeDef]]
+    ContactDetails: NotRequired[ContactDetailsTypeDef]
+    Attributes: NotRequired[Dict[str, str]]
 
 
 class ExpressionTypeDef(TypedDict):
@@ -7071,6 +7168,7 @@ class RuleActionTypeDef(TypedDict):
     SendNotificationAction: NotRequired[SendNotificationActionDefinitionUnionTypeDef]
     CreateCaseAction: NotRequired[CreateCaseActionDefinitionUnionTypeDef]
     UpdateCaseAction: NotRequired[UpdateCaseActionDefinitionUnionTypeDef]
+    AssignSlaAction: NotRequired[AssignSlaActionDefinitionUnionTypeDef]
     EndAssociatedTasksAction: NotRequired[Mapping[str, Any]]
     SubmitAutoEvaluationAction: NotRequired[SubmitAutoEvaluationActionDefinitionTypeDef]
 

@@ -2581,7 +2581,7 @@ components:
           type: string
           description: The unique identifier for the account in the third-party system that should be downgraded
           x-semantic: account-id
-      description: Request payload for releasing resources
+      description: Request payload for downgrading the license of a user
       x-capability-level: write
     DowngradeLicenseResponse:
       type: object

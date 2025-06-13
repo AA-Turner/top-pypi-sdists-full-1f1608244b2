@@ -16,9 +16,12 @@ Usage::
         ListAnalysisReportsPaginator,
         ListFirewallPoliciesPaginator,
         ListFirewallsPaginator,
+        ListFlowOperationResultsPaginator,
+        ListFlowOperationsPaginator,
         ListRuleGroupsPaginator,
         ListTLSInspectionConfigurationsPaginator,
         ListTagsForResourcePaginator,
+        ListVpcEndpointAssociationsPaginator,
     )
 
     session = get_session()
@@ -29,9 +32,12 @@ Usage::
         list_analysis_reports_paginator: ListAnalysisReportsPaginator = client.get_paginator("list_analysis_reports")
         list_firewall_policies_paginator: ListFirewallPoliciesPaginator = client.get_paginator("list_firewall_policies")
         list_firewalls_paginator: ListFirewallsPaginator = client.get_paginator("list_firewalls")
+        list_flow_operation_results_paginator: ListFlowOperationResultsPaginator = client.get_paginator("list_flow_operation_results")
+        list_flow_operations_paginator: ListFlowOperationsPaginator = client.get_paginator("list_flow_operations")
         list_rule_groups_paginator: ListRuleGroupsPaginator = client.get_paginator("list_rule_groups")
         list_tls_inspection_configurations_paginator: ListTLSInspectionConfigurationsPaginator = client.get_paginator("list_tls_inspection_configurations")
         list_tags_for_resource_paginator: ListTagsForResourcePaginator = client.get_paginator("list_tags_for_resource")
+        list_vpc_endpoint_associations_paginator: ListVpcEndpointAssociationsPaginator = client.get_paginator("list_vpc_endpoint_associations")
     ```
 """
 
@@ -51,12 +57,18 @@ from .type_defs import (
     ListFirewallPoliciesResponseTypeDef,
     ListFirewallsRequestPaginateTypeDef,
     ListFirewallsResponseTypeDef,
+    ListFlowOperationResultsRequestPaginateTypeDef,
+    ListFlowOperationResultsResponseTypeDef,
+    ListFlowOperationsRequestPaginateTypeDef,
+    ListFlowOperationsResponseTypeDef,
     ListRuleGroupsRequestPaginateTypeDef,
     ListRuleGroupsResponseTypeDef,
     ListTagsForResourceRequestPaginateTypeDef,
     ListTagsForResourceResponseTypeDef,
     ListTLSInspectionConfigurationsRequestPaginateTypeDef,
     ListTLSInspectionConfigurationsResponseTypeDef,
+    ListVpcEndpointAssociationsRequestPaginateTypeDef,
+    ListVpcEndpointAssociationsResponseTypeDef,
 )
 
 if sys.version_info >= (3, 12):
@@ -69,9 +81,12 @@ __all__ = (
     "ListAnalysisReportsPaginator",
     "ListFirewallPoliciesPaginator",
     "ListFirewallsPaginator",
+    "ListFlowOperationResultsPaginator",
+    "ListFlowOperationsPaginator",
     "ListRuleGroupsPaginator",
     "ListTLSInspectionConfigurationsPaginator",
     "ListTagsForResourcePaginator",
+    "ListVpcEndpointAssociationsPaginator",
 )
 
 if TYPE_CHECKING:
@@ -147,6 +162,42 @@ class ListFirewallsPaginator(_ListFirewallsPaginatorBase):
         """
 
 if TYPE_CHECKING:
+    _ListFlowOperationResultsPaginatorBase = AioPaginator[ListFlowOperationResultsResponseTypeDef]
+else:
+    _ListFlowOperationResultsPaginatorBase = AioPaginator  # type: ignore[assignment]
+
+class ListFlowOperationResultsPaginator(_ListFlowOperationResultsPaginatorBase):
+    """
+    [Show boto3 documentation](https://boto3.amazonaws.com/v1/documentation/api/latest/reference/services/network-firewall/paginator/ListFlowOperationResults.html#NetworkFirewall.Paginator.ListFlowOperationResults)
+    [Show types-aiobotocore documentation](https://youtype.github.io/types_aiobotocore_docs/types_aiobotocore_network_firewall/paginators/#listflowoperationresultspaginator)
+    """
+    def paginate(  # type: ignore[override]
+        self, **kwargs: Unpack[ListFlowOperationResultsRequestPaginateTypeDef]
+    ) -> AioPageIterator[ListFlowOperationResultsResponseTypeDef]:
+        """
+        [Show boto3 documentation](https://boto3.amazonaws.com/v1/documentation/api/latest/reference/services/network-firewall/paginator/ListFlowOperationResults.html#NetworkFirewall.Paginator.ListFlowOperationResults.paginate)
+        [Show types-aiobotocore documentation](https://youtype.github.io/types_aiobotocore_docs/types_aiobotocore_network_firewall/paginators/#listflowoperationresultspaginator)
+        """
+
+if TYPE_CHECKING:
+    _ListFlowOperationsPaginatorBase = AioPaginator[ListFlowOperationsResponseTypeDef]
+else:
+    _ListFlowOperationsPaginatorBase = AioPaginator  # type: ignore[assignment]
+
+class ListFlowOperationsPaginator(_ListFlowOperationsPaginatorBase):
+    """
+    [Show boto3 documentation](https://boto3.amazonaws.com/v1/documentation/api/latest/reference/services/network-firewall/paginator/ListFlowOperations.html#NetworkFirewall.Paginator.ListFlowOperations)
+    [Show types-aiobotocore documentation](https://youtype.github.io/types_aiobotocore_docs/types_aiobotocore_network_firewall/paginators/#listflowoperationspaginator)
+    """
+    def paginate(  # type: ignore[override]
+        self, **kwargs: Unpack[ListFlowOperationsRequestPaginateTypeDef]
+    ) -> AioPageIterator[ListFlowOperationsResponseTypeDef]:
+        """
+        [Show boto3 documentation](https://boto3.amazonaws.com/v1/documentation/api/latest/reference/services/network-firewall/paginator/ListFlowOperations.html#NetworkFirewall.Paginator.ListFlowOperations.paginate)
+        [Show types-aiobotocore documentation](https://youtype.github.io/types_aiobotocore_docs/types_aiobotocore_network_firewall/paginators/#listflowoperationspaginator)
+        """
+
+if TYPE_CHECKING:
     _ListRuleGroupsPaginatorBase = AioPaginator[ListRuleGroupsResponseTypeDef]
 else:
     _ListRuleGroupsPaginatorBase = AioPaginator  # type: ignore[assignment]
@@ -200,4 +251,24 @@ class ListTagsForResourcePaginator(_ListTagsForResourcePaginatorBase):
         """
         [Show boto3 documentation](https://boto3.amazonaws.com/v1/documentation/api/latest/reference/services/network-firewall/paginator/ListTagsForResource.html#NetworkFirewall.Paginator.ListTagsForResource.paginate)
         [Show types-aiobotocore documentation](https://youtype.github.io/types_aiobotocore_docs/types_aiobotocore_network_firewall/paginators/#listtagsforresourcepaginator)
+        """
+
+if TYPE_CHECKING:
+    _ListVpcEndpointAssociationsPaginatorBase = AioPaginator[
+        ListVpcEndpointAssociationsResponseTypeDef
+    ]
+else:
+    _ListVpcEndpointAssociationsPaginatorBase = AioPaginator  # type: ignore[assignment]
+
+class ListVpcEndpointAssociationsPaginator(_ListVpcEndpointAssociationsPaginatorBase):
+    """
+    [Show boto3 documentation](https://boto3.amazonaws.com/v1/documentation/api/latest/reference/services/network-firewall/paginator/ListVpcEndpointAssociations.html#NetworkFirewall.Paginator.ListVpcEndpointAssociations)
+    [Show types-aiobotocore documentation](https://youtype.github.io/types_aiobotocore_docs/types_aiobotocore_network_firewall/paginators/#listvpcendpointassociationspaginator)
+    """
+    def paginate(  # type: ignore[override]
+        self, **kwargs: Unpack[ListVpcEndpointAssociationsRequestPaginateTypeDef]
+    ) -> AioPageIterator[ListVpcEndpointAssociationsResponseTypeDef]:
+        """
+        [Show boto3 documentation](https://boto3.amazonaws.com/v1/documentation/api/latest/reference/services/network-firewall/paginator/ListVpcEndpointAssociations.html#NetworkFirewall.Paginator.ListVpcEndpointAssociations.paginate)
+        [Show types-aiobotocore documentation](https://youtype.github.io/types_aiobotocore_docs/types_aiobotocore_network_firewall/paginators/#listvpcendpointassociationspaginator)
         """

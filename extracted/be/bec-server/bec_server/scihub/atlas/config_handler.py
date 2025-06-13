@@ -10,12 +10,13 @@ import bec_lib
 from bec_lib import messages
 from bec_lib.atlas_models import Device, DevicePartial
 from bec_lib.bec_errors import DeviceConfigError
+from bec_lib.config_helper import CONF
 from bec_lib.devicemanager import DeviceManagerBase as DeviceManager
 from bec_lib.endpoints import MessageEndpoints
 from bec_lib.logger import bec_logger
 
 if TYPE_CHECKING:  # pragma: no cover
-    from bec_lib.device import DeviceBase
+    from bec_lib.device import DeviceBaseWithConfig
     from bec_lib.redis_connector import RedisConnector
     from bec_server.scihub.atlas.atlas_connector import AtlasConnector
 
@@ -215,7 +216,7 @@ class ConfigHandler:
             time.sleep(time_step)
             elapsed_time += time_step
 
-    def _update_device_config(self, device: DeviceBase, dev_config) -> bool:
+    def _update_device_config(self, device: DeviceBaseWithConfig, dev_config) -> bool:
         updated = False
         if "deviceConfig" in dev_config:
             request_id = str(uuid.uuid4())
@@ -239,17 +240,9 @@ class ConfigHandler:
         if not dev_config:
             return updated
 
-        available_keys = [
-            "readOnly",
-            "userParameter",
-            "onFailure",
-            "deviceTags",
-            "readoutPriority",
-            "softwareTrigger",
-        ]
         for key in dev_config:
-            if key not in available_keys:
-                raise DeviceConfigError(f"Unknown update key {key}.")
+            if key not in CONF.UPDATABLE:
+                raise DeviceConfigError(f"Cannot update key {key}!")
 
             self._validate_update({key: dev_config[key]})
             device._config[key] = dev_config[key]
@@ -260,12 +253,12 @@ class ConfigHandler:
     def _validate_update(self, update: dict) -> None:
         DevicePartial(**update)
 
-    def update_config_in_redis(self, device: DeviceBase):
+    def update_config_in_redis(self, device: DeviceBaseWithConfig):
         """
         Update the device config in redis
 
         Args:
-            device (DeviceBase): Device to update
+            device (DeviceBaseWithConfig): Device to update
         """
         config = self.get_config_from_redis()
         index = next(

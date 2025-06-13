@@ -348,6 +348,7 @@ __all__ = (
     "ElicitationCodeHookInvocationSettingTypeDef",
     "EmptyResponseMetadataTypeDef",
     "EncryptionSettingTypeDef",
+    "ErrorLogSettingsTypeDef",
     "ExactResponseFieldsTypeDef",
     "ExecutionErrorDetailsTypeDef",
     "ExportFilterTypeDef",
@@ -495,6 +496,8 @@ __all__ = (
     "PromptAttemptSpecificationTypeDef",
     "PromptSpecificationOutputTypeDef",
     "PromptSpecificationTypeDef",
+    "QInConnectAssistantConfigurationTypeDef",
+    "QInConnectIntentConfigurationTypeDef",
     "QnAIntentConfigurationOutputTypeDef",
     "QnAIntentConfigurationTypeDef",
     "QnAIntentConfigurationUnionTypeDef",
@@ -965,6 +968,10 @@ BotFilterTypeDef = TypedDict(
 
 class DataPrivacyTypeDef(TypedDict):
     childDirected: bool
+
+
+class ErrorLogSettingsTypeDef(TypedDict):
+    enabled: bool
 
 
 class BotLocaleExportSpecificationTypeDef(TypedDict):
@@ -1710,6 +1717,10 @@ class TextInputSpecificationTypeDef(TypedDict):
     startTimeoutMs: int
 
 
+class QInConnectAssistantConfigurationTypeDef(TypedDict):
+    assistantArn: str
+
+
 class RelativeAggregationDurationTypeDef(TypedDict):
     timeDimension: TimeDimensionType
     timeValue: int
@@ -2168,6 +2179,7 @@ class BotImportSpecificationOutputTypeDef(TypedDict):
     botName: str
     roleArn: str
     dataPrivacy: DataPrivacyTypeDef
+    errorLogSettings: NotRequired[ErrorLogSettingsTypeDef]
     idleSessionTTLInSeconds: NotRequired[int]
     botTags: NotRequired[Dict[str, str]]
     testBotAliasTags: NotRequired[Dict[str, str]]
@@ -2177,6 +2189,7 @@ class BotImportSpecificationTypeDef(TypedDict):
     botName: str
     roleArn: str
     dataPrivacy: DataPrivacyTypeDef
+    errorLogSettings: NotRequired[ErrorLogSettingsTypeDef]
     idleSessionTTLInSeconds: NotRequired[int]
     botTags: NotRequired[Mapping[str, str]]
     testBotAliasTags: NotRequired[Mapping[str, str]]
@@ -2217,6 +2230,7 @@ class CreateBotRequestTypeDef(TypedDict):
     testBotAliasTags: NotRequired[Mapping[str, str]]
     botType: NotRequired[BotTypeType]
     botMembers: NotRequired[Sequence[BotMemberTypeDef]]
+    errorLogSettings: NotRequired[ErrorLogSettingsTypeDef]
 
 
 class CreateBotResponseTypeDef(TypedDict):
@@ -2232,6 +2246,7 @@ class CreateBotResponseTypeDef(TypedDict):
     testBotAliasTags: Dict[str, str]
     botType: BotTypeType
     botMembers: List[BotMemberTypeDef]
+    errorLogSettings: ErrorLogSettingsTypeDef
     ResponseMetadata: ResponseMetadataTypeDef
 
 
@@ -2248,6 +2263,7 @@ class DescribeBotResponseTypeDef(TypedDict):
     botType: BotTypeType
     botMembers: List[BotMemberTypeDef]
     failureReasons: List[str]
+    errorLogSettings: ErrorLogSettingsTypeDef
     ResponseMetadata: ResponseMetadataTypeDef
 
 
@@ -2260,6 +2276,7 @@ class UpdateBotRequestTypeDef(TypedDict):
     description: NotRequired[str]
     botType: NotRequired[BotTypeType]
     botMembers: NotRequired[Sequence[BotMemberTypeDef]]
+    errorLogSettings: NotRequired[ErrorLogSettingsTypeDef]
 
 
 class UpdateBotResponseTypeDef(TypedDict):
@@ -2274,6 +2291,7 @@ class UpdateBotResponseTypeDef(TypedDict):
     lastUpdatedDateTime: datetime
     botType: BotTypeType
     botMembers: List[BotMemberTypeDef]
+    errorLogSettings: ErrorLogSettingsTypeDef
     ResponseMetadata: ResponseMetadataTypeDef
 
 
@@ -2835,6 +2853,10 @@ class ListUtteranceAnalyticsDataRequestTypeDef(TypedDict):
 
 class OverallTestResultsTypeDef(TypedDict):
     items: List[OverallTestResultItemTypeDef]
+
+
+class QInConnectIntentConfigurationTypeDef(TypedDict):
+    qInConnectAssistantConfiguration: NotRequired[QInConnectAssistantConfigurationTypeDef]
 
 
 class UtteranceAggregationDurationTypeDef(TypedDict):
@@ -4228,6 +4250,7 @@ class CreateIntentResponseTypeDef(TypedDict):
     creationDateTime: datetime
     initialResponseSetting: InitialResponseSettingOutputTypeDef
     qnAIntentConfiguration: QnAIntentConfigurationOutputTypeDef
+    qInConnectIntentConfiguration: QInConnectIntentConfigurationTypeDef
     ResponseMetadata: ResponseMetadataTypeDef
 
 
@@ -4252,6 +4275,7 @@ class DescribeIntentResponseTypeDef(TypedDict):
     lastUpdatedDateTime: datetime
     initialResponseSetting: InitialResponseSettingOutputTypeDef
     qnAIntentConfiguration: QnAIntentConfigurationOutputTypeDef
+    qInConnectIntentConfiguration: QInConnectIntentConfigurationTypeDef
     ResponseMetadata: ResponseMetadataTypeDef
 
 
@@ -4276,6 +4300,7 @@ class UpdateIntentResponseTypeDef(TypedDict):
     lastUpdatedDateTime: datetime
     initialResponseSetting: InitialResponseSettingOutputTypeDef
     qnAIntentConfiguration: QnAIntentConfigurationOutputTypeDef
+    qInConnectIntentConfiguration: QInConnectIntentConfigurationTypeDef
     ResponseMetadata: ResponseMetadataTypeDef
 
 
@@ -4383,6 +4408,7 @@ class CreateIntentRequestTypeDef(TypedDict):
     kendraConfiguration: NotRequired[KendraConfigurationTypeDef]
     initialResponseSetting: NotRequired[InitialResponseSettingUnionTypeDef]
     qnAIntentConfiguration: NotRequired[QnAIntentConfigurationUnionTypeDef]
+    qInConnectIntentConfiguration: NotRequired[QInConnectIntentConfigurationTypeDef]
 
 
 class UpdateIntentRequestTypeDef(TypedDict):
@@ -4404,6 +4430,7 @@ class UpdateIntentRequestTypeDef(TypedDict):
     kendraConfiguration: NotRequired[KendraConfigurationTypeDef]
     initialResponseSetting: NotRequired[InitialResponseSettingUnionTypeDef]
     qnAIntentConfiguration: NotRequired[QnAIntentConfigurationUnionTypeDef]
+    qInConnectIntentConfiguration: NotRequired[QInConnectIntentConfigurationTypeDef]
 
 
 SlotValueElicitationSettingUnionTypeDef = Union[

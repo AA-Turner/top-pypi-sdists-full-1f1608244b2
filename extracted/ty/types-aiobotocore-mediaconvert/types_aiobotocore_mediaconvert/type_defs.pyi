@@ -86,6 +86,7 @@ from .literals import (
     CaptionSourceByteRateLimitType,
     CaptionSourceConvertPaintOnToPopOnType,
     CaptionSourceTypeType,
+    CaptionSourceUpconvertSTLToTeletextType,
     ChromaPositionModeType,
     CmafClientCacheType,
     CmafCodecSpecificationType,
@@ -117,7 +118,9 @@ from .literals import (
     CmfcScte35SourceType,
     CmfcTimedMetadataBoxVersionType,
     CmfcTimedMetadataType,
+    CodecType,
     ColorMetadataType,
+    ColorPrimariesType,
     ColorSpaceConversionType,
     ColorSpaceType,
     ColorSpaceUsageType,
@@ -187,6 +190,8 @@ from .literals import (
     FileSourceConvert608To708Type,
     FileSourceTimeDeltaUnitsType,
     FontScriptType,
+    FormatType,
+    FrameMetricTypeType,
     GifFramerateControlType,
     GifFramerateConversionAlgorithmType,
     H264AdaptiveQuantizationType,
@@ -307,6 +312,7 @@ from .literals import (
     M3u8NielsenId3Type,
     M3u8PcrControlType,
     M3u8Scte35SourceType,
+    MatrixCoefficientsType,
     MotionImageInsertionModeType,
     MotionImagePlaybackType,
     MovClapAtomType,
@@ -397,6 +403,8 @@ from .literals import (
     TimecodeSourceType,
     TimecodeTrackType,
     TimedMetadataType,
+    TrackTypeType,
+    TransferCharacteristicsType,
     TsPtsOffsetType,
     TtmlStylePassthroughType,
     TypeType,
@@ -479,6 +487,7 @@ __all__ = (
     "AudioDescriptionOutputTypeDef",
     "AudioDescriptionTypeDef",
     "AudioNormalizationSettingsTypeDef",
+    "AudioPropertiesTypeDef",
     "AudioSelectorGroupOutputTypeDef",
     "AudioSelectorGroupTypeDef",
     "AudioSelectorOutputTypeDef",
@@ -490,8 +499,10 @@ __all__ = (
     "AutomatedEncodingSettingsOutputTypeDef",
     "AutomatedEncodingSettingsTypeDef",
     "Av1QvbrSettingsTypeDef",
+    "Av1SettingsOutputTypeDef",
     "Av1SettingsTypeDef",
     "AvailBlankingTypeDef",
+    "AvcIntraSettingsOutputTypeDef",
     "AvcIntraSettingsTypeDef",
     "AvcIntraUhdSettingsTypeDef",
     "BandwidthReductionFilterTypeDef",
@@ -521,6 +532,7 @@ __all__ = (
     "ColorCorrectorTypeDef",
     "ContainerSettingsOutputTypeDef",
     "ContainerSettingsTypeDef",
+    "ContainerTypeDef",
     "CreateJobRequestTypeDef",
     "CreateJobResponseTypeDef",
     "CreateJobTemplateRequestTypeDef",
@@ -536,6 +548,7 @@ __all__ = (
     "DashIsoGroupSettingsOutputTypeDef",
     "DashIsoGroupSettingsTypeDef",
     "DashIsoImageBasedTrickPlaySettingsTypeDef",
+    "DataPropertiesTypeDef",
     "DeinterlacerTypeDef",
     "DeleteJobTemplateRequestTypeDef",
     "DeletePresetRequestTypeDef",
@@ -570,6 +583,7 @@ __all__ = (
     "FlacSettingsTypeDef",
     "ForceIncludeRenditionSizeTypeDef",
     "FrameCaptureSettingsTypeDef",
+    "FrameRateTypeDef",
     "GetJobRequestTypeDef",
     "GetJobResponseTypeDef",
     "GetJobTemplateRequestTypeDef",
@@ -581,8 +595,10 @@ __all__ = (
     "GetQueueResponseTypeDef",
     "GifSettingsTypeDef",
     "H264QvbrSettingsTypeDef",
+    "H264SettingsOutputTypeDef",
     "H264SettingsTypeDef",
     "H265QvbrSettingsTypeDef",
+    "H265SettingsOutputTypeDef",
     "H265SettingsTypeDef",
     "Hdr10MetadataTypeDef",
     "Hdr10PlusTypeDef",
@@ -642,6 +658,7 @@ __all__ = (
     "M2tsSettingsTypeDef",
     "M3u8SettingsOutputTypeDef",
     "M3u8SettingsTypeDef",
+    "MetadataTypeDef",
     "MinBottomRenditionSizeTypeDef",
     "MinTopRenditionSizeTypeDef",
     "MotionImageInserterTypeDef",
@@ -652,6 +669,7 @@ __all__ = (
     "Mp3SettingsTypeDef",
     "Mp4SettingsTypeDef",
     "MpdSettingsTypeDef",
+    "Mpeg2SettingsOutputTypeDef",
     "Mpeg2SettingsTypeDef",
     "MsSmoothAdditionalManifestOutputTypeDef",
     "MsSmoothAdditionalManifestTypeDef",
@@ -686,6 +704,11 @@ __all__ = (
     "PresetSettingsTypeDef",
     "PresetSettingsUnionTypeDef",
     "PresetTypeDef",
+    "ProbeInputFileTypeDef",
+    "ProbeRequestTypeDef",
+    "ProbeResponseTypeDef",
+    "ProbeResultTypeDef",
+    "ProresSettingsOutputTypeDef",
     "ProresSettingsTypeDef",
     "PutPolicyRequestTypeDef",
     "PutPolicyResponseTypeDef",
@@ -721,7 +744,9 @@ __all__ = (
     "TimedMetadataInsertionOutputTypeDef",
     "TimedMetadataInsertionTypeDef",
     "TimingTypeDef",
+    "TrackMappingTypeDef",
     "TrackSourceSettingsTypeDef",
+    "TrackTypeDef",
     "TtmlDestinationSettingsTypeDef",
     "UncompressedSettingsTypeDef",
     "UntagResourceRequestTypeDef",
@@ -732,10 +757,12 @@ __all__ = (
     "UpdateQueueRequestTypeDef",
     "UpdateQueueResponseTypeDef",
     "Vc3SettingsTypeDef",
+    "VideoCodecSettingsOutputTypeDef",
     "VideoCodecSettingsTypeDef",
     "VideoDescriptionOutputTypeDef",
     "VideoDescriptionTypeDef",
     "VideoDetailTypeDef",
+    "VideoOverlayCropTypeDef",
     "VideoOverlayInputClippingTypeDef",
     "VideoOverlayInputOutputTypeDef",
     "VideoOverlayInputTypeDef",
@@ -745,6 +772,7 @@ __all__ = (
     "VideoOverlayTypeDef",
     "VideoPreprocessorOutputTypeDef",
     "VideoPreprocessorTypeDef",
+    "VideoPropertiesTypeDef",
     "VideoSelectorTypeDef",
     "VorbisSettingsTypeDef",
     "Vp8SettingsTypeDef",
@@ -758,6 +786,7 @@ __all__ = (
     "Xavc4kProfileSettingsTypeDef",
     "XavcHdIntraCbgProfileSettingsTypeDef",
     "XavcHdProfileSettingsTypeDef",
+    "XavcSettingsOutputTypeDef",
     "XavcSettingsTypeDef",
 )
 
@@ -904,6 +933,10 @@ class AudioNormalizationSettingsTypeDef(TypedDict):
     PeakCalculation: NotRequired[AudioNormalizationPeakCalculationType]
     TargetLkfs: NotRequired[float]
     TruePeakLimiterThreshold: NotRequired[float]
+
+class FrameRateTypeDef(TypedDict):
+    Denominator: NotRequired[int]
+    Numerator: NotRequired[int]
 
 class AudioSelectorGroupOutputTypeDef(TypedDict):
     AudioSelectorNames: NotRequired[List[str]]
@@ -1139,6 +1172,7 @@ class M3u8SettingsOutputTypeDef(TypedDict):
     AudioDuration: NotRequired[M3u8AudioDurationType]
     AudioFramesPerPes: NotRequired[int]
     AudioPids: NotRequired[List[int]]
+    AudioPtsOffsetDelta: NotRequired[int]
     DataPTSControl: NotRequired[M3u8DataPtsControlType]
     MaxPcrInterval: NotRequired[int]
     NielsenId3: NotRequired[M3u8NielsenId3Type]
@@ -1190,6 +1224,7 @@ class M3u8SettingsTypeDef(TypedDict):
     AudioDuration: NotRequired[M3u8AudioDurationType]
     AudioFramesPerPes: NotRequired[int]
     AudioPids: NotRequired[Sequence[int]]
+    AudioPtsOffsetDelta: NotRequired[int]
     DataPTSControl: NotRequired[M3u8DataPtsControlType]
     MaxPcrInterval: NotRequired[int]
     NielsenId3: NotRequired[M3u8NielsenId3Type]
@@ -1241,6 +1276,9 @@ class DashIsoImageBasedTrickPlaySettingsTypeDef(TypedDict):
     ThumbnailWidth: NotRequired[int]
     TileHeight: NotRequired[int]
     TileWidth: NotRequired[int]
+
+class DataPropertiesTypeDef(TypedDict):
+    LanguageCode: NotRequired[str]
 
 class DeinterlacerTypeDef(TypedDict):
     Algorithm: NotRequired[DeinterlaceAlgorithmType]
@@ -1534,6 +1572,12 @@ class ListVersionsRequestTypeDef(TypedDict):
 class M2tsScte35EsamTypeDef(TypedDict):
     Scte35EsamPid: NotRequired[int]
 
+class MetadataTypeDef(TypedDict):
+    ETag: NotRequired[str]
+    FileSize: NotRequired[int]
+    LastModified: NotRequired[datetime]
+    MimeType: NotRequired[str]
+
 class MotionImageInsertionFramerateTypeDef(TypedDict):
     FramerateDenominator: NotRequired[int]
     FramerateNumerator: NotRequired[int]
@@ -1541,6 +1585,42 @@ class MotionImageInsertionFramerateTypeDef(TypedDict):
 class MotionImageInsertionOffsetTypeDef(TypedDict):
     ImageX: NotRequired[int]
     ImageY: NotRequired[int]
+
+class Mpeg2SettingsOutputTypeDef(TypedDict):
+    AdaptiveQuantization: NotRequired[Mpeg2AdaptiveQuantizationType]
+    Bitrate: NotRequired[int]
+    CodecLevel: NotRequired[Mpeg2CodecLevelType]
+    CodecProfile: NotRequired[Mpeg2CodecProfileType]
+    DynamicSubGop: NotRequired[Mpeg2DynamicSubGopType]
+    FramerateControl: NotRequired[Mpeg2FramerateControlType]
+    FramerateConversionAlgorithm: NotRequired[Mpeg2FramerateConversionAlgorithmType]
+    FramerateDenominator: NotRequired[int]
+    FramerateNumerator: NotRequired[int]
+    GopClosedCadence: NotRequired[int]
+    GopSize: NotRequired[float]
+    GopSizeUnits: NotRequired[Mpeg2GopSizeUnitsType]
+    HrdBufferFinalFillPercentage: NotRequired[int]
+    HrdBufferInitialFillPercentage: NotRequired[int]
+    HrdBufferSize: NotRequired[int]
+    InterlaceMode: NotRequired[Mpeg2InterlaceModeType]
+    IntraDcPrecision: NotRequired[Mpeg2IntraDcPrecisionType]
+    MaxBitrate: NotRequired[int]
+    MinIInterval: NotRequired[int]
+    NumberBFramesBetweenReferenceFrames: NotRequired[int]
+    ParControl: NotRequired[Mpeg2ParControlType]
+    ParDenominator: NotRequired[int]
+    ParNumerator: NotRequired[int]
+    PerFrameMetrics: NotRequired[List[FrameMetricTypeType]]
+    QualityTuningLevel: NotRequired[Mpeg2QualityTuningLevelType]
+    RateControlMode: NotRequired[Mpeg2RateControlModeType]
+    ScanTypeConversionMode: NotRequired[Mpeg2ScanTypeConversionModeType]
+    SceneChangeDetect: NotRequired[Mpeg2SceneChangeDetectType]
+    SlowPal: NotRequired[Mpeg2SlowPalType]
+    Softness: NotRequired[int]
+    SpatialAdaptiveQuantization: NotRequired[Mpeg2SpatialAdaptiveQuantizationType]
+    Syntax: NotRequired[Mpeg2SyntaxType]
+    Telecine: NotRequired[Mpeg2TelecineType]
+    TemporalAdaptiveQuantization: NotRequired[Mpeg2TemporalAdaptiveQuantizationType]
 
 class Mpeg2SettingsTypeDef(TypedDict):
     AdaptiveQuantization: NotRequired[Mpeg2AdaptiveQuantizationType]
@@ -1566,6 +1646,7 @@ class Mpeg2SettingsTypeDef(TypedDict):
     ParControl: NotRequired[Mpeg2ParControlType]
     ParDenominator: NotRequired[int]
     ParNumerator: NotRequired[int]
+    PerFrameMetrics: NotRequired[Sequence[FrameMetricTypeType]]
     QualityTuningLevel: NotRequired[Mpeg2QualityTuningLevelType]
     RateControlMode: NotRequired[Mpeg2RateControlModeType]
     ScanTypeConversionMode: NotRequired[Mpeg2ScanTypeConversionModeType]
@@ -1614,6 +1695,30 @@ class VideoDetailTypeDef(TypedDict):
     HeightInPx: NotRequired[int]
     WidthInPx: NotRequired[int]
 
+class ProbeInputFileTypeDef(TypedDict):
+    FileUrl: NotRequired[str]
+
+class TrackMappingTypeDef(TypedDict):
+    AudioTrackIndexes: NotRequired[List[int]]
+    DataTrackIndexes: NotRequired[List[int]]
+    VideoTrackIndexes: NotRequired[List[int]]
+
+class ProresSettingsOutputTypeDef(TypedDict):
+    ChromaSampling: NotRequired[ProresChromaSamplingType]
+    CodecProfile: NotRequired[ProresCodecProfileType]
+    FramerateControl: NotRequired[ProresFramerateControlType]
+    FramerateConversionAlgorithm: NotRequired[ProresFramerateConversionAlgorithmType]
+    FramerateDenominator: NotRequired[int]
+    FramerateNumerator: NotRequired[int]
+    InterlaceMode: NotRequired[ProresInterlaceModeType]
+    ParControl: NotRequired[ProresParControlType]
+    ParDenominator: NotRequired[int]
+    ParNumerator: NotRequired[int]
+    PerFrameMetrics: NotRequired[List[FrameMetricTypeType]]
+    ScanTypeConversionMode: NotRequired[ProresScanTypeConversionModeType]
+    SlowPal: NotRequired[ProresSlowPalType]
+    Telecine: NotRequired[ProresTelecineType]
+
 class ProresSettingsTypeDef(TypedDict):
     ChromaSampling: NotRequired[ProresChromaSamplingType]
     CodecProfile: NotRequired[ProresCodecProfileType]
@@ -1625,6 +1730,7 @@ class ProresSettingsTypeDef(TypedDict):
     ParControl: NotRequired[ProresParControlType]
     ParDenominator: NotRequired[int]
     ParNumerator: NotRequired[int]
+    PerFrameMetrics: NotRequired[Sequence[FrameMetricTypeType]]
     ScanTypeConversionMode: NotRequired[ProresScanTypeConversionModeType]
     SlowPal: NotRequired[ProresSlowPalType]
     Telecine: NotRequired[ProresTelecineType]
@@ -1724,6 +1830,13 @@ class Vp9SettingsTypeDef(TypedDict):
     QualityTuningLevel: NotRequired[Vp9QualityTuningLevelType]
     RateControlMode: NotRequired[Literal["VBR"]]
 
+class VideoOverlayCropTypeDef(TypedDict):
+    Height: NotRequired[int]
+    Unit: NotRequired[VideoOverlayUnitType]
+    Width: NotRequired[int]
+    X: NotRequired[int]
+    Y: NotRequired[int]
+
 class VideoOverlayInputClippingTypeDef(TypedDict):
     EndTimecode: NotRequired[str]
     StartTimecode: NotRequired[str]
@@ -1779,6 +1892,24 @@ class AudioCodecSettingsTypeDef(TypedDict):
     VorbisSettings: NotRequired[VorbisSettingsTypeDef]
     WavSettings: NotRequired[WavSettingsTypeDef]
 
+class AudioPropertiesTypeDef(TypedDict):
+    BitDepth: NotRequired[int]
+    BitRate: NotRequired[int]
+    Channels: NotRequired[int]
+    FrameRate: NotRequired[FrameRateTypeDef]
+    LanguageCode: NotRequired[str]
+    SampleRate: NotRequired[int]
+
+class VideoPropertiesTypeDef(TypedDict):
+    BitDepth: NotRequired[int]
+    BitRate: NotRequired[int]
+    ColorPrimaries: NotRequired[ColorPrimariesType]
+    FrameRate: NotRequired[FrameRateTypeDef]
+    Height: NotRequired[int]
+    MatrixCoefficients: NotRequired[MatrixCoefficientsType]
+    TransferCharacteristics: NotRequired[TransferCharacteristicsType]
+    Width: NotRequired[int]
+
 AutomatedAbrRuleOutputTypeDef = TypedDict(
     "AutomatedAbrRuleOutputTypeDef",
     {
@@ -1800,6 +1931,23 @@ AutomatedAbrRuleTypeDef = TypedDict(
     },
 )
 
+class Av1SettingsOutputTypeDef(TypedDict):
+    AdaptiveQuantization: NotRequired[Av1AdaptiveQuantizationType]
+    BitDepth: NotRequired[Av1BitDepthType]
+    FilmGrainSynthesis: NotRequired[Av1FilmGrainSynthesisType]
+    FramerateControl: NotRequired[Av1FramerateControlType]
+    FramerateConversionAlgorithm: NotRequired[Av1FramerateConversionAlgorithmType]
+    FramerateDenominator: NotRequired[int]
+    FramerateNumerator: NotRequired[int]
+    GopSize: NotRequired[float]
+    MaxBitrate: NotRequired[int]
+    NumberBFramesBetweenReferenceFrames: NotRequired[int]
+    PerFrameMetrics: NotRequired[List[FrameMetricTypeType]]
+    QvbrSettings: NotRequired[Av1QvbrSettingsTypeDef]
+    RateControlMode: NotRequired[Literal["QVBR"]]
+    Slices: NotRequired[int]
+    SpatialAdaptiveQuantization: NotRequired[Av1SpatialAdaptiveQuantizationType]
+
 class Av1SettingsTypeDef(TypedDict):
     AdaptiveQuantization: NotRequired[Av1AdaptiveQuantizationType]
     BitDepth: NotRequired[Av1BitDepthType]
@@ -1811,10 +1959,24 @@ class Av1SettingsTypeDef(TypedDict):
     GopSize: NotRequired[float]
     MaxBitrate: NotRequired[int]
     NumberBFramesBetweenReferenceFrames: NotRequired[int]
+    PerFrameMetrics: NotRequired[Sequence[FrameMetricTypeType]]
     QvbrSettings: NotRequired[Av1QvbrSettingsTypeDef]
     RateControlMode: NotRequired[Literal["QVBR"]]
     Slices: NotRequired[int]
     SpatialAdaptiveQuantization: NotRequired[Av1SpatialAdaptiveQuantizationType]
+
+class AvcIntraSettingsOutputTypeDef(TypedDict):
+    AvcIntraClass: NotRequired[AvcIntraClassType]
+    AvcIntraUhdSettings: NotRequired[AvcIntraUhdSettingsTypeDef]
+    FramerateControl: NotRequired[AvcIntraFramerateControlType]
+    FramerateConversionAlgorithm: NotRequired[AvcIntraFramerateConversionAlgorithmType]
+    FramerateDenominator: NotRequired[int]
+    FramerateNumerator: NotRequired[int]
+    InterlaceMode: NotRequired[AvcIntraInterlaceModeType]
+    PerFrameMetrics: NotRequired[List[FrameMetricTypeType]]
+    ScanTypeConversionMode: NotRequired[AvcIntraScanTypeConversionModeType]
+    SlowPal: NotRequired[AvcIntraSlowPalType]
+    Telecine: NotRequired[AvcIntraTelecineType]
 
 class AvcIntraSettingsTypeDef(TypedDict):
     AvcIntraClass: NotRequired[AvcIntraClassType]
@@ -1824,6 +1986,7 @@ class AvcIntraSettingsTypeDef(TypedDict):
     FramerateDenominator: NotRequired[int]
     FramerateNumerator: NotRequired[int]
     InterlaceMode: NotRequired[AvcIntraInterlaceModeType]
+    PerFrameMetrics: NotRequired[Sequence[FrameMetricTypeType]]
     ScanTypeConversionMode: NotRequired[AvcIntraScanTypeConversionModeType]
     SlowPal: NotRequired[AvcIntraSlowPalType]
     Telecine: NotRequired[AvcIntraTelecineType]
@@ -1860,6 +2023,7 @@ class FileSourceSettingsTypeDef(TypedDict):
     SourceFile: NotRequired[str]
     TimeDelta: NotRequired[int]
     TimeDeltaUnits: NotRequired[FileSourceTimeDeltaUnitsType]
+    UpconvertSTLToTeletext: NotRequired[CaptionSourceUpconvertSTLToTeletextType]
 
 class ChannelMappingOutputTypeDef(TypedDict):
     OutputChannels: NotRequired[List[OutputChannelMappingOutputTypeDef]]
@@ -2009,6 +2173,54 @@ class PutPolicyResponseTypeDef(TypedDict):
     Policy: PolicyTypeDef
     ResponseMetadata: ResponseMetadataTypeDef
 
+class H264SettingsOutputTypeDef(TypedDict):
+    AdaptiveQuantization: NotRequired[H264AdaptiveQuantizationType]
+    BandwidthReductionFilter: NotRequired[BandwidthReductionFilterTypeDef]
+    Bitrate: NotRequired[int]
+    CodecLevel: NotRequired[H264CodecLevelType]
+    CodecProfile: NotRequired[H264CodecProfileType]
+    DynamicSubGop: NotRequired[H264DynamicSubGopType]
+    EndOfStreamMarkers: NotRequired[H264EndOfStreamMarkersType]
+    EntropyEncoding: NotRequired[H264EntropyEncodingType]
+    FieldEncoding: NotRequired[H264FieldEncodingType]
+    FlickerAdaptiveQuantization: NotRequired[H264FlickerAdaptiveQuantizationType]
+    FramerateControl: NotRequired[H264FramerateControlType]
+    FramerateConversionAlgorithm: NotRequired[H264FramerateConversionAlgorithmType]
+    FramerateDenominator: NotRequired[int]
+    FramerateNumerator: NotRequired[int]
+    GopBReference: NotRequired[H264GopBReferenceType]
+    GopClosedCadence: NotRequired[int]
+    GopSize: NotRequired[float]
+    GopSizeUnits: NotRequired[H264GopSizeUnitsType]
+    HrdBufferFinalFillPercentage: NotRequired[int]
+    HrdBufferInitialFillPercentage: NotRequired[int]
+    HrdBufferSize: NotRequired[int]
+    InterlaceMode: NotRequired[H264InterlaceModeType]
+    MaxBitrate: NotRequired[int]
+    MinIInterval: NotRequired[int]
+    NumberBFramesBetweenReferenceFrames: NotRequired[int]
+    NumberReferenceFrames: NotRequired[int]
+    ParControl: NotRequired[H264ParControlType]
+    ParDenominator: NotRequired[int]
+    ParNumerator: NotRequired[int]
+    PerFrameMetrics: NotRequired[List[FrameMetricTypeType]]
+    QualityTuningLevel: NotRequired[H264QualityTuningLevelType]
+    QvbrSettings: NotRequired[H264QvbrSettingsTypeDef]
+    RateControlMode: NotRequired[H264RateControlModeType]
+    RepeatPps: NotRequired[H264RepeatPpsType]
+    SaliencyAwareEncoding: NotRequired[H264SaliencyAwareEncodingType]
+    ScanTypeConversionMode: NotRequired[H264ScanTypeConversionModeType]
+    SceneChangeDetect: NotRequired[H264SceneChangeDetectType]
+    Slices: NotRequired[int]
+    SlowPal: NotRequired[H264SlowPalType]
+    Softness: NotRequired[int]
+    SpatialAdaptiveQuantization: NotRequired[H264SpatialAdaptiveQuantizationType]
+    Syntax: NotRequired[H264SyntaxType]
+    Telecine: NotRequired[H264TelecineType]
+    TemporalAdaptiveQuantization: NotRequired[H264TemporalAdaptiveQuantizationType]
+    UnregisteredSeiTimecode: NotRequired[H264UnregisteredSeiTimecodeType]
+    WriteMp4PackagingType: NotRequired[H264WriteMp4PackagingTypeType]
+
 class H264SettingsTypeDef(TypedDict):
     AdaptiveQuantization: NotRequired[H264AdaptiveQuantizationType]
     BandwidthReductionFilter: NotRequired[BandwidthReductionFilterTypeDef]
@@ -2039,6 +2251,7 @@ class H264SettingsTypeDef(TypedDict):
     ParControl: NotRequired[H264ParControlType]
     ParDenominator: NotRequired[int]
     ParNumerator: NotRequired[int]
+    PerFrameMetrics: NotRequired[Sequence[FrameMetricTypeType]]
     QualityTuningLevel: NotRequired[H264QualityTuningLevelType]
     QvbrSettings: NotRequired[H264QvbrSettingsTypeDef]
     RateControlMode: NotRequired[H264RateControlModeType]
@@ -2055,6 +2268,53 @@ class H264SettingsTypeDef(TypedDict):
     TemporalAdaptiveQuantization: NotRequired[H264TemporalAdaptiveQuantizationType]
     UnregisteredSeiTimecode: NotRequired[H264UnregisteredSeiTimecodeType]
     WriteMp4PackagingType: NotRequired[H264WriteMp4PackagingTypeType]
+
+class H265SettingsOutputTypeDef(TypedDict):
+    AdaptiveQuantization: NotRequired[H265AdaptiveQuantizationType]
+    AlternateTransferFunctionSei: NotRequired[H265AlternateTransferFunctionSeiType]
+    BandwidthReductionFilter: NotRequired[BandwidthReductionFilterTypeDef]
+    Bitrate: NotRequired[int]
+    CodecLevel: NotRequired[H265CodecLevelType]
+    CodecProfile: NotRequired[H265CodecProfileType]
+    Deblocking: NotRequired[H265DeblockingType]
+    DynamicSubGop: NotRequired[H265DynamicSubGopType]
+    EndOfStreamMarkers: NotRequired[H265EndOfStreamMarkersType]
+    FlickerAdaptiveQuantization: NotRequired[H265FlickerAdaptiveQuantizationType]
+    FramerateControl: NotRequired[H265FramerateControlType]
+    FramerateConversionAlgorithm: NotRequired[H265FramerateConversionAlgorithmType]
+    FramerateDenominator: NotRequired[int]
+    FramerateNumerator: NotRequired[int]
+    GopBReference: NotRequired[H265GopBReferenceType]
+    GopClosedCadence: NotRequired[int]
+    GopSize: NotRequired[float]
+    GopSizeUnits: NotRequired[H265GopSizeUnitsType]
+    HrdBufferFinalFillPercentage: NotRequired[int]
+    HrdBufferInitialFillPercentage: NotRequired[int]
+    HrdBufferSize: NotRequired[int]
+    InterlaceMode: NotRequired[H265InterlaceModeType]
+    MaxBitrate: NotRequired[int]
+    MinIInterval: NotRequired[int]
+    NumberBFramesBetweenReferenceFrames: NotRequired[int]
+    NumberReferenceFrames: NotRequired[int]
+    ParControl: NotRequired[H265ParControlType]
+    ParDenominator: NotRequired[int]
+    ParNumerator: NotRequired[int]
+    PerFrameMetrics: NotRequired[List[FrameMetricTypeType]]
+    QualityTuningLevel: NotRequired[H265QualityTuningLevelType]
+    QvbrSettings: NotRequired[H265QvbrSettingsTypeDef]
+    RateControlMode: NotRequired[H265RateControlModeType]
+    SampleAdaptiveOffsetFilterMode: NotRequired[H265SampleAdaptiveOffsetFilterModeType]
+    ScanTypeConversionMode: NotRequired[H265ScanTypeConversionModeType]
+    SceneChangeDetect: NotRequired[H265SceneChangeDetectType]
+    Slices: NotRequired[int]
+    SlowPal: NotRequired[H265SlowPalType]
+    SpatialAdaptiveQuantization: NotRequired[H265SpatialAdaptiveQuantizationType]
+    Telecine: NotRequired[H265TelecineType]
+    TemporalAdaptiveQuantization: NotRequired[H265TemporalAdaptiveQuantizationType]
+    TemporalIds: NotRequired[H265TemporalIdsType]
+    Tiles: NotRequired[H265TilesType]
+    UnregisteredSeiTimecode: NotRequired[H265UnregisteredSeiTimecodeType]
+    WriteMp4PackagingType: NotRequired[H265WriteMp4PackagingTypeType]
 
 class H265SettingsTypeDef(TypedDict):
     AdaptiveQuantization: NotRequired[H265AdaptiveQuantizationType]
@@ -2086,6 +2346,7 @@ class H265SettingsTypeDef(TypedDict):
     ParControl: NotRequired[H265ParControlType]
     ParDenominator: NotRequired[int]
     ParNumerator: NotRequired[int]
+    PerFrameMetrics: NotRequired[Sequence[FrameMetricTypeType]]
     QualityTuningLevel: NotRequired[H265QualityTuningLevelType]
     QvbrSettings: NotRequired[H265QvbrSettingsTypeDef]
     RateControlMode: NotRequired[H265RateControlModeType]
@@ -2133,6 +2394,7 @@ class M2tsSettingsOutputTypeDef(TypedDict):
     AudioDuration: NotRequired[M2tsAudioDurationType]
     AudioFramesPerPes: NotRequired[int]
     AudioPids: NotRequired[List[int]]
+    AudioPtsOffsetDelta: NotRequired[int]
     Bitrate: NotRequired[int]
     BufferModel: NotRequired[M2tsBufferModelType]
     DataPTSControl: NotRequired[M2tsDataPtsControlType]
@@ -2177,6 +2439,7 @@ class M2tsSettingsTypeDef(TypedDict):
     AudioDuration: NotRequired[M2tsAudioDurationType]
     AudioFramesPerPes: NotRequired[int]
     AudioPids: NotRequired[Sequence[int]]
+    AudioPtsOffsetDelta: NotRequired[int]
     Bitrate: NotRequired[int]
     BufferModel: NotRequired[M2tsBufferModelType]
     DataPTSControl: NotRequired[M2tsDataPtsControlType]
@@ -2242,6 +2505,9 @@ class OutputDetailTypeDef(TypedDict):
     DurationInMs: NotRequired[int]
     VideoDetails: NotRequired[VideoDetailTypeDef]
 
+class ProbeRequestTypeDef(TypedDict):
+    InputFiles: NotRequired[Sequence[ProbeInputFileTypeDef]]
+
 QueueTypeDef = TypedDict(
     "QueueTypeDef",
     {
@@ -2283,13 +2549,14 @@ class VideoOverlayTransitionTypeDef(TypedDict):
     EndTimecode: NotRequired[str]
     StartTimecode: NotRequired[str]
 
-class XavcSettingsTypeDef(TypedDict):
+class XavcSettingsOutputTypeDef(TypedDict):
     AdaptiveQuantization: NotRequired[XavcAdaptiveQuantizationType]
     EntropyEncoding: NotRequired[XavcEntropyEncodingType]
     FramerateControl: NotRequired[XavcFramerateControlType]
     FramerateConversionAlgorithm: NotRequired[XavcFramerateConversionAlgorithmType]
     FramerateDenominator: NotRequired[int]
     FramerateNumerator: NotRequired[int]
+    PerFrameMetrics: NotRequired[List[FrameMetricTypeType]]
     Profile: NotRequired[XavcProfileType]
     SlowPal: NotRequired[XavcSlowPalType]
     Softness: NotRequired[int]
@@ -2301,14 +2568,44 @@ class XavcSettingsTypeDef(TypedDict):
     XavcHdIntraCbgProfileSettings: NotRequired[XavcHdIntraCbgProfileSettingsTypeDef]
     XavcHdProfileSettings: NotRequired[XavcHdProfileSettingsTypeDef]
 
+class XavcSettingsTypeDef(TypedDict):
+    AdaptiveQuantization: NotRequired[XavcAdaptiveQuantizationType]
+    EntropyEncoding: NotRequired[XavcEntropyEncodingType]
+    FramerateControl: NotRequired[XavcFramerateControlType]
+    FramerateConversionAlgorithm: NotRequired[XavcFramerateConversionAlgorithmType]
+    FramerateDenominator: NotRequired[int]
+    FramerateNumerator: NotRequired[int]
+    PerFrameMetrics: NotRequired[Sequence[FrameMetricTypeType]]
+    Profile: NotRequired[XavcProfileType]
+    SlowPal: NotRequired[XavcSlowPalType]
+    Softness: NotRequired[int]
+    SpatialAdaptiveQuantization: NotRequired[XavcSpatialAdaptiveQuantizationType]
+    TemporalAdaptiveQuantization: NotRequired[XavcTemporalAdaptiveQuantizationType]
+    Xavc4kIntraCbgProfileSettings: NotRequired[Xavc4kIntraCbgProfileSettingsTypeDef]
+    Xavc4kIntraVbrProfileSettings: NotRequired[Xavc4kIntraVbrProfileSettingsTypeDef]
+    Xavc4kProfileSettings: NotRequired[Xavc4kProfileSettingsTypeDef]
+    XavcHdIntraCbgProfileSettings: NotRequired[XavcHdIntraCbgProfileSettingsTypeDef]
+    XavcHdProfileSettings: NotRequired[XavcHdProfileSettingsTypeDef]
+
+class TrackTypeDef(TypedDict):
+    AudioProperties: NotRequired[AudioPropertiesTypeDef]
+    Codec: NotRequired[CodecType]
+    DataProperties: NotRequired[DataPropertiesTypeDef]
+    Duration: NotRequired[float]
+    Index: NotRequired[int]
+    TrackType: NotRequired[TrackTypeType]
+    VideoProperties: NotRequired[VideoPropertiesTypeDef]
+
 class AutomatedAbrSettingsOutputTypeDef(TypedDict):
     MaxAbrBitrate: NotRequired[int]
+    MaxQualityLevel: NotRequired[float]
     MaxRenditions: NotRequired[int]
     MinAbrBitrate: NotRequired[int]
     Rules: NotRequired[List[AutomatedAbrRuleOutputTypeDef]]
 
 class AutomatedAbrSettingsTypeDef(TypedDict):
     MaxAbrBitrate: NotRequired[int]
+    MaxQualityLevel: NotRequired[float]
     MaxRenditions: NotRequired[int]
     MinAbrBitrate: NotRequired[int]
     Rules: NotRequired[Sequence[AutomatedAbrRuleTypeDef]]
@@ -2501,6 +2798,7 @@ class DestinationSettingsTypeDef(TypedDict):
     S3Settings: NotRequired[S3DestinationSettingsTypeDef]
 
 class VideoOverlayOutputTypeDef(TypedDict):
+    Crop: NotRequired[VideoOverlayCropTypeDef]
     EndTimecode: NotRequired[str]
     InitialPosition: NotRequired[VideoOverlayPositionTypeDef]
     Input: NotRequired[VideoOverlayInputOutputTypeDef]
@@ -2509,12 +2807,29 @@ class VideoOverlayOutputTypeDef(TypedDict):
     Transitions: NotRequired[List[VideoOverlayTransitionTypeDef]]
 
 class VideoOverlayTypeDef(TypedDict):
+    Crop: NotRequired[VideoOverlayCropTypeDef]
     EndTimecode: NotRequired[str]
     InitialPosition: NotRequired[VideoOverlayPositionTypeDef]
     Input: NotRequired[VideoOverlayInputTypeDef]
     Playback: NotRequired[VideoOverlayPlayBackModeType]
     StartTimecode: NotRequired[str]
     Transitions: NotRequired[Sequence[VideoOverlayTransitionTypeDef]]
+
+class VideoCodecSettingsOutputTypeDef(TypedDict):
+    Av1Settings: NotRequired[Av1SettingsOutputTypeDef]
+    AvcIntraSettings: NotRequired[AvcIntraSettingsOutputTypeDef]
+    Codec: NotRequired[VideoCodecType]
+    FrameCaptureSettings: NotRequired[FrameCaptureSettingsTypeDef]
+    GifSettings: NotRequired[GifSettingsTypeDef]
+    H264Settings: NotRequired[H264SettingsOutputTypeDef]
+    H265Settings: NotRequired[H265SettingsOutputTypeDef]
+    Mpeg2Settings: NotRequired[Mpeg2SettingsOutputTypeDef]
+    ProresSettings: NotRequired[ProresSettingsOutputTypeDef]
+    UncompressedSettings: NotRequired[UncompressedSettingsTypeDef]
+    Vc3Settings: NotRequired[Vc3SettingsTypeDef]
+    Vp8Settings: NotRequired[Vp8SettingsTypeDef]
+    Vp9Settings: NotRequired[Vp9SettingsTypeDef]
+    XavcSettings: NotRequired[XavcSettingsOutputTypeDef]
 
 class VideoCodecSettingsTypeDef(TypedDict):
     Av1Settings: NotRequired[Av1SettingsTypeDef]
@@ -2531,6 +2846,11 @@ class VideoCodecSettingsTypeDef(TypedDict):
     Vp8Settings: NotRequired[Vp8SettingsTypeDef]
     Vp9Settings: NotRequired[Vp9SettingsTypeDef]
     XavcSettings: NotRequired[XavcSettingsTypeDef]
+
+class ContainerTypeDef(TypedDict):
+    Duration: NotRequired[float]
+    Format: NotRequired[FormatType]
+    Tracks: NotRequired[List[TrackTypeDef]]
 
 class AutomatedEncodingSettingsOutputTypeDef(TypedDict):
     AbrSettings: NotRequired[AutomatedAbrSettingsOutputTypeDef]
@@ -2805,7 +3125,7 @@ class VideoDescriptionOutputTypeDef(TypedDict):
     AfdSignaling: NotRequired[AfdSignalingType]
     AntiAlias: NotRequired[AntiAliasType]
     ChromaPositionMode: NotRequired[ChromaPositionModeType]
-    CodecSettings: NotRequired[VideoCodecSettingsTypeDef]
+    CodecSettings: NotRequired[VideoCodecSettingsOutputTypeDef]
     ColorMetadata: NotRequired[ColorMetadataType]
     Crop: NotRequired[RectangleTypeDef]
     DropFrameTimecode: NotRequired[DropFrameTimecodeType]
@@ -2838,6 +3158,15 @@ class VideoDescriptionTypeDef(TypedDict):
     TimecodeTrack: NotRequired[TimecodeTrackType]
     VideoPreprocessors: NotRequired[VideoPreprocessorTypeDef]
     Width: NotRequired[int]
+
+ProbeResultTypeDef = TypedDict(
+    "ProbeResultTypeDef",
+    {
+        "Container": NotRequired[ContainerTypeDef],
+        "Metadata": NotRequired[MetadataTypeDef],
+        "TrackMappings": NotRequired[List[TrackMappingTypeDef]],
+    },
+)
 
 class InputOutputTypeDef(TypedDict):
     AdvancedInputFilter: NotRequired[AdvancedInputFilterType]
@@ -2951,6 +3280,7 @@ OutputGroupSettingsOutputTypeDef = TypedDict(
         "FileGroupSettings": NotRequired[FileGroupSettingsTypeDef],
         "HlsGroupSettings": NotRequired[HlsGroupSettingsOutputTypeDef],
         "MsSmoothGroupSettings": NotRequired[MsSmoothGroupSettingsOutputTypeDef],
+        "PerFrameMetrics": NotRequired[List[FrameMetricTypeType]],
         "Type": NotRequired[OutputGroupTypeType],
     },
 )
@@ -2962,6 +3292,7 @@ OutputGroupSettingsTypeDef = TypedDict(
         "FileGroupSettings": NotRequired[FileGroupSettingsTypeDef],
         "HlsGroupSettings": NotRequired[HlsGroupSettingsTypeDef],
         "MsSmoothGroupSettings": NotRequired[MsSmoothGroupSettingsTypeDef],
+        "PerFrameMetrics": NotRequired[Sequence[FrameMetricTypeType]],
         "Type": NotRequired[OutputGroupTypeType],
     },
 )
@@ -2997,6 +3328,10 @@ class PresetSettingsTypeDef(TypedDict):
     CaptionDescriptions: NotRequired[Sequence[CaptionDescriptionPresetTypeDef]]
     ContainerSettings: NotRequired[ContainerSettingsTypeDef]
     VideoDescription: NotRequired[VideoDescriptionTypeDef]
+
+class ProbeResponseTypeDef(TypedDict):
+    ProbeResults: List[ProbeResultTypeDef]
+    ResponseMetadata: ResponseMetadataTypeDef
 
 class OutputGroupOutputTypeDef(TypedDict):
     AutomatedEncodingSettings: NotRequired[AutomatedEncodingSettingsOutputTypeDef]

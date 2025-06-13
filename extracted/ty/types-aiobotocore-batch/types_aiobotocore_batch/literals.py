@@ -38,6 +38,7 @@ __all__ = (
     "DeviceCgroupPermissionType",
     "EFSAuthorizationConfigIAMType",
     "EFSTransitEncryptionType",
+    "FirelensConfigurationTypeType",
     "JQStateType",
     "JQStatusType",
     "JobDefinitionTypeType",
@@ -78,6 +79,7 @@ DescribeJobQueuesPaginatorName = Literal["describe_job_queues"]
 DeviceCgroupPermissionType = Literal["MKNOD", "READ", "WRITE"]
 EFSAuthorizationConfigIAMType = Literal["DISABLED", "ENABLED"]
 EFSTransitEncryptionType = Literal["DISABLED", "ENABLED"]
+FirelensConfigurationTypeType = Literal["fluentbit", "fluentd"]
 JQStateType = Literal["DISABLED", "ENABLED"]
 JQStatusType = Literal["CREATING", "DELETED", "DELETING", "INVALID", "UPDATING", "VALID"]
 JobDefinitionTypeType = Literal["container", "multinode"]
@@ -90,7 +92,9 @@ ListConsumableResourcesPaginatorName = Literal["list_consumable_resources"]
 ListJobsByConsumableResourcePaginatorName = Literal["list_jobs_by_consumable_resource"]
 ListJobsPaginatorName = Literal["list_jobs"]
 ListSchedulingPoliciesPaginatorName = Literal["list_scheduling_policies"]
-LogDriverType = Literal["awslogs", "fluentd", "gelf", "journald", "json-file", "splunk", "syslog"]
+LogDriverType = Literal[
+    "awsfirelens", "awslogs", "fluentd", "gelf", "journald", "json-file", "splunk", "syslog"
+]
 OrchestrationTypeType = Literal["ECS", "EKS"]
 PlatformCapabilityType = Literal["EC2", "FARGATE"]
 ResourceTypeType = Literal["GPU", "MEMORY", "VCPU"]
@@ -252,6 +256,7 @@ ServiceName = Literal[
     "freetier",
     "fsx",
     "gamelift",
+    "gameliftstreams",
     "geo-maps",
     "geo-places",
     "geo-routes",
@@ -277,6 +282,7 @@ ServiceName = Literal[
     "iot",
     "iot-data",
     "iot-jobs-data",
+    "iot-managed-integrations",
     "iotanalytics",
     "iotdeviceadvisor",
     "iotevents",
@@ -391,7 +397,6 @@ ServiceName = Literal[
     "pipes",
     "polly",
     "pricing",
-    "privatenetworks",
     "proton",
     "qapps",
     "qbusiness",
@@ -452,7 +457,6 @@ ServiceName = Literal[
     "signer",
     "simspaceweaver",
     "sms",
-    "sms-voice",
     "snow-device-management",
     "snowball",
     "sns",
@@ -460,6 +464,7 @@ ServiceName = Literal[
     "sqs",
     "ssm",
     "ssm-contacts",
+    "ssm-guiconnect",
     "ssm-incidents",
     "ssm-quicksetup",
     "ssm-sap",

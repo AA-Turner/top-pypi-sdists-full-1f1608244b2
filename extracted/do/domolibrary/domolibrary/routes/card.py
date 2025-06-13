@@ -7,7 +7,7 @@ __all__ = ['Cards_API_Exception', 'CardSearch_NotFoundError', 'get_card_by_id', 
 
 # %% ../../nbs/routes/card.ipynb 2
 from typing import List, Union
-from enum import Enum
+from domolibrary.client.DomoEntity import DomoEnum
 
 import httpx
 
@@ -114,7 +114,7 @@ async def get_kpi_definition(
     return res
 
 # %% ../../nbs/routes/card.ipynb 11
-class Card_OptionalParts_Enum(Enum):
+class Card_OptionalParts_Enum(DomoEnum):
     CERTIFICATION = "certification"
     DATASOURCES = "datasources"
     DOMOAPP = "domoapp"

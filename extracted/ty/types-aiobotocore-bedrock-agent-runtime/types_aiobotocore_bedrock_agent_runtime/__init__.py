@@ -13,6 +13,8 @@ Usage::
         AgentsforBedrockRuntimeClient,
         Client,
         GetAgentMemoryPaginator,
+        ListFlowExecutionEventsPaginator,
+        ListFlowExecutionsPaginator,
         ListInvocationStepsPaginator,
         ListInvocationsPaginator,
         ListSessionsPaginator,
@@ -27,6 +29,8 @@ Usage::
 
 
     get_agent_memory_paginator: GetAgentMemoryPaginator = client.get_paginator("get_agent_memory")
+    list_flow_execution_events_paginator: ListFlowExecutionEventsPaginator = client.get_paginator("list_flow_execution_events")
+    list_flow_executions_paginator: ListFlowExecutionsPaginator = client.get_paginator("list_flow_executions")
     list_invocation_steps_paginator: ListInvocationStepsPaginator = client.get_paginator("list_invocation_steps")
     list_invocations_paginator: ListInvocationsPaginator = client.get_paginator("list_invocations")
     list_sessions_paginator: ListSessionsPaginator = client.get_paginator("list_sessions")
@@ -38,6 +42,8 @@ Usage::
 from .client import AgentsforBedrockRuntimeClient
 from .paginator import (
     GetAgentMemoryPaginator,
+    ListFlowExecutionEventsPaginator,
+    ListFlowExecutionsPaginator,
     ListInvocationsPaginator,
     ListInvocationStepsPaginator,
     ListSessionsPaginator,
@@ -52,6 +58,8 @@ __all__ = (
     "AgentsforBedrockRuntimeClient",
     "Client",
     "GetAgentMemoryPaginator",
+    "ListFlowExecutionEventsPaginator",
+    "ListFlowExecutionsPaginator",
     "ListInvocationStepsPaginator",
     "ListInvocationsPaginator",
     "ListSessionsPaginator",

@@ -45,6 +45,7 @@ from .literals import (
     PipelineStatusType,
     PlatformType,
     ResourceStatusType,
+    SsmParameterDataTypeType,
     TenancyTypeType,
     WorkflowExecutionStatusType,
     WorkflowStepActionTypeType,
@@ -266,27 +267,34 @@ __all__ = (
     "ListImagesResponseTypeDef",
     "ListInfrastructureConfigurationsRequestTypeDef",
     "ListInfrastructureConfigurationsResponseTypeDef",
+    "ListLifecycleExecutionResourcesRequestPaginateTypeDef",
     "ListLifecycleExecutionResourcesRequestTypeDef",
     "ListLifecycleExecutionResourcesResponseTypeDef",
+    "ListLifecycleExecutionsRequestPaginateTypeDef",
     "ListLifecycleExecutionsRequestTypeDef",
     "ListLifecycleExecutionsResponseTypeDef",
+    "ListLifecyclePoliciesRequestPaginateTypeDef",
     "ListLifecyclePoliciesRequestTypeDef",
     "ListLifecyclePoliciesResponseTypeDef",
     "ListTagsForResourceRequestTypeDef",
     "ListTagsForResourceResponseTypeDef",
+    "ListWaitingWorkflowStepsRequestPaginateTypeDef",
     "ListWaitingWorkflowStepsRequestTypeDef",
     "ListWaitingWorkflowStepsResponseTypeDef",
+    "ListWorkflowBuildVersionsRequestPaginateTypeDef",
     "ListWorkflowBuildVersionsRequestTypeDef",
     "ListWorkflowBuildVersionsResponseTypeDef",
     "ListWorkflowExecutionsRequestTypeDef",
     "ListWorkflowExecutionsResponseTypeDef",
     "ListWorkflowStepExecutionsRequestTypeDef",
     "ListWorkflowStepExecutionsResponseTypeDef",
+    "ListWorkflowsRequestPaginateTypeDef",
     "ListWorkflowsRequestTypeDef",
     "ListWorkflowsResponseTypeDef",
     "LoggingTypeDef",
     "OutputResourcesTypeDef",
     "PackageVulnerabilityDetailsTypeDef",
+    "PaginatorConfigTypeDef",
     "PlacementTypeDef",
     "ProductCodeListItemTypeDef",
     "PutComponentPolicyRequestTypeDef",
@@ -309,6 +317,7 @@ __all__ = (
     "SendWorkflowStepActionRequestTypeDef",
     "SendWorkflowStepActionResponseTypeDef",
     "SeverityCountsTypeDef",
+    "SsmParameterConfigurationTypeDef",
     "StartImagePipelineExecutionRequestTypeDef",
     "StartImagePipelineExecutionResponseTypeDef",
     "StartResourceStateUpdateRequestTypeDef",
@@ -564,6 +573,12 @@ class S3ExportConfigurationTypeDef(TypedDict):
     diskImageFormat: DiskImageFormatType
     s3Bucket: str
     s3Prefix: NotRequired[str]
+
+
+class SsmParameterConfigurationTypeDef(TypedDict):
+    parameterName: str
+    amiAccountId: NotRequired[str]
+    dataType: NotRequired[SsmParameterDataTypeType]
 
 
 class EbsInstanceBlockDeviceSpecificationTypeDef(TypedDict):
@@ -831,6 +846,12 @@ class ListImagePackagesRequestTypeDef(TypedDict):
     imageBuildVersionArn: str
     maxResults: NotRequired[int]
     nextToken: NotRequired[str]
+
+
+class PaginatorConfigTypeDef(TypedDict):
+    MaxItems: NotRequired[int]
+    PageSize: NotRequired[int]
+    StartingToken: NotRequired[str]
 
 
 class ListLifecycleExecutionResourcesRequestTypeDef(TypedDict):
@@ -1685,6 +1706,38 @@ class ListLifecyclePoliciesResponseTypeDef(TypedDict):
     nextToken: NotRequired[str]
 
 
+class ListLifecycleExecutionResourcesRequestPaginateTypeDef(TypedDict):
+    lifecycleExecutionId: str
+    parentResourceId: NotRequired[str]
+    PaginationConfig: NotRequired[PaginatorConfigTypeDef]
+
+
+class ListLifecycleExecutionsRequestPaginateTypeDef(TypedDict):
+    resourceArn: str
+    PaginationConfig: NotRequired[PaginatorConfigTypeDef]
+
+
+class ListLifecyclePoliciesRequestPaginateTypeDef(TypedDict):
+    filters: NotRequired[Sequence[FilterTypeDef]]
+    PaginationConfig: NotRequired[PaginatorConfigTypeDef]
+
+
+class ListWaitingWorkflowStepsRequestPaginateTypeDef(TypedDict):
+    PaginationConfig: NotRequired[PaginatorConfigTypeDef]
+
+
+class ListWorkflowBuildVersionsRequestPaginateTypeDef(TypedDict):
+    workflowVersionArn: str
+    PaginationConfig: NotRequired[PaginatorConfigTypeDef]
+
+
+class ListWorkflowsRequestPaginateTypeDef(TypedDict):
+    owner: NotRequired[OwnershipType]
+    filters: NotRequired[Sequence[FilterTypeDef]]
+    byName: NotRequired[bool]
+    PaginationConfig: NotRequired[PaginatorConfigTypeDef]
+
+
 class ListWaitingWorkflowStepsResponseTypeDef(TypedDict):
     steps: List[WorkflowStepExecutionTypeDef]
     ResponseMetadata: ResponseMetadataTypeDef
@@ -1878,6 +1931,7 @@ class DistributionOutputTypeDef(TypedDict):
     launchTemplateConfigurations: NotRequired[List[LaunchTemplateConfigurationTypeDef]]
     s3ExportConfiguration: NotRequired[S3ExportConfigurationTypeDef]
     fastLaunchConfigurations: NotRequired[List[FastLaunchConfigurationTypeDef]]
+    ssmParameterConfigurations: NotRequired[List[SsmParameterConfigurationTypeDef]]
 
 
 class AmiDistributionConfigurationTypeDef(TypedDict):
@@ -2278,6 +2332,7 @@ class DistributionTypeDef(TypedDict):
     launchTemplateConfigurations: NotRequired[Sequence[LaunchTemplateConfigurationTypeDef]]
     s3ExportConfiguration: NotRequired[S3ExportConfigurationTypeDef]
     fastLaunchConfigurations: NotRequired[Sequence[FastLaunchConfigurationTypeDef]]
+    ssmParameterConfigurations: NotRequired[Sequence[SsmParameterConfigurationTypeDef]]
 
 
 class LifecyclePolicyTypeDef(TypedDict):

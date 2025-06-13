@@ -641,7 +641,7 @@ def eval_command(
 @click.option(
     "--retry-connections",
     type=float,
-    help="Reduce max_connections at this rate with each retry (defaults to 0.5)",
+    help="Reduce max_connections at this rate with each retry (defaults to 1.0, which results in no reduction).",
     envvar="INSPECT_EVAL_RETRY_CONNECTIONS",
 )
 @click.option(
@@ -966,7 +966,7 @@ def eval_exec(
         success, _ = eval_set(**params)
         return success
     else:
-        params["log_header_only"] = (True,)  # cli invocation doesn't need full log
+        params["log_header_only"] = True  # cli invocation doesn't need full log
         eval(**params)
         return True
 

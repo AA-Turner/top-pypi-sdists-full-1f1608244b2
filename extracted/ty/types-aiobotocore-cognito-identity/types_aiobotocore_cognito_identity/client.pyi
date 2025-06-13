@@ -197,7 +197,7 @@ class CognitoIdentityClient(AioBaseClient):
 
     async def get_id(self, **kwargs: Unpack[GetIdInputTypeDef]) -> GetIdResponseTypeDef:
         """
-        Generates (or retrieves) a Cognito ID.
+        Generates (or retrieves) IdentityID.
 
         [Show boto3 documentation](https://boto3.amazonaws.com/v1/documentation/api/latest/reference/services/cognito-identity/client/get_id.html)
         [Show types-aiobotocore documentation](https://youtype.github.io/types_aiobotocore_docs/types_aiobotocore_cognito_identity/client/#get_id)
@@ -360,7 +360,7 @@ class CognitoIdentityClient(AioBaseClient):
         self, **kwargs: Unpack[IdentityPoolRequestTypeDef]
     ) -> IdentityPoolTypeDef:
         """
-        Updates an identity pool.
+        Updates the configuration of an identity pool.
 
         [Show boto3 documentation](https://boto3.amazonaws.com/v1/documentation/api/latest/reference/services/cognito-identity/client/update_identity_pool.html)
         [Show types-aiobotocore documentation](https://youtype.github.io/types_aiobotocore_docs/types_aiobotocore_cognito_identity/client/#update_identity_pool)

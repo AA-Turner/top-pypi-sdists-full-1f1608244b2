@@ -206,11 +206,14 @@ class ListSchemasRequestTypeDef(TypedDict):
 
 
 class ListStatementsRequestTypeDef(TypedDict):
+    ClusterIdentifier: NotRequired[str]
+    Database: NotRequired[str]
     MaxResults: NotRequired[int]
     NextToken: NotRequired[str]
     RoleLevel: NotRequired[bool]
     StatementName: NotRequired[str]
     Status: NotRequired[StatusStringType]
+    WorkgroupName: NotRequired[str]
 
 
 class ListTablesRequestTypeDef(TypedDict):
@@ -385,9 +388,12 @@ class ListSchemasRequestPaginateTypeDef(TypedDict):
 
 
 class ListStatementsRequestPaginateTypeDef(TypedDict):
+    ClusterIdentifier: NotRequired[str]
+    Database: NotRequired[str]
     RoleLevel: NotRequired[bool]
     StatementName: NotRequired[str]
     Status: NotRequired[StatusStringType]
+    WorkgroupName: NotRequired[str]
     PaginationConfig: NotRequired[PaginatorConfigTypeDef]
 
 

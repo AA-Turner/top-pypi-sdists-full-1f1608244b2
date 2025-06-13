@@ -43,9 +43,16 @@ __all__ = (
     "LifecyclePolicyResourceTypeType",
     "LifecyclePolicyStatusType",
     "LifecyclePolicyTimeUnitType",
+    "ListLifecycleExecutionResourcesPaginatorName",
+    "ListLifecycleExecutionsPaginatorName",
+    "ListLifecyclePoliciesPaginatorName",
+    "ListWaitingWorkflowStepsPaginatorName",
+    "ListWorkflowBuildVersionsPaginatorName",
+    "ListWorkflowsPaginatorName",
     "MarketplaceResourceTypeType",
     "OnWorkflowFailureType",
     "OwnershipType",
+    "PaginatorName",
     "PipelineExecutionStartConditionType",
     "PipelineStatusType",
     "PlatformType",
@@ -53,6 +60,7 @@ __all__ = (
     "ResourceServiceName",
     "ResourceStatusType",
     "ServiceName",
+    "SsmParameterDataTypeType",
     "TenancyTypeType",
     "WorkflowExecutionStatusType",
     "WorkflowStatusType",
@@ -99,6 +107,12 @@ LifecyclePolicyDetailFilterTypeType = Literal["AGE", "COUNT"]
 LifecyclePolicyResourceTypeType = Literal["AMI_IMAGE", "CONTAINER_IMAGE"]
 LifecyclePolicyStatusType = Literal["DISABLED", "ENABLED"]
 LifecyclePolicyTimeUnitType = Literal["DAYS", "MONTHS", "WEEKS", "YEARS"]
+ListLifecycleExecutionResourcesPaginatorName = Literal["list_lifecycle_execution_resources"]
+ListLifecycleExecutionsPaginatorName = Literal["list_lifecycle_executions"]
+ListLifecyclePoliciesPaginatorName = Literal["list_lifecycle_policies"]
+ListWaitingWorkflowStepsPaginatorName = Literal["list_waiting_workflow_steps"]
+ListWorkflowBuildVersionsPaginatorName = Literal["list_workflow_build_versions"]
+ListWorkflowsPaginatorName = Literal["list_workflows"]
 MarketplaceResourceTypeType = Literal["COMPONENT_ARTIFACT", "COMPONENT_DATA"]
 OnWorkflowFailureType = Literal["ABORT", "CONTINUE"]
 OwnershipType = Literal["AWSMarketplace", "Amazon", "Self", "Shared", "ThirdParty"]
@@ -109,6 +123,7 @@ PipelineStatusType = Literal["DISABLED", "ENABLED"]
 PlatformType = Literal["Linux", "Windows", "macOS"]
 ProductCodeTypeType = Literal["marketplace"]
 ResourceStatusType = Literal["AVAILABLE", "DELETED", "DEPRECATED", "DISABLED"]
+SsmParameterDataTypeType = Literal["aws:ec2:image", "text"]
 TenancyTypeType = Literal["dedicated", "default", "host"]
 WorkflowExecutionStatusType = Literal[
     "CANCELLED",
@@ -284,6 +299,7 @@ ServiceName = Literal[
     "freetier",
     "fsx",
     "gamelift",
+    "gameliftstreams",
     "geo-maps",
     "geo-places",
     "geo-routes",
@@ -309,6 +325,7 @@ ServiceName = Literal[
     "iot",
     "iot-data",
     "iot-jobs-data",
+    "iot-managed-integrations",
     "iotanalytics",
     "iotdeviceadvisor",
     "iotevents",
@@ -423,7 +440,6 @@ ServiceName = Literal[
     "pipes",
     "polly",
     "pricing",
-    "privatenetworks",
     "proton",
     "qapps",
     "qbusiness",
@@ -484,7 +500,6 @@ ServiceName = Literal[
     "signer",
     "simspaceweaver",
     "sms",
-    "sms-voice",
     "snow-device-management",
     "snowball",
     "sns",
@@ -492,6 +507,7 @@ ServiceName = Literal[
     "sqs",
     "ssm",
     "ssm-contacts",
+    "ssm-guiconnect",
     "ssm-incidents",
     "ssm-quicksetup",
     "ssm-sap",
@@ -543,4 +559,12 @@ ResourceServiceName = Literal[
     "s3",
     "sns",
     "sqs",
+]
+PaginatorName = Literal[
+    "list_lifecycle_execution_resources",
+    "list_lifecycle_executions",
+    "list_lifecycle_policies",
+    "list_waiting_workflow_steps",
+    "list_workflow_build_versions",
+    "list_workflows",
 ]

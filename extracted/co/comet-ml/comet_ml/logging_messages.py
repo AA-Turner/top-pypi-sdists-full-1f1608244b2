@@ -380,7 +380,7 @@ INSTALLED_PACKAGES_MSG_SENDING_ERROR = (
 
 OPTIMIZER_KWARGS_CONSTRUCTOR_DEPRECATED = "Passing Experiment through Optimizer constructor is deprecated; pass them to Optimizer.get_experiments or Optimizer.next"
 
-BACKEND_VERSION_CHECK_ERROR = "Failed to check backend version at URL: %r"
+BACKEND_VERSION_CHECK_ERROR = "Failed to check backend version at URL: %r, reason: %s"
 
 INVALID_CONFIG_MINIMAL_BACKEND_VERSION = "Invalid configured `comet.rest_v2_minimal_backend_version` value %r, skipping backend version check"
 

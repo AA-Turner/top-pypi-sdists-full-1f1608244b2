@@ -52,6 +52,7 @@ __all__ = (
     "ProtocolEnumType",
     "RedirectActionStatusCodeEnumType",
     "RegionName",
+    "RemoveIpamPoolEnumType",
     "ResourceServiceName",
     "RevocationTypeType",
     "ServiceName",
@@ -97,6 +98,7 @@ LoadBalancersDeletedWaiterName = Literal["load_balancers_deleted"]
 MitigationInEffectEnumType = Literal["no", "yes"]
 ProtocolEnumType = Literal["GENEVE", "HTTP", "HTTPS", "TCP", "TCP_UDP", "TLS", "UDP"]
 RedirectActionStatusCodeEnumType = Literal["HTTP_301", "HTTP_302"]
+RemoveIpamPoolEnumType = Literal["ipv4"]
 RevocationTypeType = Literal["CRL"]
 TargetAdministrativeOverrideReasonEnumType = Literal[
     "AdministrativeOverride.NoOverride",
@@ -287,6 +289,7 @@ ServiceName = Literal[
     "freetier",
     "fsx",
     "gamelift",
+    "gameliftstreams",
     "geo-maps",
     "geo-places",
     "geo-routes",
@@ -312,6 +315,7 @@ ServiceName = Literal[
     "iot",
     "iot-data",
     "iot-jobs-data",
+    "iot-managed-integrations",
     "iotanalytics",
     "iotdeviceadvisor",
     "iotevents",
@@ -426,7 +430,6 @@ ServiceName = Literal[
     "pipes",
     "polly",
     "pricing",
-    "privatenetworks",
     "proton",
     "qapps",
     "qbusiness",
@@ -487,7 +490,6 @@ ServiceName = Literal[
     "signer",
     "simspaceweaver",
     "sms",
-    "sms-voice",
     "snow-device-management",
     "snowball",
     "sns",
@@ -495,6 +497,7 @@ ServiceName = Literal[
     "sqs",
     "ssm",
     "ssm-contacts",
+    "ssm-guiconnect",
     "ssm-incidents",
     "ssm-quicksetup",
     "ssm-sap",

@@ -65,6 +65,7 @@ __all__ = (
     "CandidateSortByType",
     "CandidateStatusType",
     "CandidateStepTypeType",
+    "CapacityReservationPreferenceType",
     "CapacitySizeTypeType",
     "CaptureModeType",
     "CaptureStatusType",
@@ -279,6 +280,7 @@ __all__ = (
     "MonitoringProblemTypeType",
     "MonitoringScheduleSortKeyType",
     "MonitoringTypeType",
+    "NodeUnavailabilityTypeType",
     "NotebookInstanceAcceleratorTypeType",
     "NotebookInstanceDeletedWaiterName",
     "NotebookInstanceInServiceWaiterName",
@@ -332,6 +334,7 @@ __all__ = (
     "RedshiftResultCompressionTypeType",
     "RedshiftResultFormatType",
     "RegionName",
+    "RelationType",
     "RepositoryAccessModeType",
     "ReservedCapacityInstanceTypeType",
     "ReservedCapacityStatusType",
@@ -392,6 +395,7 @@ __all__ = (
     "TargetPlatformArchType",
     "TargetPlatformOsType",
     "ThroughputModeType",
+    "TrackingServerMaintenanceStatusType",
     "TrackingServerSizeType",
     "TrackingServerStatusType",
     "TrafficRoutingConfigTypeType",
@@ -547,6 +551,7 @@ AppInstanceTypeType = Literal[
     "ml.p4d.24xlarge",
     "ml.p4de.24xlarge",
     "ml.p5.48xlarge",
+    "ml.p5en.48xlarge",
     "ml.r5.12xlarge",
     "ml.r5.16xlarge",
     "ml.r5.24xlarge",
@@ -730,6 +735,7 @@ CandidateStatusType = Literal["Completed", "Failed", "InProgress", "Stopped", "S
 CandidateStepTypeType = Literal[
     "AWS::SageMaker::ProcessingJob", "AWS::SageMaker::TrainingJob", "AWS::SageMaker::TransformJob"
 ]
+CapacityReservationPreferenceType = Literal["capacity-reservations-only"]
 CapacitySizeTypeType = Literal["CAPACITY_PERCENT", "INSTANCE_COUNT"]
 CaptureModeType = Literal["Input", "InputAndOutput", "Output"]
 CaptureStatusType = Literal["Started", "Stopped"]
@@ -849,6 +855,13 @@ ClusterInstanceTypeType = Literal[
     "ml.g6e.xlarge",
     "ml.gr6.4xlarge",
     "ml.gr6.8xlarge",
+    "ml.i3en.12xlarge",
+    "ml.i3en.24xlarge",
+    "ml.i3en.2xlarge",
+    "ml.i3en.3xlarge",
+    "ml.i3en.6xlarge",
+    "ml.i3en.large",
+    "ml.i3en.xlarge",
     "ml.m5.12xlarge",
     "ml.m5.16xlarge",
     "ml.m5.24xlarge",
@@ -866,6 +879,15 @@ ClusterInstanceTypeType = Literal[
     "ml.m6i.8xlarge",
     "ml.m6i.large",
     "ml.m6i.xlarge",
+    "ml.m7i.12xlarge",
+    "ml.m7i.16xlarge",
+    "ml.m7i.24xlarge",
+    "ml.m7i.2xlarge",
+    "ml.m7i.48xlarge",
+    "ml.m7i.4xlarge",
+    "ml.m7i.8xlarge",
+    "ml.m7i.large",
+    "ml.m7i.xlarge",
     "ml.p4d.24xlarge",
     "ml.p4de.24xlarge",
     "ml.p5.48xlarge",
@@ -880,6 +902,15 @@ ClusterInstanceTypeType = Literal[
     "ml.r6i.8xlarge",
     "ml.r6i.large",
     "ml.r6i.xlarge",
+    "ml.r7i.12xlarge",
+    "ml.r7i.16xlarge",
+    "ml.r7i.24xlarge",
+    "ml.r7i.2xlarge",
+    "ml.r7i.48xlarge",
+    "ml.r7i.4xlarge",
+    "ml.r7i.8xlarge",
+    "ml.r7i.large",
+    "ml.r7i.xlarge",
     "ml.t3.2xlarge",
     "ml.t3.large",
     "ml.t3.medium",
@@ -1358,6 +1389,7 @@ MonitoringProblemTypeType = Literal[
 ]
 MonitoringScheduleSortKeyType = Literal["CreationTime", "Name", "Status"]
 MonitoringTypeType = Literal["DataQuality", "ModelBias", "ModelExplainability", "ModelQuality"]
+NodeUnavailabilityTypeType = Literal["CAPACITY_PERCENTAGE", "INSTANCE_COUNT"]
 NotebookInstanceAcceleratorTypeType = Literal[
     "ml.eia1.large",
     "ml.eia1.medium",
@@ -1408,6 +1440,14 @@ OptimizationJobDeploymentInstanceTypeType = Literal[
     "ml.g6.4xlarge",
     "ml.g6.8xlarge",
     "ml.g6.xlarge",
+    "ml.g6e.12xlarge",
+    "ml.g6e.16xlarge",
+    "ml.g6e.24xlarge",
+    "ml.g6e.2xlarge",
+    "ml.g6e.48xlarge",
+    "ml.g6e.4xlarge",
+    "ml.g6e.8xlarge",
+    "ml.g6e.xlarge",
     "ml.inf2.24xlarge",
     "ml.inf2.48xlarge",
     "ml.inf2.8xlarge",
@@ -1444,6 +1484,14 @@ ProcessingInstanceTypeType = Literal[
     "ml.c5.4xlarge",
     "ml.c5.9xlarge",
     "ml.c5.xlarge",
+    "ml.c6i.12xlarge",
+    "ml.c6i.16xlarge",
+    "ml.c6i.24xlarge",
+    "ml.c6i.2xlarge",
+    "ml.c6i.32xlarge",
+    "ml.c6i.4xlarge",
+    "ml.c6i.8xlarge",
+    "ml.c6i.xlarge",
     "ml.g4dn.12xlarge",
     "ml.g4dn.16xlarge",
     "ml.g4dn.2xlarge",
@@ -1458,6 +1506,22 @@ ProcessingInstanceTypeType = Literal[
     "ml.g5.4xlarge",
     "ml.g5.8xlarge",
     "ml.g5.xlarge",
+    "ml.g6.12xlarge",
+    "ml.g6.16xlarge",
+    "ml.g6.24xlarge",
+    "ml.g6.2xlarge",
+    "ml.g6.48xlarge",
+    "ml.g6.4xlarge",
+    "ml.g6.8xlarge",
+    "ml.g6.xlarge",
+    "ml.g6e.12xlarge",
+    "ml.g6e.16xlarge",
+    "ml.g6e.24xlarge",
+    "ml.g6e.2xlarge",
+    "ml.g6e.48xlarge",
+    "ml.g6e.4xlarge",
+    "ml.g6e.8xlarge",
+    "ml.g6e.xlarge",
     "ml.m4.10xlarge",
     "ml.m4.16xlarge",
     "ml.m4.2xlarge",
@@ -1469,6 +1533,15 @@ ProcessingInstanceTypeType = Literal[
     "ml.m5.4xlarge",
     "ml.m5.large",
     "ml.m5.xlarge",
+    "ml.m6i.12xlarge",
+    "ml.m6i.16xlarge",
+    "ml.m6i.24xlarge",
+    "ml.m6i.2xlarge",
+    "ml.m6i.32xlarge",
+    "ml.m6i.4xlarge",
+    "ml.m6i.8xlarge",
+    "ml.m6i.large",
+    "ml.m6i.xlarge",
     "ml.p2.16xlarge",
     "ml.p2.8xlarge",
     "ml.p2.xlarge",
@@ -1516,6 +1589,7 @@ ProductionVariantInferenceAmiVersionType = Literal[
     "al2-ami-sagemaker-inference-gpu-2",
     "al2-ami-sagemaker-inference-gpu-2-1",
     "al2-ami-sagemaker-inference-gpu-3-1",
+    "al2-ami-sagemaker-inference-neuron-2",
 ]
 ProductionVariantInstanceTypeType = Literal[
     "ml.c4.2xlarge",
@@ -1770,6 +1844,7 @@ RecommendationStepTypeType = Literal["BENCHMARK"]
 RecordWrapperType = Literal["None", "RecordIO"]
 RedshiftResultCompressionTypeType = Literal["BZIP2", "GZIP", "None", "SNAPPY", "ZSTD"]
 RedshiftResultFormatType = Literal["CSV", "PARQUET"]
+RelationType = Literal["EqualTo", "GreaterThanOrEqualTo"]
 RepositoryAccessModeType = Literal["Platform", "Vpc"]
 ReservedCapacityInstanceTypeType = Literal[
     "ml.p4d.24xlarge",
@@ -1938,6 +2013,9 @@ TargetPlatformAcceleratorType = Literal["INTEL_GRAPHICS", "MALI", "NNA", "NVIDIA
 TargetPlatformArchType = Literal["ARM64", "ARM_EABI", "ARM_EABIHF", "X86", "X86_64"]
 TargetPlatformOsType = Literal["ANDROID", "LINUX"]
 ThroughputModeType = Literal["OnDemand", "Provisioned"]
+TrackingServerMaintenanceStatusType = Literal[
+    "MaintenanceComplete", "MaintenanceFailed", "MaintenanceInProgress"
+]
 TrackingServerSizeType = Literal["Large", "Medium", "Small"]
 TrackingServerStatusType = Literal[
     "CreateFailed",
@@ -2356,6 +2434,7 @@ ServiceName = Literal[
     "freetier",
     "fsx",
     "gamelift",
+    "gameliftstreams",
     "geo-maps",
     "geo-places",
     "geo-routes",
@@ -2381,6 +2460,7 @@ ServiceName = Literal[
     "iot",
     "iot-data",
     "iot-jobs-data",
+    "iot-managed-integrations",
     "iotanalytics",
     "iotdeviceadvisor",
     "iotevents",
@@ -2495,7 +2575,6 @@ ServiceName = Literal[
     "pipes",
     "polly",
     "pricing",
-    "privatenetworks",
     "proton",
     "qapps",
     "qbusiness",
@@ -2556,7 +2635,6 @@ ServiceName = Literal[
     "signer",
     "simspaceweaver",
     "sms",
-    "sms-voice",
     "snow-device-management",
     "snowball",
     "sns",
@@ -2564,6 +2642,7 @@ ServiceName = Literal[
     "sqs",
     "ssm",
     "ssm-contacts",
+    "ssm-guiconnect",
     "ssm-incidents",
     "ssm-quicksetup",
     "ssm-sap",
@@ -2724,6 +2803,7 @@ RegionName = Literal[
     "ap-southeast-3",
     "ap-southeast-4",
     "ap-southeast-5",
+    "ap-southeast-7",
     "ca-central-1",
     "ca-west-1",
     "eu-central-1",
@@ -2737,6 +2817,7 @@ RegionName = Literal[
     "il-central-1",
     "me-central-1",
     "me-south-1",
+    "mx-central-1",
     "sa-east-1",
     "us-east-1",
     "us-east-2",

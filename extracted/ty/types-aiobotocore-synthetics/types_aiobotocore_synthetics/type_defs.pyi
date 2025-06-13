@@ -25,10 +25,12 @@ from aiobotocore.response import StreamingBody
 from .literals import (
     CanaryRunStateReasonCodeType,
     CanaryRunStateType,
+    CanaryRunTestResultType,
     CanaryStateReasonCodeType,
     CanaryStateType,
     EncryptionModeType,
     ProvisionedResourceCleanupSettingType,
+    RunTypeType,
 )
 
 if sys.version_info >= (3, 9):
@@ -52,6 +54,7 @@ __all__ = (
     "BlobTypeDef",
     "CanaryCodeInputTypeDef",
     "CanaryCodeOutputTypeDef",
+    "CanaryDryRunConfigOutputTypeDef",
     "CanaryLastRunTypeDef",
     "CanaryRunConfigInputTypeDef",
     "CanaryRunConfigOutputTypeDef",
@@ -76,6 +79,7 @@ __all__ = (
     "DescribeRuntimeVersionsRequestTypeDef",
     "DescribeRuntimeVersionsResponseTypeDef",
     "DisassociateResourceRequestTypeDef",
+    "DryRunConfigOutputTypeDef",
     "GetCanaryRequestTypeDef",
     "GetCanaryResponseTypeDef",
     "GetCanaryRunsRequestTypeDef",
@@ -93,8 +97,12 @@ __all__ = (
     "ListTagsForResourceRequestTypeDef",
     "ListTagsForResourceResponseTypeDef",
     "ResponseMetadataTypeDef",
+    "RetryConfigInputTypeDef",
+    "RetryConfigOutputTypeDef",
     "RuntimeVersionTypeDef",
     "S3EncryptionConfigTypeDef",
+    "StartCanaryDryRunRequestTypeDef",
+    "StartCanaryDryRunResponseTypeDef",
     "StartCanaryRequestTypeDef",
     "StopCanaryRequestTypeDef",
     "TagResourceRequestTypeDef",
@@ -128,33 +136,38 @@ class CanaryCodeOutputTypeDef(TypedDict):
     SourceLocationArn: NotRequired[str]
     Handler: NotRequired[str]
 
+class CanaryDryRunConfigOutputTypeDef(TypedDict):
+    DryRunId: NotRequired[str]
+
 class CanaryRunConfigInputTypeDef(TypedDict):
     TimeoutInSeconds: NotRequired[int]
     MemoryInMB: NotRequired[int]
     ActiveTracing: NotRequired[bool]
     EnvironmentVariables: NotRequired[Mapping[str, str]]
+    EphemeralStorage: NotRequired[int]
 
 class CanaryRunConfigOutputTypeDef(TypedDict):
     TimeoutInSeconds: NotRequired[int]
     MemoryInMB: NotRequired[int]
     ActiveTracing: NotRequired[bool]
+    EphemeralStorage: NotRequired[int]
 
 class CanaryRunStatusTypeDef(TypedDict):
     State: NotRequired[CanaryRunStateType]
     StateReason: NotRequired[str]
     StateReasonCode: NotRequired[CanaryRunStateReasonCodeType]
+    TestResult: NotRequired[CanaryRunTestResultType]
 
 class CanaryRunTimelineTypeDef(TypedDict):
     Started: NotRequired[datetime]
     Completed: NotRequired[datetime]
+    MetricTimestampForRunAndRetries: NotRequired[datetime]
 
-class CanaryScheduleInputTypeDef(TypedDict):
-    Expression: str
-    DurationInSeconds: NotRequired[int]
+class RetryConfigInputTypeDef(TypedDict):
+    MaxRetries: int
 
-class CanaryScheduleOutputTypeDef(TypedDict):
-    Expression: NotRequired[str]
-    DurationInSeconds: NotRequired[int]
+class RetryConfigOutputTypeDef(TypedDict):
+    MaxRetries: NotRequired[int]
 
 class CanaryStatusTypeDef(TypedDict):
     State: NotRequired[CanaryStateType]
@@ -166,6 +179,10 @@ class CanaryTimelineTypeDef(TypedDict):
     LastModified: NotRequired[datetime]
     LastStarted: NotRequired[datetime]
     LastStopped: NotRequired[datetime]
+
+class DryRunConfigOutputTypeDef(TypedDict):
+    DryRunId: NotRequired[str]
+    LastDryRunExecutionStatus: NotRequired[str]
 
 class VpcConfigOutputTypeDef(TypedDict):
     VpcId: NotRequired[str]
@@ -230,11 +247,14 @@ class DisassociateResourceRequestTypeDef(TypedDict):
 
 class GetCanaryRequestTypeDef(TypedDict):
     Name: str
+    DryRunId: NotRequired[str]
 
 class GetCanaryRunsRequestTypeDef(TypedDict):
     Name: str
     NextToken: NotRequired[str]
     MaxResults: NotRequired[int]
+    DryRunId: NotRequired[str]
+    RunType: NotRequired[RunTypeType]
 
 class GetGroupRequestTypeDef(TypedDict):
     GroupIdentifier: str
@@ -296,10 +316,23 @@ class CanaryCodeInputTypeDef(TypedDict):
 
 class CanaryRunTypeDef(TypedDict):
     Id: NotRequired[str]
+    ScheduledRunId: NotRequired[str]
+    RetryAttempt: NotRequired[int]
     Name: NotRequired[str]
     Status: NotRequired[CanaryRunStatusTypeDef]
     Timeline: NotRequired[CanaryRunTimelineTypeDef]
     ArtifactS3Location: NotRequired[str]
+    DryRunConfig: NotRequired[CanaryDryRunConfigOutputTypeDef]
+
+class CanaryScheduleInputTypeDef(TypedDict):
+    Expression: str
+    DurationInSeconds: NotRequired[int]
+    RetryConfig: NotRequired[RetryConfigInputTypeDef]
+
+class CanaryScheduleOutputTypeDef(TypedDict):
+    Expression: NotRequired[str]
+    DurationInSeconds: NotRequired[int]
+    RetryConfig: NotRequired[RetryConfigOutputTypeDef]
 
 class ListGroupResourcesResponseTypeDef(TypedDict):
     Resources: List[str]
@@ -308,6 +341,10 @@ class ListGroupResourcesResponseTypeDef(TypedDict):
 
 class ListTagsForResourceResponseTypeDef(TypedDict):
     Tags: Dict[str, str]
+    ResponseMetadata: ResponseMetadataTypeDef
+
+class StartCanaryDryRunResponseTypeDef(TypedDict):
+    DryRunConfig: DryRunConfigOutputTypeDef
     ResponseMetadata: ResponseMetadataTypeDef
 
 class CreateGroupResponseTypeDef(TypedDict):
@@ -333,6 +370,35 @@ class ListGroupsResponseTypeDef(TypedDict):
     ResponseMetadata: ResponseMetadataTypeDef
     NextToken: NotRequired[str]
 
+class VisualReferenceInputTypeDef(TypedDict):
+    BaseCanaryRunId: str
+    BaseScreenshots: NotRequired[Sequence[BaseScreenshotUnionTypeDef]]
+
+class CanaryLastRunTypeDef(TypedDict):
+    CanaryName: NotRequired[str]
+    LastRun: NotRequired[CanaryRunTypeDef]
+
+class GetCanaryRunsResponseTypeDef(TypedDict):
+    CanaryRuns: List[CanaryRunTypeDef]
+    ResponseMetadata: ResponseMetadataTypeDef
+    NextToken: NotRequired[str]
+
+class CreateCanaryRequestTypeDef(TypedDict):
+    Name: str
+    Code: CanaryCodeInputTypeDef
+    ArtifactS3Location: str
+    ExecutionRoleArn: str
+    Schedule: CanaryScheduleInputTypeDef
+    RuntimeVersion: str
+    RunConfig: NotRequired[CanaryRunConfigInputTypeDef]
+    SuccessRetentionPeriodInDays: NotRequired[int]
+    FailureRetentionPeriodInDays: NotRequired[int]
+    VpcConfig: NotRequired[VpcConfigInputTypeDef]
+    ResourcesToReplicateTags: NotRequired[Sequence[Literal["lambda-function"]]]
+    ProvisionedResourceCleanup: NotRequired[ProvisionedResourceCleanupSettingType]
+    Tags: NotRequired[Mapping[str, str]]
+    ArtifactConfig: NotRequired[ArtifactConfigInputTypeDef]
+
 class CanaryTypeDef(TypedDict):
     Id: NotRequired[str]
     Name: NotRequired[str]
@@ -352,48 +418,21 @@ class CanaryTypeDef(TypedDict):
     ProvisionedResourceCleanup: NotRequired[ProvisionedResourceCleanupSettingType]
     Tags: NotRequired[Dict[str, str]]
     ArtifactConfig: NotRequired[ArtifactConfigOutputTypeDef]
+    DryRunConfig: NotRequired[DryRunConfigOutputTypeDef]
 
-class VisualReferenceInputTypeDef(TypedDict):
-    BaseCanaryRunId: str
-    BaseScreenshots: NotRequired[Sequence[BaseScreenshotUnionTypeDef]]
-
-class CreateCanaryRequestTypeDef(TypedDict):
+class StartCanaryDryRunRequestTypeDef(TypedDict):
     Name: str
-    Code: CanaryCodeInputTypeDef
-    ArtifactS3Location: str
-    ExecutionRoleArn: str
-    Schedule: CanaryScheduleInputTypeDef
-    RuntimeVersion: str
+    Code: NotRequired[CanaryCodeInputTypeDef]
+    RuntimeVersion: NotRequired[str]
     RunConfig: NotRequired[CanaryRunConfigInputTypeDef]
+    VpcConfig: NotRequired[VpcConfigInputTypeDef]
+    ExecutionRoleArn: NotRequired[str]
     SuccessRetentionPeriodInDays: NotRequired[int]
     FailureRetentionPeriodInDays: NotRequired[int]
-    VpcConfig: NotRequired[VpcConfigInputTypeDef]
-    ResourcesToReplicateTags: NotRequired[Sequence[Literal["lambda-function"]]]
-    ProvisionedResourceCleanup: NotRequired[ProvisionedResourceCleanupSettingType]
-    Tags: NotRequired[Mapping[str, str]]
+    VisualReference: NotRequired[VisualReferenceInputTypeDef]
+    ArtifactS3Location: NotRequired[str]
     ArtifactConfig: NotRequired[ArtifactConfigInputTypeDef]
-
-class CanaryLastRunTypeDef(TypedDict):
-    CanaryName: NotRequired[str]
-    LastRun: NotRequired[CanaryRunTypeDef]
-
-class GetCanaryRunsResponseTypeDef(TypedDict):
-    CanaryRuns: List[CanaryRunTypeDef]
-    ResponseMetadata: ResponseMetadataTypeDef
-    NextToken: NotRequired[str]
-
-class CreateCanaryResponseTypeDef(TypedDict):
-    Canary: CanaryTypeDef
-    ResponseMetadata: ResponseMetadataTypeDef
-
-class DescribeCanariesResponseTypeDef(TypedDict):
-    Canaries: List[CanaryTypeDef]
-    ResponseMetadata: ResponseMetadataTypeDef
-    NextToken: NotRequired[str]
-
-class GetCanaryResponseTypeDef(TypedDict):
-    Canary: CanaryTypeDef
-    ResponseMetadata: ResponseMetadataTypeDef
+    ProvisionedResourceCleanup: NotRequired[ProvisionedResourceCleanupSettingType]
 
 class UpdateCanaryRequestTypeDef(TypedDict):
     Name: str
@@ -409,8 +448,22 @@ class UpdateCanaryRequestTypeDef(TypedDict):
     ArtifactS3Location: NotRequired[str]
     ArtifactConfig: NotRequired[ArtifactConfigInputTypeDef]
     ProvisionedResourceCleanup: NotRequired[ProvisionedResourceCleanupSettingType]
+    DryRunId: NotRequired[str]
 
 class DescribeCanariesLastRunResponseTypeDef(TypedDict):
     CanariesLastRun: List[CanaryLastRunTypeDef]
     ResponseMetadata: ResponseMetadataTypeDef
     NextToken: NotRequired[str]
+
+class CreateCanaryResponseTypeDef(TypedDict):
+    Canary: CanaryTypeDef
+    ResponseMetadata: ResponseMetadataTypeDef
+
+class DescribeCanariesResponseTypeDef(TypedDict):
+    Canaries: List[CanaryTypeDef]
+    ResponseMetadata: ResponseMetadataTypeDef
+    NextToken: NotRequired[str]
+
+class GetCanaryResponseTypeDef(TypedDict):
+    Canary: CanaryTypeDef
+    ResponseMetadata: ResponseMetadataTypeDef

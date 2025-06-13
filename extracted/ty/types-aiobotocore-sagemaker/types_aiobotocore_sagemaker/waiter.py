@@ -99,7 +99,7 @@ class EndpointDeletedWaiter(AIOWaiter):
     """
 
     async def wait(  # type: ignore[override]
-        self, **kwargs: Unpack[DescribeEndpointInputWaitExtraTypeDef]
+        self, **kwargs: Unpack[DescribeEndpointInputWaitTypeDef]
     ) -> None:
         """
         [Show boto3 documentation](https://boto3.amazonaws.com/v1/documentation/api/latest/reference/services/sagemaker/waiter/EndpointDeleted.html#SageMaker.Waiter.EndpointDeleted.wait)
@@ -114,7 +114,7 @@ class EndpointInServiceWaiter(AIOWaiter):
     """
 
     async def wait(  # type: ignore[override]
-        self, **kwargs: Unpack[DescribeEndpointInputWaitTypeDef]
+        self, **kwargs: Unpack[DescribeEndpointInputWaitExtraTypeDef]
     ) -> None:
         """
         [Show boto3 documentation](https://boto3.amazonaws.com/v1/documentation/api/latest/reference/services/sagemaker/waiter/EndpointInService.html#SageMaker.Waiter.EndpointInService.wait)
@@ -144,7 +144,7 @@ class ImageDeletedWaiter(AIOWaiter):
     """
 
     async def wait(  # type: ignore[override]
-        self, **kwargs: Unpack[DescribeImageRequestWaitExtraExtraTypeDef]
+        self, **kwargs: Unpack[DescribeImageRequestWaitExtraTypeDef]
     ) -> None:
         """
         [Show boto3 documentation](https://boto3.amazonaws.com/v1/documentation/api/latest/reference/services/sagemaker/waiter/ImageDeleted.html#SageMaker.Waiter.ImageDeleted.wait)
@@ -159,7 +159,7 @@ class ImageUpdatedWaiter(AIOWaiter):
     """
 
     async def wait(  # type: ignore[override]
-        self, **kwargs: Unpack[DescribeImageRequestWaitExtraTypeDef]
+        self, **kwargs: Unpack[DescribeImageRequestWaitExtraExtraTypeDef]
     ) -> None:
         """
         [Show boto3 documentation](https://boto3.amazonaws.com/v1/documentation/api/latest/reference/services/sagemaker/waiter/ImageUpdated.html#SageMaker.Waiter.ImageUpdated.wait)
@@ -204,7 +204,7 @@ class NotebookInstanceDeletedWaiter(AIOWaiter):
     """
 
     async def wait(  # type: ignore[override]
-        self, **kwargs: Unpack[DescribeNotebookInstanceInputWaitExtraExtraTypeDef]
+        self, **kwargs: Unpack[DescribeNotebookInstanceInputWaitTypeDef]
     ) -> None:
         """
         [Show boto3 documentation](https://boto3.amazonaws.com/v1/documentation/api/latest/reference/services/sagemaker/waiter/NotebookInstanceDeleted.html#SageMaker.Waiter.NotebookInstanceDeleted.wait)
@@ -219,7 +219,7 @@ class NotebookInstanceInServiceWaiter(AIOWaiter):
     """
 
     async def wait(  # type: ignore[override]
-        self, **kwargs: Unpack[DescribeNotebookInstanceInputWaitTypeDef]
+        self, **kwargs: Unpack[DescribeNotebookInstanceInputWaitExtraTypeDef]
     ) -> None:
         """
         [Show boto3 documentation](https://boto3.amazonaws.com/v1/documentation/api/latest/reference/services/sagemaker/waiter/NotebookInstanceInService.html#SageMaker.Waiter.NotebookInstanceInService.wait)
@@ -234,7 +234,7 @@ class NotebookInstanceStoppedWaiter(AIOWaiter):
     """
 
     async def wait(  # type: ignore[override]
-        self, **kwargs: Unpack[DescribeNotebookInstanceInputWaitExtraTypeDef]
+        self, **kwargs: Unpack[DescribeNotebookInstanceInputWaitExtraExtraTypeDef]
     ) -> None:
         """
         [Show boto3 documentation](https://boto3.amazonaws.com/v1/documentation/api/latest/reference/services/sagemaker/waiter/NotebookInstanceStopped.html#SageMaker.Waiter.NotebookInstanceStopped.wait)

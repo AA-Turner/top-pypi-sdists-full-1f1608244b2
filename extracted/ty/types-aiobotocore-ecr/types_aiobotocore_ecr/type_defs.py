@@ -292,6 +292,8 @@ class CreatePullThroughCacheRuleRequestTypeDef(TypedDict):
     registryId: NotRequired[str]
     upstreamRegistry: NotRequired[UpstreamRegistryType]
     credentialArn: NotRequired[str]
+    customRoleArn: NotRequired[str]
+    upstreamRepositoryPrefix: NotRequired[str]
 
 
 class EncryptionConfigurationForRepositoryCreationTemplateTypeDef(TypedDict):
@@ -390,6 +392,8 @@ class PullThroughCacheRuleTypeDef(TypedDict):
     createdAt: NotRequired[datetime]
     registryId: NotRequired[str]
     credentialArn: NotRequired[str]
+    customRoleArn: NotRequired[str]
+    upstreamRepositoryPrefix: NotRequired[str]
     upstreamRegistry: NotRequired[UpstreamRegistryType]
     updatedAt: NotRequired[datetime]
 
@@ -556,8 +560,9 @@ class UntagResourceRequestTypeDef(TypedDict):
 
 class UpdatePullThroughCacheRuleRequestTypeDef(TypedDict):
     ecrRepositoryPrefix: str
-    credentialArn: str
     registryId: NotRequired[str]
+    credentialArn: NotRequired[str]
+    customRoleArn: NotRequired[str]
 
 
 class ValidatePullThroughCacheRuleRequestTypeDef(TypedDict):
@@ -598,6 +603,8 @@ class CreatePullThroughCacheRuleResponseTypeDef(TypedDict):
     registryId: str
     upstreamRegistry: UpstreamRegistryType
     credentialArn: str
+    customRoleArn: str
+    upstreamRepositoryPrefix: str
     ResponseMetadata: ResponseMetadataTypeDef
 
 
@@ -615,6 +622,8 @@ class DeletePullThroughCacheRuleResponseTypeDef(TypedDict):
     createdAt: datetime
     registryId: str
     credentialArn: str
+    customRoleArn: str
+    upstreamRepositoryPrefix: str
     ResponseMetadata: ResponseMetadataTypeDef
 
 
@@ -721,6 +730,8 @@ class UpdatePullThroughCacheRuleResponseTypeDef(TypedDict):
     registryId: str
     updatedAt: datetime
     credentialArn: str
+    customRoleArn: str
+    upstreamRepositoryPrefix: str
     ResponseMetadata: ResponseMetadataTypeDef
 
 
@@ -737,6 +748,8 @@ class ValidatePullThroughCacheRuleResponseTypeDef(TypedDict):
     registryId: str
     upstreamRegistryUrl: str
     credentialArn: str
+    customRoleArn: str
+    upstreamRepositoryPrefix: str
     isValid: bool
     failure: str
     ResponseMetadata: ResponseMetadataTypeDef

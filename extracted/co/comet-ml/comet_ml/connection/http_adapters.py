@@ -25,7 +25,7 @@ class HTTPSAdapter(HTTPAdapter):
     def cert_verify(self, conn, url, verify, cert):
         # Tests for existence due to issue when Session changes
         # This can happen in Comet's Python Panels
-        if hasattr(self, "_custom_ca_certs") and self._custom_ca_certs is None:
+        if getattr(self, "_custom_ca_certs", None) is None:
             super().cert_verify(conn, url, verify, cert)
             return
 

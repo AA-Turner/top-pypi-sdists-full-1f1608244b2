@@ -25,6 +25,8 @@ from .literals import (
     AZStatusType,
     DataTieringStatusType,
     InputAuthenticationTypeType,
+    IpDiscoveryType,
+    NetworkTypeType,
     ServiceUpdateStatusType,
     SourceTypeType,
     UpdateStrategyType,
@@ -473,6 +475,7 @@ class UserTypeDef(TypedDict):
 class SubnetTypeDef(TypedDict):
     Identifier: NotRequired[str]
     AvailabilityZone: NotRequired[AvailabilityZoneTypeDef]
+    SupportedNetworkTypes: NotRequired[List[NetworkTypeType]]
 
 class BatchUpdateClusterRequestTypeDef(TypedDict):
     ClusterNames: Sequence[str]
@@ -532,6 +535,8 @@ class CreateClusterRequestTypeDef(TypedDict):
     EngineVersion: NotRequired[str]
     AutoMinorVersionUpgrade: NotRequired[bool]
     DataTiering: NotRequired[bool]
+    NetworkType: NotRequired[NetworkTypeType]
+    IpDiscovery: NotRequired[IpDiscoveryType]
 
 class CreateMultiRegionClusterRequestTypeDef(TypedDict):
     MultiRegionClusterNameSuffix: str
@@ -777,6 +782,7 @@ class UpdateClusterRequestTypeDef(TypedDict):
     ReplicaConfiguration: NotRequired[ReplicaConfigurationRequestTypeDef]
     ShardConfiguration: NotRequired[ShardConfigurationRequestTypeDef]
     ACLName: NotRequired[str]
+    IpDiscovery: NotRequired[IpDiscoveryType]
 
 class UpdateMultiRegionClusterRequestTypeDef(TypedDict):
     MultiRegionClusterName: str
@@ -833,6 +839,7 @@ class SubnetGroupTypeDef(TypedDict):
     VpcId: NotRequired[str]
     Subnets: NotRequired[List[SubnetTypeDef]]
     ARN: NotRequired[str]
+    SupportedNetworkTypes: NotRequired[List[NetworkTypeType]]
 
 class ShardTypeDef(TypedDict):
     Name: NotRequired[str]
@@ -942,6 +949,8 @@ class ClusterTypeDef(TypedDict):
     ACLName: NotRequired[str]
     AutoMinorVersionUpgrade: NotRequired[bool]
     DataTiering: NotRequired[DataTieringStatusType]
+    NetworkType: NotRequired[NetworkTypeType]
+    IpDiscovery: NotRequired[IpDiscoveryType]
 
 class SnapshotTypeDef(TypedDict):
     Name: NotRequired[str]

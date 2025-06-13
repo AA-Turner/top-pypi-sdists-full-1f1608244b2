@@ -9,14 +9,28 @@ See https://github.com/github/rest-api-description for more information.
 
 from __future__ import annotations
 
+from typing import Union
 from typing_extensions import TypedDict
 
 
-class ActionsCacheUsageOrgEnterpriseType(TypedDict):
-    """ActionsCacheUsageOrgEnterprise"""
+class OrganizationSimpleType(TypedDict):
+    """Organization Simple
 
-    total_active_caches_count: int
-    total_active_caches_size_in_bytes: int
+    A GitHub organization.
+    """
+
+    login: str
+    id: int
+    node_id: str
+    url: str
+    repos_url: str
+    events_url: str
+    hooks_url: str
+    issues_url: str
+    members_url: str
+    public_members_url: str
+    avatar_url: str
+    description: Union[str, None]
 
 
-__all__ = ("ActionsCacheUsageOrgEnterpriseType",)
+__all__ = ("OrganizationSimpleType",)

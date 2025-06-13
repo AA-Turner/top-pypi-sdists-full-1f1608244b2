@@ -1,6 +1,5 @@
 from __future__ import annotations
 
-import datetime as dt
 from collections.abc import Iterable
 from io import StringIO
 from logging import DEBUG, WARNING, FileHandler, StreamHandler, getLogger
@@ -12,7 +11,6 @@ from hypothesis import assume, given
 from hypothesis.strategies import (
     booleans,
     builds,
-    dates,
     dictionaries,
     integers,
     lists,
@@ -26,14 +24,14 @@ from polars import Object, String, UInt64
 from pytest import approx, raises
 
 from tests.conftest import SKIPIF_CI_AND_WINDOWS
-from tests.test_operator import (
+from tests.test_objects.objects import (
     CustomError,
     SubFrozenSet,
     SubList,
     SubSet,
     SubTuple,
     TruthEnum,
-    make_objects,
+    objects,
 )
 from tests.test_typing_funcs.with_future import (
     DataClassFutureCustomEquality,
@@ -51,16 +49,16 @@ from tests.test_typing_funcs.with_future import (
     DataClassFutureTypeLiteral,
     DataClassFutureTypeLiteralNullable,
 )
-from utilities.datetime import MINUTE, SECOND, get_now
 from utilities.functions import is_sequence_of
 from utilities.hypothesis import (
     assume_does_not_raise,
+    dates_whenever,
     int64s,
     paths,
     temp_paths,
     text_ascii,
     text_printable,
-    zoned_datetimes,
+    zoned_datetimes_whenever,
 )
 from utilities.iterables import always_iterable, one
 from utilities.logging import get_logging_level_number
@@ -81,12 +79,15 @@ from utilities.orjson import (
 )
 from utilities.polars import check_polars_dataframe, zoned_datetime
 from utilities.sentinel import Sentinel, sentinel
-from utilities.types import DateOrDateTime, LogLevel, MaybeIterable, PathLike
+from utilities.types import LogLevel, MaybeIterable, PathLike
 from utilities.typing import get_args
-from utilities.tzlocal import get_now_local
+from utilities.tzlocal import LOCAL_TIME_ZONE
+from utilities.whenever2 import MINUTE, SECOND, get_now
 
 if TYPE_CHECKING:
     from collections.abc import Sequence
+
+    from whenever import Date, ZonedDateTime
 
     from utilities.types import Dataclass, StrMapping
 
@@ -129,7 +130,9 @@ class TestGetLogRecords:
         assert abs(record.datetime - get_now()) <= MINUTE
         assert record.func_name == "test_main"
         assert record.stack_info is None
-        assert record.extra == {"a": 1, "b": 2}
+        assert record.extra is not None
+        assert record.extra["a"] == 1
+        assert record.extra["b"] == 2
         assert record.log_file == file
         assert record.log_file_line_num == 1
 
@@ -169,7 +172,7 @@ class TestGetLogRecords:
                 "level": UInt64,
                 "path_name": String,
                 "line_num": UInt64,
-                "datetime": zoned_datetime(time_zone="local"),
+                "datetime": zoned_datetime(time_zone=LOCAL_TIME_ZONE),
                 "func_name": String,
                 "stack_info": String,
                 "extra": Object,
@@ -195,9 +198,12 @@ class TestGetLogRecords:
         level=sampled_from(get_args(LogLevel)) | none(),
         min_level=sampled_from(get_args(LogLevel)) | none(),
         max_level=sampled_from(get_args(LogLevel)) | none(),
-        date_or_datetime=dates() | zoned_datetimes() | none(),
-        min_date_or_datetime=dates() | zoned_datetimes() | none(),
-        max_date_or_datetime=dates() | zoned_datetimes() | none(),
+        date=dates_whenever() | none(),
+        min_date=dates_whenever() | none(),
+        max_date=dates_whenever() | none(),
+        datetime=zoned_datetimes_whenever() | none(),
+        min_datetime=zoned_datetimes_whenever() | none(),
+        max_datetime=zoned_datetimes_whenever() | none(),
         func_name=booleans() | text_ascii() | none(),
         extra=booleans() | text_ascii() | sets(text_ascii()) | none(),
         log_file=booleans() | paths() | text_ascii() | none(),
@@ -218,9 +224,12 @@ class TestGetLogRecords:
         level: LogLevel | None,
         min_level: LogLevel | None,
         max_level: LogLevel | None,
-        date_or_datetime: DateOrDateTime | None,
-        min_date_or_datetime: DateOrDateTime | None,
-        max_date_or_datetime: DateOrDateTime | None,
+        date: Date | None,
+        min_date: Date | None,
+        max_date: Date | None,
+        datetime: ZonedDateTime | None,
+        min_datetime: ZonedDateTime | None,
+        max_datetime: ZonedDateTime | None,
         func_name: bool | str | None,
         extra: bool | MaybeIterable[str] | None,
         log_file: bool | PathLike | None,
@@ -245,9 +254,12 @@ class TestGetLogRecords:
             level=level,
             min_level=min_level,
             max_level=max_level,
-            date_or_datetime=date_or_datetime,
-            min_date_or_datetime=min_date_or_datetime,
-            max_date_or_datetime=max_date_or_datetime,
+            date=date,
+            min_date=min_date,
+            max_date=max_date,
+            datetime=datetime,
+            min_datetime=min_datetime,
+            max_datetime=max_datetime,
             func_name=func_name,
             extra=extra,
             log_file=log_file,
@@ -272,24 +284,18 @@ class TestGetLogRecords:
             assert all(r.level >= get_logging_level_number(min_level) for r in records)
         if max_level is not None:
             assert all(r.level <= get_logging_level_number(max_level) for r in records)
-        if date_or_datetime is not None:
-            match date_or_datetime:
-                case dt.datetime() as datetime:
-                    assert all(r.datetime == datetime for r in records)
-                case dt.date() as date:
-                    assert all(r.date == date for r in records)
-        if min_date_or_datetime is not None:
-            match min_date_or_datetime:
-                case dt.datetime() as min_datetime:
-                    assert all(r.datetime >= min_datetime for r in records)
-                case dt.date() as min_date:
-                    assert all(r.date >= min_date for r in records)
-        if max_date_or_datetime is not None:
-            match max_date_or_datetime:
-                case dt.datetime() as max_datetime:
-                    assert all(r.datetime <= max_datetime for r in records)
-                case dt.date() as max_date:
-                    assert all(r.date <= max_date for r in records)
+        if date is not None:
+            assert all(r.date == date for r in records)
+        if min_date is not None:
+            assert all(r.date >= min_date for r in records)
+        if max_date is not None:
+            assert all(r.date <= max_date for r in records)
+        if datetime is not None:
+            assert all(r.datetime == datetime for r in records)
+        if min_datetime is not None:
+            assert all(r.datetime >= min_datetime for r in records)
+        if max_datetime is not None:
+            assert all(r.datetime <= max_datetime for r in records)
         if func_name is not None:
             match func_name:
                 case bool() as has_func_name:
@@ -425,37 +431,19 @@ class TestOrjsonFormatter:
         assert record.message == "message"
         assert record.level == WARNING
         assert record.path_name == Path(__file__)
-        assert abs(record.datetime - get_now_local()) <= SECOND
+        assert abs(record.datetime - get_now()) <= SECOND
         assert record.func_name == TestOrjsonFormatter.test_main.__name__
         assert record.stack_info is None
-        assert record.extra == {"a": 1, "b": 2}
+        assert record.extra is not None
+        assert record.extra["a"] == 1
+        assert record.extra["b"] == 2
 
 
 # serialize/deserialize
 
 
 class TestSerializeAndDeserialize:
-    @given(
-        obj=make_objects(
-            dataclass_custom_equality=True,
-            dataclass_default_in_init_child=False,
-            dataclass_int=True,
-            dataclass_int_default=True,
-            dataclass_literal=True,
-            dataclass_literal_nullable=True,
-            dataclass_nested=True,
-            dataclass_none=True,
-            dataclass_type_literal=True,
-            dataclass_type_literal_nullable=True,
-            enum=True,
-            exception_class=True,
-            exception_instance=True,
-            sub_frozenset=True,
-            sub_list=True,
-            sub_set=True,
-            sub_tuple=True,
-        )
-    )
+    @given(obj=objects(all_=True, parsable=True))
     def test_all(self, *, obj: Any) -> None:
         with assume_does_not_raise(_SerializeIntegerError):
             ser = serialize(obj, globalns=globals())
@@ -485,17 +473,17 @@ class TestSerializeAndDeserialize:
         with assume_does_not_raise(IsEqualError):
             assert is_equal(result, obj)
 
-    @given(obj=make_objects())
+    @given(obj=objects(parsable=True))
     def test_base(self, *, obj: Any) -> None:
         result = deserialize(serialize(obj))
         assert is_equal(result, obj)
 
-    @given(obj=make_objects(dataclass_custom_equality=True))
+    @given(obj=objects(dataclass_custom_equality=True, parsable=True))
     def test_dataclass_custom_equality(self, *, obj: Any) -> None:
         result = deserialize(serialize(obj), objects={DataClassFutureCustomEquality})
         assert is_equal(result, obj)
 
-    @given(obj=make_objects(dataclass_default_in_init_child=True))
+    @given(obj=objects(dataclass_default_in_init_child=True, parsable=True))
     def test_dataclass_default_in_init_child_hook_in_serialize(
         self, *, obj: Any
     ) -> None:
@@ -510,7 +498,7 @@ class TestSerializeAndDeserialize:
         )
         assert is_equal(result, obj)
 
-    @given(obj=make_objects(dataclass_default_in_init_child=True))
+    @given(obj=objects(dataclass_default_in_init_child=True, parsable=True))
     def test_dataclass_default_in_init_child_hook_in_deserialize(
         self, *, obj: Any
     ) -> None:
@@ -526,28 +514,28 @@ class TestSerializeAndDeserialize:
         )
         assert is_equal(result, obj)
 
-    @given(obj=make_objects(dataclass_int=True))
+    @given(obj=objects(dataclass_int=True, parsable=True))
     def test_dataclass_int(self, *, obj: Any) -> None:
         result = deserialize(serialize(obj), objects={DataClassFutureInt})
         assert is_equal(result, obj)
 
-    @given(obj=make_objects(dataclass_int_default=True))
+    @given(obj=objects(dataclass_int_default=True, parsable=True))
     def test_dataclass_int_default(self, *, obj: Any) -> None:
         result = deserialize(serialize(obj), objects={DataClassFutureIntDefault})
         assert is_equal(result, obj)
 
-    @given(obj=make_objects(dataclass_literal=True))
+    @given(obj=objects(dataclass_literal=True, parsable=True))
     def test_dataclass_literal(self, *, obj: Any) -> None:
         result = deserialize(serialize(obj), objects={DataClassFutureLiteral})
         assert is_equal(result, obj)
 
-    @given(obj=make_objects(dataclass_literal_nullable=True))
+    @given(obj=objects(dataclass_literal_nullable=True, parsable=True))
     def test_dataclass_literal_nullable(self, *, obj: Any) -> None:
         result = deserialize(serialize(obj), objects={DataClassFutureLiteralNullable})
         with assume_does_not_raise(IsEqualError):
             assert is_equal(result, obj)
 
-    @given(obj=make_objects(dataclass_nested=True))
+    @given(obj=objects(dataclass_nested=True, parsable=True))
     def test_dataclass_nested(self, *, obj: Any) -> None:
         ser = serialize(obj, globalns=globals())
         result = deserialize(
@@ -561,18 +549,18 @@ class TestSerializeAndDeserialize:
         )
         assert is_equal(result, obj)
 
-    @given(obj=make_objects(dataclass_none=True))
+    @given(obj=objects(dataclass_none=True, parsable=True))
     def test_dataclass_none(self, *, obj: Any) -> None:
         ser = serialize(obj, globalns=globals())
         result = deserialize(ser, objects={DataClassFutureNone})
         assert is_equal(result, obj)
 
-    @given(obj=make_objects(dataclass_type_literal=True))
+    @given(obj=objects(dataclass_type_literal=True, parsable=True))
     def test_dataclass_type_literal(self, *, obj: Any) -> None:
         result = deserialize(serialize(obj), objects={DataClassFutureTypeLiteral})
         assert is_equal(result, obj)
 
-    @given(obj=make_objects(dataclass_type_literal_nullable=True))
+    @given(obj=objects(dataclass_type_literal_nullable=True, parsable=True))
     def test_dataclass_type_literal_nullable(self, *, obj: Any) -> None:
         result = deserialize(
             serialize(obj), objects={DataClassFutureTypeLiteralNullable}
@@ -614,19 +602,19 @@ class TestSerializeAndDeserialize:
         )
         assert result == obj
 
-    @given(obj=make_objects(enum=True))
+    @given(obj=objects(enum=True, parsable=True))
     def test_enum(self, *, obj: Any) -> None:
         result = deserialize(serialize(obj), objects={TruthEnum})
         with assume_does_not_raise(IsEqualError):
             assert is_equal(result, obj)
 
-    @given(obj=make_objects(exception_class=True))
+    @given(obj=objects(exception_class=True, parsable=True))
     def test_exception_class(self, *, obj: Any) -> None:
         result = deserialize(serialize(obj), objects={CustomError})
         with assume_does_not_raise(IsEqualError):
             assert is_equal(result, obj)
 
-    @given(obj=make_objects(exception_instance=True))
+    @given(obj=objects(exception_instance=True, parsable=True))
     def test_exception_instance(self, *, obj: Any) -> None:
         result = deserialize(serialize(obj), objects={CustomError})
         with assume_does_not_raise(IsEqualError):
@@ -636,22 +624,22 @@ class TestSerializeAndDeserialize:
         result = deserialize(serialize(None))
         assert result is None
 
-    @given(obj=make_objects(sub_frozenset=True))
+    @given(obj=objects(sub_frozenset=True, parsable=True))
     def test_sub_frozenset(self, *, obj: Any) -> None:
         result = deserialize(serialize(obj), objects={SubFrozenSet})
         assert is_equal(result, obj)
 
-    @given(obj=make_objects(sub_list=True))
+    @given(obj=objects(sub_list=True, parsable=True))
     def test_sub_list(self, *, obj: Any) -> None:
         result = deserialize(serialize(obj), objects={SubList})
         assert is_equal(result, obj)
 
-    @given(obj=make_objects(sub_set=True))
+    @given(obj=objects(sub_set=True, parsable=True))
     def test_sub_set(self, *, obj: Any) -> None:
         result = deserialize(serialize(obj), objects={SubSet})
         assert is_equal(result, obj)
 
-    @given(obj=make_objects(sub_tuple=True))
+    @given(obj=objects(sub_tuple=True, parsable=True))
     def test_sub_tuple(self, *, obj: Any) -> None:
         result = deserialize(serialize(obj), objects={SubTuple})
         assert is_equal(result, obj)
@@ -709,14 +697,14 @@ class TestSerialize:
         class CustomError(Exception): ...
 
         result = serialize(CustomError)
-        expected = b'"[exc|TestSerialize.test_exception_class.<locals>.CustomError]"'
+        expected = b'"[Ex|TestSerialize.test_exception_class.<locals>.CustomError]"'
         assert result == expected
 
     def test_exception_instance(self) -> None:
         class CustomError(Exception): ...
 
         result = serialize(CustomError(1, 2, 3))
-        expected = b'{"[exi|TestSerialize.test_exception_instance.<locals>.CustomError]":{"[tu]":[1,2,3]}}'
+        expected = b'{"[ex|TestSerialize.test_exception_instance.<locals>.CustomError]":{"[tu]":[1,2,3]}}'
         assert result == expected
 
     @given(x=sampled_from([MIN_INT64 - 1, MAX_INT64 + 1]))

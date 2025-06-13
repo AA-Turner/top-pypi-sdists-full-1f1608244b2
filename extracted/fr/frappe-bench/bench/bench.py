@@ -159,7 +159,10 @@ class Bench(Base, Validator):
 	def get_installed_apps(self) -> List:
 		"""Returns list of installed apps on bench, not in excluded_apps.txt"""
 		try:
-			installed_packages = get_cmd_output(f"{self.python} -m pip freeze", cwd=self.name)
+			if os.environ.get("BENCH_USE_UV"):
+				installed_packages = get_cmd_output(f"uv pip freeze --python {self.python}", cwd=self.name)
+			else:
+				installed_packages = get_cmd_output(f"{self.python} -m pip freeze", cwd=self.name)
 		except Exception:
 			installed_packages = []
 
@@ -361,11 +364,13 @@ class BenchSetup(Base):
 		quiet_flag = "" if verbose else "--quiet"
 
 		if not os.path.exists(self.bench.python):
-			venv = get_venv_path(verbose=verbose, python=python)
-			self.run(f"{venv} env", cwd=self.bench.name)
-
-		self.pip()
-		self.wheel()
+			if os.environ.get("BENCH_USE_UV"):
+				self.run("uv venv env --seed", cwd=self.bench.name)
+			else:
+				venv = get_venv_path(verbose=verbose, python=python)
+				self.run(f"{venv} env", cwd=self.bench.name)
+				self.pip()
+				self.wheel()
 
 		if os.path.exists(frappe):
 				env = None
@@ -379,10 +384,16 @@ class BenchSetup(Base):
 							"PKG_CONFIG_PATH": get_mariadb_pkgconfig_path(),
 						}
 
-				self.run(
-					f"{self.bench.python} -m pip install {quiet_flag} --upgrade -e {frappe}",
-					cwd=self.bench.name, env=env,
-				)
+				if os.environ.get("BENCH_USE_UV"):
+					self.run(
+						f"uv pip install {quiet_flag} --upgrade -e {frappe} --python {self.bench.python}",
+						cwd=self.bench.name, env=env,
+					)
+				else:
+					self.run(
+						f"{self.bench.python} -m pip install {quiet_flag} --upgrade -e {frappe}",
+						cwd=self.bench.name, env=env,
+					)
 
 	@step(title="Setting Up Bench Config", success="Bench Config Set Up")
 	def config(self, redis=True, procfile=True, additional_config=None):
@@ -503,7 +514,10 @@ class BenchSetup(Base):
 						"PKG_CONFIG_PATH": get_mariadb_pkgconfig_path(),
 					}
 
-			self.run(f"{self.bench.python} -m pip install {quiet_flag} --upgrade -e {app_path}", env=env)
+			if os.environ.get("BENCH_USE_UV"):
+				self.run(f"uv pip install {quiet_flag} --upgrade -e {app_path} --python {self.bench.python}", env=env)
+			else:
+				self.run(f"{self.bench.python} -m pip install {quiet_flag} --upgrade -e {app_path}", env=env)
 
 	def node(self, apps=None):
 		"""Install and upgrade Node dependencies for specified / all apps on given Bench"""

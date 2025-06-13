@@ -3819,6 +3819,7 @@ class PutBucketOwnershipControlsRequestTypeDef(TypedDict):
     OwnershipControls: OwnershipControlsUnionTypeDef
     ContentMD5: NotRequired[str]
     ExpectedBucketOwner: NotRequired[str]
+    ChecksumAlgorithm: NotRequired[ChecksumAlgorithmType]
 
 
 class GetBucketLoggingOutputTypeDef(TypedDict):

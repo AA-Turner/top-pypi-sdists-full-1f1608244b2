@@ -24,6 +24,7 @@ else:
 __all__ = (
     "AsyncInvokeStatusType",
     "BedrockRuntimeServiceName",
+    "CachePointTypeType",
     "ConversationRoleType",
     "DocumentFormatType",
     "GuardrailActionType",
@@ -39,6 +40,7 @@ __all__ = (
     "GuardrailConverseImageFormatType",
     "GuardrailImageFormatType",
     "GuardrailManagedWordTypeType",
+    "GuardrailOutputScopeType",
     "GuardrailPiiEntityTypeType",
     "GuardrailSensitiveInformationPolicyActionType",
     "GuardrailStreamProcessingModeType",
@@ -61,6 +63,7 @@ __all__ = (
 )
 
 AsyncInvokeStatusType = Literal["Completed", "Failed", "InProgress"]
+CachePointTypeType = Literal["default"]
 ConversationRoleType = Literal["assistant", "user"]
 DocumentFormatType = Literal["csv", "doc", "docx", "html", "md", "pdf", "txt", "xls", "xlsx"]
 GuardrailActionType = Literal["GUARDRAIL_INTERVENED", "NONE"]
@@ -69,7 +72,7 @@ GuardrailContentFilterStrengthType = Literal["HIGH", "LOW", "MEDIUM", "NONE"]
 GuardrailContentFilterTypeType = Literal[
     "HATE", "INSULTS", "MISCONDUCT", "PROMPT_ATTACK", "SEXUAL", "VIOLENCE"
 ]
-GuardrailContentPolicyActionType = Literal["BLOCKED"]
+GuardrailContentPolicyActionType = Literal["BLOCKED", "NONE"]
 GuardrailContentQualifierType = Literal["grounding_source", "guard_content", "query"]
 GuardrailContentSourceType = Literal["INPUT", "OUTPUT"]
 GuardrailContextualGroundingFilterTypeType = Literal["GROUNDING", "RELEVANCE"]
@@ -78,6 +81,7 @@ GuardrailConverseContentQualifierType = Literal["grounding_source", "guard_conte
 GuardrailConverseImageFormatType = Literal["jpeg", "png"]
 GuardrailImageFormatType = Literal["jpeg", "png"]
 GuardrailManagedWordTypeType = Literal["PROFANITY"]
+GuardrailOutputScopeType = Literal["FULL", "INTERVENTIONS"]
 GuardrailPiiEntityTypeType = Literal[
     "ADDRESS",
     "AGE",
@@ -111,12 +115,12 @@ GuardrailPiiEntityTypeType = Literal[
     "US_SOCIAL_SECURITY_NUMBER",
     "VEHICLE_IDENTIFICATION_NUMBER",
 ]
-GuardrailSensitiveInformationPolicyActionType = Literal["ANONYMIZED", "BLOCKED"]
+GuardrailSensitiveInformationPolicyActionType = Literal["ANONYMIZED", "BLOCKED", "NONE"]
 GuardrailStreamProcessingModeType = Literal["async", "sync"]
-GuardrailTopicPolicyActionType = Literal["BLOCKED"]
+GuardrailTopicPolicyActionType = Literal["BLOCKED", "NONE"]
 GuardrailTopicTypeType = Literal["DENY"]
-GuardrailTraceType = Literal["disabled", "enabled"]
-GuardrailWordPolicyActionType = Literal["BLOCKED"]
+GuardrailTraceType = Literal["disabled", "enabled", "enabled_full"]
+GuardrailWordPolicyActionType = Literal["BLOCKED", "NONE"]
 ImageFormatType = Literal["gif", "jpeg", "png", "webp"]
 ListAsyncInvokesPaginatorName = Literal["list_async_invokes"]
 PerformanceConfigLatencyType = Literal["optimized", "standard"]
@@ -131,7 +135,7 @@ StopReasonType = Literal[
     "tool_use",
 ]
 ToolResultStatusType = Literal["error", "success"]
-TraceType = Literal["DISABLED", "ENABLED"]
+TraceType = Literal["DISABLED", "ENABLED", "ENABLED_FULL"]
 VideoFormatType = Literal["flv", "mkv", "mov", "mp4", "mpeg", "mpg", "three_gp", "webm", "wmv"]
 BedrockRuntimeServiceName = Literal["bedrock-runtime"]
 ServiceName = Literal[
@@ -290,6 +294,7 @@ ServiceName = Literal[
     "freetier",
     "fsx",
     "gamelift",
+    "gameliftstreams",
     "geo-maps",
     "geo-places",
     "geo-routes",
@@ -315,6 +320,7 @@ ServiceName = Literal[
     "iot",
     "iot-data",
     "iot-jobs-data",
+    "iot-managed-integrations",
     "iotanalytics",
     "iotdeviceadvisor",
     "iotevents",
@@ -429,7 +435,6 @@ ServiceName = Literal[
     "pipes",
     "polly",
     "pricing",
-    "privatenetworks",
     "proton",
     "qapps",
     "qbusiness",
@@ -490,7 +495,6 @@ ServiceName = Literal[
     "signer",
     "simspaceweaver",
     "sms",
-    "sms-voice",
     "snow-device-management",
     "snowball",
     "sns",
@@ -498,6 +502,7 @@ ServiceName = Literal[
     "sqs",
     "ssm",
     "ssm-contacts",
+    "ssm-guiconnect",
     "ssm-incidents",
     "ssm-quicksetup",
     "ssm-sap",

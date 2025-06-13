@@ -7,7 +7,7 @@ __all__ = ['Bootstrap_RetrievalError', 'get_bootstrap', 'get_bootstrap_customeri
 # %% ../../nbs/routes/bootstrap.ipynb 3
 import httpx
 
-import domolibrary.client.DomoError as de
+import domolibrary.client.DomoError as dmde
 import domolibrary.client.get_data as gd
 import domolibrary.client.ResponseGetData as rgd
 import domolibrary.client.DomoAuth as dmda
@@ -16,17 +16,11 @@ import domolibrary.client.DomoAuth as dmda
 from ..client.DomoAuth import InvalidAuthTypeError
 
 # %% ../../nbs/routes/bootstrap.ipynb 7
-class Bootstrap_RetrievalError(de.DomoError):
-    def __init__(self, status, response, domo_instance, parent_class, function_name):
-        super().__init__(
-            status=status,
-            message=response,
-            domo_instance=domo_instance,
-            parent_class=parent_class,
-            function_name=function_name,
-        )
+class Bootstrap_RetrievalError(dmde.RouteError):
+    def __init__(self, res, response: str = None):
+        super().__init__(res=res, message=response)
 
-# %% ../../nbs/routes/bootstrap.ipynb 10
+# %% ../../nbs/routes/bootstrap.ipynb 9
 @gd.route_function
 async def get_bootstrap(
     auth: dmda.DomoFullAuth,  ## only works with DomoFullAuth authentication, do not use TokenAuth
@@ -37,7 +31,7 @@ async def get_bootstrap(
 ) -> rgd.ResponseGetData:
     """get bootstrap data"""
 
-    dmda.test_is_full_auth(auth, num_stacks_to_drop=1)
+    dmda.test_is_full_auth(auth, num_stacks_to_drop=2)
 
     # url = f"https://{auth.domo_instance}.domo.com/api/domoweb/bootstrap?v2Navigation=false"
     url = (
@@ -57,25 +51,18 @@ async def get_bootstrap(
 
     if not res.is_success:
         raise Bootstrap_RetrievalError(
-            status=res.status,
-            response=res.response,
-            domo_instance=auth.domo_instance,
-            parent_class=parent_class,
-            function_name=res.traceback_details.function_name,
+            res = res
         )
 
     if res.response == "":
         raise Bootstrap_RetrievalError(
             response="BSR_Features:  no features returned - is there a VPN?",
-            status=res.status,
-            domo_instance=auth.domo_instance,
-            parent_class=parent_class,
-            function_name=res.traceback_details.function_name,
+            res = res
         )
 
     return res
 
-# %% ../../nbs/routes/bootstrap.ipynb 15
+# %% ../../nbs/routes/bootstrap.ipynb 14
 @gd.route_function
 async def get_bootstrap_customerid(
     auth: dmda.DomoFullAuth,  # this function requires the DomoFullAuth object to authenticate the bootstrap
@@ -103,7 +90,7 @@ async def get_bootstrap_customerid(
     res.response = res.response.get("currentUser").get("USER_GROUP")
     return res
 
-# %% ../../nbs/routes/bootstrap.ipynb 20
+# %% ../../nbs/routes/bootstrap.ipynb 19
 @gd.route_function
 async def get_bootstrap_features(
     auth: dmda.DomoFullAuth,
@@ -128,7 +115,7 @@ async def get_bootstrap_features(
     res.response = res.response.get("data").get("features")
     return res
 
-# %% ../../nbs/routes/bootstrap.ipynb 24
+# %% ../../nbs/routes/bootstrap.ipynb 23
 @gd.route_function
 async def get_bootstrap_features_is_accountsv2_enabled(
     auth: dmda.DomoAuth,
@@ -163,7 +150,7 @@ async def get_bootstrap_features_is_accountsv2_enabled(
     res.response = True if match_accounts_v2 else False
     return res
 
-# %% ../../nbs/routes/bootstrap.ipynb 28
+# %% ../../nbs/routes/bootstrap.ipynb 27
 @gd.route_function
 async def get_bootstrap_pages(
     auth: dmda.DomoFullAuth,

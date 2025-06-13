@@ -17,6 +17,8 @@ Usage::
         ListManagedWorkgroupsPaginator,
         ListNamespacesPaginator,
         ListRecoveryPointsPaginator,
+        ListReservationOfferingsPaginator,
+        ListReservationsPaginator,
         ListScheduledActionsPaginator,
         ListSnapshotCopyConfigurationsPaginator,
         ListSnapshotsPaginator,
@@ -35,6 +37,8 @@ Usage::
         list_managed_workgroups_paginator: ListManagedWorkgroupsPaginator = client.get_paginator("list_managed_workgroups")
         list_namespaces_paginator: ListNamespacesPaginator = client.get_paginator("list_namespaces")
         list_recovery_points_paginator: ListRecoveryPointsPaginator = client.get_paginator("list_recovery_points")
+        list_reservation_offerings_paginator: ListReservationOfferingsPaginator = client.get_paginator("list_reservation_offerings")
+        list_reservations_paginator: ListReservationsPaginator = client.get_paginator("list_reservations")
         list_scheduled_actions_paginator: ListScheduledActionsPaginator = client.get_paginator("list_scheduled_actions")
         list_snapshot_copy_configurations_paginator: ListSnapshotCopyConfigurationsPaginator = client.get_paginator("list_snapshot_copy_configurations")
         list_snapshots_paginator: ListSnapshotsPaginator = client.get_paginator("list_snapshots")
@@ -63,6 +67,10 @@ from .type_defs import (
     ListNamespacesResponseTypeDef,
     ListRecoveryPointsRequestPaginateTypeDef,
     ListRecoveryPointsResponseTypeDef,
+    ListReservationOfferingsRequestPaginateTypeDef,
+    ListReservationOfferingsResponseTypeDef,
+    ListReservationsRequestPaginateTypeDef,
+    ListReservationsResponseTypeDef,
     ListScheduledActionsRequestPaginateTypeDef,
     ListScheduledActionsResponseTypeDef,
     ListSnapshotCopyConfigurationsRequestPaginateTypeDef,
@@ -91,6 +99,8 @@ __all__ = (
     "ListManagedWorkgroupsPaginator",
     "ListNamespacesPaginator",
     "ListRecoveryPointsPaginator",
+    "ListReservationOfferingsPaginator",
+    "ListReservationsPaginator",
     "ListScheduledActionsPaginator",
     "ListSnapshotCopyConfigurationsPaginator",
     "ListSnapshotsPaginator",
@@ -205,6 +215,48 @@ class ListRecoveryPointsPaginator(_ListRecoveryPointsPaginatorBase):
         """
         [Show boto3 documentation](https://boto3.amazonaws.com/v1/documentation/api/latest/reference/services/redshift-serverless/paginator/ListRecoveryPoints.html#RedshiftServerless.Paginator.ListRecoveryPoints.paginate)
         [Show types-aiobotocore documentation](https://youtype.github.io/types_aiobotocore_docs/types_aiobotocore_redshift_serverless/paginators/#listrecoverypointspaginator)
+        """
+
+
+if TYPE_CHECKING:
+    _ListReservationOfferingsPaginatorBase = AioPaginator[ListReservationOfferingsResponseTypeDef]
+else:
+    _ListReservationOfferingsPaginatorBase = AioPaginator  # type: ignore[assignment]
+
+
+class ListReservationOfferingsPaginator(_ListReservationOfferingsPaginatorBase):
+    """
+    [Show boto3 documentation](https://boto3.amazonaws.com/v1/documentation/api/latest/reference/services/redshift-serverless/paginator/ListReservationOfferings.html#RedshiftServerless.Paginator.ListReservationOfferings)
+    [Show types-aiobotocore documentation](https://youtype.github.io/types_aiobotocore_docs/types_aiobotocore_redshift_serverless/paginators/#listreservationofferingspaginator)
+    """
+
+    def paginate(  # type: ignore[override]
+        self, **kwargs: Unpack[ListReservationOfferingsRequestPaginateTypeDef]
+    ) -> AioPageIterator[ListReservationOfferingsResponseTypeDef]:
+        """
+        [Show boto3 documentation](https://boto3.amazonaws.com/v1/documentation/api/latest/reference/services/redshift-serverless/paginator/ListReservationOfferings.html#RedshiftServerless.Paginator.ListReservationOfferings.paginate)
+        [Show types-aiobotocore documentation](https://youtype.github.io/types_aiobotocore_docs/types_aiobotocore_redshift_serverless/paginators/#listreservationofferingspaginator)
+        """
+
+
+if TYPE_CHECKING:
+    _ListReservationsPaginatorBase = AioPaginator[ListReservationsResponseTypeDef]
+else:
+    _ListReservationsPaginatorBase = AioPaginator  # type: ignore[assignment]
+
+
+class ListReservationsPaginator(_ListReservationsPaginatorBase):
+    """
+    [Show boto3 documentation](https://boto3.amazonaws.com/v1/documentation/api/latest/reference/services/redshift-serverless/paginator/ListReservations.html#RedshiftServerless.Paginator.ListReservations)
+    [Show types-aiobotocore documentation](https://youtype.github.io/types_aiobotocore_docs/types_aiobotocore_redshift_serverless/paginators/#listreservationspaginator)
+    """
+
+    def paginate(  # type: ignore[override]
+        self, **kwargs: Unpack[ListReservationsRequestPaginateTypeDef]
+    ) -> AioPageIterator[ListReservationsResponseTypeDef]:
+        """
+        [Show boto3 documentation](https://boto3.amazonaws.com/v1/documentation/api/latest/reference/services/redshift-serverless/paginator/ListReservations.html#RedshiftServerless.Paginator.ListReservations.paginate)
+        [Show types-aiobotocore documentation](https://youtype.github.io/types_aiobotocore_docs/types_aiobotocore_redshift_serverless/paginators/#listreservationspaginator)
         """
 
 

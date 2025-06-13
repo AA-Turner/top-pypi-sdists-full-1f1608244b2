@@ -31,6 +31,7 @@ from .literals import (
     DirectoryRegistrationStatusReasonType,
     DirectoryRegistrationStatusType,
     HashAlgorithmType,
+    IpAddressTypeType,
     KeySpecType,
     PrivateKeyAlgorithmType,
     ServicePrincipalNameStatusReasonType,
@@ -176,6 +177,7 @@ class ValidityPeriodTypeDef(TypedDict):
 
 class VpcInformationOutputTypeDef(TypedDict):
     SecurityGroupIds: List[str]
+    IpAddressType: NotRequired[IpAddressTypeType]
 
 
 class ResponseMetadataTypeDef(TypedDict):
@@ -459,6 +461,7 @@ class UntagResourceRequestTypeDef(TypedDict):
 
 class VpcInformationTypeDef(TypedDict):
     SecurityGroupIds: Sequence[str]
+    IpAddressType: NotRequired[IpAddressTypeType]
 
 
 class AccessControlEntrySummaryTypeDef(TypedDict):

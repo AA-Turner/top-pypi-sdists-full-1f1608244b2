@@ -33,6 +33,7 @@ from .paginator import (
     ListApplicationVersionsPaginator,
     ListBatchJobDefinitionsPaginator,
     ListBatchJobExecutionsPaginator,
+    ListDataSetExportHistoryPaginator,
     ListDataSetImportHistoryPaginator,
     ListDataSetsPaginator,
     ListDeploymentsPaginator,
@@ -43,6 +44,8 @@ from .type_defs import (
     CancelBatchJobExecutionRequestTypeDef,
     CreateApplicationRequestTypeDef,
     CreateApplicationResponseTypeDef,
+    CreateDataSetExportTaskRequestTypeDef,
+    CreateDataSetExportTaskResponseTypeDef,
     CreateDataSetImportTaskRequestTypeDef,
     CreateDataSetImportTaskResponseTypeDef,
     CreateDeploymentRequestTypeDef,
@@ -60,6 +63,8 @@ from .type_defs import (
     GetBatchJobExecutionResponseTypeDef,
     GetDataSetDetailsRequestTypeDef,
     GetDataSetDetailsResponseTypeDef,
+    GetDataSetExportTaskRequestTypeDef,
+    GetDataSetExportTaskResponseTypeDef,
     GetDataSetImportTaskRequestTypeDef,
     GetDataSetImportTaskResponseTypeDef,
     GetDeploymentRequestTypeDef,
@@ -77,6 +82,8 @@ from .type_defs import (
     ListBatchJobExecutionsResponseTypeDef,
     ListBatchJobRestartPointsRequestTypeDef,
     ListBatchJobRestartPointsResponseTypeDef,
+    ListDataSetExportHistoryRequestTypeDef,
+    ListDataSetExportHistoryResponseTypeDef,
     ListDataSetImportHistoryRequestTypeDef,
     ListDataSetImportHistoryResponseTypeDef,
     ListDataSetsRequestTypeDef,
@@ -181,6 +188,16 @@ class MainframeModernizationClient(AioBaseClient):
         [Show types-aiobotocore documentation](https://youtype.github.io/types_aiobotocore_docs/types_aiobotocore_m2/client/#create_application)
         """
 
+    async def create_data_set_export_task(
+        self, **kwargs: Unpack[CreateDataSetExportTaskRequestTypeDef]
+    ) -> CreateDataSetExportTaskResponseTypeDef:
+        """
+        Starts a data set export task for a specific application.
+
+        [Show boto3 documentation](https://boto3.amazonaws.com/v1/documentation/api/latest/reference/services/m2/client/create_data_set_export_task.html)
+        [Show types-aiobotocore documentation](https://youtype.github.io/types_aiobotocore_docs/types_aiobotocore_m2/client/#create_data_set_export_task)
+        """
+
     async def create_data_set_import_task(
         self, **kwargs: Unpack[CreateDataSetImportTaskRequestTypeDef]
     ) -> CreateDataSetImportTaskResponseTypeDef:
@@ -283,6 +300,17 @@ class MainframeModernizationClient(AioBaseClient):
         [Show types-aiobotocore documentation](https://youtype.github.io/types_aiobotocore_docs/types_aiobotocore_m2/client/#get_data_set_details)
         """
 
+    async def get_data_set_export_task(
+        self, **kwargs: Unpack[GetDataSetExportTaskRequestTypeDef]
+    ) -> GetDataSetExportTaskResponseTypeDef:
+        """
+        Gets the status of a data set import task initiated with the
+        <a>CreateDataSetExportTask</a> operation.
+
+        [Show boto3 documentation](https://boto3.amazonaws.com/v1/documentation/api/latest/reference/services/m2/client/get_data_set_export_task.html)
+        [Show types-aiobotocore documentation](https://youtype.github.io/types_aiobotocore_docs/types_aiobotocore_m2/client/#get_data_set_export_task)
+        """
+
     async def get_data_set_import_task(
         self, **kwargs: Unpack[GetDataSetImportTaskRequestTypeDef]
     ) -> GetDataSetImportTaskResponseTypeDef:
@@ -372,6 +400,16 @@ class MainframeModernizationClient(AioBaseClient):
 
         [Show boto3 documentation](https://boto3.amazonaws.com/v1/documentation/api/latest/reference/services/m2/client/list_batch_job_restart_points.html)
         [Show types-aiobotocore documentation](https://youtype.github.io/types_aiobotocore_docs/types_aiobotocore_m2/client/#list_batch_job_restart_points)
+        """
+
+    async def list_data_set_export_history(
+        self, **kwargs: Unpack[ListDataSetExportHistoryRequestTypeDef]
+    ) -> ListDataSetExportHistoryResponseTypeDef:
+        """
+        Lists the data set exports for the specified application.
+
+        [Show boto3 documentation](https://boto3.amazonaws.com/v1/documentation/api/latest/reference/services/m2/client/list_data_set_export_history.html)
+        [Show types-aiobotocore documentation](https://youtype.github.io/types_aiobotocore_docs/types_aiobotocore_m2/client/#list_data_set_export_history)
         """
 
     async def list_data_set_import_history(
@@ -538,6 +576,17 @@ class MainframeModernizationClient(AioBaseClient):
     def get_paginator(  # type: ignore[override]
         self, operation_name: Literal["list_batch_job_executions"]
     ) -> ListBatchJobExecutionsPaginator:
+        """
+        Create a paginator for an operation.
+
+        [Show boto3 documentation](https://boto3.amazonaws.com/v1/documentation/api/latest/reference/services/m2/client/get_paginator.html)
+        [Show types-aiobotocore documentation](https://youtype.github.io/types_aiobotocore_docs/types_aiobotocore_m2/client/#get_paginator)
+        """
+
+    @overload  # type: ignore[override]
+    def get_paginator(  # type: ignore[override]
+        self, operation_name: Literal["list_data_set_export_history"]
+    ) -> ListDataSetExportHistoryPaginator:
         """
         Create a paginator for an operation.
 

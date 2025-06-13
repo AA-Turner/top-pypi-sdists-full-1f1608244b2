@@ -42,6 +42,7 @@ def run(
     package_sync_conda_extras: list | None = None,
     host_setup_script: str | None = None,
     ignore_container_entrypoint: bool | None = None,
+    job_timeout: str | None = None,
     logger=None,
 ) -> dict:
     """Submit a batch job to run on Coiled.
@@ -87,6 +88,7 @@ def run(
         package_sync_conda_extras=package_sync_conda_extras,
         host_setup_script=host_setup_script,
         ignore_container_entrypoint=ignore_container_entrypoint,
+        job_timeout=job_timeout,
         logger=logger,
     )
 

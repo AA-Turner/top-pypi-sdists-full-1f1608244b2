@@ -75,8 +75,12 @@ from .type_defs import (
     ListPolicyStoresOutputTypeDef,
     ListPolicyTemplatesInputTypeDef,
     ListPolicyTemplatesOutputTypeDef,
+    ListTagsForResourceInputTypeDef,
+    ListTagsForResourceOutputTypeDef,
     PutSchemaInputTypeDef,
     PutSchemaOutputTypeDef,
+    TagResourceInputTypeDef,
+    UntagResourceInputTypeDef,
     UpdateIdentitySourceInputTypeDef,
     UpdateIdentitySourceOutputTypeDef,
     UpdatePolicyInputTypeDef,
@@ -105,9 +109,11 @@ class Exceptions(BaseClientExceptions):
     ClientError: Type[BotocoreClientError]
     ConflictException: Type[BotocoreClientError]
     InternalServerException: Type[BotocoreClientError]
+    InvalidStateException: Type[BotocoreClientError]
     ResourceNotFoundException: Type[BotocoreClientError]
     ServiceQuotaExceededException: Type[BotocoreClientError]
     ThrottlingException: Type[BotocoreClientError]
+    TooManyTagsException: Type[BotocoreClientError]
     ValidationException: Type[BotocoreClientError]
 
 class VerifiedPermissionsClient(AioBaseClient):
@@ -367,12 +373,41 @@ class VerifiedPermissionsClient(AioBaseClient):
         [Show types-aiobotocore documentation](https://youtype.github.io/types_aiobotocore_docs/types_aiobotocore_verifiedpermissions/client/#list_policy_templates)
         """
 
+    async def list_tags_for_resource(
+        self, **kwargs: Unpack[ListTagsForResourceInputTypeDef]
+    ) -> ListTagsForResourceOutputTypeDef:
+        """
+        Returns the tags associated with the specified Amazon Verified Permissions
+        resource.
+
+        [Show boto3 documentation](https://boto3.amazonaws.com/v1/documentation/api/latest/reference/services/verifiedpermissions/client/list_tags_for_resource.html)
+        [Show types-aiobotocore documentation](https://youtype.github.io/types_aiobotocore_docs/types_aiobotocore_verifiedpermissions/client/#list_tags_for_resource)
+        """
+
     async def put_schema(self, **kwargs: Unpack[PutSchemaInputTypeDef]) -> PutSchemaOutputTypeDef:
         """
         Creates or updates the policy schema in the specified policy store.
 
         [Show boto3 documentation](https://boto3.amazonaws.com/v1/documentation/api/latest/reference/services/verifiedpermissions/client/put_schema.html)
         [Show types-aiobotocore documentation](https://youtype.github.io/types_aiobotocore_docs/types_aiobotocore_verifiedpermissions/client/#put_schema)
+        """
+
+    async def tag_resource(self, **kwargs: Unpack[TagResourceInputTypeDef]) -> Dict[str, Any]:
+        """
+        Assigns one or more tags (key-value pairs) to the specified Amazon Verified
+        Permissions resource.
+
+        [Show boto3 documentation](https://boto3.amazonaws.com/v1/documentation/api/latest/reference/services/verifiedpermissions/client/tag_resource.html)
+        [Show types-aiobotocore documentation](https://youtype.github.io/types_aiobotocore_docs/types_aiobotocore_verifiedpermissions/client/#tag_resource)
+        """
+
+    async def untag_resource(self, **kwargs: Unpack[UntagResourceInputTypeDef]) -> Dict[str, Any]:
+        """
+        Removes one or more tags from the specified Amazon Verified Permissions
+        resource.
+
+        [Show boto3 documentation](https://boto3.amazonaws.com/v1/documentation/api/latest/reference/services/verifiedpermissions/client/untag_resource.html)
+        [Show types-aiobotocore documentation](https://youtype.github.io/types_aiobotocore_docs/types_aiobotocore_verifiedpermissions/client/#untag_resource)
         """
 
     async def update_identity_source(

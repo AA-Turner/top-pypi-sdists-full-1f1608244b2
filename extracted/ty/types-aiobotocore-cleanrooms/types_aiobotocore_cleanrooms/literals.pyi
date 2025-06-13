@@ -33,6 +33,7 @@ __all__ = (
     "AnalysisTypeType",
     "AnalyticsEngineType",
     "CleanRoomsServiceServiceName",
+    "CollaborationJobLogStatusType",
     "CollaborationQueryLogStatusType",
     "ConfiguredTableAnalysisRuleTypeType",
     "ConfiguredTableAssociationAnalysisRuleTypeType",
@@ -58,16 +59,21 @@ __all__ = (
     "ListMembershipsPaginatorName",
     "ListPrivacyBudgetTemplatesPaginatorName",
     "ListPrivacyBudgetsPaginatorName",
+    "ListProtectedJobsPaginatorName",
     "ListProtectedQueriesPaginatorName",
     "ListSchemasPaginatorName",
     "MemberAbilityType",
     "MemberStatusType",
+    "MembershipJobLogStatusType",
     "MembershipQueryLogStatusType",
     "MembershipStatusType",
     "PaginatorName",
     "ParameterTypeType",
     "PrivacyBudgetTemplateAutoRefreshType",
     "PrivacyBudgetTypeType",
+    "ProtectedJobAnalysisTypeType",
+    "ProtectedJobStatusType",
+    "ProtectedJobTypeType",
     "ProtectedQueryStatusType",
     "ProtectedQueryTypeType",
     "RegionName",
@@ -78,7 +84,9 @@ __all__ = (
     "SchemaStatusReasonCodeType",
     "SchemaStatusType",
     "SchemaTypeType",
+    "SelectedAnalysisMethodType",
     "ServiceName",
+    "TargetProtectedJobStatusType",
     "TargetProtectedQueryStatusType",
     "WorkerComputeTypeType",
 )
@@ -86,13 +94,14 @@ __all__ = (
 AdditionalAnalysesType = Literal["ALLOWED", "NOT_ALLOWED", "REQUIRED"]
 AggregateFunctionNameType = Literal["AVG", "COUNT", "COUNT_DISTINCT", "SUM", "SUM_DISTINCT"]
 AggregationTypeType = Literal["COUNT_DISTINCT"]
-AnalysisFormatType = Literal["SQL"]
-AnalysisMethodType = Literal["DIRECT_QUERY"]
+AnalysisFormatType = Literal["PYSPARK_1_0", "SQL"]
+AnalysisMethodType = Literal["DIRECT_JOB", "DIRECT_QUERY", "MULTIPLE"]
 AnalysisRuleTypeType = Literal["AGGREGATION", "CUSTOM", "ID_MAPPING_TABLE", "LIST"]
 AnalysisTemplateValidationStatusType = Literal["INVALID", "UNABLE_TO_VALIDATE", "VALID"]
 AnalysisTemplateValidationTypeType = Literal["DIFFERENTIAL_PRIVACY"]
 AnalysisTypeType = Literal["ADDITIONAL_ANALYSIS", "DIRECT_ANALYSIS"]
 AnalyticsEngineType = Literal["CLEAN_ROOMS_SQL", "SPARK"]
+CollaborationJobLogStatusType = Literal["DISABLED", "ENABLED"]
 CollaborationQueryLogStatusType = Literal["DISABLED", "ENABLED"]
 ConfiguredTableAnalysisRuleTypeType = Literal["AGGREGATION", "CUSTOM", "LIST"]
 ConfiguredTableAssociationAnalysisRuleTypeType = Literal["AGGREGATION", "CUSTOM", "LIST"]
@@ -126,10 +135,12 @@ ListMembersPaginatorName = Literal["list_members"]
 ListMembershipsPaginatorName = Literal["list_memberships"]
 ListPrivacyBudgetTemplatesPaginatorName = Literal["list_privacy_budget_templates"]
 ListPrivacyBudgetsPaginatorName = Literal["list_privacy_budgets"]
+ListProtectedJobsPaginatorName = Literal["list_protected_jobs"]
 ListProtectedQueriesPaginatorName = Literal["list_protected_queries"]
 ListSchemasPaginatorName = Literal["list_schemas"]
-MemberAbilityType = Literal["CAN_QUERY", "CAN_RECEIVE_RESULTS"]
+MemberAbilityType = Literal["CAN_QUERY", "CAN_RECEIVE_RESULTS", "CAN_RUN_JOB"]
 MemberStatusType = Literal["ACTIVE", "INVITED", "LEFT", "REMOVED"]
+MembershipJobLogStatusType = Literal["DISABLED", "ENABLED"]
 MembershipQueryLogStatusType = Literal["DISABLED", "ENABLED"]
 MembershipStatusType = Literal["ACTIVE", "COLLABORATION_DELETED", "REMOVED"]
 ParameterTypeType = Literal[
@@ -164,6 +175,11 @@ ParameterTypeType = Literal[
 ]
 PrivacyBudgetTemplateAutoRefreshType = Literal["CALENDAR_MONTH", "NONE"]
 PrivacyBudgetTypeType = Literal["DIFFERENTIAL_PRIVACY"]
+ProtectedJobAnalysisTypeType = Literal["DIRECT_ANALYSIS"]
+ProtectedJobStatusType = Literal[
+    "CANCELLED", "CANCELLING", "FAILED", "STARTED", "SUBMITTED", "SUCCESS"
+]
+ProtectedJobTypeType = Literal["PYSPARK"]
 ProtectedQueryStatusType = Literal[
     "CANCELLED", "CANCELLING", "FAILED", "STARTED", "SUBMITTED", "SUCCESS", "TIMED_OUT"
 ]
@@ -211,6 +227,8 @@ SchemaStatusReasonCodeType = Literal[
 ]
 SchemaStatusType = Literal["NOT_READY", "READY"]
 SchemaTypeType = Literal["ID_MAPPING_TABLE", "TABLE"]
+SelectedAnalysisMethodType = Literal["DIRECT_JOB", "DIRECT_QUERY"]
+TargetProtectedJobStatusType = Literal["CANCELLED"]
 TargetProtectedQueryStatusType = Literal["CANCELLED"]
 WorkerComputeTypeType = Literal["CR.1X", "CR.4X"]
 CleanRoomsServiceServiceName = Literal["cleanrooms"]
@@ -370,6 +388,7 @@ ServiceName = Literal[
     "freetier",
     "fsx",
     "gamelift",
+    "gameliftstreams",
     "geo-maps",
     "geo-places",
     "geo-routes",
@@ -395,6 +414,7 @@ ServiceName = Literal[
     "iot",
     "iot-data",
     "iot-jobs-data",
+    "iot-managed-integrations",
     "iotanalytics",
     "iotdeviceadvisor",
     "iotevents",
@@ -509,7 +529,6 @@ ServiceName = Literal[
     "pipes",
     "polly",
     "pricing",
-    "privatenetworks",
     "proton",
     "qapps",
     "qbusiness",
@@ -570,7 +589,6 @@ ServiceName = Literal[
     "signer",
     "simspaceweaver",
     "sms",
-    "sms-voice",
     "snow-device-management",
     "snowball",
     "sns",
@@ -578,6 +596,7 @@ ServiceName = Literal[
     "sqs",
     "ssm",
     "ssm-contacts",
+    "ssm-guiconnect",
     "ssm-incidents",
     "ssm-quicksetup",
     "ssm-sap",
@@ -647,6 +666,7 @@ PaginatorName = Literal[
     "list_memberships",
     "list_privacy_budget_templates",
     "list_privacy_budgets",
+    "list_protected_jobs",
     "list_protected_queries",
     "list_schemas",
 ]

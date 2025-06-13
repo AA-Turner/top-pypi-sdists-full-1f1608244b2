@@ -62,6 +62,10 @@ from .type_defs import (
     ChatOutputTypeDef,
     ChatSyncInputTypeDef,
     ChatSyncOutputTypeDef,
+    CheckDocumentAccessRequestTypeDef,
+    CheckDocumentAccessResponseTypeDef,
+    CreateAnonymousWebExperienceUrlRequestTypeDef,
+    CreateAnonymousWebExperienceUrlResponseTypeDef,
     CreateApplicationRequestTypeDef,
     CreateApplicationResponseTypeDef,
     CreateDataAccessorRequestTypeDef,
@@ -294,6 +298,27 @@ class QBusinessClient(AioBaseClient):
 
         [Show boto3 documentation](https://boto3.amazonaws.com/v1/documentation/api/latest/reference/services/qbusiness/client/chat_sync.html)
         [Show types-aiobotocore documentation](https://youtype.github.io/types_aiobotocore_docs/types_aiobotocore_qbusiness/client/#chat_sync)
+        """
+
+    async def check_document_access(
+        self, **kwargs: Unpack[CheckDocumentAccessRequestTypeDef]
+    ) -> CheckDocumentAccessResponseTypeDef:
+        """
+        Verifies if a user has access permissions for a specified document and returns
+        the actual ACL attached to the document.
+
+        [Show boto3 documentation](https://boto3.amazonaws.com/v1/documentation/api/latest/reference/services/qbusiness/client/check_document_access.html)
+        [Show types-aiobotocore documentation](https://youtype.github.io/types_aiobotocore_docs/types_aiobotocore_qbusiness/client/#check_document_access)
+        """
+
+    async def create_anonymous_web_experience_url(
+        self, **kwargs: Unpack[CreateAnonymousWebExperienceUrlRequestTypeDef]
+    ) -> CreateAnonymousWebExperienceUrlResponseTypeDef:
+        """
+        Creates a unique URL for anonymous Amazon Q Business web experience.
+
+        [Show boto3 documentation](https://boto3.amazonaws.com/v1/documentation/api/latest/reference/services/qbusiness/client/create_anonymous_web_experience_url.html)
+        [Show types-aiobotocore documentation](https://youtype.github.io/types_aiobotocore_docs/types_aiobotocore_qbusiness/client/#create_anonymous_web_experience_url)
         """
 
     async def create_application(

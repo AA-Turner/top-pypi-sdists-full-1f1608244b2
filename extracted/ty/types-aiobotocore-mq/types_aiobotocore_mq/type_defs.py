@@ -65,6 +65,8 @@ __all__ = (
     "DataReplicationMetadataOutputTypeDef",
     "DeleteBrokerRequestTypeDef",
     "DeleteBrokerResponseTypeDef",
+    "DeleteConfigurationRequestTypeDef",
+    "DeleteConfigurationResponseTypeDef",
     "DeleteTagsRequestTypeDef",
     "DeleteUserRequestTypeDef",
     "DescribeBrokerEngineTypesRequestTypeDef",
@@ -232,6 +234,10 @@ class DataReplicationCounterpartTypeDef(TypedDict):
 
 class DeleteBrokerRequestTypeDef(TypedDict):
     BrokerId: str
+
+
+class DeleteConfigurationRequestTypeDef(TypedDict):
+    ConfigurationId: str
 
 
 class DeleteTagsRequestTypeDef(TypedDict):
@@ -456,6 +462,11 @@ class CreateConfigurationResponseTypeDef(TypedDict):
 
 class DeleteBrokerResponseTypeDef(TypedDict):
     BrokerId: str
+    ResponseMetadata: ResponseMetadataTypeDef
+
+
+class DeleteConfigurationResponseTypeDef(TypedDict):
+    ConfigurationId: str
     ResponseMetadata: ResponseMetadataTypeDef
 
 

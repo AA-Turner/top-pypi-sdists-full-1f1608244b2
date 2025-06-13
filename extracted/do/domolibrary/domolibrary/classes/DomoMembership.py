@@ -15,6 +15,7 @@ import domolibrary.utils.chunk_execution as dmce
 
 import domolibrary.client.DomoAuth as dmda
 import domolibrary.client.DomoError as dmde
+from domolibrary.client.DomoEntity import DomoSubEntity, Entity_Relation
 
 import domolibrary.routes.group as group_routes
 
@@ -33,21 +34,7 @@ class UpdateMembership(dmde.ClassError):
 
 
 @dataclass
-class Membership_Entity:
-    entity: Any
-
-    def __eq__(self, other):
-        import domolibrary.classes.DomoUser as dmdu
-        import domolibrary.classes.DomoGroup as dmdg
-
-        if isinstance(other, (dmdu.DomoUser, dmdg.DomoGroup)):
-            return str(self.entity.id) == str(other.id)
-
-
-        if self.__class__.__name__ != other.__class__.__name__:
-            return False
-
-        return self.entity.id == other.entity.id
+class Membership_Entity(Entity_Relation):
 
     def to_json(self):
         import domolibrary.classes.DomoUser as dmdu
@@ -63,10 +50,7 @@ class Membership_Entity:
 
 
 @dataclass
-class Membership:
-    auth: dmda.DomoAuth = field(repr=False)
-    parent: Any = field(repr=False, default=None)
-    parent_id: int = None
+class Membership(DomoSubEntity):
 
     owners: List[str] = field(default_factory=lambda: [])
     members: List[str] = field(default_factory=lambda: [])
@@ -77,8 +61,6 @@ class Membership:
     _add_owner_ls: List[str] = field(default_factory=lambda: [])
     _remove_owner_ls: List[str] = field(default_factory=lambda: [])
 
-    def __post_init__(self):
-        self.parent_id = self.parent_id or (self.parent and self.parent.id)
 
     @abstractmethod
     async def get_owners(self):
@@ -92,36 +74,41 @@ class Membership:
     async def update(self):
         pass
 
-    def _add_to_list(self, member, list_to_update):
+    def _add_to_list(self, member, list_to_update, relation_type):
 
-        if not isinstance(member, Membership_Entity):
+        if not isinstance(
+            member,
+            Membership_Entity,
+        ):
 
-            member = Membership_Entity(entity=member)
+            member = Membership_Entity(entity=member, relation_type=relation_type, auth = member.auth)
 
         if member not in list_to_update:
             list_to_update.append(member)
 
     def _add_member(self, member):
-        return self._add_to_list(member, self._add_member_ls)
+        return self._add_to_list(member, self._add_member_ls, relation_type = "member")
 
-    def _remove_member(self, member):
+    def _remove_member(self, member, is_keep_system_group=True):
+        """does not remove system groups"""
         import domolibrary.classes.DomoGroup as dmg
 
-        if isinstance(member, dmg.DomoGroup) and member.type == "system":
+        if is_keep_system_group and isinstance(member, dmg.DomoGroup) and member.type == "system":
             return
 
-        return self._add_to_list(member, self._remove_member_ls)
+        return self._add_to_list(member, self._remove_member_ls, relation_type = "member")
 
     def _add_owner(self, member):
-        return self._add_to_list(member, self._add_owner_ls)
+        return self._add_to_list(member, self._add_owner_ls, relation_type = "owner")
 
-    def _remove_owner(self, member):
+    def _remove_owner(self, member, is_keep_system_group=True):
+        """does not remove system groups"""
         import domolibrary.classes.DomoGroup as dmg
 
-        if isinstance(member, dmg.DomoGroup) and member.type == "system":
-            return
+        if is_keep_system_group and isinstance(member, dmg.DomoGroup) and member.type == "system":
+            return  
 
-        return self._add_to_list(member, self._remove_owner_ls)
+        return self._add_to_list(member, self._remove_owner_ls, relation_type = "owner")
 
     def _reset_obj(self):
         self._add_member_ls = []
@@ -167,7 +154,10 @@ class Membership:
         )
 
     async def _extract_domo_entities_from_list(
-        self, entity_ls, session: httpx.AsyncClient = None
+        self,
+        entity_ls, 
+        relation_type,
+        session: httpx.AsyncClient = None
     ):
         session = session or httpx.AsyncClient()
 
@@ -178,11 +168,11 @@ class Membership:
             entity_ls, session=session
         )
 
-        return [Membership_Entity(entity=entity) for entity in domo_groups + domo_users]
+        return [Membership_Entity(entity=entity, relation_type=relation_type, auth = entity.auth) for entity in domo_groups + domo_users]
 
     @staticmethod
     def _list_to_json(entity_ls):
-        return [entity.to_json() for entity in entity_ls]
+        return [parent.to_json() for parent in entity_ls]
 
 # %% ../../nbs/classes/50_DomoMembership.ipynb 7
 @dataclass
@@ -206,7 +196,7 @@ class GroupMembership(Membership):
         if return_raw:
             return res
 
-        owners = await self._extract_domo_entities_from_list(res.response, session = session)
+        owners = await self._extract_domo_entities_from_list(res.response, relation_type = 'OWNER', session = session)
         self.owners = owners
 
         if self.parent:
@@ -258,7 +248,7 @@ class GroupMembership(Membership):
         if return_raw:
             return res
 
-        members = await self._extract_domo_entities_from_list(res.response, session = session)
+        members = await self._extract_domo_entities_from_list(res.response, relation_type = 'MEMBER', session = session)
         self.members = members
 
         if self.parent:
@@ -340,7 +330,7 @@ async def set_members(
     self._reset_obj()
 
     user_ls = [
-        Membership_Entity(entity=user) for user in user_ls
+        Membership_Entity(entity=user, auth = self.auth) for user in user_ls
     ]
 
     memberships = await self.get_members(

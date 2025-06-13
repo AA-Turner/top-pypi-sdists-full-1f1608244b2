@@ -113,8 +113,7 @@ class MarketplaceMeteringClient(AioBaseClient):
         self, **kwargs: Unpack[BatchMeterUsageRequestTypeDef]
     ) -> BatchMeterUsageResultTypeDef:
         """
-        <code>BatchMeterUsage</code> is called from a SaaS application listed on AWS
-        Marketplace to post metering records for a set of customers.
+        The <code>CustomerIdentifier</code> parameter is scheduled for deprecation.
 
         [Show boto3 documentation](https://boto3.amazonaws.com/v1/documentation/api/latest/reference/services/meteringmarketplace/client/batch_meter_usage.html)
         [Show types-aiobotocore documentation](https://youtype.github.io/types_aiobotocore_docs/types_aiobotocore_meteringmarketplace/client/#batch_meter_usage)
@@ -134,9 +133,10 @@ class MarketplaceMeteringClient(AioBaseClient):
         self, **kwargs: Unpack[RegisterUsageRequestTypeDef]
     ) -> RegisterUsageResultTypeDef:
         """
-        Paid container software products sold through AWS Marketplace must integrate
-        with the AWS Marketplace Metering Service and call the
-        <code>RegisterUsage</code> operation for software entitlement and metering.
+        Paid container software products sold through Amazon Web Services Marketplace
+        must integrate with the Amazon Web Services Marketplace Metering Service and
+        call the <code>RegisterUsage</code> operation for software entitlement and
+        metering.
 
         [Show boto3 documentation](https://boto3.amazonaws.com/v1/documentation/api/latest/reference/services/meteringmarketplace/client/register_usage.html)
         [Show types-aiobotocore documentation](https://youtype.github.io/types_aiobotocore_docs/types_aiobotocore_meteringmarketplace/client/#register_usage)

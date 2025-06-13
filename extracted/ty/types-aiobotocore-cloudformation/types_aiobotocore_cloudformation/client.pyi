@@ -989,7 +989,7 @@ class CloudFormationClient(AioBaseClient):
     ) -> ListStacksOutputTypeDef:
         """
         Returns the summary information for stacks whose status matches the specified
-        StackStatusFilter.
+        <code>StackStatusFilter</code>.
 
         [Show boto3 documentation](https://boto3.amazonaws.com/v1/documentation/api/latest/reference/services/cloudformation/client/list_stacks.html)
         [Show types-aiobotocore documentation](https://youtype.github.io/types_aiobotocore_docs/types_aiobotocore_cloudformation/client/#list_stacks)
@@ -1183,7 +1183,7 @@ class CloudFormationClient(AioBaseClient):
         self, **kwargs: Unpack[UpdateStackSetInputTypeDef]
     ) -> UpdateStackSetOutputTypeDef:
         """
-        Updates the stack set, and associated stack instances in the specified accounts
+        Updates the stack set and associated stack instances in the specified accounts
         and Amazon Web Services Regions.
 
         [Show boto3 documentation](https://boto3.amazonaws.com/v1/documentation/api/latest/reference/services/cloudformation/client/update_stack_set.html)

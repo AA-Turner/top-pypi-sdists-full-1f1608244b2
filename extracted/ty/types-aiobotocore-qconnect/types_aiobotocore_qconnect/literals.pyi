@@ -111,7 +111,9 @@ __all__ = (
 
 AIAgentAssociationConfigurationTypeType = Literal["KNOWLEDGE_BASE"]
 AIAgentTypeType = Literal["ANSWER_RECOMMENDATION", "MANUAL_SEARCH", "SELF_SERVICE"]
-AIPromptAPIFormatType = Literal["ANTHROPIC_CLAUDE_MESSAGES", "ANTHROPIC_CLAUDE_TEXT_COMPLETIONS"]
+AIPromptAPIFormatType = Literal[
+    "ANTHROPIC_CLAUDE_MESSAGES", "ANTHROPIC_CLAUDE_TEXT_COMPLETIONS", "MESSAGES", "TEXT_COMPLETIONS"
+]
 AIPromptTemplateTypeType = Literal["TEXT"]
 AIPromptTypeType = Literal[
     "ANSWER_GENERATION",
@@ -234,7 +236,15 @@ PriorityType = Literal["HIGH", "LOW", "MEDIUM"]
 QueryAssistantPaginatorName = Literal["query_assistant"]
 QueryConditionComparisonOperatorType = Literal["EQUALS"]
 QueryConditionFieldNameType = Literal["RESULT_TYPE"]
-QueryResultTypeType = Literal["GENERATIVE_ANSWER", "INTENT_ANSWER", "KNOWLEDGE_CONTENT"]
+QueryResultTypeType = Literal[
+    "BLOCKED_GENERATIVE_ANSWER_CHUNK",
+    "BLOCKED_INTENT_ANSWER_CHUNK",
+    "GENERATIVE_ANSWER",
+    "GENERATIVE_ANSWER_CHUNK",
+    "INTENT_ANSWER",
+    "INTENT_ANSWER_CHUNK",
+    "KNOWLEDGE_CONTENT",
+]
 QuickResponseFilterOperatorType = Literal["EQUALS", "PREFIX"]
 QuickResponseQueryOperatorType = Literal["CONTAINS", "CONTAINS_AND_PREFIX"]
 QuickResponseStatusType = Literal[
@@ -250,7 +260,14 @@ QuickResponseStatusType = Literal[
 RecommendationSourceTypeType = Literal["ISSUE_DETECTION", "OTHER", "RULE_EVALUATION"]
 RecommendationTriggerTypeType = Literal["GENERATIVE", "QUERY"]
 RecommendationTypeType = Literal[
-    "DETECTED_INTENT", "GENERATIVE_ANSWER", "GENERATIVE_RESPONSE", "KNOWLEDGE_CONTENT"
+    "BLOCKED_GENERATIVE_ANSWER_CHUNK",
+    "BLOCKED_INTENT_ANSWER_CHUNK",
+    "DETECTED_INTENT",
+    "GENERATIVE_ANSWER",
+    "GENERATIVE_ANSWER_CHUNK",
+    "GENERATIVE_RESPONSE",
+    "INTENT_ANSWER_CHUNK",
+    "KNOWLEDGE_CONTENT",
 ]
 ReferenceTypeType = Literal["KNOWLEDGE_BASE", "WEB_CRAWLER"]
 RelevanceLevelType = Literal["HIGH", "LOW", "MEDIUM"]
@@ -430,6 +447,7 @@ ServiceName = Literal[
     "freetier",
     "fsx",
     "gamelift",
+    "gameliftstreams",
     "geo-maps",
     "geo-places",
     "geo-routes",
@@ -455,6 +473,7 @@ ServiceName = Literal[
     "iot",
     "iot-data",
     "iot-jobs-data",
+    "iot-managed-integrations",
     "iotanalytics",
     "iotdeviceadvisor",
     "iotevents",
@@ -569,7 +588,6 @@ ServiceName = Literal[
     "pipes",
     "polly",
     "pricing",
-    "privatenetworks",
     "proton",
     "qapps",
     "qbusiness",
@@ -630,7 +648,6 @@ ServiceName = Literal[
     "signer",
     "simspaceweaver",
     "sms",
-    "sms-voice",
     "snow-device-management",
     "snowball",
     "sns",
@@ -638,6 +655,7 @@ ServiceName = Literal[
     "sqs",
     "ssm",
     "ssm-contacts",
+    "ssm-guiconnect",
     "ssm-incidents",
     "ssm-quicksetup",
     "ssm-sap",

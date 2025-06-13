@@ -194,6 +194,8 @@ from .type_defs import (
     DescribeSessionsRequestTypeDef,
     DescribeSessionsResponseTypeDef,
     DisassociateOpsItemRelatedItemRequestTypeDef,
+    GetAccessTokenRequestTypeDef,
+    GetAccessTokenResponseTypeDef,
     GetAutomationExecutionRequestTypeDef,
     GetAutomationExecutionResultTypeDef,
     GetCalendarStateRequestTypeDef,
@@ -308,6 +310,8 @@ from .type_defs import (
     SendAutomationSignalRequestTypeDef,
     SendCommandRequestTypeDef,
     SendCommandResultTypeDef,
+    StartAccessRequestRequestTypeDef,
+    StartAccessRequestResponseTypeDef,
     StartAssociationsOnceRequestTypeDef,
     StartAutomationExecutionRequestTypeDef,
     StartAutomationExecutionResultTypeDef,
@@ -364,6 +368,7 @@ __all__ = ("SSMClient",)
 
 
 class Exceptions(BaseClientExceptions):
+    AccessDeniedException: Type[BotocoreClientError]
     AlreadyExistsException: Type[BotocoreClientError]
     AssociatedInstances: Type[BotocoreClientError]
     AssociationAlreadyExists: Type[BotocoreClientError]
@@ -483,11 +488,13 @@ class Exceptions(BaseClientExceptions):
     ResourcePolicyInvalidParameterException: Type[BotocoreClientError]
     ResourcePolicyLimitExceededException: Type[BotocoreClientError]
     ResourcePolicyNotFoundException: Type[BotocoreClientError]
+    ServiceQuotaExceededException: Type[BotocoreClientError]
     ServiceSettingNotFound: Type[BotocoreClientError]
     StatusUnchanged: Type[BotocoreClientError]
     SubTypeCountLimitExceededException: Type[BotocoreClientError]
     TargetInUseException: Type[BotocoreClientError]
     TargetNotConnected: Type[BotocoreClientError]
+    ThrottlingException: Type[BotocoreClientError]
     TooManyTagsError: Type[BotocoreClientError]
     TooManyUpdates: Type[BotocoreClientError]
     TotalSizeLimitExceededException: Type[BotocoreClientError]
@@ -1196,6 +1203,16 @@ class SSMClient(AioBaseClient):
         [Show types-aiobotocore documentation](https://youtype.github.io/types_aiobotocore_docs/types_aiobotocore_ssm/client/#disassociate_ops_item_related_item)
         """
 
+    async def get_access_token(
+        self, **kwargs: Unpack[GetAccessTokenRequestTypeDef]
+    ) -> GetAccessTokenResponseTypeDef:
+        """
+        Returns a credentials set to be used with just-in-time node access.
+
+        [Show boto3 documentation](https://boto3.amazonaws.com/v1/documentation/api/latest/reference/services/ssm/client/get_access_token.html)
+        [Show types-aiobotocore documentation](https://youtype.github.io/types_aiobotocore_docs/types_aiobotocore_ssm/client/#get_access_token)
+        """
+
     async def get_automation_execution(
         self, **kwargs: Unpack[GetAutomationExecutionRequestTypeDef]
     ) -> GetAutomationExecutionResultTypeDef:
@@ -1703,7 +1720,7 @@ class SSMClient(AioBaseClient):
         self, **kwargs: Unpack[PutParameterRequestTypeDef]
     ) -> PutParameterResultTypeDef:
         """
-        Add a parameter to the system.
+        Create or update a parameter in Parameter Store.
 
         [Show boto3 documentation](https://boto3.amazonaws.com/v1/documentation/api/latest/reference/services/ssm/client/put_parameter.html)
         [Show types-aiobotocore documentation](https://youtype.github.io/types_aiobotocore_docs/types_aiobotocore_ssm/client/#put_parameter)
@@ -1809,6 +1826,16 @@ class SSMClient(AioBaseClient):
 
         [Show boto3 documentation](https://boto3.amazonaws.com/v1/documentation/api/latest/reference/services/ssm/client/send_command.html)
         [Show types-aiobotocore documentation](https://youtype.github.io/types_aiobotocore_docs/types_aiobotocore_ssm/client/#send_command)
+        """
+
+    async def start_access_request(
+        self, **kwargs: Unpack[StartAccessRequestRequestTypeDef]
+    ) -> StartAccessRequestResponseTypeDef:
+        """
+        Starts the workflow for just-in-time node access sessions.
+
+        [Show boto3 documentation](https://boto3.amazonaws.com/v1/documentation/api/latest/reference/services/ssm/client/start_access_request.html)
+        [Show types-aiobotocore documentation](https://youtype.github.io/types_aiobotocore_docs/types_aiobotocore_ssm/client/#start_access_request)
         """
 
     async def start_associations_once(

@@ -5,6 +5,17 @@ from typing import Annotated, Any, ClassVar, Literal, Optional, Union
 from pydantic import BaseModel, Field
 
 
+WRITE_STRATEGY_FULL_FILE_REWRITE: Literal["FULL_FILE_REWRITE"] = "FULL_FILE_REWRITE"
+DEFAULT_CODE_BLOCK_TIMEOUT = 30
+WRITE_STRATEGY_NATURAL_EDIT: Literal["NATURAL_EDIT"] = "NATURAL_EDIT"
+WRITE_STRATEGY_SEARCH_REPLACE: Literal["SEARCH_REPLACE"] = "SEARCH_REPLACE"
+WRITE_STRATEGY_UDIFF: Literal["UDIFF"] = "UDIFF"
+
+FileWriteStrategyName = Literal[
+    "FULL_FILE_REWRITE", "UDIFF", "SEARCH_REPLACE", "NATURAL_EDIT"
+]
+
+
 class CommandType(str, Enum):
     THINKING = "thinking"
     FILE_READ = "file_read"
@@ -16,6 +27,9 @@ class CommandType(str, Enum):
     DB_GET_TABLE_SCHEMA = "db_get_table_schema"
     ANSWER = "answer"
     ASK = "ask"
+    SHELL = "shell"
+    PYTHON = "python"
+    FILE_WRITE = "file_write"
 
 
 class CommandData(BaseModel):
@@ -75,10 +89,17 @@ class StepOutputCommandData(CommandData):
 
 
 class DBQueryCommandData(CommandData):
+    def __init__(
+        self,
+        **kwargs: Any,
+    ) -> None:
+        super().__init__(**kwargs)
+
     executable: ClassVar[bool] = True
     type: Literal[CommandType.DB_QUERY] = CommandType.DB_QUERY
 
     query: str
+    max_gigabytes_billed: Optional[float] = None  # BigQuery only
 
 
 class DBGetTableNamesCommandData(CommandData):
@@ -107,6 +128,63 @@ class AskCommandData(CommandData):
     ask_raw: str
 
 
+class ShellCommandData(CommandData):
+    exclude_from_schema_gen: ClassVar[bool] = True
+
+    executable: ClassVar[bool] = True
+    type: Literal[CommandType.SHELL] = CommandType.SHELL
+
+    timeout: int = DEFAULT_CODE_BLOCK_TIMEOUT
+    content: str
+
+
+class PythonCommandData(CommandData):
+    exclude_from_schema_gen: ClassVar[bool] = True
+
+    executable: ClassVar[bool] = True
+    type: Literal[CommandType.PYTHON] = CommandType.PYTHON
+
+    content: str
+
+
+class EditContent(BaseModel):
+    content: str
+    original_file: Optional[str] = None
+
+
+class NaturalEditContent(BaseModel):
+    natural_edit: str
+    intermediate_edit: Optional[str]
+    original_file: Optional[str]
+    new_file: Optional[str]
+    error_content: Optional[str]
+
+    @property
+    def is_resolved(self) -> bool:
+        return self.new_file is not None or self.error_content is not None
+
+    @property
+    def is_noop(self) -> bool:
+        return bool(
+            self.new_file is not None
+            and self.original_file is not None
+            and self.new_file == self.original_file
+        )
+
+
+class FileWriteCommandData(CommandData):
+    exclude_from_schema_gen: ClassVar[bool] = True
+
+    executable: ClassVar[bool] = True
+    type: Literal[CommandType.FILE_WRITE] = CommandType.FILE_WRITE
+
+    file_path: str
+    language: str
+    write_strategy: FileWriteStrategyName
+    write_content: Union[NaturalEditContent, EditContent]
+    content: str
+
+
 CommandDataType = Annotated[
     Union[
         FileReadCommandData,
@@ -119,6 +197,9 @@ CommandDataType = Annotated[
         StepOutputCommandData,
         AnswerCommandData,
         AskCommandData,
+        ShellCommandData,
+        PythonCommandData,
+        FileWriteCommandData,
     ],
     Field(discriminator="type"),
 ]

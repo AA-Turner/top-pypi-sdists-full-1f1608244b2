@@ -55,6 +55,7 @@ __all__ = (
     "GetUsagePlansPaginatorName",
     "GetVpcLinksPaginatorName",
     "IntegrationTypeType",
+    "IpAddressTypeType",
     "LocationStatusTypeType",
     "OpType",
     "PaginatorName",
@@ -144,6 +145,7 @@ GetUsagePlanKeysPaginatorName = Literal["get_usage_plan_keys"]
 GetUsagePlansPaginatorName = Literal["get_usage_plans"]
 GetVpcLinksPaginatorName = Literal["get_vpc_links"]
 IntegrationTypeType = Literal["AWS", "AWS_PROXY", "HTTP", "HTTP_PROXY", "MOCK"]
+IpAddressTypeType = Literal["dualstack", "ipv4"]
 LocationStatusTypeType = Literal["DOCUMENTED", "UNDOCUMENTED"]
 OpType = Literal["add", "copy", "move", "remove", "replace", "test"]
 PutModeType = Literal["merge", "overwrite"]
@@ -311,6 +313,7 @@ ServiceName = Literal[
     "freetier",
     "fsx",
     "gamelift",
+    "gameliftstreams",
     "geo-maps",
     "geo-places",
     "geo-routes",
@@ -336,6 +339,7 @@ ServiceName = Literal[
     "iot",
     "iot-data",
     "iot-jobs-data",
+    "iot-managed-integrations",
     "iotanalytics",
     "iotdeviceadvisor",
     "iotevents",
@@ -450,7 +454,6 @@ ServiceName = Literal[
     "pipes",
     "polly",
     "pricing",
-    "privatenetworks",
     "proton",
     "qapps",
     "qbusiness",
@@ -511,7 +514,6 @@ ServiceName = Literal[
     "signer",
     "simspaceweaver",
     "sms",
-    "sms-voice",
     "snow-device-management",
     "snowball",
     "sns",
@@ -519,6 +521,7 @@ ServiceName = Literal[
     "sqs",
     "ssm",
     "ssm-contacts",
+    "ssm-guiconnect",
     "ssm-incidents",
     "ssm-quicksetup",
     "ssm-sap",

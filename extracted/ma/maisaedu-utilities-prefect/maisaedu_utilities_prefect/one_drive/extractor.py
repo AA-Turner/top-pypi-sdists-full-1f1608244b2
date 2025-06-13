@@ -1,6 +1,7 @@
 from datetime import datetime, time
 import pandas as pd
 from maisaedu_utilities_prefect import get_dsn
+from decimal import Decimal
 from .document_handling import (
     document_handling,
     get_documents_info,
@@ -177,6 +178,9 @@ class Extractor():
 
                 if column['type_cast'] == 'numeric':
                     documents_list.iloc[:, column['position']] = documents_list.iloc[:, column['position']].apply(lambda x: x if str(x).isnumeric() else None)
+
+                if column['type_cast'] == 'decimal':
+                    documents_list.iloc[:, column['position']] = documents_list.iloc[:, column['position']].apply(lambda x: Decimal(str(x).replace(',', '.')))
 
                 if column['type_cast'] == 'date - pt-br':
                     documents_list.iloc[:, column['position']] = documents_list.iloc[:, column['position']].apply(self.__convert_date_pt_br)

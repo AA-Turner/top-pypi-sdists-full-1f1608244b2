@@ -65,6 +65,7 @@ from .literals import (
     SettingTypeType,
     SortOrderType,
     StabilityStatusType,
+    StopServiceDeploymentStopTypeType,
     TaskDefinitionFamilyStatusType,
     TaskDefinitionStatusType,
     TaskFilesystemTypeType,
@@ -320,6 +321,8 @@ __all__ = (
     "SettingTypeDef",
     "StartTaskRequestTypeDef",
     "StartTaskResponseTypeDef",
+    "StopServiceDeploymentRequestTypeDef",
+    "StopServiceDeploymentResponseTypeDef",
     "StopTaskRequestTypeDef",
     "StopTaskResponseTypeDef",
     "SubmitAttachmentStateChangesRequestTypeDef",
@@ -1005,6 +1008,10 @@ ServiceEventTypeDef = TypedDict(
     },
 )
 
+class StopServiceDeploymentRequestTypeDef(TypedDict):
+    serviceDeploymentArn: str
+    stopType: NotRequired[StopServiceDeploymentStopTypeType]
+
 class StopTaskRequestTypeDef(TypedDict):
     task: str
     cluster: NotRequired[str]
@@ -1256,6 +1263,10 @@ class ListTasksResponseTypeDef(TypedDict):
 
 class PutAttributesResponseTypeDef(TypedDict):
     attributes: List[AttributeTypeDef]
+    ResponseMetadata: ResponseMetadataTypeDef
+
+class StopServiceDeploymentResponseTypeDef(TypedDict):
+    serviceDeploymentArn: str
     ResponseMetadata: ResponseMetadataTypeDef
 
 class SubmitAttachmentStateChangesResponseTypeDef(TypedDict):
@@ -1522,6 +1533,7 @@ class ServiceManagedEBSVolumeConfigurationOutputTypeDef(TypedDict):
     volumeType: NotRequired[str]
     sizeInGiB: NotRequired[int]
     snapshotId: NotRequired[str]
+    volumeInitializationRate: NotRequired[int]
     iops: NotRequired[int]
     throughput: NotRequired[int]
     tagSpecifications: NotRequired[List[EBSTagSpecificationOutputTypeDef]]
@@ -1782,6 +1794,7 @@ class ServiceManagedEBSVolumeConfigurationTypeDef(TypedDict):
     volumeType: NotRequired[str]
     sizeInGiB: NotRequired[int]
     snapshotId: NotRequired[str]
+    volumeInitializationRate: NotRequired[int]
     iops: NotRequired[int]
     throughput: NotRequired[int]
     tagSpecifications: NotRequired[Sequence[EBSTagSpecificationUnionTypeDef]]
@@ -1794,6 +1807,7 @@ class TaskManagedEBSVolumeConfigurationTypeDef(TypedDict):
     volumeType: NotRequired[str]
     sizeInGiB: NotRequired[int]
     snapshotId: NotRequired[str]
+    volumeInitializationRate: NotRequired[int]
     iops: NotRequired[int]
     throughput: NotRequired[int]
     tagSpecifications: NotRequired[Sequence[EBSTagSpecificationUnionTypeDef]]

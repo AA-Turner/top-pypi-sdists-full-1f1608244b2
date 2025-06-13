@@ -37,6 +37,7 @@ __all__ = (
     "RegionName",
     "ResourceServiceName",
     "ServiceName",
+    "ShiftTypeType",
     "ZonalAutoshiftStatusType",
     "ZonalShiftStatusType",
 )
@@ -51,6 +52,7 @@ ListAutoshiftsPaginatorName = Literal["list_autoshifts"]
 ListManagedResourcesPaginatorName = Literal["list_managed_resources"]
 ListZonalShiftsPaginatorName = Literal["list_zonal_shifts"]
 PracticeRunOutcomeType = Literal["FAILED", "INTERRUPTED", "PENDING", "SUCCEEDED"]
+ShiftTypeType = Literal["FIS_EXPERIMENT", "PRACTICE_RUN", "ZONAL_AUTOSHIFT", "ZONAL_SHIFT"]
 ZonalAutoshiftStatusType = Literal["DISABLED", "ENABLED"]
 ZonalShiftStatusType = Literal["ACTIVE", "CANCELED", "EXPIRED"]
 ARCZonalShiftServiceName = Literal["arc-zonal-shift"]
@@ -210,6 +212,7 @@ ServiceName = Literal[
     "freetier",
     "fsx",
     "gamelift",
+    "gameliftstreams",
     "geo-maps",
     "geo-places",
     "geo-routes",
@@ -235,6 +238,7 @@ ServiceName = Literal[
     "iot",
     "iot-data",
     "iot-jobs-data",
+    "iot-managed-integrations",
     "iotanalytics",
     "iotdeviceadvisor",
     "iotevents",
@@ -349,7 +353,6 @@ ServiceName = Literal[
     "pipes",
     "polly",
     "pricing",
-    "privatenetworks",
     "proton",
     "qapps",
     "qbusiness",
@@ -410,7 +413,6 @@ ServiceName = Literal[
     "signer",
     "simspaceweaver",
     "sms",
-    "sms-voice",
     "snow-device-management",
     "snowball",
     "sns",
@@ -418,6 +420,7 @@ ServiceName = Literal[
     "sqs",
     "ssm",
     "ssm-contacts",
+    "ssm-guiconnect",
     "ssm-incidents",
     "ssm-quicksetup",
     "ssm-sap",

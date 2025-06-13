@@ -23,15 +23,19 @@ from typing import Union
 from .literals import (
     AccessTypeType,
     AdMarkupTypeType,
+    AdsInteractionExcludeEventTypeType,
     AlertCategoryType,
     ChannelStateType,
     FillPolicyType,
     InsertionModeType,
+    ListPrefetchScheduleTypeType,
     LoggingStrategyType,
+    ManifestServiceExcludeEventTypeType,
     MessageTypeType,
     ModeType,
     OriginManifestTypeType,
     PlaybackModeType,
+    PrefetchScheduleTypeType,
     RelativePositionType,
     ScheduleEntryTypeType,
     StreamingMediaFileConditioningType,
@@ -58,6 +62,9 @@ __all__ = (
     "AdBreakUnionTypeDef",
     "AdConditioningConfigurationTypeDef",
     "AdMarkerPassthroughTypeDef",
+    "AdsInteractionLogOutputTypeDef",
+    "AdsInteractionLogTypeDef",
+    "AdsInteractionLogUnionTypeDef",
     "AlertTypeDef",
     "AlternateMediaOutputTypeDef",
     "AlternateMediaTypeDef",
@@ -154,6 +161,9 @@ __all__ = (
     "LogConfigurationForChannelTypeDef",
     "LogConfigurationTypeDef",
     "ManifestProcessingRulesTypeDef",
+    "ManifestServiceInteractionLogOutputTypeDef",
+    "ManifestServiceInteractionLogTypeDef",
+    "ManifestServiceInteractionLogUnionTypeDef",
     "PaginatorConfigTypeDef",
     "PlaybackConfigurationTypeDef",
     "PrefetchConsumptionOutputTypeDef",
@@ -166,6 +176,13 @@ __all__ = (
     "PutChannelPolicyRequestTypeDef",
     "PutPlaybackConfigurationRequestTypeDef",
     "PutPlaybackConfigurationResponseTypeDef",
+    "RecurringConsumptionOutputTypeDef",
+    "RecurringConsumptionTypeDef",
+    "RecurringPrefetchConfigurationOutputTypeDef",
+    "RecurringPrefetchConfigurationTypeDef",
+    "RecurringPrefetchConfigurationUnionTypeDef",
+    "RecurringRetrievalOutputTypeDef",
+    "RecurringRetrievalTypeDef",
     "RequestOutputItemTypeDef",
     "ResponseMetadataTypeDef",
     "ResponseOutputItemTypeDef",
@@ -186,6 +203,7 @@ __all__ = (
     "TimeSignalMessageTypeDef",
     "TimeSignalMessageUnionTypeDef",
     "TimestampTypeDef",
+    "TrafficShapingRetrievalWindowTypeDef",
     "TransitionTypeDef",
     "UntagResourceRequestTypeDef",
     "UpdateChannelRequestTypeDef",
@@ -231,6 +249,14 @@ class AdConditioningConfigurationTypeDef(TypedDict):
 class AdMarkerPassthroughTypeDef(TypedDict):
     Enabled: NotRequired[bool]
 
+class AdsInteractionLogOutputTypeDef(TypedDict):
+    PublishOptInEventTypes: NotRequired[List[Literal["RAW_ADS_RESPONSE"]]]
+    ExcludeEventTypes: NotRequired[List[AdsInteractionExcludeEventTypeType]]
+
+class AdsInteractionLogTypeDef(TypedDict):
+    PublishOptInEventTypes: NotRequired[Sequence[Literal["RAW_ADS_RESPONSE"]]]
+    ExcludeEventTypes: NotRequired[Sequence[AdsInteractionExcludeEventTypeType]]
+
 class AlertTypeDef(TypedDict):
     AlertCode: str
     AlertMessage: str
@@ -274,10 +300,8 @@ class ResponseMetadataTypeDef(TypedDict):
     RetryAttempts: int
     HostId: NotRequired[str]
 
-class ConfigureLogsForPlaybackConfigurationRequestTypeDef(TypedDict):
-    PercentEnabled: int
-    PlaybackConfigurationName: str
-    EnabledLoggingStrategies: NotRequired[Sequence[LoggingStrategyType]]
+class ManifestServiceInteractionLogOutputTypeDef(TypedDict):
+    ExcludeEventTypes: NotRequired[List[ManifestServiceExcludeEventTypeType]]
 
 class TimeShiftConfigurationTypeDef(TypedDict):
     MaxTimeDelaySeconds: int
@@ -290,11 +314,6 @@ HttpPackageConfigurationTypeDef = TypedDict(
         "Type": TypeType,
     },
 )
-
-class PrefetchRetrievalOutputTypeDef(TypedDict):
-    EndTime: datetime
-    DynamicVariables: NotRequired[Dict[str, str]]
-    StartTime: NotRequired[datetime]
 
 class DefaultSegmentDeliveryConfigurationTypeDef(TypedDict):
     BaseUrl: NotRequired[str]
@@ -392,10 +411,6 @@ class LivePreRollConfigurationTypeDef(TypedDict):
     AdDecisionServerUrl: NotRequired[str]
     MaxDurationSeconds: NotRequired[int]
 
-class LogConfigurationTypeDef(TypedDict):
-    PercentEnabled: int
-    EnabledLoggingStrategies: NotRequired[List[LoggingStrategyType]]
-
 class GetPrefetchScheduleRequestTypeDef(TypedDict):
     Name: str
     PlaybackConfigurationName: str
@@ -430,6 +445,7 @@ class ListPrefetchSchedulesRequestTypeDef(TypedDict):
     PlaybackConfigurationName: str
     MaxResults: NotRequired[int]
     NextToken: NotRequired[str]
+    ScheduleType: NotRequired[ListPrefetchScheduleTypeType]
     StreamId: NotRequired[str]
 
 class ListSourceLocationsRequestTypeDef(TypedDict):
@@ -444,7 +460,13 @@ class ListVodSourcesRequestTypeDef(TypedDict):
     MaxResults: NotRequired[int]
     NextToken: NotRequired[str]
 
+class ManifestServiceInteractionLogTypeDef(TypedDict):
+    ExcludeEventTypes: NotRequired[Sequence[ManifestServiceExcludeEventTypeType]]
+
 TimestampTypeDef = Union[datetime, str]
+
+class TrafficShapingRetrievalWindowTypeDef(TypedDict):
+    RetrievalWindowDurationSeconds: NotRequired[int]
 
 class PutChannelPolicyRequestTypeDef(TypedDict):
     ChannelName: str
@@ -504,20 +526,24 @@ class AccessConfigurationTypeDef(TypedDict):
 class ManifestProcessingRulesTypeDef(TypedDict):
     AdMarkerPassthrough: NotRequired[AdMarkerPassthroughTypeDef]
 
+AdsInteractionLogUnionTypeDef = Union[AdsInteractionLogTypeDef, AdsInteractionLogOutputTypeDef]
+
 class PrefetchConsumptionOutputTypeDef(TypedDict):
     EndTime: datetime
     AvailMatchingCriteria: NotRequired[List[AvailMatchingCriteriaTypeDef]]
     StartTime: NotRequired[datetime]
 
+class RecurringConsumptionOutputTypeDef(TypedDict):
+    RetrievedAdExpirationSeconds: NotRequired[int]
+    AvailMatchingCriteria: NotRequired[List[AvailMatchingCriteriaTypeDef]]
+
+class RecurringConsumptionTypeDef(TypedDict):
+    RetrievedAdExpirationSeconds: NotRequired[int]
+    AvailMatchingCriteria: NotRequired[Sequence[AvailMatchingCriteriaTypeDef]]
+
 class ConfigureLogsForChannelResponseTypeDef(TypedDict):
     ChannelName: str
     LogTypes: List[Literal["AS_RUN"]]
-    ResponseMetadata: ResponseMetadataTypeDef
-
-class ConfigureLogsForPlaybackConfigurationResponseTypeDef(TypedDict):
-    PercentEnabled: int
-    PlaybackConfigurationName: str
-    EnabledLoggingStrategies: List[LoggingStrategyType]
     ResponseMetadata: ResponseMetadataTypeDef
 
 class EmptyResponseMetadataTypeDef(TypedDict):
@@ -535,6 +561,20 @@ class ListAlertsResponseTypeDef(TypedDict):
 class ListTagsForResourceResponseTypeDef(TypedDict):
     Tags: Dict[str, str]
     ResponseMetadata: ResponseMetadataTypeDef
+
+class ConfigureLogsForPlaybackConfigurationResponseTypeDef(TypedDict):
+    PercentEnabled: int
+    PlaybackConfigurationName: str
+    EnabledLoggingStrategies: List[LoggingStrategyType]
+    AdsInteractionLog: AdsInteractionLogOutputTypeDef
+    ManifestServiceInteractionLog: ManifestServiceInteractionLogOutputTypeDef
+    ResponseMetadata: ResponseMetadataTypeDef
+
+class LogConfigurationTypeDef(TypedDict):
+    PercentEnabled: int
+    EnabledLoggingStrategies: List[LoggingStrategyType]
+    AdsInteractionLog: NotRequired[AdsInteractionLogOutputTypeDef]
+    ManifestServiceInteractionLog: NotRequired[ManifestServiceInteractionLogOutputTypeDef]
 
 class CreateLiveSourceRequestTypeDef(TypedDict):
     HttpPackageConfigurations: Sequence[HttpPackageConfigurationTypeDef]
@@ -659,6 +699,7 @@ class ListPlaybackConfigurationsRequestPaginateTypeDef(TypedDict):
 
 class ListPrefetchSchedulesRequestPaginateTypeDef(TypedDict):
     PlaybackConfigurationName: str
+    ScheduleType: NotRequired[ListPrefetchScheduleTypeType]
     StreamId: NotRequired[str]
     PaginationConfig: NotRequired[PaginatorConfigTypeDef]
 
@@ -679,16 +720,40 @@ class ResponseOutputItemTypeDef(TypedDict):
 HlsPlaylistSettingsUnionTypeDef = Union[
     HlsPlaylistSettingsTypeDef, HlsPlaylistSettingsOutputTypeDef
 ]
+ManifestServiceInteractionLogUnionTypeDef = Union[
+    ManifestServiceInteractionLogTypeDef, ManifestServiceInteractionLogOutputTypeDef
+]
 
 class PrefetchConsumptionTypeDef(TypedDict):
     EndTime: TimestampTypeDef
     AvailMatchingCriteria: NotRequired[Sequence[AvailMatchingCriteriaTypeDef]]
     StartTime: NotRequired[TimestampTypeDef]
 
+class PrefetchRetrievalOutputTypeDef(TypedDict):
+    EndTime: datetime
+    DynamicVariables: NotRequired[Dict[str, str]]
+    StartTime: NotRequired[datetime]
+    TrafficShapingType: NotRequired[Literal["RETRIEVAL_WINDOW"]]
+    TrafficShapingRetrievalWindow: NotRequired[TrafficShapingRetrievalWindowTypeDef]
+
 class PrefetchRetrievalTypeDef(TypedDict):
     EndTime: TimestampTypeDef
     DynamicVariables: NotRequired[Mapping[str, str]]
     StartTime: NotRequired[TimestampTypeDef]
+    TrafficShapingType: NotRequired[Literal["RETRIEVAL_WINDOW"]]
+    TrafficShapingRetrievalWindow: NotRequired[TrafficShapingRetrievalWindowTypeDef]
+
+class RecurringRetrievalOutputTypeDef(TypedDict):
+    DynamicVariables: NotRequired[Dict[str, str]]
+    DelayAfterAvailEndSeconds: NotRequired[int]
+    TrafficShapingType: NotRequired[Literal["RETRIEVAL_WINDOW"]]
+    TrafficShapingRetrievalWindow: NotRequired[TrafficShapingRetrievalWindowTypeDef]
+
+class RecurringRetrievalTypeDef(TypedDict):
+    DynamicVariables: NotRequired[Mapping[str, str]]
+    DelayAfterAvailEndSeconds: NotRequired[int]
+    TrafficShapingType: NotRequired[Literal["RETRIEVAL_WINDOW"]]
+    TrafficShapingRetrievalWindow: NotRequired[TrafficShapingRetrievalWindowTypeDef]
 
 class ScheduleEntryTypeDef(TypedDict):
     Arn: str
@@ -779,6 +844,24 @@ class UpdateSourceLocationResponseTypeDef(TypedDict):
     Tags: Dict[str, str]
     ResponseMetadata: ResponseMetadataTypeDef
 
+class PutPlaybackConfigurationRequestTypeDef(TypedDict):
+    Name: str
+    AdDecisionServerUrl: NotRequired[str]
+    AvailSuppression: NotRequired[AvailSuppressionTypeDef]
+    Bumper: NotRequired[BumperTypeDef]
+    CdnConfiguration: NotRequired[CdnConfigurationTypeDef]
+    ConfigurationAliases: NotRequired[Mapping[str, Mapping[str, str]]]
+    DashConfiguration: NotRequired[DashConfigurationForPutTypeDef]
+    InsertionMode: NotRequired[InsertionModeType]
+    LivePreRollConfiguration: NotRequired[LivePreRollConfigurationTypeDef]
+    ManifestProcessingRules: NotRequired[ManifestProcessingRulesTypeDef]
+    PersonalizationThresholdSeconds: NotRequired[int]
+    SlateAdUrl: NotRequired[str]
+    Tags: NotRequired[Mapping[str, str]]
+    TranscodeProfileName: NotRequired[str]
+    VideoContentSourceUrl: NotRequired[str]
+    AdConditioningConfiguration: NotRequired[AdConditioningConfigurationTypeDef]
+
 class GetPlaybackConfigurationResponseTypeDef(TypedDict):
     AdDecisionServerUrl: str
     AvailSuppression: AvailSuppressionTypeDef
@@ -826,24 +909,6 @@ class PlaybackConfigurationTypeDef(TypedDict):
     VideoContentSourceUrl: NotRequired[str]
     AdConditioningConfiguration: NotRequired[AdConditioningConfigurationTypeDef]
 
-class PutPlaybackConfigurationRequestTypeDef(TypedDict):
-    Name: str
-    AdDecisionServerUrl: NotRequired[str]
-    AvailSuppression: NotRequired[AvailSuppressionTypeDef]
-    Bumper: NotRequired[BumperTypeDef]
-    CdnConfiguration: NotRequired[CdnConfigurationTypeDef]
-    ConfigurationAliases: NotRequired[Mapping[str, Mapping[str, str]]]
-    DashConfiguration: NotRequired[DashConfigurationForPutTypeDef]
-    InsertionMode: NotRequired[InsertionModeType]
-    LivePreRollConfiguration: NotRequired[LivePreRollConfigurationTypeDef]
-    ManifestProcessingRules: NotRequired[ManifestProcessingRulesTypeDef]
-    PersonalizationThresholdSeconds: NotRequired[int]
-    SlateAdUrl: NotRequired[str]
-    Tags: NotRequired[Mapping[str, str]]
-    TranscodeProfileName: NotRequired[str]
-    VideoContentSourceUrl: NotRequired[str]
-    AdConditioningConfiguration: NotRequired[AdConditioningConfigurationTypeDef]
-
 class PutPlaybackConfigurationResponseTypeDef(TypedDict):
     AdDecisionServerUrl: str
     AvailSuppression: AvailSuppressionTypeDef
@@ -867,32 +932,6 @@ class PutPlaybackConfigurationResponseTypeDef(TypedDict):
     VideoContentSourceUrl: str
     AdConditioningConfiguration: AdConditioningConfigurationTypeDef
     ResponseMetadata: ResponseMetadataTypeDef
-
-class CreatePrefetchScheduleResponseTypeDef(TypedDict):
-    Arn: str
-    Consumption: PrefetchConsumptionOutputTypeDef
-    Name: str
-    PlaybackConfigurationName: str
-    Retrieval: PrefetchRetrievalOutputTypeDef
-    StreamId: str
-    ResponseMetadata: ResponseMetadataTypeDef
-
-class GetPrefetchScheduleResponseTypeDef(TypedDict):
-    Arn: str
-    Consumption: PrefetchConsumptionOutputTypeDef
-    Name: str
-    PlaybackConfigurationName: str
-    Retrieval: PrefetchRetrievalOutputTypeDef
-    StreamId: str
-    ResponseMetadata: ResponseMetadataTypeDef
-
-class PrefetchScheduleTypeDef(TypedDict):
-    Arn: str
-    Consumption: PrefetchConsumptionOutputTypeDef
-    Name: str
-    PlaybackConfigurationName: str
-    Retrieval: PrefetchRetrievalOutputTypeDef
-    StreamId: NotRequired[str]
 
 class ListLiveSourcesResponseTypeDef(TypedDict):
     Items: List[LiveSourceTypeDef]
@@ -970,10 +1009,29 @@ class RequestOutputItemTypeDef(TypedDict):
     DashPlaylistSettings: NotRequired[DashPlaylistSettingsTypeDef]
     HlsPlaylistSettings: NotRequired[HlsPlaylistSettingsUnionTypeDef]
 
+class ConfigureLogsForPlaybackConfigurationRequestTypeDef(TypedDict):
+    PercentEnabled: int
+    PlaybackConfigurationName: str
+    EnabledLoggingStrategies: NotRequired[Sequence[LoggingStrategyType]]
+    AdsInteractionLog: NotRequired[AdsInteractionLogUnionTypeDef]
+    ManifestServiceInteractionLog: NotRequired[ManifestServiceInteractionLogUnionTypeDef]
+
 PrefetchConsumptionUnionTypeDef = Union[
     PrefetchConsumptionTypeDef, PrefetchConsumptionOutputTypeDef
 ]
 PrefetchRetrievalUnionTypeDef = Union[PrefetchRetrievalTypeDef, PrefetchRetrievalOutputTypeDef]
+
+class RecurringPrefetchConfigurationOutputTypeDef(TypedDict):
+    EndTime: datetime
+    RecurringConsumption: RecurringConsumptionOutputTypeDef
+    RecurringRetrieval: RecurringRetrievalOutputTypeDef
+    StartTime: NotRequired[datetime]
+
+class RecurringPrefetchConfigurationTypeDef(TypedDict):
+    EndTime: TimestampTypeDef
+    RecurringConsumption: RecurringConsumptionTypeDef
+    RecurringRetrieval: RecurringRetrievalTypeDef
+    StartTime: NotRequired[TimestampTypeDef]
 
 class GetChannelScheduleResponseTypeDef(TypedDict):
     Items: List[ScheduleEntryTypeDef]
@@ -1000,11 +1058,6 @@ class ListPlaybackConfigurationsResponseTypeDef(TypedDict):
     ResponseMetadata: ResponseMetadataTypeDef
     NextToken: NotRequired[str]
 
-class ListPrefetchSchedulesResponseTypeDef(TypedDict):
-    Items: List[PrefetchScheduleTypeDef]
-    ResponseMetadata: ResponseMetadataTypeDef
-    NextToken: NotRequired[str]
-
 class ListChannelsResponseTypeDef(TypedDict):
     Items: List[ChannelTypeDef]
     ResponseMetadata: ResponseMetadataTypeDef
@@ -1027,12 +1080,41 @@ class UpdateChannelRequestTypeDef(TypedDict):
     TimeShiftConfiguration: NotRequired[TimeShiftConfigurationTypeDef]
     Audiences: NotRequired[Sequence[str]]
 
-class CreatePrefetchScheduleRequestTypeDef(TypedDict):
-    Consumption: PrefetchConsumptionUnionTypeDef
+class CreatePrefetchScheduleResponseTypeDef(TypedDict):
+    Arn: str
+    Consumption: PrefetchConsumptionOutputTypeDef
     Name: str
     PlaybackConfigurationName: str
-    Retrieval: PrefetchRetrievalUnionTypeDef
+    Retrieval: PrefetchRetrievalOutputTypeDef
+    RecurringPrefetchConfiguration: RecurringPrefetchConfigurationOutputTypeDef
+    ScheduleType: PrefetchScheduleTypeType
+    StreamId: str
+    ResponseMetadata: ResponseMetadataTypeDef
+
+class GetPrefetchScheduleResponseTypeDef(TypedDict):
+    Arn: str
+    Consumption: PrefetchConsumptionOutputTypeDef
+    Name: str
+    PlaybackConfigurationName: str
+    Retrieval: PrefetchRetrievalOutputTypeDef
+    ScheduleType: PrefetchScheduleTypeType
+    RecurringPrefetchConfiguration: RecurringPrefetchConfigurationOutputTypeDef
+    StreamId: str
+    ResponseMetadata: ResponseMetadataTypeDef
+
+class PrefetchScheduleTypeDef(TypedDict):
+    Arn: str
+    Name: str
+    PlaybackConfigurationName: str
+    Consumption: NotRequired[PrefetchConsumptionOutputTypeDef]
+    Retrieval: NotRequired[PrefetchRetrievalOutputTypeDef]
+    ScheduleType: NotRequired[PrefetchScheduleTypeType]
+    RecurringPrefetchConfiguration: NotRequired[RecurringPrefetchConfigurationOutputTypeDef]
     StreamId: NotRequired[str]
+
+RecurringPrefetchConfigurationUnionTypeDef = Union[
+    RecurringPrefetchConfigurationTypeDef, RecurringPrefetchConfigurationOutputTypeDef
+]
 
 class AlternateMediaOutputTypeDef(TypedDict):
     SourceLocationName: NotRequired[str]
@@ -1050,6 +1132,20 @@ class AdBreakTypeDef(TypedDict):
     SpliceInsertMessage: NotRequired[SpliceInsertMessageTypeDef]
     TimeSignalMessage: NotRequired[TimeSignalMessageUnionTypeDef]
     AdBreakMetadata: NotRequired[Sequence[KeyValuePairTypeDef]]
+
+class ListPrefetchSchedulesResponseTypeDef(TypedDict):
+    Items: List[PrefetchScheduleTypeDef]
+    ResponseMetadata: ResponseMetadataTypeDef
+    NextToken: NotRequired[str]
+
+class CreatePrefetchScheduleRequestTypeDef(TypedDict):
+    Name: str
+    PlaybackConfigurationName: str
+    Consumption: NotRequired[PrefetchConsumptionUnionTypeDef]
+    Retrieval: NotRequired[PrefetchRetrievalUnionTypeDef]
+    RecurringPrefetchConfiguration: NotRequired[RecurringPrefetchConfigurationUnionTypeDef]
+    ScheduleType: NotRequired[PrefetchScheduleTypeType]
+    StreamId: NotRequired[str]
 
 class AudienceMediaOutputTypeDef(TypedDict):
     Audience: NotRequired[str]

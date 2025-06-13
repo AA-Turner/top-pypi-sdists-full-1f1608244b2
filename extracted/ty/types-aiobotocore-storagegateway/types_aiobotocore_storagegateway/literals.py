@@ -37,6 +37,7 @@ __all__ = (
     "FileShareTypeType",
     "GatewayCapacityType",
     "HostEnvironmentType",
+    "ListCacheReportsPaginatorName",
     "ListFileSharesPaginatorName",
     "ListFileSystemAssociationsPaginatorName",
     "ListGatewaysPaginatorName",
@@ -58,7 +59,14 @@ __all__ = (
 
 
 ActiveDirectoryStatusType = Literal[
-    "ACCESS_DENIED", "DETACHED", "JOINED", "JOINING", "NETWORK_ERROR", "TIMEOUT", "UNKNOWN_ERROR"
+    "ACCESS_DENIED",
+    "DETACHED",
+    "INSUFFICIENT_PERMISSIONS",
+    "JOINED",
+    "JOINING",
+    "NETWORK_ERROR",
+    "TIMEOUT",
+    "UNKNOWN_ERROR",
 ]
 AutomaticUpdatePolicyType = Literal["ALL_VERSIONS", "EMERGENCY_VERSIONS_ONLY"]
 AvailabilityMonitorTestStatusType = Literal["COMPLETE", "FAILED", "PENDING"]
@@ -73,6 +81,7 @@ EncryptionTypeType = Literal["DsseKms", "SseKms", "SseS3"]
 FileShareTypeType = Literal["NFS", "SMB"]
 GatewayCapacityType = Literal["Large", "Medium", "Small"]
 HostEnvironmentType = Literal["EC2", "HYPER-V", "KVM", "OTHER", "SNOWBALL", "VMWARE"]
+ListCacheReportsPaginatorName = Literal["list_cache_reports"]
 ListFileSharesPaginatorName = Literal["list_file_shares"]
 ListFileSystemAssociationsPaginatorName = Literal["list_file_system_associations"]
 ListGatewaysPaginatorName = Literal["list_gateways"]
@@ -252,6 +261,7 @@ ServiceName = Literal[
     "freetier",
     "fsx",
     "gamelift",
+    "gameliftstreams",
     "geo-maps",
     "geo-places",
     "geo-routes",
@@ -277,6 +287,7 @@ ServiceName = Literal[
     "iot",
     "iot-data",
     "iot-jobs-data",
+    "iot-managed-integrations",
     "iotanalytics",
     "iotdeviceadvisor",
     "iotevents",
@@ -391,7 +402,6 @@ ServiceName = Literal[
     "pipes",
     "polly",
     "pricing",
-    "privatenetworks",
     "proton",
     "qapps",
     "qbusiness",
@@ -452,7 +462,6 @@ ServiceName = Literal[
     "signer",
     "simspaceweaver",
     "sms",
-    "sms-voice",
     "snow-device-management",
     "snowball",
     "sns",
@@ -460,6 +469,7 @@ ServiceName = Literal[
     "sqs",
     "ssm",
     "ssm-contacts",
+    "ssm-guiconnect",
     "ssm-incidents",
     "ssm-quicksetup",
     "ssm-sap",
@@ -517,6 +527,7 @@ PaginatorName = Literal[
     "describe_tape_recovery_points",
     "describe_tapes",
     "describe_vtl_devices",
+    "list_cache_reports",
     "list_file_shares",
     "list_file_system_associations",
     "list_gateways",
@@ -538,6 +549,7 @@ RegionName = Literal[
     "ap-southeast-3",
     "ap-southeast-4",
     "ap-southeast-5",
+    "ap-southeast-7",
     "ca-central-1",
     "ca-west-1",
     "eu-central-1",

@@ -41,6 +41,8 @@ from .literals import (
     GraphQLApiIntrospectionConfigType,
     GraphQLApiTypeType,
     GraphQLApiVisibilityType,
+    HandlerBehaviorType,
+    InvokeTypeType,
     MergeTypeType,
     OperationLevelMetricsConfigType,
     OutputTypeType,
@@ -181,8 +183,12 @@ __all__ = (
     "GetTypeRequestTypeDef",
     "GetTypeResponseTypeDef",
     "GraphqlApiTypeDef",
+    "HandlerConfigTypeDef",
+    "HandlerConfigsTypeDef",
     "HttpDataSourceConfigTypeDef",
+    "IntegrationTypeDef",
     "LambdaAuthorizerConfigTypeDef",
+    "LambdaConfigTypeDef",
     "LambdaConflictHandlerConfigTypeDef",
     "LambdaDataSourceConfigTypeDef",
     "ListApiKeysRequestPaginateTypeDef",
@@ -423,6 +429,7 @@ class CreateDomainNameRequestTypeDef(TypedDict):
     domainName: str
     certificateArn: str
     description: NotRequired[str]
+    tags: NotRequired[Mapping[str, str]]
 
 
 class DomainNameConfigTypeDef(TypedDict):
@@ -431,6 +438,8 @@ class DomainNameConfigTypeDef(TypedDict):
     certificateArn: NotRequired[str]
     appsyncDomainName: NotRequired[str]
     hostedZoneId: NotRequired[str]
+    tags: NotRequired[Dict[str, str]]
+    domainNameArn: NotRequired[str]
 
 
 class EnhancedMetricsConfigTypeDef(TypedDict):
@@ -654,6 +663,10 @@ GetTypeRequestTypeDef = TypedDict(
         "format": TypeDefinitionFormatType,
     },
 )
+
+
+class LambdaConfigTypeDef(TypedDict):
+    invokeType: NotRequired[InvokeTypeType]
 
 
 class LambdaConflictHandlerConfigTypeDef(TypedDict):
@@ -984,35 +997,6 @@ class UpdateSourceApiAssociationRequestTypeDef(TypedDict):
     sourceApiAssociationConfig: NotRequired[SourceApiAssociationConfigTypeDef]
 
 
-class ChannelNamespaceTypeDef(TypedDict):
-    apiId: NotRequired[str]
-    name: NotRequired[str]
-    subscribeAuthModes: NotRequired[List[AuthModeTypeDef]]
-    publishAuthModes: NotRequired[List[AuthModeTypeDef]]
-    codeHandlers: NotRequired[str]
-    tags: NotRequired[Dict[str, str]]
-    channelNamespaceArn: NotRequired[str]
-    created: NotRequired[datetime]
-    lastModified: NotRequired[datetime]
-
-
-class CreateChannelNamespaceRequestTypeDef(TypedDict):
-    apiId: str
-    name: str
-    subscribeAuthModes: NotRequired[Sequence[AuthModeTypeDef]]
-    publishAuthModes: NotRequired[Sequence[AuthModeTypeDef]]
-    codeHandlers: NotRequired[str]
-    tags: NotRequired[Mapping[str, str]]
-
-
-class UpdateChannelNamespaceRequestTypeDef(TypedDict):
-    apiId: str
-    name: str
-    subscribeAuthModes: NotRequired[Sequence[AuthModeTypeDef]]
-    publishAuthModes: NotRequired[Sequence[AuthModeTypeDef]]
-    codeHandlers: NotRequired[str]
-
-
 class AuthProviderTypeDef(TypedDict):
     authType: AuthenticationTypeType
     cognitoConfig: NotRequired[CognitoConfigTypeDef]
@@ -1122,6 +1106,11 @@ class EvaluateMappingTemplateResponseTypeDef(TypedDict):
     stash: str
     outErrors: str
     ResponseMetadata: ResponseMetadataTypeDef
+
+
+class IntegrationTypeDef(TypedDict):
+    dataSourceName: str
+    lambdaConfig: NotRequired[LambdaConfigTypeDef]
 
 
 class SyncConfigTypeDef(TypedDict):
@@ -1306,27 +1295,6 @@ class UpdateSourceApiAssociationResponseTypeDef(TypedDict):
     ResponseMetadata: ResponseMetadataTypeDef
 
 
-class CreateChannelNamespaceResponseTypeDef(TypedDict):
-    channelNamespace: ChannelNamespaceTypeDef
-    ResponseMetadata: ResponseMetadataTypeDef
-
-
-class GetChannelNamespaceResponseTypeDef(TypedDict):
-    channelNamespace: ChannelNamespaceTypeDef
-    ResponseMetadata: ResponseMetadataTypeDef
-
-
-class ListChannelNamespacesResponseTypeDef(TypedDict):
-    channelNamespaces: List[ChannelNamespaceTypeDef]
-    ResponseMetadata: ResponseMetadataTypeDef
-    nextToken: NotRequired[str]
-
-
-class UpdateChannelNamespaceResponseTypeDef(TypedDict):
-    channelNamespace: ChannelNamespaceTypeDef
-    ResponseMetadata: ResponseMetadataTypeDef
-
-
 class EventConfigOutputTypeDef(TypedDict):
     authProviders: List[AuthProviderTypeDef]
     connectionAuthModes: List[AuthModeTypeDef]
@@ -1359,6 +1327,11 @@ class DataSourceIntrospectionModelTypeDef(TypedDict):
     primaryKey: NotRequired[DataSourceIntrospectionModelIndexTypeDef]
     indexes: NotRequired[List[DataSourceIntrospectionModelIndexTypeDef]]
     sdl: NotRequired[str]
+
+
+class HandlerConfigTypeDef(TypedDict):
+    behavior: HandlerBehaviorType
+    integration: IntegrationTypeDef
 
 
 class CreateFunctionRequestTypeDef(TypedDict):
@@ -1561,6 +1534,11 @@ class DataSourceIntrospectionResultTypeDef(TypedDict):
     nextToken: NotRequired[str]
 
 
+class HandlerConfigsTypeDef(TypedDict):
+    onPublish: NotRequired[HandlerConfigTypeDef]
+    onSubscribe: NotRequired[HandlerConfigTypeDef]
+
+
 class CreateFunctionResponseTypeDef(TypedDict):
     functionConfiguration: FunctionConfigurationTypeDef
     ResponseMetadata: ResponseMetadataTypeDef
@@ -1670,4 +1648,57 @@ class GetDataSourceIntrospectionResponseTypeDef(TypedDict):
     introspectionStatus: DataSourceIntrospectionStatusType
     introspectionStatusDetail: str
     introspectionResult: DataSourceIntrospectionResultTypeDef
+    ResponseMetadata: ResponseMetadataTypeDef
+
+
+class ChannelNamespaceTypeDef(TypedDict):
+    apiId: NotRequired[str]
+    name: NotRequired[str]
+    subscribeAuthModes: NotRequired[List[AuthModeTypeDef]]
+    publishAuthModes: NotRequired[List[AuthModeTypeDef]]
+    codeHandlers: NotRequired[str]
+    tags: NotRequired[Dict[str, str]]
+    channelNamespaceArn: NotRequired[str]
+    created: NotRequired[datetime]
+    lastModified: NotRequired[datetime]
+    handlerConfigs: NotRequired[HandlerConfigsTypeDef]
+
+
+class CreateChannelNamespaceRequestTypeDef(TypedDict):
+    apiId: str
+    name: str
+    subscribeAuthModes: NotRequired[Sequence[AuthModeTypeDef]]
+    publishAuthModes: NotRequired[Sequence[AuthModeTypeDef]]
+    codeHandlers: NotRequired[str]
+    tags: NotRequired[Mapping[str, str]]
+    handlerConfigs: NotRequired[HandlerConfigsTypeDef]
+
+
+class UpdateChannelNamespaceRequestTypeDef(TypedDict):
+    apiId: str
+    name: str
+    subscribeAuthModes: NotRequired[Sequence[AuthModeTypeDef]]
+    publishAuthModes: NotRequired[Sequence[AuthModeTypeDef]]
+    codeHandlers: NotRequired[str]
+    handlerConfigs: NotRequired[HandlerConfigsTypeDef]
+
+
+class CreateChannelNamespaceResponseTypeDef(TypedDict):
+    channelNamespace: ChannelNamespaceTypeDef
+    ResponseMetadata: ResponseMetadataTypeDef
+
+
+class GetChannelNamespaceResponseTypeDef(TypedDict):
+    channelNamespace: ChannelNamespaceTypeDef
+    ResponseMetadata: ResponseMetadataTypeDef
+
+
+class ListChannelNamespacesResponseTypeDef(TypedDict):
+    channelNamespaces: List[ChannelNamespaceTypeDef]
+    ResponseMetadata: ResponseMetadataTypeDef
+    nextToken: NotRequired[str]
+
+
+class UpdateChannelNamespaceResponseTypeDef(TypedDict):
+    channelNamespace: ChannelNamespaceTypeDef
     ResponseMetadata: ResponseMetadataTypeDef

@@ -1,6 +1,6 @@
 Metadata-Version: 2.1
 Name: lusid-sdk
-Version: 2.1.818
+Version: 2.1.820
 Summary: LUSID API
 Home-page: https://github.com/finbourne/lusid-sdk-python
 License: MIT
@@ -1534,6 +1534,8 @@ Class | Method | HTTP request | Description
  - [RelationshipDefinition](docs/RelationshipDefinition.md)
  - [RelativeDateOffset](docs/RelativeDateOffset.md)
  - [Repo](docs/Repo.md)
+ - [RepoCashFlowEvent](docs/RepoCashFlowEvent.md)
+ - [RepoPartialClosureEvent](docs/RepoPartialClosureEvent.md)
  - [RepurchaseOfferEvent](docs/RepurchaseOfferEvent.md)
  - [RequestedChanges](docs/RequestedChanges.md)
  - [ResetEvent](docs/ResetEvent.md)

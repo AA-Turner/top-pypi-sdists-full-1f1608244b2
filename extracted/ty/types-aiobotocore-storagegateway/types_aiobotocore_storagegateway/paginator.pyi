@@ -16,6 +16,7 @@ Usage::
         DescribeTapeRecoveryPointsPaginator,
         DescribeTapesPaginator,
         DescribeVTLDevicesPaginator,
+        ListCacheReportsPaginator,
         ListFileSharesPaginator,
         ListFileSystemAssociationsPaginator,
         ListGatewaysPaginator,
@@ -33,6 +34,7 @@ Usage::
         describe_tape_recovery_points_paginator: DescribeTapeRecoveryPointsPaginator = client.get_paginator("describe_tape_recovery_points")
         describe_tapes_paginator: DescribeTapesPaginator = client.get_paginator("describe_tapes")
         describe_vtl_devices_paginator: DescribeVTLDevicesPaginator = client.get_paginator("describe_vtl_devices")
+        list_cache_reports_paginator: ListCacheReportsPaginator = client.get_paginator("list_cache_reports")
         list_file_shares_paginator: ListFileSharesPaginator = client.get_paginator("list_file_shares")
         list_file_system_associations_paginator: ListFileSystemAssociationsPaginator = client.get_paginator("list_file_system_associations")
         list_gateways_paginator: ListGatewaysPaginator = client.get_paginator("list_gateways")
@@ -59,6 +61,8 @@ from .type_defs import (
     DescribeTapesOutputTypeDef,
     DescribeVTLDevicesInputPaginateTypeDef,
     DescribeVTLDevicesOutputTypeDef,
+    ListCacheReportsInputPaginateTypeDef,
+    ListCacheReportsOutputTypeDef,
     ListFileSharesInputPaginateTypeDef,
     ListFileSharesOutputTypeDef,
     ListFileSystemAssociationsInputPaginateTypeDef,
@@ -85,6 +89,7 @@ __all__ = (
     "DescribeTapeRecoveryPointsPaginator",
     "DescribeTapesPaginator",
     "DescribeVTLDevicesPaginator",
+    "ListCacheReportsPaginator",
     "ListFileSharesPaginator",
     "ListFileSystemAssociationsPaginator",
     "ListGatewaysPaginator",
@@ -164,6 +169,24 @@ class DescribeVTLDevicesPaginator(_DescribeVTLDevicesPaginatorBase):
         """
         [Show boto3 documentation](https://boto3.amazonaws.com/v1/documentation/api/latest/reference/services/storagegateway/paginator/DescribeVTLDevices.html#StorageGateway.Paginator.DescribeVTLDevices.paginate)
         [Show types-aiobotocore documentation](https://youtype.github.io/types_aiobotocore_docs/types_aiobotocore_storagegateway/paginators/#describevtldevicespaginator)
+        """
+
+if TYPE_CHECKING:
+    _ListCacheReportsPaginatorBase = AioPaginator[ListCacheReportsOutputTypeDef]
+else:
+    _ListCacheReportsPaginatorBase = AioPaginator  # type: ignore[assignment]
+
+class ListCacheReportsPaginator(_ListCacheReportsPaginatorBase):
+    """
+    [Show boto3 documentation](https://boto3.amazonaws.com/v1/documentation/api/latest/reference/services/storagegateway/paginator/ListCacheReports.html#StorageGateway.Paginator.ListCacheReports)
+    [Show types-aiobotocore documentation](https://youtype.github.io/types_aiobotocore_docs/types_aiobotocore_storagegateway/paginators/#listcachereportspaginator)
+    """
+    def paginate(  # type: ignore[override]
+        self, **kwargs: Unpack[ListCacheReportsInputPaginateTypeDef]
+    ) -> AioPageIterator[ListCacheReportsOutputTypeDef]:
+        """
+        [Show boto3 documentation](https://boto3.amazonaws.com/v1/documentation/api/latest/reference/services/storagegateway/paginator/ListCacheReports.html#StorageGateway.Paginator.ListCacheReports.paginate)
+        [Show types-aiobotocore documentation](https://youtype.github.io/types_aiobotocore_docs/types_aiobotocore_storagegateway/paginators/#listcachereportspaginator)
         """
 
 if TYPE_CHECKING:

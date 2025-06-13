@@ -32,11 +32,13 @@ from .literals import (
     EncodingNameType,
     EntitlementStatusType,
     FailoverModeType,
+    FlowSizeType,
     GatewayStateType,
     InstanceStateType,
     KeyTypeType,
     MaintenanceDayType,
     MediaStreamTypeType,
+    NdiStateType,
     NetworkInterfaceTypeType,
     OutputStatusType,
     ProtocolType,
@@ -195,6 +197,10 @@ __all__ = (
     "MonitoringConfigTypeDef",
     "MonitoringConfigUnionTypeDef",
     "MulticastSourceSettingsTypeDef",
+    "NdiConfigOutputTypeDef",
+    "NdiConfigTypeDef",
+    "NdiConfigUnionTypeDef",
+    "NdiDiscoveryServerConfigTypeDef",
     "OfferingTypeDef",
     "OutputTypeDef",
     "PaginatorConfigTypeDef",
@@ -584,6 +590,12 @@ class ListTagsForResourceRequestTypeDef(TypedDict):
     ResourceArn: str
 
 
+class NdiDiscoveryServerConfigTypeDef(TypedDict):
+    DiscoveryServerAddress: str
+    VpcInterfaceAdapter: str
+    DiscoveryServerPort: NotRequired[int]
+
+
 class ResourceSpecificationTypeDef(TypedDict):
     ResourceType: Literal["Mbps_Outbound_Bandwidth"]
     ReservedBitrate: NotRequired[int]
@@ -605,6 +617,8 @@ TransportTypeDef = TypedDict(
         "SourceListenerAddress": NotRequired[str],
         "SourceListenerPort": NotRequired[int],
         "StreamId": NotRequired[str],
+        "NdiSpeedHqQuality": NotRequired[int],
+        "NdiProgramName": NotRequired[str],
     },
 )
 
@@ -1102,6 +1116,18 @@ class ListGatewaysResponseTypeDef(TypedDict):
     NextToken: NotRequired[str]
 
 
+class NdiConfigOutputTypeDef(TypedDict):
+    NdiState: NotRequired[NdiStateType]
+    MachineName: NotRequired[str]
+    NdiDiscoveryServers: NotRequired[List[NdiDiscoveryServerConfigTypeDef]]
+
+
+class NdiConfigTypeDef(TypedDict):
+    NdiState: NotRequired[NdiStateType]
+    MachineName: NotRequired[str]
+    NdiDiscoveryServers: NotRequired[Sequence[NdiDiscoveryServerConfigTypeDef]]
+
+
 class OfferingTypeDef(TypedDict):
     CurrencyCode: str
     Duration: int
@@ -1307,6 +1333,9 @@ class MonitoringConfigTypeDef(TypedDict):
     VideoMonitoringSettings: NotRequired[Sequence[VideoMonitoringSettingTypeDef]]
 
 
+NdiConfigUnionTypeDef = Union[NdiConfigTypeDef, NdiConfigOutputTypeDef]
+
+
 class DescribeOfferingResponseTypeDef(TypedDict):
     Offering: OfferingTypeDef
     ResponseMetadata: ResponseMetadataTypeDef
@@ -1395,6 +1424,8 @@ AddOutputRequestTypeDef = TypedDict(
         "StreamId": NotRequired[str],
         "VpcInterfaceAttachment": NotRequired[VpcInterfaceAttachmentTypeDef],
         "OutputStatus": NotRequired[OutputStatusType],
+        "NdiSpeedHqQuality": NotRequired[int],
+        "NdiProgramName": NotRequired[str],
     },
 )
 UpdateFlowOutputRequestTypeDef = TypedDict(
@@ -1420,6 +1451,8 @@ UpdateFlowOutputRequestTypeDef = TypedDict(
         "StreamId": NotRequired[str],
         "VpcInterfaceAttachment": NotRequired[VpcInterfaceAttachmentTypeDef],
         "OutputStatus": NotRequired[OutputStatusType],
+        "NdiProgramName": NotRequired[str],
+        "NdiSpeedHqQuality": NotRequired[int],
     },
 )
 SetSourceRequestTypeDef = TypedDict(
@@ -1597,6 +1630,8 @@ class FlowTypeDef(TypedDict):
     VpcInterfaces: NotRequired[List[VpcInterfaceTypeDef]]
     Maintenance: NotRequired[MaintenanceTypeDef]
     SourceMonitoringConfig: NotRequired[MonitoringConfigOutputTypeDef]
+    FlowSize: NotRequired[FlowSizeType]
+    NdiConfig: NotRequired[NdiConfigOutputTypeDef]
 
 
 class UpdateFlowSourceResponseTypeDef(TypedDict):
@@ -1625,6 +1660,8 @@ class CreateFlowRequestTypeDef(TypedDict):
     VpcInterfaces: NotRequired[Sequence[VpcInterfaceRequestTypeDef]]
     Maintenance: NotRequired[AddMaintenanceTypeDef]
     SourceMonitoringConfig: NotRequired[MonitoringConfigUnionTypeDef]
+    FlowSize: NotRequired[FlowSizeType]
+    NdiConfig: NotRequired[NdiConfigUnionTypeDef]
 
 
 class UpdateFlowRequestTypeDef(TypedDict):
@@ -1632,6 +1669,7 @@ class UpdateFlowRequestTypeDef(TypedDict):
     SourceFailoverConfig: NotRequired[UpdateFailoverConfigTypeDef]
     Maintenance: NotRequired[UpdateMaintenanceTypeDef]
     SourceMonitoringConfig: NotRequired[MonitoringConfigUnionTypeDef]
+    NdiConfig: NotRequired[NdiConfigUnionTypeDef]
 
 
 class CreateFlowResponseTypeDef(TypedDict):

@@ -125,6 +125,7 @@ async def get_workflow_executions(
     debug_num_stacks_to_drop=1,
     parent_class: str = None,
     session: httpx.AsyncClient = None,
+    return_raw: bool = False
 ):
     params = {
         "modelId": model_id,
@@ -148,5 +149,10 @@ async def get_workflow_executions(
 
     if not res.is_success:
         raise dmde.RouteError(res=res)
+    
+    if return_raw:
+        return res
+
+    res.response = res.response.get("executions", [])
 
     return res

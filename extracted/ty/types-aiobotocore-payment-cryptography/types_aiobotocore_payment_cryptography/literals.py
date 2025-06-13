@@ -8,9 +8,9 @@ Copyright 2025 Vlad Emelianov
 Usage::
 
     ```python
-    from types_aiobotocore_payment_cryptography.literals import KeyAlgorithmType
+    from types_aiobotocore_payment_cryptography.literals import DeriveKeyUsageType
 
-    data: KeyAlgorithmType = "AES_128"
+    data: DeriveKeyUsageType = "TR31_B0_BASE_DERIVATION_KEY"
     ```
 """
 
@@ -23,9 +23,12 @@ else:
 
 
 __all__ = (
+    "DeriveKeyUsageType",
     "KeyAlgorithmType",
     "KeyCheckValueAlgorithmType",
     "KeyClassType",
+    "KeyDerivationFunctionType",
+    "KeyDerivationHashAlgorithmType",
     "KeyExportabilityType",
     "KeyMaterialTypeType",
     "KeyOriginType",
@@ -38,18 +41,41 @@ __all__ = (
     "PaymentCryptographyControlPlaneServiceName",
     "ResourceServiceName",
     "ServiceName",
+    "SymmetricKeyAlgorithmType",
     "Tr34KeyBlockFormatType",
     "WrappedKeyMaterialFormatType",
     "WrappingKeySpecType",
 )
 
 
+DeriveKeyUsageType = Literal[
+    "TR31_B0_BASE_DERIVATION_KEY",
+    "TR31_C0_CARD_VERIFICATION_KEY",
+    "TR31_D0_SYMMETRIC_DATA_ENCRYPTION_KEY",
+    "TR31_E0_EMV_MKEY_APP_CRYPTOGRAMS",
+    "TR31_E1_EMV_MKEY_CONFIDENTIALITY",
+    "TR31_E2_EMV_MKEY_INTEGRITY",
+    "TR31_E4_EMV_MKEY_DYNAMIC_NUMBERS",
+    "TR31_E5_EMV_MKEY_CARD_PERSONALIZATION",
+    "TR31_E6_EMV_MKEY_OTHER",
+    "TR31_K0_KEY_ENCRYPTION_KEY",
+    "TR31_K1_KEY_BLOCK_PROTECTION_KEY",
+    "TR31_M1_ISO_9797_1_MAC_KEY",
+    "TR31_M3_ISO_9797_3_MAC_KEY",
+    "TR31_M6_ISO_9797_5_CMAC_KEY",
+    "TR31_M7_HMAC_KEY",
+    "TR31_P0_PIN_ENCRYPTION_KEY",
+    "TR31_P1_PIN_GENERATION_KEY",
+    "TR31_V1_IBM3624_PIN_VERIFICATION_KEY",
+    "TR31_V2_VISA_PIN_VERIFICATION_KEY",
+]
 KeyAlgorithmType = Literal[
     "AES_128",
     "AES_192",
     "AES_256",
     "ECC_NIST_P256",
     "ECC_NIST_P384",
+    "ECC_NIST_P521",
     "RSA_2048",
     "RSA_3072",
     "RSA_4096",
@@ -58,6 +84,8 @@ KeyAlgorithmType = Literal[
 ]
 KeyCheckValueAlgorithmType = Literal["ANSI_X9_24", "CMAC"]
 KeyClassType = Literal["ASYMMETRIC_KEY_PAIR", "PRIVATE_KEY", "PUBLIC_KEY", "SYMMETRIC_KEY"]
+KeyDerivationFunctionType = Literal["ANSI_X963", "NIST_SP800"]
+KeyDerivationHashAlgorithmType = Literal["SHA_256", "SHA_384", "SHA_512"]
 KeyExportabilityType = Literal["EXPORTABLE", "NON_EXPORTABLE", "SENSITIVE"]
 KeyMaterialTypeType = Literal[
     "KEY_CRYPTOGRAM",
@@ -96,6 +124,7 @@ KeyUsageType = Literal[
 ListAliasesPaginatorName = Literal["list_aliases"]
 ListKeysPaginatorName = Literal["list_keys"]
 ListTagsForResourcePaginatorName = Literal["list_tags_for_resource"]
+SymmetricKeyAlgorithmType = Literal["AES_128", "AES_192", "AES_256", "TDES_2KEY", "TDES_3KEY"]
 Tr34KeyBlockFormatType = Literal["X9_TR34_2012"]
 WrappedKeyMaterialFormatType = Literal["KEY_CRYPTOGRAM", "TR31_KEY_BLOCK", "TR34_KEY_BLOCK"]
 WrappingKeySpecType = Literal["RSA_OAEP_SHA_256", "RSA_OAEP_SHA_512"]
@@ -256,6 +285,7 @@ ServiceName = Literal[
     "freetier",
     "fsx",
     "gamelift",
+    "gameliftstreams",
     "geo-maps",
     "geo-places",
     "geo-routes",
@@ -281,6 +311,7 @@ ServiceName = Literal[
     "iot",
     "iot-data",
     "iot-jobs-data",
+    "iot-managed-integrations",
     "iotanalytics",
     "iotdeviceadvisor",
     "iotevents",
@@ -395,7 +426,6 @@ ServiceName = Literal[
     "pipes",
     "polly",
     "pricing",
-    "privatenetworks",
     "proton",
     "qapps",
     "qbusiness",
@@ -456,7 +486,6 @@ ServiceName = Literal[
     "signer",
     "simspaceweaver",
     "sms",
-    "sms-voice",
     "snow-device-management",
     "snowball",
     "sns",
@@ -464,6 +493,7 @@ ServiceName = Literal[
     "sqs",
     "ssm",
     "ssm-contacts",
+    "ssm-guiconnect",
     "ssm-incidents",
     "ssm-quicksetup",
     "ssm-sap",

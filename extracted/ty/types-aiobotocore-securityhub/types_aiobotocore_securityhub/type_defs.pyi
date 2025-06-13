@@ -49,6 +49,7 @@ from .literals import (
     SeverityLabelType,
     SeverityRatingType,
     SortOrderType,
+    StandardsControlsUpdatableType,
     StandardsStatusType,
     StatusReasonCodeType,
     StringFilterComparisonType,
@@ -6424,6 +6425,7 @@ class StandardsSubscriptionTypeDef(TypedDict):
     StandardsArn: str
     StandardsInput: Dict[str, str]
     StandardsStatus: StandardsStatusType
+    StandardsControlsUpdatable: NotRequired[StandardsControlsUpdatableType]
     StandardsStatusReason: NotRequired[StandardsStatusReasonTypeDef]
 
 class StatelessCustomPublishMetricActionOutputTypeDef(TypedDict):

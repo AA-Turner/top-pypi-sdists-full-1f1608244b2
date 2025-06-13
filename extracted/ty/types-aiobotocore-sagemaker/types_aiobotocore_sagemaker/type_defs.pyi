@@ -185,6 +185,7 @@ from .literals import (
     MonitoringProblemTypeType,
     MonitoringScheduleSortKeyType,
     MonitoringTypeType,
+    NodeUnavailabilityTypeType,
     NotebookInstanceAcceleratorTypeType,
     NotebookInstanceLifecycleConfigSortKeyType,
     NotebookInstanceLifecycleConfigSortOrderType,
@@ -228,6 +229,7 @@ from .literals import (
     RecordWrapperType,
     RedshiftResultCompressionTypeType,
     RedshiftResultFormatType,
+    RelationType,
     RepositoryAccessModeType,
     ReservedCapacityInstanceTypeType,
     ReservedCapacityStatusType,
@@ -283,6 +285,7 @@ from .literals import (
     TargetPlatformArchType,
     TargetPlatformOsType,
     ThroughputModeType,
+    TrackingServerMaintenanceStatusType,
     TrackingServerSizeType,
     TrackingServerStatusType,
     TrafficRoutingConfigTypeType,
@@ -333,6 +336,7 @@ __all__ = (
     "AdditionalModelDataSourceTypeDef",
     "AdditionalS3DataSourceTypeDef",
     "AgentVersionTypeDef",
+    "AlarmDetailsTypeDef",
     "AlarmTypeDef",
     "AlgorithmSpecificationOutputTypeDef",
     "AlgorithmSpecificationTypeDef",
@@ -426,6 +430,7 @@ __all__ = (
     "CandidatePropertiesTypeDef",
     "CanvasAppSettingsOutputTypeDef",
     "CanvasAppSettingsTypeDef",
+    "CapacitySizeConfigTypeDef",
     "CapacitySizeTypeDef",
     "CaptureContentTypeHeaderOutputTypeDef",
     "CaptureContentTypeHeaderTypeDef",
@@ -727,6 +732,9 @@ __all__ = (
     "DeploymentConfigOutputTypeDef",
     "DeploymentConfigTypeDef",
     "DeploymentConfigUnionTypeDef",
+    "DeploymentConfigurationOutputTypeDef",
+    "DeploymentConfigurationTypeDef",
+    "DeploymentConfigurationUnionTypeDef",
     "DeploymentRecommendationTypeDef",
     "DeploymentStageStatusSummaryTypeDef",
     "DeploymentStageTypeDef",
@@ -909,6 +917,7 @@ __all__ = (
     "EFSFileSystemTypeDef",
     "EMRStepMetadataTypeDef",
     "EbsStorageSettingsTypeDef",
+    "Ec2CapacityReservationTypeDef",
     "EdgeDeploymentConfigTypeDef",
     "EdgeDeploymentModelConfigTypeDef",
     "EdgeDeploymentPlanSummaryTypeDef",
@@ -1553,6 +1562,8 @@ __all__ = (
     "ProcessingS3InputTypeDef",
     "ProcessingS3OutputTypeDef",
     "ProcessingStoppingConditionTypeDef",
+    "ProductionVariantCapacityReservationConfigTypeDef",
+    "ProductionVariantCapacityReservationSummaryTypeDef",
     "ProductionVariantCoreDumpConfigTypeDef",
     "ProductionVariantManagedInstanceScalingTypeDef",
     "ProductionVariantRoutingConfigTypeDef",
@@ -1631,6 +1642,7 @@ __all__ = (
     "RetryPipelineExecutionRequestTypeDef",
     "RetryPipelineExecutionResponseTypeDef",
     "RetryStrategyTypeDef",
+    "RollingDeploymentPolicyTypeDef",
     "RollingUpdatePolicyTypeDef",
     "S3DataSourceOutputTypeDef",
     "S3DataSourceTypeDef",
@@ -1642,6 +1654,9 @@ __all__ = (
     "ScalingPolicyObjectiveTypeDef",
     "ScalingPolicyTypeDef",
     "ScheduleConfigTypeDef",
+    "ScheduledUpdateConfigOutputTypeDef",
+    "ScheduledUpdateConfigTypeDef",
+    "ScheduledUpdateConfigUnionTypeDef",
     "SchedulerConfigOutputTypeDef",
     "SchedulerConfigTypeDef",
     "SchedulerConfigUnionTypeDef",
@@ -1753,6 +1768,7 @@ __all__ = (
     "TimeSeriesTransformationsOutputTypeDef",
     "TimeSeriesTransformationsTypeDef",
     "TimestampTypeDef",
+    "TotalHitsTypeDef",
     "TrackingServerSummaryTypeDef",
     "TrafficPatternOutputTypeDef",
     "TrafficPatternTypeDef",
@@ -1800,6 +1816,7 @@ __all__ = (
     "UiConfigTypeDef",
     "UiTemplateInfoTypeDef",
     "UiTemplateTypeDef",
+    "UnifiedStudioSettingsTypeDef",
     "UpdateActionRequestTypeDef",
     "UpdateActionResponseTypeDef",
     "UpdateAppImageConfigRequestTypeDef",
@@ -1810,6 +1827,7 @@ __all__ = (
     "UpdateClusterResponseTypeDef",
     "UpdateClusterSchedulerConfigRequestTypeDef",
     "UpdateClusterSchedulerConfigResponseTypeDef",
+    "UpdateClusterSoftwareInstanceGroupSpecificationTypeDef",
     "UpdateClusterSoftwareRequestTypeDef",
     "UpdateClusterSoftwareResponseTypeDef",
     "UpdateCodeRepositoryInputTypeDef",
@@ -1933,6 +1951,9 @@ class AdditionalS3DataSourceTypeDef(TypedDict):
 class AgentVersionTypeDef(TypedDict):
     Version: str
     AgentCount: int
+
+class AlarmDetailsTypeDef(TypedDict):
+    AlarmName: str
 
 class AlarmTypeDef(TypedDict):
     AlarmName: NotRequired[str]
@@ -2138,9 +2159,9 @@ MetricDatumTypeDef = TypedDict(
     "MetricDatumTypeDef",
     {
         "MetricName": NotRequired[AutoMLMetricEnumType],
+        "StandardMetricName": NotRequired[AutoMLMetricExtendedEnumType],
         "Value": NotRequired[float],
         "Set": NotRequired[MetricSetSourceType],
-        "StandardMetricName": NotRequired[AutoMLMetricExtendedEnumType],
     },
 )
 
@@ -2174,6 +2195,13 @@ class WorkspaceSettingsTypeDef(TypedDict):
     S3ArtifactPath: NotRequired[str]
     S3KmsKeyId: NotRequired[str]
 
+CapacitySizeConfigTypeDef = TypedDict(
+    "CapacitySizeConfigTypeDef",
+    {
+        "Type": NodeUnavailabilityTypeType,
+        "Value": int,
+    },
+)
 CapacitySizeTypeDef = TypedDict(
     "CapacitySizeTypeDef",
     {
@@ -2611,6 +2639,7 @@ class TransformResourcesTypeDef(TypedDict):
     InstanceType: TransformInstanceTypeType
     InstanceCount: int
     VolumeKmsKeyId: NotRequired[str]
+    TransformAmiVersion: NotRequired[str]
 
 TimestampTypeDef = Union[datetime, str]
 
@@ -3503,6 +3532,16 @@ class DomainDetailsTypeDef(TypedDict):
     LastModifiedTime: NotRequired[datetime]
     Url: NotRequired[str]
 
+class UnifiedStudioSettingsTypeDef(TypedDict):
+    StudioWebPortalAccess: NotRequired[FeatureStatusType]
+    DomainAccountId: NotRequired[str]
+    DomainRegion: NotRequired[str]
+    DomainId: NotRequired[str]
+    ProjectId: NotRequired[str]
+    EnvironmentId: NotRequired[str]
+    ProjectS3Path: NotRequired[str]
+    SingleSignOnApplicationArn: NotRequired[str]
+
 class FileSourceTypeDef(TypedDict):
     S3Uri: str
     ContentType: NotRequired[str]
@@ -3516,6 +3555,12 @@ class EMRStepMetadataTypeDef(TypedDict):
 
 class EbsStorageSettingsTypeDef(TypedDict):
     EbsVolumeSizeInGb: int
+
+class Ec2CapacityReservationTypeDef(TypedDict):
+    Ec2CapacityReservationId: NotRequired[str]
+    TotalInstanceCount: NotRequired[int]
+    AvailableInstanceCount: NotRequired[int]
+    UsedByCurrentEndpoint: NotRequired[int]
 
 class EdgeDeploymentPlanSummaryTypeDef(TypedDict):
     EdgeDeploymentPlanArn: str
@@ -3943,16 +3988,6 @@ class ModelPackageGroupSummaryTypeDef(TypedDict):
     CreationTime: datetime
     ModelPackageGroupStatus: ModelPackageGroupStatusType
     ModelPackageGroupDescription: NotRequired[str]
-
-class ModelPackageSummaryTypeDef(TypedDict):
-    ModelPackageArn: str
-    CreationTime: datetime
-    ModelPackageStatus: ModelPackageStatusType
-    ModelPackageName: NotRequired[str]
-    ModelPackageGroupName: NotRequired[str]
-    ModelPackageVersion: NotRequired[int]
-    ModelPackageDescription: NotRequired[str]
-    ModelApprovalStatus: NotRequired[ModelApprovalStatusType]
 
 class ModelSummaryTypeDef(TypedDict):
     ModelName: str
@@ -4418,6 +4453,10 @@ class ProcessingS3OutputTypeDef(TypedDict):
     S3UploadMode: ProcessingS3UploadModeType
     LocalPath: NotRequired[str]
 
+class ProductionVariantCapacityReservationConfigTypeDef(TypedDict):
+    CapacityReservationPreference: NotRequired[Literal["capacity-reservations-only"]]
+    MlReservationArn: NotRequired[str]
+
 class ProductionVariantCoreDumpConfigTypeDef(TypedDict):
     DestinationS3Uri: str
     KmsKeyId: NotRequired[str]
@@ -4520,6 +4559,10 @@ class ResourceConfigForUpdateTypeDef(TypedDict):
 class VisibilityConditionsTypeDef(TypedDict):
     Key: NotRequired[str]
     Value: NotRequired[str]
+
+class TotalHitsTypeDef(TypedDict):
+    Value: NotRequired[int]
+    Relation: NotRequired[RelationType]
 
 class SelectedStepTypeDef(TypedDict):
     StepName: str
@@ -4663,8 +4706,8 @@ class UpdateArtifactRequestTypeDef(TypedDict):
     Properties: NotRequired[Mapping[str, str]]
     PropertiesToRemove: NotRequired[Sequence[str]]
 
-class UpdateClusterSoftwareRequestTypeDef(TypedDict):
-    ClusterName: str
+class UpdateClusterSoftwareInstanceGroupSpecificationTypeDef(TypedDict):
+    InstanceGroupName: str
 
 class UpdateContextRequestTypeDef(TypedDict):
     ContextName: str
@@ -4831,6 +4874,7 @@ class CreateDataQualityJobDefinitionResponseTypeDef(TypedDict):
 
 class CreateDomainResponseTypeDef(TypedDict):
     DomainArn: str
+    DomainId: str
     Url: str
     ResponseMetadata: ResponseMetadataTypeDef
 
@@ -5460,6 +5504,7 @@ class CreateAppRequestTypeDef(TypedDict):
     SpaceName: NotRequired[str]
     Tags: NotRequired[Sequence[TagTypeDef]]
     ResourceSpec: NotRequired[ResourceSpecTypeDef]
+    RecoveryMode: NotRequired[bool]
 
 class DescribeAppResponseTypeDef(TypedDict):
     AppArn: str
@@ -5469,6 +5514,7 @@ class DescribeAppResponseTypeDef(TypedDict):
     UserProfileName: str
     SpaceName: str
     Status: AppStatusType
+    RecoveryMode: bool
     LastHealthCheckTimestamp: datetime
     LastUserActivityTimestamp: datetime
     CreationTime: datetime
@@ -5672,6 +5718,10 @@ class CanvasAppSettingsTypeDef(TypedDict):
     GenerativeAiSettings: NotRequired[GenerativeAiSettingsTypeDef]
     EmrServerlessSettings: NotRequired[EmrServerlessSettingsTypeDef]
 
+class RollingDeploymentPolicyTypeDef(TypedDict):
+    MaximumBatchSize: CapacitySizeConfigTypeDef
+    RollbackMaximumBatchSize: NotRequired[CapacitySizeConfigTypeDef]
+
 class RollingUpdatePolicyTypeDef(TypedDict):
     MaximumBatchSize: CapacitySizeTypeDef
     WaitIntervalInSeconds: int
@@ -5740,6 +5790,7 @@ class ClusterNodeSummaryTypeDef(TypedDict):
     InstanceType: ClusterInstanceTypeType
     LaunchTime: datetime
     InstanceStatus: ClusterInstanceStatusDetailsTypeDef
+    LastSoftwareUpdateTime: NotRequired[datetime]
 
 class ClusterOrchestratorTypeDef(TypedDict):
     Eks: ClusterOrchestratorEksConfigTypeDef
@@ -5750,9 +5801,9 @@ class ListClusterSchedulerConfigsResponseTypeDef(TypedDict):
     NextToken: NotRequired[str]
 
 class ListClustersResponseTypeDef(TypedDict):
-    NextToken: str
     ClusterSummaries: List[ClusterSummaryTypeDef]
     ResponseMetadata: ResponseMetadataTypeDef
+    NextToken: NotRequired[str]
 
 class CodeEditorAppImageConfigOutputTypeDef(TypedDict):
     FileSystemConfig: NotRequired[FileSystemConfigTypeDef]
@@ -5965,6 +6016,17 @@ class CreateModelCardRequestTypeDef(TypedDict):
     SecurityConfig: NotRequired[ModelCardSecurityConfigTypeDef]
     Tags: NotRequired[Sequence[TagTypeDef]]
 
+class ModelPackageSummaryTypeDef(TypedDict):
+    ModelPackageArn: str
+    CreationTime: datetime
+    ModelPackageStatus: ModelPackageStatusType
+    ModelPackageName: NotRequired[str]
+    ModelPackageGroupName: NotRequired[str]
+    ModelPackageVersion: NotRequired[int]
+    ModelPackageDescription: NotRequired[str]
+    ModelApprovalStatus: NotRequired[ModelApprovalStatusType]
+    ModelLifeCycle: NotRequired[ModelLifeCycleTypeDef]
+
 class CreateNotebookInstanceInputTypeDef(TypedDict):
     NotebookInstanceName: str
     InstanceType: InstanceTypeType
@@ -6028,6 +6090,7 @@ class CreateNotebookInstanceLifecycleConfigInputTypeDef(TypedDict):
     NotebookInstanceLifecycleConfigName: str
     OnCreate: NotRequired[Sequence[NotebookInstanceLifecycleHookTypeDef]]
     OnStart: NotRequired[Sequence[NotebookInstanceLifecycleHookTypeDef]]
+    Tags: NotRequired[Sequence[TagTypeDef]]
 
 class DescribeNotebookInstanceLifecycleConfigOutputTypeDef(TypedDict):
     NotebookInstanceLifecycleConfigArn: str
@@ -6772,12 +6835,12 @@ class QueryFiltersTypeDef(TypedDict):
     Properties: NotRequired[Mapping[str, str]]
 
 class SearchTrainingPlanOfferingsRequestTypeDef(TypedDict):
-    InstanceType: ReservedCapacityInstanceTypeType
-    InstanceCount: int
+    DurationHours: int
     TargetResources: Sequence[SageMakerResourceNameType]
+    InstanceType: NotRequired[ReservedCapacityInstanceTypeType]
+    InstanceCount: NotRequired[int]
     StartTimeAfter: NotRequired[TimestampTypeDef]
     EndTimeBefore: NotRequired[TimestampTypeDef]
-    DurationHours: NotRequired[int]
 
 class CreateTrialComponentRequestTypeDef(TypedDict):
     TrialComponentName: str
@@ -7075,7 +7138,9 @@ DescribePartnerAppResponseTypeDef = TypedDict(
         "Type": PartnerAppTypeType,
         "Status": PartnerAppStatusType,
         "CreationTime": datetime,
+        "LastModifiedTime": datetime,
         "ExecutionRoleArn": str,
+        "KmsKeyId": str,
         "BaseUrl": str,
         "MaintenanceConfig": PartnerAppMaintenanceConfigTypeDef,
         "Tier": str,
@@ -7209,6 +7274,14 @@ class DriftCheckExplainabilityTypeDef(TypedDict):
 
 class SpaceStorageSettingsTypeDef(TypedDict):
     EbsStorageSettings: NotRequired[EbsStorageSettingsTypeDef]
+
+class ProductionVariantCapacityReservationSummaryTypeDef(TypedDict):
+    MlReservationArn: NotRequired[str]
+    CapacityReservationPreference: NotRequired[Literal["capacity-reservations-only"]]
+    TotalInstanceCount: NotRequired[int]
+    AvailableInstanceCount: NotRequired[int]
+    UsedByCurrentEndpoint: NotRequired[int]
+    Ec2CapacityReservations: NotRequired[List[Ec2CapacityReservationTypeDef]]
 
 class ListEdgeDeploymentPlansResponseTypeDef(TypedDict):
     EdgeDeploymentPlanSummaries: List[EdgeDeploymentPlanSummaryTypeDef]
@@ -8211,11 +8284,6 @@ class ListModelPackageGroupsOutputTypeDef(TypedDict):
     ResponseMetadata: ResponseMetadataTypeDef
     NextToken: NotRequired[str]
 
-class ListModelPackagesOutputTypeDef(TypedDict):
-    ModelPackageSummaryList: List[ModelPackageSummaryTypeDef]
-    ResponseMetadata: ResponseMetadataTypeDef
-    NextToken: NotRequired[str]
-
 class ListModelsOutputTypeDef(TypedDict):
     Models: List[ModelSummaryTypeDef]
     ResponseMetadata: ResponseMetadataTypeDef
@@ -8488,19 +8556,6 @@ class PendingProductionVariantSummaryTypeDef(TypedDict):
     ManagedInstanceScaling: NotRequired[ProductionVariantManagedInstanceScalingTypeDef]
     RoutingConfig: NotRequired[ProductionVariantRoutingConfigTypeDef]
 
-class ProductionVariantSummaryTypeDef(TypedDict):
-    VariantName: str
-    DeployedImages: NotRequired[List[DeployedImageTypeDef]]
-    CurrentWeight: NotRequired[float]
-    DesiredWeight: NotRequired[float]
-    CurrentInstanceCount: NotRequired[int]
-    DesiredInstanceCount: NotRequired[int]
-    VariantStatus: NotRequired[List[ProductionVariantStatusTypeDef]]
-    CurrentServerlessConfig: NotRequired[ProductionVariantServerlessConfigTypeDef]
-    DesiredServerlessConfig: NotRequired[ProductionVariantServerlessConfigTypeDef]
-    ManagedInstanceScaling: NotRequired[ProductionVariantManagedInstanceScalingTypeDef]
-    RoutingConfig: NotRequired[ProductionVariantRoutingConfigTypeDef]
-
 class SchedulerConfigOutputTypeDef(TypedDict):
     PriorityClasses: NotRequired[List[PriorityClassTypeDef]]
     FairShare: NotRequired[FairShareType]
@@ -8534,6 +8589,7 @@ class ProductionVariantTypeDef(TypedDict):
     ManagedInstanceScaling: NotRequired[ProductionVariantManagedInstanceScalingTypeDef]
     RoutingConfig: NotRequired[ProductionVariantRoutingConfigTypeDef]
     InferenceAmiVersion: NotRequired[ProductionVariantInferenceAmiVersionType]
+    CapacityReservationConfig: NotRequired[ProductionVariantCapacityReservationConfigTypeDef]
 
 ProfilerConfigUnionTypeDef = Union[ProfilerConfigTypeDef, ProfilerConfigOutputTypeDef]
 ProfilerRuleConfigurationUnionTypeDef = Union[
@@ -8689,6 +8745,7 @@ class DomainSettingsOutputTypeDef(TypedDict):
     ExecutionRoleIdentityConfig: NotRequired[ExecutionRoleIdentityConfigType]
     DockerSettings: NotRequired[DockerSettingsOutputTypeDef]
     AmazonQSettings: NotRequired[AmazonQSettingsTypeDef]
+    UnifiedStudioSettings: NotRequired[UnifiedStudioSettingsTypeDef]
 
 class DomainSettingsTypeDef(TypedDict):
     SecurityGroupIds: NotRequired[Sequence[str]]
@@ -8696,6 +8753,7 @@ class DomainSettingsTypeDef(TypedDict):
     ExecutionRoleIdentityConfig: NotRequired[ExecutionRoleIdentityConfigType]
     DockerSettings: NotRequired[DockerSettingsTypeDef]
     AmazonQSettings: NotRequired[AmazonQSettingsTypeDef]
+    UnifiedStudioSettings: NotRequired[UnifiedStudioSettingsTypeDef]
 
 class CodeEditorAppSettingsOutputTypeDef(TypedDict):
     DefaultResourceSpec: NotRequired[ResourceSpecTypeDef]
@@ -8886,6 +8944,16 @@ class AutoMLCandidateTypeDef(TypedDict):
         Dict[AutoMLProcessingUnitType, List[AutoMLContainerDefinitionTypeDef]]
     ]
 
+class DeploymentConfigurationOutputTypeDef(TypedDict):
+    RollingUpdatePolicy: NotRequired[RollingDeploymentPolicyTypeDef]
+    WaitIntervalInSeconds: NotRequired[int]
+    AutoRollbackConfiguration: NotRequired[List[AlarmDetailsTypeDef]]
+
+class DeploymentConfigurationTypeDef(TypedDict):
+    RollingUpdatePolicy: NotRequired[RollingDeploymentPolicyTypeDef]
+    WaitIntervalInSeconds: NotRequired[int]
+    AutoRollbackConfiguration: NotRequired[Sequence[AlarmDetailsTypeDef]]
+
 class BlueGreenUpdatePolicyTypeDef(TypedDict):
     TrafficRoutingConfiguration: TrafficRoutingConfigTypeDef
     TerminationWaitInSeconds: NotRequired[int]
@@ -8924,39 +8992,13 @@ class ClarifyExplainerConfigTypeDef(TypedDict):
     EnableExplanations: NotRequired[str]
     InferenceConfig: NotRequired[ClarifyInferenceConfigTypeDef]
 
-class ClusterInstanceGroupDetailsTypeDef(TypedDict):
-    CurrentCount: NotRequired[int]
-    TargetCount: NotRequired[int]
-    InstanceGroupName: NotRequired[str]
-    InstanceType: NotRequired[ClusterInstanceTypeType]
-    LifeCycleConfig: NotRequired[ClusterLifeCycleConfigTypeDef]
-    ExecutionRole: NotRequired[str]
-    ThreadsPerCore: NotRequired[int]
-    InstanceStorageConfigs: NotRequired[List[ClusterInstanceStorageConfigTypeDef]]
-    OnStartDeepHealthChecks: NotRequired[List[DeepHealthCheckTypeType]]
-    Status: NotRequired[InstanceGroupStatusType]
-    TrainingPlanArn: NotRequired[str]
-    TrainingPlanStatus: NotRequired[str]
-    OverrideVpcConfig: NotRequired[VpcConfigOutputTypeDef]
-
-class ClusterInstanceGroupSpecificationTypeDef(TypedDict):
-    InstanceCount: int
-    InstanceGroupName: str
-    InstanceType: ClusterInstanceTypeType
-    LifeCycleConfig: ClusterLifeCycleConfigTypeDef
-    ExecutionRole: str
-    ThreadsPerCore: NotRequired[int]
-    InstanceStorageConfigs: NotRequired[Sequence[ClusterInstanceStorageConfigTypeDef]]
-    OnStartDeepHealthChecks: NotRequired[Sequence[DeepHealthCheckTypeType]]
-    TrainingPlanArn: NotRequired[str]
-    OverrideVpcConfig: NotRequired[VpcConfigUnionTypeDef]
-
 class ClusterNodeDetailsTypeDef(TypedDict):
     InstanceGroupName: NotRequired[str]
     InstanceId: NotRequired[str]
     InstanceStatus: NotRequired[ClusterInstanceStatusDetailsTypeDef]
     InstanceType: NotRequired[ClusterInstanceTypeType]
     LaunchTime: NotRequired[datetime]
+    LastSoftwareUpdateTime: NotRequired[datetime]
     LifeCycleConfig: NotRequired[ClusterLifeCycleConfigTypeDef]
     OverrideVpcConfig: NotRequired[VpcConfigOutputTypeDef]
     ThreadsPerCore: NotRequired[int]
@@ -8967,9 +9009,9 @@ class ClusterNodeDetailsTypeDef(TypedDict):
     Placement: NotRequired[ClusterInstancePlacementTypeDef]
 
 class ListClusterNodesResponseTypeDef(TypedDict):
-    NextToken: str
     ClusterNodeSummaries: List[ClusterNodeSummaryTypeDef]
     ResponseMetadata: ResponseMetadataTypeDef
+    NextToken: NotRequired[str]
 
 CodeEditorAppImageConfigUnionTypeDef = Union[
     CodeEditorAppImageConfigTypeDef, CodeEditorAppImageConfigOutputTypeDef
@@ -9008,6 +9050,11 @@ ComputeQuotaConfigUnionTypeDef = Union[ComputeQuotaConfigTypeDef, ComputeQuotaCo
 
 class ListContextsResponseTypeDef(TypedDict):
     ContextSummaries: List[ContextSummaryTypeDef]
+    ResponseMetadata: ResponseMetadataTypeDef
+    NextToken: NotRequired[str]
+
+class ListModelPackagesOutputTypeDef(TypedDict):
+    ModelPackageSummaryList: List[ModelPackageSummaryTypeDef]
     ResponseMetadata: ResponseMetadataTypeDef
     NextToken: NotRequired[str]
 
@@ -9109,6 +9156,7 @@ class DomainSettingsForUpdateTypeDef(TypedDict):
     SecurityGroupIds: NotRequired[Sequence[str]]
     DockerSettings: NotRequired[DockerSettingsUnionTypeDef]
     AmazonQSettings: NotRequired[AmazonQSettingsTypeDef]
+    UnifiedStudioSettings: NotRequired[UnifiedStudioSettingsTypeDef]
 
 class DriftCheckBaselinesTypeDef(TypedDict):
     Bias: NotRequired[DriftCheckBiasTypeDef]
@@ -9119,6 +9167,20 @@ class DriftCheckBaselinesTypeDef(TypedDict):
 class SpaceSettingsSummaryTypeDef(TypedDict):
     AppType: NotRequired[AppTypeType]
     SpaceStorageSettings: NotRequired[SpaceStorageSettingsTypeDef]
+
+class ProductionVariantSummaryTypeDef(TypedDict):
+    VariantName: str
+    DeployedImages: NotRequired[List[DeployedImageTypeDef]]
+    CurrentWeight: NotRequired[float]
+    DesiredWeight: NotRequired[float]
+    CurrentInstanceCount: NotRequired[int]
+    DesiredInstanceCount: NotRequired[int]
+    VariantStatus: NotRequired[List[ProductionVariantStatusTypeDef]]
+    CurrentServerlessConfig: NotRequired[ProductionVariantServerlessConfigTypeDef]
+    DesiredServerlessConfig: NotRequired[ProductionVariantServerlessConfigTypeDef]
+    ManagedInstanceScaling: NotRequired[ProductionVariantManagedInstanceScalingTypeDef]
+    RoutingConfig: NotRequired[ProductionVariantRoutingConfigTypeDef]
+    CapacityReservationConfig: NotRequired[ProductionVariantCapacityReservationSummaryTypeDef]
 
 class InferenceRecommendationTypeDef(TypedDict):
     EndpointConfiguration: EndpointOutputConfigurationTypeDef
@@ -9272,6 +9334,7 @@ class DescribeMlflowTrackingServerResponseTypeDef(TypedDict):
     MlflowVersion: str
     RoleArn: str
     TrackingServerStatus: TrackingServerStatusType
+    TrackingServerMaintenanceStatus: TrackingServerMaintenanceStatusType
     IsActive: IsTrackingServerActiveType
     TrackingServerUrl: str
     WeeklyMaintenanceWindowStart: str
@@ -9676,6 +9739,7 @@ CreatePartnerAppRequestTypeDef = TypedDict(
         "ExecutionRoleArn": str,
         "Tier": str,
         "AuthType": Literal["IAM"],
+        "KmsKeyId": NotRequired[str],
         "MaintenanceConfig": NotRequired[PartnerAppMaintenanceConfigTypeDef],
         "ApplicationConfig": NotRequired[PartnerAppConfigUnionTypeDef],
         "EnableIamSessionBasedIdentity": NotRequired[bool],
@@ -10080,6 +10144,14 @@ class ListCandidatesForAutoMLJobResponseTypeDef(TypedDict):
     ResponseMetadata: ResponseMetadataTypeDef
     NextToken: NotRequired[str]
 
+class ScheduledUpdateConfigOutputTypeDef(TypedDict):
+    ScheduleExpression: str
+    DeploymentConfig: NotRequired[DeploymentConfigurationOutputTypeDef]
+
+DeploymentConfigurationUnionTypeDef = Union[
+    DeploymentConfigurationTypeDef, DeploymentConfigurationOutputTypeDef
+]
+
 class DeploymentConfigOutputTypeDef(TypedDict):
     BlueGreenUpdatePolicy: NotRequired[BlueGreenUpdatePolicyTypeDef]
     RollingUpdatePolicy: NotRequired[RollingUpdatePolicyTypeDef]
@@ -10131,32 +10203,6 @@ class ExplainerConfigOutputTypeDef(TypedDict):
 
 class ExplainerConfigTypeDef(TypedDict):
     ClarifyExplainerConfig: NotRequired[ClarifyExplainerConfigTypeDef]
-
-class DescribeClusterResponseTypeDef(TypedDict):
-    ClusterArn: str
-    ClusterName: str
-    ClusterStatus: ClusterStatusType
-    CreationTime: datetime
-    FailureMessage: str
-    InstanceGroups: List[ClusterInstanceGroupDetailsTypeDef]
-    VpcConfig: VpcConfigOutputTypeDef
-    Orchestrator: ClusterOrchestratorTypeDef
-    NodeRecovery: ClusterNodeRecoveryType
-    ResponseMetadata: ResponseMetadataTypeDef
-
-class CreateClusterRequestTypeDef(TypedDict):
-    ClusterName: str
-    InstanceGroups: Sequence[ClusterInstanceGroupSpecificationTypeDef]
-    VpcConfig: NotRequired[VpcConfigUnionTypeDef]
-    Tags: NotRequired[Sequence[TagTypeDef]]
-    Orchestrator: NotRequired[ClusterOrchestratorTypeDef]
-    NodeRecovery: NotRequired[ClusterNodeRecoveryType]
-
-class UpdateClusterRequestTypeDef(TypedDict):
-    ClusterName: str
-    InstanceGroups: Sequence[ClusterInstanceGroupSpecificationTypeDef]
-    NodeRecovery: NotRequired[ClusterNodeRecoveryType]
-    InstanceGroupsToDelete: NotRequired[Sequence[str]]
 
 class DescribeClusterNodeResponseTypeDef(TypedDict):
     NodeDetails: ClusterNodeDetailsTypeDef
@@ -10659,8 +10705,8 @@ ProcessingOutputConfigUnionTypeDef = Union[
 
 class CreateProjectInputTypeDef(TypedDict):
     ProjectName: str
-    ServiceCatalogProvisioningDetails: ServiceCatalogProvisioningDetailsUnionTypeDef
     ProjectDescription: NotRequired[str]
+    ServiceCatalogProvisioningDetails: NotRequired[ServiceCatalogProvisioningDetailsUnionTypeDef]
     Tags: NotRequired[Sequence[TagTypeDef]]
 
 class DescribeFlowDefinitionResponseTypeDef(TypedDict):
@@ -10742,6 +10788,7 @@ class SpaceSettingsOutputTypeDef(TypedDict):
     JupyterLabAppSettings: NotRequired[SpaceJupyterLabAppSettingsOutputTypeDef]
     AppType: NotRequired[AppTypeType]
     SpaceStorageSettings: NotRequired[SpaceStorageSettingsTypeDef]
+    SpaceManagedResources: NotRequired[FeatureStatusType]
     CustomFileSystems: NotRequired[List[CustomFileSystemTypeDef]]
 
 class SpaceSettingsTypeDef(TypedDict):
@@ -10751,6 +10798,7 @@ class SpaceSettingsTypeDef(TypedDict):
     JupyterLabAppSettings: NotRequired[SpaceJupyterLabAppSettingsTypeDef]
     AppType: NotRequired[AppTypeType]
     SpaceStorageSettings: NotRequired[SpaceStorageSettingsTypeDef]
+    SpaceManagedResources: NotRequired[FeatureStatusType]
     CustomFileSystems: NotRequired[Sequence[CustomFileSystemTypeDef]]
 
 AlgorithmSpecificationUnionTypeDef = Union[
@@ -10930,6 +10978,31 @@ class ListPipelineExecutionStepsResponseTypeDef(TypedDict):
     PipelineExecutionSteps: List[PipelineExecutionStepTypeDef]
     ResponseMetadata: ResponseMetadataTypeDef
     NextToken: NotRequired[str]
+
+class ClusterInstanceGroupDetailsTypeDef(TypedDict):
+    CurrentCount: NotRequired[int]
+    TargetCount: NotRequired[int]
+    InstanceGroupName: NotRequired[str]
+    InstanceType: NotRequired[ClusterInstanceTypeType]
+    LifeCycleConfig: NotRequired[ClusterLifeCycleConfigTypeDef]
+    ExecutionRole: NotRequired[str]
+    ThreadsPerCore: NotRequired[int]
+    InstanceStorageConfigs: NotRequired[List[ClusterInstanceStorageConfigTypeDef]]
+    OnStartDeepHealthChecks: NotRequired[List[DeepHealthCheckTypeType]]
+    Status: NotRequired[InstanceGroupStatusType]
+    TrainingPlanArn: NotRequired[str]
+    TrainingPlanStatus: NotRequired[str]
+    OverrideVpcConfig: NotRequired[VpcConfigOutputTypeDef]
+    ScheduledUpdateConfig: NotRequired[ScheduledUpdateConfigOutputTypeDef]
+
+class ScheduledUpdateConfigTypeDef(TypedDict):
+    ScheduleExpression: str
+    DeploymentConfig: NotRequired[DeploymentConfigurationUnionTypeDef]
+
+class UpdateClusterSoftwareRequestTypeDef(TypedDict):
+    ClusterName: str
+    InstanceGroups: NotRequired[Sequence[UpdateClusterSoftwareInstanceGroupSpecificationTypeDef]]
+    DeploymentConfig: NotRequired[DeploymentConfigurationUnionTypeDef]
 
 DeploymentConfigUnionTypeDef = Union[DeploymentConfigTypeDef, DeploymentConfigOutputTypeDef]
 
@@ -11445,6 +11518,22 @@ class CreateAutoMLJobV2RequestTypeDef(TypedDict):
     DataSplitConfig: NotRequired[AutoMLDataSplitConfigTypeDef]
     AutoMLComputeConfig: NotRequired[AutoMLComputeConfigTypeDef]
 
+class DescribeClusterResponseTypeDef(TypedDict):
+    ClusterArn: str
+    ClusterName: str
+    ClusterStatus: ClusterStatusType
+    CreationTime: datetime
+    FailureMessage: str
+    InstanceGroups: List[ClusterInstanceGroupDetailsTypeDef]
+    VpcConfig: VpcConfigOutputTypeDef
+    Orchestrator: ClusterOrchestratorTypeDef
+    NodeRecovery: ClusterNodeRecoveryType
+    ResponseMetadata: ResponseMetadataTypeDef
+
+ScheduledUpdateConfigUnionTypeDef = Union[
+    ScheduledUpdateConfigTypeDef, ScheduledUpdateConfigOutputTypeDef
+]
+
 class CreateEndpointInputTypeDef(TypedDict):
     EndpointName: str
     EndpointConfigName: str
@@ -11679,6 +11768,19 @@ class ModelPackageValidationSpecificationTypeDef(TypedDict):
     ValidationRole: str
     ValidationProfiles: Sequence[ModelPackageValidationProfileTypeDef]
 
+class ClusterInstanceGroupSpecificationTypeDef(TypedDict):
+    InstanceCount: int
+    InstanceGroupName: str
+    InstanceType: ClusterInstanceTypeType
+    LifeCycleConfig: ClusterLifeCycleConfigTypeDef
+    ExecutionRole: str
+    ThreadsPerCore: NotRequired[int]
+    InstanceStorageConfigs: NotRequired[Sequence[ClusterInstanceStorageConfigTypeDef]]
+    OnStartDeepHealthChecks: NotRequired[Sequence[DeepHealthCheckTypeType]]
+    TrainingPlanArn: NotRequired[str]
+    OverrideVpcConfig: NotRequired[VpcConfigUnionTypeDef]
+    ScheduledUpdateConfig: NotRequired[ScheduledUpdateConfigUnionTypeDef]
+
 class AlgorithmValidationSpecificationOutputTypeDef(TypedDict):
     ValidationRole: str
     ValidationProfiles: List[AlgorithmValidationProfileOutputTypeDef]
@@ -11841,6 +11943,20 @@ class ModelPackageTypeDef(TypedDict):
 ModelPackageValidationSpecificationUnionTypeDef = Union[
     ModelPackageValidationSpecificationTypeDef, ModelPackageValidationSpecificationOutputTypeDef
 ]
+
+class CreateClusterRequestTypeDef(TypedDict):
+    ClusterName: str
+    InstanceGroups: Sequence[ClusterInstanceGroupSpecificationTypeDef]
+    VpcConfig: NotRequired[VpcConfigUnionTypeDef]
+    Tags: NotRequired[Sequence[TagTypeDef]]
+    Orchestrator: NotRequired[ClusterOrchestratorTypeDef]
+    NodeRecovery: NotRequired[ClusterNodeRecoveryType]
+
+class UpdateClusterRequestTypeDef(TypedDict):
+    ClusterName: str
+    InstanceGroups: Sequence[ClusterInstanceGroupSpecificationTypeDef]
+    NodeRecovery: NotRequired[ClusterNodeRecoveryType]
+    InstanceGroupsToDelete: NotRequired[Sequence[str]]
 
 class DescribeAlgorithmOutputTypeDef(TypedDict):
     AlgorithmName: str
@@ -12020,6 +12136,7 @@ AlgorithmValidationSpecificationUnionTypeDef = Union[
 
 class SearchResponseTypeDef(TypedDict):
     Results: List[SearchRecordTypeDef]
+    TotalHits: TotalHitsTypeDef
     ResponseMetadata: ResponseMetadataTypeDef
     NextToken: NotRequired[str]
 

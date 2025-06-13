@@ -96,10 +96,12 @@ class DeleteSinkInputTypeDef(TypedDict):
 
 class GetLinkInputTypeDef(TypedDict):
     Identifier: str
+    IncludeTags: NotRequired[bool]
 
 
 class GetSinkInputTypeDef(TypedDict):
     Identifier: str
+    IncludeTags: NotRequired[bool]
 
 
 class GetSinkPolicyInputTypeDef(TypedDict):
@@ -281,6 +283,7 @@ class GetLinkOutputTypeDef(TypedDict):
 class UpdateLinkInputTypeDef(TypedDict):
     Identifier: str
     ResourceTypes: Sequence[ResourceTypeType]
+    IncludeTags: NotRequired[bool]
     LinkConfiguration: NotRequired[LinkConfigurationTypeDef]
 
 

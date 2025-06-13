@@ -76,6 +76,7 @@ __all__ = (
     "SeverityLabelType",
     "SeverityRatingType",
     "SortOrderType",
+    "StandardsControlsUpdatableType",
     "StandardsStatusType",
     "StatusReasonCodeType",
     "StringFilterComparisonType",
@@ -160,8 +161,13 @@ SecurityControlPropertyType = Literal["Parameters"]
 SeverityLabelType = Literal["CRITICAL", "HIGH", "INFORMATIONAL", "LOW", "MEDIUM"]
 SeverityRatingType = Literal["CRITICAL", "HIGH", "LOW", "MEDIUM"]
 SortOrderType = Literal["asc", "desc"]
+StandardsControlsUpdatableType = Literal["NOT_READY_FOR_UPDATES", "READY_FOR_UPDATES"]
 StandardsStatusType = Literal["DELETING", "FAILED", "INCOMPLETE", "PENDING", "READY"]
-StatusReasonCodeType = Literal["INTERNAL_ERROR", "NO_AVAILABLE_CONFIGURATION_RECORDER"]
+StatusReasonCodeType = Literal[
+    "INTERNAL_ERROR",
+    "MAXIMUM_NUMBER_OF_CONFIG_RULES_EXCEEDED",
+    "NO_AVAILABLE_CONFIGURATION_RECORDER",
+]
 StringFilterComparisonType = Literal[
     "CONTAINS", "EQUALS", "NOT_CONTAINS", "NOT_EQUALS", "PREFIX", "PREFIX_NOT_EQUALS"
 ]
@@ -346,6 +352,7 @@ ServiceName = Literal[
     "freetier",
     "fsx",
     "gamelift",
+    "gameliftstreams",
     "geo-maps",
     "geo-places",
     "geo-routes",
@@ -371,6 +378,7 @@ ServiceName = Literal[
     "iot",
     "iot-data",
     "iot-jobs-data",
+    "iot-managed-integrations",
     "iotanalytics",
     "iotdeviceadvisor",
     "iotevents",
@@ -485,7 +493,6 @@ ServiceName = Literal[
     "pipes",
     "polly",
     "pricing",
-    "privatenetworks",
     "proton",
     "qapps",
     "qbusiness",
@@ -546,7 +553,6 @@ ServiceName = Literal[
     "signer",
     "simspaceweaver",
     "sms",
-    "sms-voice",
     "snow-device-management",
     "snowball",
     "sns",
@@ -554,6 +560,7 @@ ServiceName = Literal[
     "sqs",
     "ssm",
     "ssm-contacts",
+    "ssm-guiconnect",
     "ssm-incidents",
     "ssm-quicksetup",
     "ssm-sap",

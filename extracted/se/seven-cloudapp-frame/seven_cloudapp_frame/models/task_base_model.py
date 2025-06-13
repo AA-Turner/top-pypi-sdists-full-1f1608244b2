@@ -2,7 +2,7 @@
 """
 @Author: HuangJianYi
 @Date: 2021-08-10 10:41:13
-@LastEditTime: 2025-03-26 16:40:12
+@LastEditTime: 2025-06-12 19:12:12
 @LastEditors: HuangJianYi
 @Description: 
 """
@@ -3311,93 +3311,97 @@ class TaskBaseModel(FrameBaseModel):
             invoke_result_data = self.business_process_executing(app_id,act_id,module_id,user_id,login_token,handler_name,check_new_user,check_user_nick,continue_request_expire,acquire_lock_name)
             if invoke_result_data.success == True:
                 task_invoke_result_data = self.check_task_info(act_id,module_id,task_type)
-                if task_invoke_result_data.success == True:
-                    task_info_dict = task_invoke_result_data.data
-                    config_json = task_info_dict["config_json"]
-                    reward_value = int(config_json["reward_value"]) if config_json.__contains__("reward_value") else 0
-                    asset_object_id = config_json["asset_object_id"] if config_json.__contains__("asset_object_id") else ""
-                    limit_num = int(config_json["limit_num"]) if config_json.__contains__("limit_num") else 1
-                    need_crm_point = int(config_json["satisfy_num"]) if config_json.__contains__("satisfy_num") else 0
-                    act_info_dict = invoke_result_data.data["act_info_dict"]
-                    user_info_dict = invoke_result_data.data["user_info_dict"]
-                    task_count_model = TaskCountModel(context=self.context).set_sub_table(app_id)
-                    task_count_id_md5 = self._get_task_count_id_md5(act_id,module_id,task_info_dict["task_type"],"",user_id)
-                    task_count = task_count_model.get_entity("id_md5=%s",params=[task_count_id_md5])
-                    task_count = TaskCount() if not task_count else task_count
-                    limit_meaasge = ""
-                    top_base_model = TopBaseModel(context=self.context)
-
-                    if task_info_dict["complete_type"] == 1:
-                        limit_meaasge = "今日领取上限"
-                        if task_count.modify_day != now_day:
-                            task_count.complete_count = 0
-                            task_count.now_count = 0
-                    elif task_info_dict["complete_type"] == 2:
-                        limit_meaasge = "每周领取上限"
-                        if TimeHelper.is_this_week(task_count.modify_date) == False:
-                            task_count.complete_count = 0
-                            task_count.now_count = 0
-                    else:
-                        limit_meaasge = "领取上限"
-                    is_limit = True if task_count.complete_count >= limit_num else False
-                    if is_limit == True:
-                        invoke_result_data.success = False
-                        invoke_result_data.error_code = "error"
-                        invoke_result_data.error_message = limit_meaasge
-                    elif not need_crm_point:
-                        invoke_result_data.success = False
-                        invoke_result_data.error_code = "error"
-                        invoke_result_data.error_message = "配置异常无法兑换"
-                    else:
-                        member_invoke_result_data = top_base_model.get_crm_point_available(mix_nick, access_token, app_key, app_secret, False, user_info_dict["open_id"])
-                        if member_invoke_result_data.success == False:
-                            invoke_result_data.success = False
-                            invoke_result_data.error_code = "member_error"
-                            invoke_result_data.error_message = "获取会员积分失败"
-                        elif member_invoke_result_data.data < need_crm_point:
-                            invoke_result_data.success = False
-                            invoke_result_data.error_code = "member_error"
-                            invoke_result_data.error_message = f"会员积分不足，当前只有{member_invoke_result_data.data}积分"
-                        else:
-                            invoke_result_data.data["need_crm_point"] = need_crm_point
-
-                            task_count.id_md5 = task_count_id_md5
-                            task_count.app_id = app_id
-                            task_count.act_id = act_id
-                            task_count.module_id = module_id
-                            task_count.user_id = user_id
-                            task_count.open_id = user_info_dict["open_id"]
-                            task_count.task_type = task_type
-                            task_count.task_sub_type = ""
-                            task_count.complete_count = task_count.complete_count+1
-                            task_count.now_count = 0
-                            task_count.create_date = now_datetime
-                            task_count.modify_date = now_datetime
-                            task_count.modify_day = now_day
-                            task_count_model.add_update_entity(task_count,"complete_count=%s,modify_date=%s,modify_day=%s",params=[task_count.complete_count,task_count.modify_date,now_day])
-                            reward_object_id = ""
-                            if reward_value > 0:
-                                crm_point_invoke_result_data = top_base_model.change_crm_point(user_info_dict["open_id"], mix_nick, 1, 1, need_crm_point, access_token, app_key, app_secret, 0, "", True)
-                                if crm_point_invoke_result_data.success == True:
-                                    only_id = self.get_only_id(user_id,task_info_dict["complete_type"],task_type,complete_count=task_count.complete_count)
-                                    if module_id > 0:
-                                        only_id = f"{module_id}_{only_id}"
-                                    asset_type = self.get_task_asset_type(act_info_dict["task_asset_type_json"],task_type)
-                                    reward_object_id = asset_type
-                                    asset_base_model = AssetBaseModel(context=self.context)
-                                    asset_invoke_result_data = asset_base_model.update_user_asset(app_id,act_id,module_id,user_id,user_info_dict["open_id"],user_info_dict["user_nick"],asset_type,reward_value,asset_object_id,2,task_type,task_info_dict["task_name"],task_info_dict["task_name"],only_id,handler_name,request_code,info_json=info_json)
-                                    if asset_invoke_result_data.success == False:
-                                        reward_value = 0
-                                else:
-                                    reward_value = 0
-
-                            invoke_result_data.data["reward_value"] = reward_value
-                            self.add_task_stat(task_type, app_id, act_id, module_id, user_info_dict["user_id"], user_info_dict["open_id"], reward_value, is_stat)
-                            self.add_task_log(task_type=task_type, task_sub_type='', app_id=app_id, act_id=act_id, module_id=module_id, user_id=user_info_dict["user_id"], open_id=user_info_dict["open_id"], user_nick=user_info_dict["user_nick"],task_name=task_info_dict["task_name"],log_title=task_info_dict["task_name"],reward_type=1, reward_object_id=reward_object_id, reward_name="", reward_num=reward_value, handler_name=handler_name, request_code=request_code, info_json=info_json)
-                else:
+                if task_invoke_result_data.success == False:
                     invoke_result_data.success = False
                     invoke_result_data.error_code = task_invoke_result_data.error_code
                     invoke_result_data.error_message = task_invoke_result_data.error_message
+                    return invoke_result_data
+                task_info_dict = task_invoke_result_data.data
+                config_json = task_info_dict["config_json"]
+                reward_value = int(config_json["reward_value"]) if config_json.__contains__("reward_value") else 0
+                asset_object_id = config_json["asset_object_id"] if config_json.__contains__("asset_object_id") else ""
+                limit_num = int(config_json["limit_num"]) if config_json.__contains__("limit_num") else 1
+                need_crm_point = int(config_json["satisfy_num"]) if config_json.__contains__("satisfy_num") else 0
+                act_info_dict = invoke_result_data.data["act_info_dict"]
+                user_info_dict = invoke_result_data.data["user_info_dict"]
+                task_count_model = TaskCountModel(context=self.context).set_sub_table(app_id)
+                task_count_id_md5 = self._get_task_count_id_md5(act_id,module_id,task_info_dict["task_type"],"",user_id)
+                task_count = task_count_model.get_entity("id_md5=%s",params=[task_count_id_md5])
+                task_count = TaskCount() if not task_count else task_count
+                limit_meaasge = ""
+                top_base_model = TopBaseModel(context=self.context)
+                if task_info_dict["complete_type"] == 1:
+                    limit_meaasge = "今日领取上限"
+                    if task_count.modify_day != now_day:
+                        task_count.complete_count = 0
+                        task_count.now_count = 0
+                elif task_info_dict["complete_type"] == 2:
+                    limit_meaasge = "每周领取上限"
+                    if TimeHelper.is_this_week(task_count.modify_date) == False:
+                        task_count.complete_count = 0
+                        task_count.now_count = 0
+                else:
+                    limit_meaasge = "领取上限"
+                is_limit = True if task_count.complete_count >= limit_num else False
+                if is_limit == True:
+                    invoke_result_data.success = False
+                    invoke_result_data.error_code = "error"
+                    invoke_result_data.error_message = limit_meaasge
+                    return invoke_result_data
+                if not need_crm_point:
+                    invoke_result_data.success = False
+                    invoke_result_data.error_code = "error"
+                    invoke_result_data.error_message = "配置异常无法兑换"
+                    return invoke_result_data
+                if reward_value <= 0:
+                    invoke_result_data.success = False
+                    invoke_result_data.error_code = "error"
+                    invoke_result_data.error_message = "配置异常无法兑换"
+                    return invoke_result_data
+                member_invoke_result_data = top_base_model.get_crm_point_available(mix_nick, access_token, app_key, app_secret, False, user_info_dict["open_id"])
+                if member_invoke_result_data.success == False:
+                    invoke_result_data.success = False
+                    invoke_result_data.error_code = "member_error"
+                    invoke_result_data.error_message = "获取会员积分失败"
+                    return invoke_result_data
+                elif member_invoke_result_data.data < need_crm_point:
+                    invoke_result_data.success = False
+                    invoke_result_data.error_code = "member_error"
+                    invoke_result_data.error_message = f"会员积分不足，当前只有{member_invoke_result_data.data}积分"
+                    return invoke_result_data
+                crm_point_invoke_result_data = top_base_model.change_crm_point(user_info_dict["open_id"], mix_nick, 1, 1, need_crm_point, access_token, app_key, app_secret, 0, "", True)
+                if crm_point_invoke_result_data.success == False:
+                    invoke_result_data.success = False
+                    invoke_result_data.error_code = crm_point_invoke_result_data.error_code
+                    invoke_result_data.error_message = crm_point_invoke_result_data.error_message
+                    return invoke_result_data
+                task_count.id_md5 = task_count_id_md5
+                task_count.app_id = app_id
+                task_count.act_id = act_id
+                task_count.module_id = module_id
+                task_count.user_id = user_id
+                task_count.open_id = user_info_dict["open_id"]
+                task_count.task_type = task_type
+                task_count.task_sub_type = ""
+                task_count.complete_count = task_count.complete_count+1
+                task_count.now_count = 0
+                task_count.create_date = now_datetime
+                task_count.modify_date = now_datetime
+                task_count.modify_day = now_day
+                task_count_model.add_update_entity(task_count,"complete_count=%s,modify_date=%s,modify_day=%s",params=[task_count.complete_count,task_count.modify_date,now_day])
+                only_id = self.get_only_id(user_id,task_info_dict["complete_type"],task_type,complete_count=task_count.complete_count)
+                if module_id > 0:
+                    only_id = f"{module_id}_{only_id}"
+                asset_type = self.get_task_asset_type(act_info_dict["task_asset_type_json"],task_type)
+                reward_object_id = asset_type
+                asset_base_model = AssetBaseModel(context=self.context)
+                asset_invoke_result_data = asset_base_model.update_user_asset(app_id,act_id,module_id,user_id,user_info_dict["open_id"],user_info_dict["user_nick"],asset_type,reward_value,asset_object_id,2,task_type,task_info_dict["task_name"],task_info_dict["task_name"],only_id,handler_name,request_code,info_json=info_json)
+                if asset_invoke_result_data.success == False:
+                    reward_value = 0
+                invoke_result_data.data["need_crm_point"] = need_crm_point
+                invoke_result_data.data["reward_value"] = reward_value
+                self.add_task_stat(task_type, app_id, act_id, module_id, user_info_dict["user_id"], user_info_dict["open_id"], reward_value, is_stat)
+                self.add_task_log(task_type=task_type, task_sub_type='', app_id=app_id, act_id=act_id, module_id=module_id, user_id=user_info_dict["user_id"], open_id=user_info_dict["open_id"], user_nick=user_info_dict["user_nick"],task_name=task_info_dict["task_name"],log_title=task_info_dict["task_name"],reward_type=1, reward_object_id=reward_object_id, reward_name="", reward_num=reward_value, handler_name=handler_name, request_code=request_code, info_json=info_json)
         except Exception as ex:
             if self.context:
                 self.context.logging_link_error("【店铺会员积分兑换资产任务】" + traceback.format_exc())
@@ -3406,9 +3410,8 @@ class TaskBaseModel(FrameBaseModel):
             invoke_result_data.success = False
             invoke_result_data.error_code = "exception"
             invoke_result_data.error_message = "系统繁忙,请稍后再试"
-
-        self.business_process_executed()
-
+        finally:
+            self.business_process_executed()
         return invoke_result_data
 
     def process_routine_task(self,app_id,act_id,module_id,user_id,login_token,handler_name,task_type,task_sub_type,check_new_user=False,check_user_nick=True,continue_request_expire=0):
@@ -3901,7 +3904,7 @@ class TaskBaseModel(FrameBaseModel):
                             collect_list = None
                             browse_list = None
                             invite_help_list = None
-                            
+
                             cur_complete_count = limit_num - task_count.complete_count if task_count.complete_count + int(task_count.now_count/satisfy_num) > limit_num else int(task_count.now_count / satisfy_num)
                             reward_value = cur_complete_count * reward_value
                             cur_now_count = task_count.now_count - (cur_complete_count * satisfy_num)

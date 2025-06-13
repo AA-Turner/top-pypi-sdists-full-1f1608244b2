@@ -75,6 +75,8 @@ from .type_defs import (
     ListTagsForResourceResponseTypeDef,
     ListVersionsRequestTypeDef,
     ListVersionsResponseTypeDef,
+    ProbeRequestTypeDef,
+    ProbeResponseTypeDef,
     PutPolicyRequestTypeDef,
     PutPolicyResponseTypeDef,
     SearchJobsRequestTypeDef,
@@ -366,6 +368,14 @@ class MediaConvertClient(AioBaseClient):
 
         [Show boto3 documentation](https://boto3.amazonaws.com/v1/documentation/api/latest/reference/services/mediaconvert/client/list_versions.html)
         [Show types-aiobotocore documentation](https://youtype.github.io/types_aiobotocore_docs/types_aiobotocore_mediaconvert/client/#list_versions)
+        """
+
+    async def probe(self, **kwargs: Unpack[ProbeRequestTypeDef]) -> ProbeResponseTypeDef:
+        """
+        Use Probe to obtain detailed information about your input media files.
+
+        [Show boto3 documentation](https://boto3.amazonaws.com/v1/documentation/api/latest/reference/services/mediaconvert/client/probe.html)
+        [Show types-aiobotocore documentation](https://youtype.github.io/types_aiobotocore_docs/types_aiobotocore_mediaconvert/client/#probe)
         """
 
     async def put_policy(

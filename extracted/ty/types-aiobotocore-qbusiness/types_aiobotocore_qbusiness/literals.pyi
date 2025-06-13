@@ -29,6 +29,8 @@ __all__ = (
     "AttachmentsControlModeType",
     "AttributeTypeType",
     "AttributeValueOperatorType",
+    "AudioExtractionStatusType",
+    "AudioExtractionTypeType",
     "AutoSubscriptionStatusType",
     "BrowserExtensionType",
     "ChatModeType",
@@ -43,6 +45,7 @@ __all__ = (
     "ErrorCodeType",
     "GetChatControlsConfigurationPaginatorName",
     "GroupStatusType",
+    "HallucinationReductionControlType",
     "IdentityTypeType",
     "ImageExtractionStatusType",
     "IndexStatusType",
@@ -92,6 +95,9 @@ __all__ = (
     "StatusType",
     "StringAttributeValueBoostingLevelType",
     "SubscriptionTypeType",
+    "SystemMessageTypeType",
+    "VideoExtractionStatusType",
+    "VideoExtractionTypeType",
     "WebExperienceSamplePromptsControlModeType",
     "WebExperienceStatusType",
 )
@@ -103,6 +109,8 @@ AttachmentStatusType = Literal["FAILED", "SUCCESS"]
 AttachmentsControlModeType = Literal["DISABLED", "ENABLED"]
 AttributeTypeType = Literal["DATE", "NUMBER", "STRING", "STRING_LIST"]
 AttributeValueOperatorType = Literal["DELETE"]
+AudioExtractionStatusType = Literal["DISABLED", "ENABLED"]
+AudioExtractionTypeType = Literal["SUMMARY", "TRANSCRIPT"]
 AutoSubscriptionStatusType = Literal["DISABLED", "ENABLED"]
 BrowserExtensionType = Literal["CHROME", "FIREFOX"]
 ChatModeType = Literal["CREATOR_MODE", "PLUGIN_MODE", "RETRIEVAL_MODE"]
@@ -155,8 +163,9 @@ DocumentStatusType = Literal[
 ErrorCodeType = Literal["InternalError", "InvalidRequest", "ResourceInactive", "ResourceNotFound"]
 GetChatControlsConfigurationPaginatorName = Literal["get_chat_controls_configuration"]
 GroupStatusType = Literal["DELETED", "DELETING", "FAILED", "PROCESSING", "SUCCEEDED"]
+HallucinationReductionControlType = Literal["DISABLED", "ENABLED"]
 IdentityTypeType = Literal[
-    "AWS_IAM_IDC", "AWS_IAM_IDP_OIDC", "AWS_IAM_IDP_SAML", "AWS_QUICKSIGHT_IDP"
+    "ANONYMOUS", "AWS_IAM_IDC", "AWS_IAM_IDP_OIDC", "AWS_IAM_IDP_SAML", "AWS_QUICKSIGHT_IDP"
 ]
 ImageExtractionStatusType = Literal["DISABLED", "ENABLED"]
 IndexStatusType = Literal["ACTIVE", "CREATING", "DELETING", "FAILED", "UPDATING"]
@@ -246,6 +255,9 @@ SearchRelevantContentPaginatorName = Literal["search_relevant_content"]
 StatusType = Literal["DISABLED", "ENABLED"]
 StringAttributeValueBoostingLevelType = Literal["HIGH", "LOW", "MEDIUM", "VERY_HIGH"]
 SubscriptionTypeType = Literal["Q_BUSINESS", "Q_LITE"]
+SystemMessageTypeType = Literal["GROUNDED_RESPONSE", "RESPONSE"]
+VideoExtractionStatusType = Literal["DISABLED", "ENABLED"]
+VideoExtractionTypeType = Literal["SUMMARY", "TRANSCRIPT"]
 WebExperienceSamplePromptsControlModeType = Literal["DISABLED", "ENABLED"]
 WebExperienceStatusType = Literal["ACTIVE", "CREATING", "DELETING", "FAILED", "PENDING_AUTH_CONFIG"]
 QBusinessServiceName = Literal["qbusiness"]
@@ -405,6 +417,7 @@ ServiceName = Literal[
     "freetier",
     "fsx",
     "gamelift",
+    "gameliftstreams",
     "geo-maps",
     "geo-places",
     "geo-routes",
@@ -430,6 +443,7 @@ ServiceName = Literal[
     "iot",
     "iot-data",
     "iot-jobs-data",
+    "iot-managed-integrations",
     "iotanalytics",
     "iotdeviceadvisor",
     "iotevents",
@@ -544,7 +558,6 @@ ServiceName = Literal[
     "pipes",
     "polly",
     "pricing",
-    "privatenetworks",
     "proton",
     "qapps",
     "qbusiness",
@@ -605,7 +618,6 @@ ServiceName = Literal[
     "signer",
     "simspaceweaver",
     "sms",
-    "sms-voice",
     "snow-device-management",
     "snowball",
     "sns",
@@ -613,6 +625,7 @@ ServiceName = Literal[
     "sqs",
     "ssm",
     "ssm-contacts",
+    "ssm-guiconnect",
     "ssm-incidents",
     "ssm-quicksetup",
     "ssm-sap",

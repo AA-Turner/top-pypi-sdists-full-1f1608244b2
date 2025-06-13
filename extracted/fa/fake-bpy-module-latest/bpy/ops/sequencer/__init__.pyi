@@ -344,6 +344,7 @@ def effect_strip_add(
         "COLORMIX",
     ]
     | None = "CROSS",
+    move_strips: bool | None = True,
     frame_start: int | None = 0,
     frame_end: int | None = 0,
     channel: int | None = 1,
@@ -410,6 +411,8 @@ def effect_strip_add(
     COLORMIX
     Color Mix -- Combine two strips using blend modes.
         :type type: typing.Literal['CROSS','ADD','SUBTRACT','ALPHA_OVER','ALPHA_UNDER','GAMMA_CROSS','MULTIPLY','WIPE','GLOW','TRANSFORM','COLOR','SPEED','MULTICAM','ADJUSTMENT','GAUSSIAN_BLUR','TEXT','COLORMIX'] | None
+        :param move_strips: Move Strips, Move strips after adding them to the timeline
+        :type move_strips: bool | None
         :param frame_start: Start Frame, Start frame of the sequence strip
         :type frame_start: int | None
         :param frame_end: End Frame, End frame for the color strip
@@ -663,6 +666,7 @@ def image_strip_add(
         "ASSET_CATALOG",
     ]
     | None = "",
+    move_strips: bool | None = True,
     frame_start: int | None = 0,
     frame_end: int | None = 0,
     channel: int | None = 1,
@@ -758,6 +762,8 @@ def image_strip_add(
     ASSET_CATALOG
     Asset Catalog -- Sort the asset list so that assets in the same catalog are kept together. Within a single catalog, assets are ordered by name. The catalogs are in order of the flattened catalog hierarchy..
         :type sort_method: typing.Literal['DEFAULT','FILE_SORT_ALPHA','FILE_SORT_EXTENSION','FILE_SORT_TIME','FILE_SORT_SIZE','ASSET_CATALOG'] | None
+        :param move_strips: Move Strips, Move strips after adding them to the timeline
+        :type move_strips: bool | None
         :param frame_start: Start Frame, Start frame of the sequence strip
         :type frame_start: int | None
         :param frame_end: End Frame, End frame for the color strip
@@ -819,6 +825,7 @@ def mask_strip_add(
     undo: bool | None = None,
     /,
     *,
+    move_strips: bool | None = True,
     frame_start: int | None = 0,
     channel: int | None = 1,
     replace_sel: bool | None = True,
@@ -831,6 +838,8 @@ def mask_strip_add(
 
     :type execution_context: int | str | None
     :type undo: bool | None
+    :param move_strips: Move Strips, Move strips after adding them to the timeline
+    :type move_strips: bool | None
     :param frame_start: Start Frame, Start frame of the sequence strip
     :type frame_start: int | None
     :param channel: Channel, Channel to place this strip into
@@ -917,6 +926,7 @@ def movie_strip_add(
         "ASSET_CATALOG",
     ]
     | None = "",
+    move_strips: bool | None = True,
     frame_start: int | None = 0,
     channel: int | None = 1,
     replace_sel: bool | None = True,
@@ -1015,6 +1025,8 @@ def movie_strip_add(
     ASSET_CATALOG
     Asset Catalog -- Sort the asset list so that assets in the same catalog are kept together. Within a single catalog, assets are ordered by name. The catalogs are in order of the flattened catalog hierarchy..
         :type sort_method: typing.Literal['DEFAULT','FILE_SORT_ALPHA','FILE_SORT_EXTENSION','FILE_SORT_TIME','FILE_SORT_SIZE','ASSET_CATALOG'] | None
+        :param move_strips: Move Strips, Move strips after adding them to the timeline
+        :type move_strips: bool | None
         :param frame_start: Start Frame, Start frame of the sequence strip
         :type frame_start: int | None
         :param channel: Channel, Channel to place this strip into
@@ -1056,6 +1068,7 @@ def movieclip_strip_add(
     undo: bool | None = None,
     /,
     *,
+    move_strips: bool | None = True,
     frame_start: int | None = 0,
     channel: int | None = 1,
     replace_sel: bool | None = True,
@@ -1068,6 +1081,8 @@ def movieclip_strip_add(
 
     :type execution_context: int | str | None
     :type undo: bool | None
+    :param move_strips: Move Strips, Move strips after adding them to the timeline
+    :type move_strips: bool | None
     :param frame_start: Start Frame, Start frame of the sequence strip
     :type frame_start: int | None
     :param channel: Channel, Channel to place this strip into
@@ -1356,6 +1371,7 @@ def scene_strip_add(
     undo: bool | None = None,
     /,
     *,
+    move_strips: bool | None = True,
     frame_start: int | None = 0,
     channel: int | None = 1,
     replace_sel: bool | None = True,
@@ -1368,6 +1384,8 @@ def scene_strip_add(
 
     :type execution_context: int | str | None
     :type undo: bool | None
+    :param move_strips: Move Strips, Move strips after adding them to the timeline
+    :type move_strips: bool | None
     :param frame_start: Start Frame, Start frame of the sequence strip
     :type frame_start: int | None
     :param channel: Channel, Channel to place this strip into
@@ -1389,6 +1407,7 @@ def scene_strip_add_new(
     undo: bool | None = None,
     /,
     *,
+    move_strips: bool | None = True,
     frame_start: int | None = 0,
     channel: int | None = 1,
     replace_sel: bool | None = True,
@@ -1401,6 +1420,8 @@ def scene_strip_add_new(
 
         :type execution_context: int | str | None
         :type undo: bool | None
+        :param move_strips: Move Strips, Move strips after adding them to the timeline
+        :type move_strips: bool | None
         :param frame_start: Start Frame, Start frame of the sequence strip
         :type frame_start: int | None
         :param channel: Channel, Channel to place this strip into
@@ -1815,6 +1836,7 @@ def sound_strip_add(
         "ASSET_CATALOG",
     ]
     | None = "",
+    move_strips: bool | None = True,
     frame_start: int | None = 0,
     channel: int | None = 1,
     replace_sel: bool | None = True,
@@ -1906,6 +1928,8 @@ def sound_strip_add(
     ASSET_CATALOG
     Asset Catalog -- Sort the asset list so that assets in the same catalog are kept together. Within a single catalog, assets are ordered by name. The catalogs are in order of the flattened catalog hierarchy..
         :type sort_method: typing.Literal['DEFAULT','FILE_SORT_ALPHA','FILE_SORT_EXTENSION','FILE_SORT_TIME','FILE_SORT_SIZE','ASSET_CATALOG'] | None
+        :param move_strips: Move Strips, Move strips after adding them to the timeline
+        :type move_strips: bool | None
         :param frame_start: Start Frame, Start frame of the sequence strip
         :type frame_start: int | None
         :param channel: Channel, Channel to place this strip into

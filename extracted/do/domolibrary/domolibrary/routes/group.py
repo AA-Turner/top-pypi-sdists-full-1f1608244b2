@@ -9,7 +9,7 @@ __all__ = ['Group_GET_Error', 'SearchGroups_Error', 'search_groups_by_name', 'ge
 
 # %% ../../nbs/routes/group.ipynb 2
 import httpx
-from enum import Enum
+from domolibrary.client.DomoEntity import DomoEnum
 from typing import Union, List
 
 import domolibrary.client.get_data as gd
@@ -241,7 +241,7 @@ async def toggle_system_group_visibility(
     )
 
 # %% ../../nbs/routes/group.ipynb 19
-class GroupType_Enum(Enum):
+class GroupType_Enum(DomoEnum):
     OPEN = "open"
     ADHOC = "adHoc"
     CLOSED = "closed"

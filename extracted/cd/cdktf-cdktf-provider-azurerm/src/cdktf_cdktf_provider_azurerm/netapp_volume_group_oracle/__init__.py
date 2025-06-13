@@ -1,7 +1,7 @@
 r'''
 # `azurerm_netapp_volume_group_oracle`
 
-Refer to the Terraform Registry for docs: [`azurerm_netapp_volume_group_oracle`](https://registry.terraform.io/providers/hashicorp/azurerm/4.32.0/docs/resources/netapp_volume_group_oracle).
+Refer to the Terraform Registry for docs: [`azurerm_netapp_volume_group_oracle`](https://registry.terraform.io/providers/hashicorp/azurerm/4.33.0/docs/resources/netapp_volume_group_oracle).
 '''
 from pkgutil import extend_path
 __path__ = extend_path(__path__, __name__)
@@ -44,7 +44,7 @@ class NetappVolumeGroupOracle(
     metaclass=jsii.JSIIMeta,
     jsii_type="@cdktf/provider-azurerm.netappVolumeGroupOracle.NetappVolumeGroupOracle",
 ):
-    '''Represents a {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.32.0/docs/resources/netapp_volume_group_oracle azurerm_netapp_volume_group_oracle}.'''
+    '''Represents a {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.33.0/docs/resources/netapp_volume_group_oracle azurerm_netapp_volume_group_oracle}.'''
 
     def __init__(
         self,
@@ -68,19 +68,19 @@ class NetappVolumeGroupOracle(
         provider: typing.Optional[_cdktf_9a9027ec.TerraformProvider] = None,
         provisioners: typing.Optional[typing.Sequence[typing.Union[typing.Union[_cdktf_9a9027ec.FileProvisioner, typing.Dict[builtins.str, typing.Any]], typing.Union[_cdktf_9a9027ec.LocalExecProvisioner, typing.Dict[builtins.str, typing.Any]], typing.Union[_cdktf_9a9027ec.RemoteExecProvisioner, typing.Dict[builtins.str, typing.Any]]]]] = None,
     ) -> None:
-        '''Create a new {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.32.0/docs/resources/netapp_volume_group_oracle azurerm_netapp_volume_group_oracle} Resource.
+        '''Create a new {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.33.0/docs/resources/netapp_volume_group_oracle azurerm_netapp_volume_group_oracle} Resource.
 
         :param scope: The scope in which to define this construct.
         :param id_: The scoped construct ID. Must be unique amongst siblings in the same scope
-        :param account_name: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.32.0/docs/resources/netapp_volume_group_oracle#account_name NetappVolumeGroupOracle#account_name}.
-        :param application_identifier: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.32.0/docs/resources/netapp_volume_group_oracle#application_identifier NetappVolumeGroupOracle#application_identifier}.
-        :param group_description: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.32.0/docs/resources/netapp_volume_group_oracle#group_description NetappVolumeGroupOracle#group_description}.
-        :param location: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.32.0/docs/resources/netapp_volume_group_oracle#location NetappVolumeGroupOracle#location}.
-        :param name: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.32.0/docs/resources/netapp_volume_group_oracle#name NetappVolumeGroupOracle#name}.
-        :param resource_group_name: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.32.0/docs/resources/netapp_volume_group_oracle#resource_group_name NetappVolumeGroupOracle#resource_group_name}.
-        :param volume: volume block. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.32.0/docs/resources/netapp_volume_group_oracle#volume NetappVolumeGroupOracle#volume}
-        :param id: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.32.0/docs/resources/netapp_volume_group_oracle#id NetappVolumeGroupOracle#id}. Please be aware that the id field is automatically added to all resources in Terraform providers using a Terraform provider SDK version below 2. If you experience problems setting this value it might not be settable. Please take a look at the provider documentation to ensure it should be settable.
-        :param timeouts: timeouts block. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.32.0/docs/resources/netapp_volume_group_oracle#timeouts NetappVolumeGroupOracle#timeouts}
+        :param account_name: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.33.0/docs/resources/netapp_volume_group_oracle#account_name NetappVolumeGroupOracle#account_name}.
+        :param application_identifier: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.33.0/docs/resources/netapp_volume_group_oracle#application_identifier NetappVolumeGroupOracle#application_identifier}.
+        :param group_description: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.33.0/docs/resources/netapp_volume_group_oracle#group_description NetappVolumeGroupOracle#group_description}.
+        :param location: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.33.0/docs/resources/netapp_volume_group_oracle#location NetappVolumeGroupOracle#location}.
+        :param name: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.33.0/docs/resources/netapp_volume_group_oracle#name NetappVolumeGroupOracle#name}.
+        :param resource_group_name: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.33.0/docs/resources/netapp_volume_group_oracle#resource_group_name NetappVolumeGroupOracle#resource_group_name}.
+        :param volume: volume block. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.33.0/docs/resources/netapp_volume_group_oracle#volume NetappVolumeGroupOracle#volume}
+        :param id: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.33.0/docs/resources/netapp_volume_group_oracle#id NetappVolumeGroupOracle#id}. Please be aware that the id field is automatically added to all resources in Terraform providers using a Terraform provider SDK version below 2. If you experience problems setting this value it might not be settable. Please take a look at the provider documentation to ensure it should be settable.
+        :param timeouts: timeouts block. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.33.0/docs/resources/netapp_volume_group_oracle#timeouts NetappVolumeGroupOracle#timeouts}
         :param connection: 
         :param count: 
         :param depends_on: 
@@ -127,7 +127,7 @@ class NetappVolumeGroupOracle(
 
         :param scope: The scope in which to define this construct.
         :param import_to_id: The construct id used in the generated config for the NetappVolumeGroupOracle to import.
-        :param import_from_id: The id of the existing NetappVolumeGroupOracle that should be imported. Refer to the {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.32.0/docs/resources/netapp_volume_group_oracle#import import section} in the documentation of this resource for the id to use
+        :param import_from_id: The id of the existing NetappVolumeGroupOracle that should be imported. Refer to the {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.33.0/docs/resources/netapp_volume_group_oracle#import import section} in the documentation of this resource for the id to use
         :param provider: ? Optional instance of the provider where the NetappVolumeGroupOracle to import is found.
         '''
         if __debug__:
@@ -148,10 +148,10 @@ class NetappVolumeGroupOracle(
         update: typing.Optional[builtins.str] = None,
     ) -> None:
         '''
-        :param create: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.32.0/docs/resources/netapp_volume_group_oracle#create NetappVolumeGroupOracle#create}.
-        :param delete: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.32.0/docs/resources/netapp_volume_group_oracle#delete NetappVolumeGroupOracle#delete}.
-        :param read: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.32.0/docs/resources/netapp_volume_group_oracle#read NetappVolumeGroupOracle#read}.
-        :param update: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.32.0/docs/resources/netapp_volume_group_oracle#update NetappVolumeGroupOracle#update}.
+        :param create: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.33.0/docs/resources/netapp_volume_group_oracle#create NetappVolumeGroupOracle#create}.
+        :param delete: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.33.0/docs/resources/netapp_volume_group_oracle#delete NetappVolumeGroupOracle#delete}.
+        :param read: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.33.0/docs/resources/netapp_volume_group_oracle#read NetappVolumeGroupOracle#read}.
+        :param update: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.33.0/docs/resources/netapp_volume_group_oracle#update NetappVolumeGroupOracle#update}.
         '''
         value = NetappVolumeGroupOracleTimeouts(
             create=create, delete=delete, read=read, update=update
@@ -388,15 +388,15 @@ class NetappVolumeGroupOracleConfig(_cdktf_9a9027ec.TerraformMetaArguments):
         :param lifecycle: 
         :param provider: 
         :param provisioners: 
-        :param account_name: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.32.0/docs/resources/netapp_volume_group_oracle#account_name NetappVolumeGroupOracle#account_name}.
-        :param application_identifier: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.32.0/docs/resources/netapp_volume_group_oracle#application_identifier NetappVolumeGroupOracle#application_identifier}.
-        :param group_description: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.32.0/docs/resources/netapp_volume_group_oracle#group_description NetappVolumeGroupOracle#group_description}.
-        :param location: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.32.0/docs/resources/netapp_volume_group_oracle#location NetappVolumeGroupOracle#location}.
-        :param name: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.32.0/docs/resources/netapp_volume_group_oracle#name NetappVolumeGroupOracle#name}.
-        :param resource_group_name: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.32.0/docs/resources/netapp_volume_group_oracle#resource_group_name NetappVolumeGroupOracle#resource_group_name}.
-        :param volume: volume block. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.32.0/docs/resources/netapp_volume_group_oracle#volume NetappVolumeGroupOracle#volume}
-        :param id: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.32.0/docs/resources/netapp_volume_group_oracle#id NetappVolumeGroupOracle#id}. Please be aware that the id field is automatically added to all resources in Terraform providers using a Terraform provider SDK version below 2. If you experience problems setting this value it might not be settable. Please take a look at the provider documentation to ensure it should be settable.
-        :param timeouts: timeouts block. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.32.0/docs/resources/netapp_volume_group_oracle#timeouts NetappVolumeGroupOracle#timeouts}
+        :param account_name: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.33.0/docs/resources/netapp_volume_group_oracle#account_name NetappVolumeGroupOracle#account_name}.
+        :param application_identifier: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.33.0/docs/resources/netapp_volume_group_oracle#application_identifier NetappVolumeGroupOracle#application_identifier}.
+        :param group_description: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.33.0/docs/resources/netapp_volume_group_oracle#group_description NetappVolumeGroupOracle#group_description}.
+        :param location: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.33.0/docs/resources/netapp_volume_group_oracle#location NetappVolumeGroupOracle#location}.
+        :param name: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.33.0/docs/resources/netapp_volume_group_oracle#name NetappVolumeGroupOracle#name}.
+        :param resource_group_name: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.33.0/docs/resources/netapp_volume_group_oracle#resource_group_name NetappVolumeGroupOracle#resource_group_name}.
+        :param volume: volume block. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.33.0/docs/resources/netapp_volume_group_oracle#volume NetappVolumeGroupOracle#volume}
+        :param id: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.33.0/docs/resources/netapp_volume_group_oracle#id NetappVolumeGroupOracle#id}. Please be aware that the id field is automatically added to all resources in Terraform providers using a Terraform provider SDK version below 2. If you experience problems setting this value it might not be settable. Please take a look at the provider documentation to ensure it should be settable.
+        :param timeouts: timeouts block. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.33.0/docs/resources/netapp_volume_group_oracle#timeouts NetappVolumeGroupOracle#timeouts}
         '''
         if isinstance(lifecycle, dict):
             lifecycle = _cdktf_9a9027ec.TerraformResourceLifecycle(**lifecycle)
@@ -514,42 +514,42 @@ class NetappVolumeGroupOracleConfig(_cdktf_9a9027ec.TerraformMetaArguments):
 
     @builtins.property
     def account_name(self) -> builtins.str:
-        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.32.0/docs/resources/netapp_volume_group_oracle#account_name NetappVolumeGroupOracle#account_name}.'''
+        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.33.0/docs/resources/netapp_volume_group_oracle#account_name NetappVolumeGroupOracle#account_name}.'''
         result = self._values.get("account_name")
         assert result is not None, "Required property 'account_name' is missing"
         return typing.cast(builtins.str, result)
 
     @builtins.property
     def application_identifier(self) -> builtins.str:
-        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.32.0/docs/resources/netapp_volume_group_oracle#application_identifier NetappVolumeGroupOracle#application_identifier}.'''
+        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.33.0/docs/resources/netapp_volume_group_oracle#application_identifier NetappVolumeGroupOracle#application_identifier}.'''
         result = self._values.get("application_identifier")
         assert result is not None, "Required property 'application_identifier' is missing"
         return typing.cast(builtins.str, result)
 
     @builtins.property
     def group_description(self) -> builtins.str:
-        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.32.0/docs/resources/netapp_volume_group_oracle#group_description NetappVolumeGroupOracle#group_description}.'''
+        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.33.0/docs/resources/netapp_volume_group_oracle#group_description NetappVolumeGroupOracle#group_description}.'''
         result = self._values.get("group_description")
         assert result is not None, "Required property 'group_description' is missing"
         return typing.cast(builtins.str, result)
 
     @builtins.property
     def location(self) -> builtins.str:
-        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.32.0/docs/resources/netapp_volume_group_oracle#location NetappVolumeGroupOracle#location}.'''
+        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.33.0/docs/resources/netapp_volume_group_oracle#location NetappVolumeGroupOracle#location}.'''
         result = self._values.get("location")
         assert result is not None, "Required property 'location' is missing"
         return typing.cast(builtins.str, result)
 
     @builtins.property
     def name(self) -> builtins.str:
-        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.32.0/docs/resources/netapp_volume_group_oracle#name NetappVolumeGroupOracle#name}.'''
+        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.33.0/docs/resources/netapp_volume_group_oracle#name NetappVolumeGroupOracle#name}.'''
         result = self._values.get("name")
         assert result is not None, "Required property 'name' is missing"
         return typing.cast(builtins.str, result)
 
     @builtins.property
     def resource_group_name(self) -> builtins.str:
-        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.32.0/docs/resources/netapp_volume_group_oracle#resource_group_name NetappVolumeGroupOracle#resource_group_name}.'''
+        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.33.0/docs/resources/netapp_volume_group_oracle#resource_group_name NetappVolumeGroupOracle#resource_group_name}.'''
         result = self._values.get("resource_group_name")
         assert result is not None, "Required property 'resource_group_name' is missing"
         return typing.cast(builtins.str, result)
@@ -560,7 +560,7 @@ class NetappVolumeGroupOracleConfig(_cdktf_9a9027ec.TerraformMetaArguments):
     ) -> typing.Union[_cdktf_9a9027ec.IResolvable, typing.List["NetappVolumeGroupOracleVolume"]]:
         '''volume block.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.32.0/docs/resources/netapp_volume_group_oracle#volume NetappVolumeGroupOracle#volume}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.33.0/docs/resources/netapp_volume_group_oracle#volume NetappVolumeGroupOracle#volume}
         '''
         result = self._values.get("volume")
         assert result is not None, "Required property 'volume' is missing"
@@ -568,7 +568,7 @@ class NetappVolumeGroupOracleConfig(_cdktf_9a9027ec.TerraformMetaArguments):
 
     @builtins.property
     def id(self) -> typing.Optional[builtins.str]:
-        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.32.0/docs/resources/netapp_volume_group_oracle#id NetappVolumeGroupOracle#id}.
+        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.33.0/docs/resources/netapp_volume_group_oracle#id NetappVolumeGroupOracle#id}.
 
         Please be aware that the id field is automatically added to all resources in Terraform providers using a Terraform provider SDK version below 2.
         If you experience problems setting this value it might not be settable. Please take a look at the provider documentation to ensure it should be settable.
@@ -580,7 +580,7 @@ class NetappVolumeGroupOracleConfig(_cdktf_9a9027ec.TerraformMetaArguments):
     def timeouts(self) -> typing.Optional["NetappVolumeGroupOracleTimeouts"]:
         '''timeouts block.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.32.0/docs/resources/netapp_volume_group_oracle#timeouts NetappVolumeGroupOracle#timeouts}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.33.0/docs/resources/netapp_volume_group_oracle#timeouts NetappVolumeGroupOracle#timeouts}
         '''
         result = self._values.get("timeouts")
         return typing.cast(typing.Optional["NetappVolumeGroupOracleTimeouts"], result)
@@ -617,10 +617,10 @@ class NetappVolumeGroupOracleTimeouts:
         update: typing.Optional[builtins.str] = None,
     ) -> None:
         '''
-        :param create: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.32.0/docs/resources/netapp_volume_group_oracle#create NetappVolumeGroupOracle#create}.
-        :param delete: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.32.0/docs/resources/netapp_volume_group_oracle#delete NetappVolumeGroupOracle#delete}.
-        :param read: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.32.0/docs/resources/netapp_volume_group_oracle#read NetappVolumeGroupOracle#read}.
-        :param update: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.32.0/docs/resources/netapp_volume_group_oracle#update NetappVolumeGroupOracle#update}.
+        :param create: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.33.0/docs/resources/netapp_volume_group_oracle#create NetappVolumeGroupOracle#create}.
+        :param delete: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.33.0/docs/resources/netapp_volume_group_oracle#delete NetappVolumeGroupOracle#delete}.
+        :param read: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.33.0/docs/resources/netapp_volume_group_oracle#read NetappVolumeGroupOracle#read}.
+        :param update: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.33.0/docs/resources/netapp_volume_group_oracle#update NetappVolumeGroupOracle#update}.
         '''
         if __debug__:
             type_hints = typing.get_type_hints(_typecheckingstub__261a80fa0041b7c59d13f09d5eaf3aa468dce8fe2b645b1b600e176b69f1e134)
@@ -640,25 +640,25 @@ class NetappVolumeGroupOracleTimeouts:
 
     @builtins.property
     def create(self) -> typing.Optional[builtins.str]:
-        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.32.0/docs/resources/netapp_volume_group_oracle#create NetappVolumeGroupOracle#create}.'''
+        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.33.0/docs/resources/netapp_volume_group_oracle#create NetappVolumeGroupOracle#create}.'''
         result = self._values.get("create")
         return typing.cast(typing.Optional[builtins.str], result)
 
     @builtins.property
     def delete(self) -> typing.Optional[builtins.str]:
-        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.32.0/docs/resources/netapp_volume_group_oracle#delete NetappVolumeGroupOracle#delete}.'''
+        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.33.0/docs/resources/netapp_volume_group_oracle#delete NetappVolumeGroupOracle#delete}.'''
         result = self._values.get("delete")
         return typing.cast(typing.Optional[builtins.str], result)
 
     @builtins.property
     def read(self) -> typing.Optional[builtins.str]:
-        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.32.0/docs/resources/netapp_volume_group_oracle#read NetappVolumeGroupOracle#read}.'''
+        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.33.0/docs/resources/netapp_volume_group_oracle#read NetappVolumeGroupOracle#read}.'''
         result = self._values.get("read")
         return typing.cast(typing.Optional[builtins.str], result)
 
     @builtins.property
     def update(self) -> typing.Optional[builtins.str]:
-        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.32.0/docs/resources/netapp_volume_group_oracle#update NetappVolumeGroupOracle#update}.'''
+        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.33.0/docs/resources/netapp_volume_group_oracle#update NetappVolumeGroupOracle#update}.'''
         result = self._values.get("update")
         return typing.cast(typing.Optional[builtins.str], result)
 
@@ -812,6 +812,7 @@ class NetappVolumeGroupOracleTimeoutsOutputReference(
         "throughput_in_mibps": "throughputInMibps",
         "volume_path": "volumePath",
         "volume_spec_name": "volumeSpecName",
+        "data_protection_replication": "dataProtectionReplication",
         "data_protection_snapshot_policy": "dataProtectionSnapshotPolicy",
         "encryption_key_source": "encryptionKeySource",
         "key_vault_private_endpoint_id": "keyVaultPrivateEndpointId",
@@ -837,6 +838,7 @@ class NetappVolumeGroupOracleVolume:
         throughput_in_mibps: jsii.Number,
         volume_path: builtins.str,
         volume_spec_name: builtins.str,
+        data_protection_replication: typing.Optional[typing.Union["NetappVolumeGroupOracleVolumeDataProtectionReplication", typing.Dict[builtins.str, typing.Any]]] = None,
         data_protection_snapshot_policy: typing.Optional[typing.Union["NetappVolumeGroupOracleVolumeDataProtectionSnapshotPolicy", typing.Dict[builtins.str, typing.Any]]] = None,
         encryption_key_source: typing.Optional[builtins.str] = None,
         key_vault_private_endpoint_id: typing.Optional[builtins.str] = None,
@@ -846,26 +848,29 @@ class NetappVolumeGroupOracleVolume:
         zone: typing.Optional[builtins.str] = None,
     ) -> None:
         '''
-        :param capacity_pool_id: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.32.0/docs/resources/netapp_volume_group_oracle#capacity_pool_id NetappVolumeGroupOracle#capacity_pool_id}.
-        :param export_policy_rule: export_policy_rule block. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.32.0/docs/resources/netapp_volume_group_oracle#export_policy_rule NetappVolumeGroupOracle#export_policy_rule}
-        :param name: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.32.0/docs/resources/netapp_volume_group_oracle#name NetappVolumeGroupOracle#name}.
-        :param protocols: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.32.0/docs/resources/netapp_volume_group_oracle#protocols NetappVolumeGroupOracle#protocols}.
-        :param security_style: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.32.0/docs/resources/netapp_volume_group_oracle#security_style NetappVolumeGroupOracle#security_style}.
-        :param service_level: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.32.0/docs/resources/netapp_volume_group_oracle#service_level NetappVolumeGroupOracle#service_level}.
-        :param snapshot_directory_visible: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.32.0/docs/resources/netapp_volume_group_oracle#snapshot_directory_visible NetappVolumeGroupOracle#snapshot_directory_visible}.
-        :param storage_quota_in_gb: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.32.0/docs/resources/netapp_volume_group_oracle#storage_quota_in_gb NetappVolumeGroupOracle#storage_quota_in_gb}.
-        :param subnet_id: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.32.0/docs/resources/netapp_volume_group_oracle#subnet_id NetappVolumeGroupOracle#subnet_id}.
-        :param throughput_in_mibps: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.32.0/docs/resources/netapp_volume_group_oracle#throughput_in_mibps NetappVolumeGroupOracle#throughput_in_mibps}.
-        :param volume_path: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.32.0/docs/resources/netapp_volume_group_oracle#volume_path NetappVolumeGroupOracle#volume_path}.
-        :param volume_spec_name: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.32.0/docs/resources/netapp_volume_group_oracle#volume_spec_name NetappVolumeGroupOracle#volume_spec_name}.
-        :param data_protection_snapshot_policy: data_protection_snapshot_policy block. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.32.0/docs/resources/netapp_volume_group_oracle#data_protection_snapshot_policy NetappVolumeGroupOracle#data_protection_snapshot_policy}
-        :param encryption_key_source: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.32.0/docs/resources/netapp_volume_group_oracle#encryption_key_source NetappVolumeGroupOracle#encryption_key_source}.
-        :param key_vault_private_endpoint_id: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.32.0/docs/resources/netapp_volume_group_oracle#key_vault_private_endpoint_id NetappVolumeGroupOracle#key_vault_private_endpoint_id}.
-        :param network_features: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.32.0/docs/resources/netapp_volume_group_oracle#network_features NetappVolumeGroupOracle#network_features}.
-        :param proximity_placement_group_id: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.32.0/docs/resources/netapp_volume_group_oracle#proximity_placement_group_id NetappVolumeGroupOracle#proximity_placement_group_id}.
-        :param tags: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.32.0/docs/resources/netapp_volume_group_oracle#tags NetappVolumeGroupOracle#tags}.
-        :param zone: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.32.0/docs/resources/netapp_volume_group_oracle#zone NetappVolumeGroupOracle#zone}.
+        :param capacity_pool_id: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.33.0/docs/resources/netapp_volume_group_oracle#capacity_pool_id NetappVolumeGroupOracle#capacity_pool_id}.
+        :param export_policy_rule: export_policy_rule block. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.33.0/docs/resources/netapp_volume_group_oracle#export_policy_rule NetappVolumeGroupOracle#export_policy_rule}
+        :param name: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.33.0/docs/resources/netapp_volume_group_oracle#name NetappVolumeGroupOracle#name}.
+        :param protocols: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.33.0/docs/resources/netapp_volume_group_oracle#protocols NetappVolumeGroupOracle#protocols}.
+        :param security_style: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.33.0/docs/resources/netapp_volume_group_oracle#security_style NetappVolumeGroupOracle#security_style}.
+        :param service_level: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.33.0/docs/resources/netapp_volume_group_oracle#service_level NetappVolumeGroupOracle#service_level}.
+        :param snapshot_directory_visible: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.33.0/docs/resources/netapp_volume_group_oracle#snapshot_directory_visible NetappVolumeGroupOracle#snapshot_directory_visible}.
+        :param storage_quota_in_gb: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.33.0/docs/resources/netapp_volume_group_oracle#storage_quota_in_gb NetappVolumeGroupOracle#storage_quota_in_gb}.
+        :param subnet_id: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.33.0/docs/resources/netapp_volume_group_oracle#subnet_id NetappVolumeGroupOracle#subnet_id}.
+        :param throughput_in_mibps: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.33.0/docs/resources/netapp_volume_group_oracle#throughput_in_mibps NetappVolumeGroupOracle#throughput_in_mibps}.
+        :param volume_path: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.33.0/docs/resources/netapp_volume_group_oracle#volume_path NetappVolumeGroupOracle#volume_path}.
+        :param volume_spec_name: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.33.0/docs/resources/netapp_volume_group_oracle#volume_spec_name NetappVolumeGroupOracle#volume_spec_name}.
+        :param data_protection_replication: data_protection_replication block. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.33.0/docs/resources/netapp_volume_group_oracle#data_protection_replication NetappVolumeGroupOracle#data_protection_replication}
+        :param data_protection_snapshot_policy: data_protection_snapshot_policy block. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.33.0/docs/resources/netapp_volume_group_oracle#data_protection_snapshot_policy NetappVolumeGroupOracle#data_protection_snapshot_policy}
+        :param encryption_key_source: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.33.0/docs/resources/netapp_volume_group_oracle#encryption_key_source NetappVolumeGroupOracle#encryption_key_source}.
+        :param key_vault_private_endpoint_id: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.33.0/docs/resources/netapp_volume_group_oracle#key_vault_private_endpoint_id NetappVolumeGroupOracle#key_vault_private_endpoint_id}.
+        :param network_features: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.33.0/docs/resources/netapp_volume_group_oracle#network_features NetappVolumeGroupOracle#network_features}.
+        :param proximity_placement_group_id: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.33.0/docs/resources/netapp_volume_group_oracle#proximity_placement_group_id NetappVolumeGroupOracle#proximity_placement_group_id}.
+        :param tags: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.33.0/docs/resources/netapp_volume_group_oracle#tags NetappVolumeGroupOracle#tags}.
+        :param zone: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.33.0/docs/resources/netapp_volume_group_oracle#zone NetappVolumeGroupOracle#zone}.
         '''
+        if isinstance(data_protection_replication, dict):
+            data_protection_replication = NetappVolumeGroupOracleVolumeDataProtectionReplication(**data_protection_replication)
         if isinstance(data_protection_snapshot_policy, dict):
             data_protection_snapshot_policy = NetappVolumeGroupOracleVolumeDataProtectionSnapshotPolicy(**data_protection_snapshot_policy)
         if __debug__:
@@ -882,6 +887,7 @@ class NetappVolumeGroupOracleVolume:
             check_type(argname="argument throughput_in_mibps", value=throughput_in_mibps, expected_type=type_hints["throughput_in_mibps"])
             check_type(argname="argument volume_path", value=volume_path, expected_type=type_hints["volume_path"])
             check_type(argname="argument volume_spec_name", value=volume_spec_name, expected_type=type_hints["volume_spec_name"])
+            check_type(argname="argument data_protection_replication", value=data_protection_replication, expected_type=type_hints["data_protection_replication"])
             check_type(argname="argument data_protection_snapshot_policy", value=data_protection_snapshot_policy, expected_type=type_hints["data_protection_snapshot_policy"])
             check_type(argname="argument encryption_key_source", value=encryption_key_source, expected_type=type_hints["encryption_key_source"])
             check_type(argname="argument key_vault_private_endpoint_id", value=key_vault_private_endpoint_id, expected_type=type_hints["key_vault_private_endpoint_id"])
@@ -903,6 +909,8 @@ class NetappVolumeGroupOracleVolume:
             "volume_path": volume_path,
             "volume_spec_name": volume_spec_name,
         }
+        if data_protection_replication is not None:
+            self._values["data_protection_replication"] = data_protection_replication
         if data_protection_snapshot_policy is not None:
             self._values["data_protection_snapshot_policy"] = data_protection_snapshot_policy
         if encryption_key_source is not None:
@@ -920,7 +928,7 @@ class NetappVolumeGroupOracleVolume:
 
     @builtins.property
     def capacity_pool_id(self) -> builtins.str:
-        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.32.0/docs/resources/netapp_volume_group_oracle#capacity_pool_id NetappVolumeGroupOracle#capacity_pool_id}.'''
+        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.33.0/docs/resources/netapp_volume_group_oracle#capacity_pool_id NetappVolumeGroupOracle#capacity_pool_id}.'''
         result = self._values.get("capacity_pool_id")
         assert result is not None, "Required property 'capacity_pool_id' is missing"
         return typing.cast(builtins.str, result)
@@ -931,7 +939,7 @@ class NetappVolumeGroupOracleVolume:
     ) -> typing.Union[_cdktf_9a9027ec.IResolvable, typing.List["NetappVolumeGroupOracleVolumeExportPolicyRule"]]:
         '''export_policy_rule block.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.32.0/docs/resources/netapp_volume_group_oracle#export_policy_rule NetappVolumeGroupOracle#export_policy_rule}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.33.0/docs/resources/netapp_volume_group_oracle#export_policy_rule NetappVolumeGroupOracle#export_policy_rule}
         '''
         result = self._values.get("export_policy_rule")
         assert result is not None, "Required property 'export_policy_rule' is missing"
@@ -939,28 +947,28 @@ class NetappVolumeGroupOracleVolume:
 
     @builtins.property
     def name(self) -> builtins.str:
-        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.32.0/docs/resources/netapp_volume_group_oracle#name NetappVolumeGroupOracle#name}.'''
+        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.33.0/docs/resources/netapp_volume_group_oracle#name NetappVolumeGroupOracle#name}.'''
         result = self._values.get("name")
         assert result is not None, "Required property 'name' is missing"
         return typing.cast(builtins.str, result)
 
     @builtins.property
     def protocols(self) -> typing.List[builtins.str]:
-        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.32.0/docs/resources/netapp_volume_group_oracle#protocols NetappVolumeGroupOracle#protocols}.'''
+        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.33.0/docs/resources/netapp_volume_group_oracle#protocols NetappVolumeGroupOracle#protocols}.'''
         result = self._values.get("protocols")
         assert result is not None, "Required property 'protocols' is missing"
         return typing.cast(typing.List[builtins.str], result)
 
     @builtins.property
     def security_style(self) -> builtins.str:
-        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.32.0/docs/resources/netapp_volume_group_oracle#security_style NetappVolumeGroupOracle#security_style}.'''
+        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.33.0/docs/resources/netapp_volume_group_oracle#security_style NetappVolumeGroupOracle#security_style}.'''
         result = self._values.get("security_style")
         assert result is not None, "Required property 'security_style' is missing"
         return typing.cast(builtins.str, result)
 
     @builtins.property
     def service_level(self) -> builtins.str:
-        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.32.0/docs/resources/netapp_volume_group_oracle#service_level NetappVolumeGroupOracle#service_level}.'''
+        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.33.0/docs/resources/netapp_volume_group_oracle#service_level NetappVolumeGroupOracle#service_level}.'''
         result = self._values.get("service_level")
         assert result is not None, "Required property 'service_level' is missing"
         return typing.cast(builtins.str, result)
@@ -969,45 +977,56 @@ class NetappVolumeGroupOracleVolume:
     def snapshot_directory_visible(
         self,
     ) -> typing.Union[builtins.bool, _cdktf_9a9027ec.IResolvable]:
-        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.32.0/docs/resources/netapp_volume_group_oracle#snapshot_directory_visible NetappVolumeGroupOracle#snapshot_directory_visible}.'''
+        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.33.0/docs/resources/netapp_volume_group_oracle#snapshot_directory_visible NetappVolumeGroupOracle#snapshot_directory_visible}.'''
         result = self._values.get("snapshot_directory_visible")
         assert result is not None, "Required property 'snapshot_directory_visible' is missing"
         return typing.cast(typing.Union[builtins.bool, _cdktf_9a9027ec.IResolvable], result)
 
     @builtins.property
     def storage_quota_in_gb(self) -> jsii.Number:
-        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.32.0/docs/resources/netapp_volume_group_oracle#storage_quota_in_gb NetappVolumeGroupOracle#storage_quota_in_gb}.'''
+        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.33.0/docs/resources/netapp_volume_group_oracle#storage_quota_in_gb NetappVolumeGroupOracle#storage_quota_in_gb}.'''
         result = self._values.get("storage_quota_in_gb")
         assert result is not None, "Required property 'storage_quota_in_gb' is missing"
         return typing.cast(jsii.Number, result)
 
     @builtins.property
     def subnet_id(self) -> builtins.str:
-        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.32.0/docs/resources/netapp_volume_group_oracle#subnet_id NetappVolumeGroupOracle#subnet_id}.'''
+        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.33.0/docs/resources/netapp_volume_group_oracle#subnet_id NetappVolumeGroupOracle#subnet_id}.'''
         result = self._values.get("subnet_id")
         assert result is not None, "Required property 'subnet_id' is missing"
         return typing.cast(builtins.str, result)
 
     @builtins.property
     def throughput_in_mibps(self) -> jsii.Number:
-        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.32.0/docs/resources/netapp_volume_group_oracle#throughput_in_mibps NetappVolumeGroupOracle#throughput_in_mibps}.'''
+        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.33.0/docs/resources/netapp_volume_group_oracle#throughput_in_mibps NetappVolumeGroupOracle#throughput_in_mibps}.'''
         result = self._values.get("throughput_in_mibps")
         assert result is not None, "Required property 'throughput_in_mibps' is missing"
         return typing.cast(jsii.Number, result)
 
     @builtins.property
     def volume_path(self) -> builtins.str:
-        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.32.0/docs/resources/netapp_volume_group_oracle#volume_path NetappVolumeGroupOracle#volume_path}.'''
+        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.33.0/docs/resources/netapp_volume_group_oracle#volume_path NetappVolumeGroupOracle#volume_path}.'''
         result = self._values.get("volume_path")
         assert result is not None, "Required property 'volume_path' is missing"
         return typing.cast(builtins.str, result)
 
     @builtins.property
     def volume_spec_name(self) -> builtins.str:
-        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.32.0/docs/resources/netapp_volume_group_oracle#volume_spec_name NetappVolumeGroupOracle#volume_spec_name}.'''
+        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.33.0/docs/resources/netapp_volume_group_oracle#volume_spec_name NetappVolumeGroupOracle#volume_spec_name}.'''
         result = self._values.get("volume_spec_name")
         assert result is not None, "Required property 'volume_spec_name' is missing"
         return typing.cast(builtins.str, result)
+
+    @builtins.property
+    def data_protection_replication(
+        self,
+    ) -> typing.Optional["NetappVolumeGroupOracleVolumeDataProtectionReplication"]:
+        '''data_protection_replication block.
+
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.33.0/docs/resources/netapp_volume_group_oracle#data_protection_replication NetappVolumeGroupOracle#data_protection_replication}
+        '''
+        result = self._values.get("data_protection_replication")
+        return typing.cast(typing.Optional["NetappVolumeGroupOracleVolumeDataProtectionReplication"], result)
 
     @builtins.property
     def data_protection_snapshot_policy(
@@ -1015,44 +1034,44 @@ class NetappVolumeGroupOracleVolume:
     ) -> typing.Optional["NetappVolumeGroupOracleVolumeDataProtectionSnapshotPolicy"]:
         '''data_protection_snapshot_policy block.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.32.0/docs/resources/netapp_volume_group_oracle#data_protection_snapshot_policy NetappVolumeGroupOracle#data_protection_snapshot_policy}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.33.0/docs/resources/netapp_volume_group_oracle#data_protection_snapshot_policy NetappVolumeGroupOracle#data_protection_snapshot_policy}
         '''
         result = self._values.get("data_protection_snapshot_policy")
         return typing.cast(typing.Optional["NetappVolumeGroupOracleVolumeDataProtectionSnapshotPolicy"], result)
 
     @builtins.property
     def encryption_key_source(self) -> typing.Optional[builtins.str]:
-        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.32.0/docs/resources/netapp_volume_group_oracle#encryption_key_source NetappVolumeGroupOracle#encryption_key_source}.'''
+        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.33.0/docs/resources/netapp_volume_group_oracle#encryption_key_source NetappVolumeGroupOracle#encryption_key_source}.'''
         result = self._values.get("encryption_key_source")
         return typing.cast(typing.Optional[builtins.str], result)
 
     @builtins.property
     def key_vault_private_endpoint_id(self) -> typing.Optional[builtins.str]:
-        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.32.0/docs/resources/netapp_volume_group_oracle#key_vault_private_endpoint_id NetappVolumeGroupOracle#key_vault_private_endpoint_id}.'''
+        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.33.0/docs/resources/netapp_volume_group_oracle#key_vault_private_endpoint_id NetappVolumeGroupOracle#key_vault_private_endpoint_id}.'''
         result = self._values.get("key_vault_private_endpoint_id")
         return typing.cast(typing.Optional[builtins.str], result)
 
     @builtins.property
     def network_features(self) -> typing.Optional[builtins.str]:
-        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.32.0/docs/resources/netapp_volume_group_oracle#network_features NetappVolumeGroupOracle#network_features}.'''
+        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.33.0/docs/resources/netapp_volume_group_oracle#network_features NetappVolumeGroupOracle#network_features}.'''
         result = self._values.get("network_features")
         return typing.cast(typing.Optional[builtins.str], result)
 
     @builtins.property
     def proximity_placement_group_id(self) -> typing.Optional[builtins.str]:
-        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.32.0/docs/resources/netapp_volume_group_oracle#proximity_placement_group_id NetappVolumeGroupOracle#proximity_placement_group_id}.'''
+        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.33.0/docs/resources/netapp_volume_group_oracle#proximity_placement_group_id NetappVolumeGroupOracle#proximity_placement_group_id}.'''
         result = self._values.get("proximity_placement_group_id")
         return typing.cast(typing.Optional[builtins.str], result)
 
     @builtins.property
     def tags(self) -> typing.Optional[typing.Mapping[builtins.str, builtins.str]]:
-        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.32.0/docs/resources/netapp_volume_group_oracle#tags NetappVolumeGroupOracle#tags}.'''
+        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.33.0/docs/resources/netapp_volume_group_oracle#tags NetappVolumeGroupOracle#tags}.'''
         result = self._values.get("tags")
         return typing.cast(typing.Optional[typing.Mapping[builtins.str, builtins.str]], result)
 
     @builtins.property
     def zone(self) -> typing.Optional[builtins.str]:
-        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.32.0/docs/resources/netapp_volume_group_oracle#zone NetappVolumeGroupOracle#zone}.'''
+        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.33.0/docs/resources/netapp_volume_group_oracle#zone NetappVolumeGroupOracle#zone}.'''
         result = self._values.get("zone")
         return typing.cast(typing.Optional[builtins.str], result)
 
@@ -1069,6 +1088,194 @@ class NetappVolumeGroupOracleVolume:
 
 
 @jsii.data_type(
+    jsii_type="@cdktf/provider-azurerm.netappVolumeGroupOracle.NetappVolumeGroupOracleVolumeDataProtectionReplication",
+    jsii_struct_bases=[],
+    name_mapping={
+        "remote_volume_location": "remoteVolumeLocation",
+        "remote_volume_resource_id": "remoteVolumeResourceId",
+        "replication_frequency": "replicationFrequency",
+        "endpoint_type": "endpointType",
+    },
+)
+class NetappVolumeGroupOracleVolumeDataProtectionReplication:
+    def __init__(
+        self,
+        *,
+        remote_volume_location: builtins.str,
+        remote_volume_resource_id: builtins.str,
+        replication_frequency: builtins.str,
+        endpoint_type: typing.Optional[builtins.str] = None,
+    ) -> None:
+        '''
+        :param remote_volume_location: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.33.0/docs/resources/netapp_volume_group_oracle#remote_volume_location NetappVolumeGroupOracle#remote_volume_location}.
+        :param remote_volume_resource_id: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.33.0/docs/resources/netapp_volume_group_oracle#remote_volume_resource_id NetappVolumeGroupOracle#remote_volume_resource_id}.
+        :param replication_frequency: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.33.0/docs/resources/netapp_volume_group_oracle#replication_frequency NetappVolumeGroupOracle#replication_frequency}.
+        :param endpoint_type: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.33.0/docs/resources/netapp_volume_group_oracle#endpoint_type NetappVolumeGroupOracle#endpoint_type}.
+        '''
+        if __debug__:
+            type_hints = typing.get_type_hints(_typecheckingstub__ed0b26057499c88770b7dbbe2189cb2c5c8e985193f1ba33913e405ebc80b272)
+            check_type(argname="argument remote_volume_location", value=remote_volume_location, expected_type=type_hints["remote_volume_location"])
+            check_type(argname="argument remote_volume_resource_id", value=remote_volume_resource_id, expected_type=type_hints["remote_volume_resource_id"])
+            check_type(argname="argument replication_frequency", value=replication_frequency, expected_type=type_hints["replication_frequency"])
+            check_type(argname="argument endpoint_type", value=endpoint_type, expected_type=type_hints["endpoint_type"])
+        self._values: typing.Dict[builtins.str, typing.Any] = {
+            "remote_volume_location": remote_volume_location,
+            "remote_volume_resource_id": remote_volume_resource_id,
+            "replication_frequency": replication_frequency,
+        }
+        if endpoint_type is not None:
+            self._values["endpoint_type"] = endpoint_type
+
+    @builtins.property
+    def remote_volume_location(self) -> builtins.str:
+        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.33.0/docs/resources/netapp_volume_group_oracle#remote_volume_location NetappVolumeGroupOracle#remote_volume_location}.'''
+        result = self._values.get("remote_volume_location")
+        assert result is not None, "Required property 'remote_volume_location' is missing"
+        return typing.cast(builtins.str, result)
+
+    @builtins.property
+    def remote_volume_resource_id(self) -> builtins.str:
+        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.33.0/docs/resources/netapp_volume_group_oracle#remote_volume_resource_id NetappVolumeGroupOracle#remote_volume_resource_id}.'''
+        result = self._values.get("remote_volume_resource_id")
+        assert result is not None, "Required property 'remote_volume_resource_id' is missing"
+        return typing.cast(builtins.str, result)
+
+    @builtins.property
+    def replication_frequency(self) -> builtins.str:
+        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.33.0/docs/resources/netapp_volume_group_oracle#replication_frequency NetappVolumeGroupOracle#replication_frequency}.'''
+        result = self._values.get("replication_frequency")
+        assert result is not None, "Required property 'replication_frequency' is missing"
+        return typing.cast(builtins.str, result)
+
+    @builtins.property
+    def endpoint_type(self) -> typing.Optional[builtins.str]:
+        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.33.0/docs/resources/netapp_volume_group_oracle#endpoint_type NetappVolumeGroupOracle#endpoint_type}.'''
+        result = self._values.get("endpoint_type")
+        return typing.cast(typing.Optional[builtins.str], result)
+
+    def __eq__(self, rhs: typing.Any) -> builtins.bool:
+        return isinstance(rhs, self.__class__) and rhs._values == self._values
+
+    def __ne__(self, rhs: typing.Any) -> builtins.bool:
+        return not (rhs == self)
+
+    def __repr__(self) -> str:
+        return "NetappVolumeGroupOracleVolumeDataProtectionReplication(%s)" % ", ".join(
+            k + "=" + repr(v) for k, v in self._values.items()
+        )
+
+
+class NetappVolumeGroupOracleVolumeDataProtectionReplicationOutputReference(
+    _cdktf_9a9027ec.ComplexObject,
+    metaclass=jsii.JSIIMeta,
+    jsii_type="@cdktf/provider-azurerm.netappVolumeGroupOracle.NetappVolumeGroupOracleVolumeDataProtectionReplicationOutputReference",
+):
+    def __init__(
+        self,
+        terraform_resource: _cdktf_9a9027ec.IInterpolatingParent,
+        terraform_attribute: builtins.str,
+    ) -> None:
+        '''
+        :param terraform_resource: The parent resource.
+        :param terraform_attribute: The attribute on the parent resource this class is referencing.
+        '''
+        if __debug__:
+            type_hints = typing.get_type_hints(_typecheckingstub__84a7d102593d30129c0517049121beb90758d08e8f515623d9b0da90cb5c7dfa)
+            check_type(argname="argument terraform_resource", value=terraform_resource, expected_type=type_hints["terraform_resource"])
+            check_type(argname="argument terraform_attribute", value=terraform_attribute, expected_type=type_hints["terraform_attribute"])
+        jsii.create(self.__class__, self, [terraform_resource, terraform_attribute])
+
+    @jsii.member(jsii_name="resetEndpointType")
+    def reset_endpoint_type(self) -> None:
+        return typing.cast(None, jsii.invoke(self, "resetEndpointType", []))
+
+    @builtins.property
+    @jsii.member(jsii_name="endpointTypeInput")
+    def endpoint_type_input(self) -> typing.Optional[builtins.str]:
+        return typing.cast(typing.Optional[builtins.str], jsii.get(self, "endpointTypeInput"))
+
+    @builtins.property
+    @jsii.member(jsii_name="remoteVolumeLocationInput")
+    def remote_volume_location_input(self) -> typing.Optional[builtins.str]:
+        return typing.cast(typing.Optional[builtins.str], jsii.get(self, "remoteVolumeLocationInput"))
+
+    @builtins.property
+    @jsii.member(jsii_name="remoteVolumeResourceIdInput")
+    def remote_volume_resource_id_input(self) -> typing.Optional[builtins.str]:
+        return typing.cast(typing.Optional[builtins.str], jsii.get(self, "remoteVolumeResourceIdInput"))
+
+    @builtins.property
+    @jsii.member(jsii_name="replicationFrequencyInput")
+    def replication_frequency_input(self) -> typing.Optional[builtins.str]:
+        return typing.cast(typing.Optional[builtins.str], jsii.get(self, "replicationFrequencyInput"))
+
+    @builtins.property
+    @jsii.member(jsii_name="endpointType")
+    def endpoint_type(self) -> builtins.str:
+        return typing.cast(builtins.str, jsii.get(self, "endpointType"))
+
+    @endpoint_type.setter
+    def endpoint_type(self, value: builtins.str) -> None:
+        if __debug__:
+            type_hints = typing.get_type_hints(_typecheckingstub__7fc7eb49363537733ec72f8dbf432f457da3e52e6d276815d30b55d4add9a8e2)
+            check_type(argname="argument value", value=value, expected_type=type_hints["value"])
+        jsii.set(self, "endpointType", value) # pyright: ignore[reportArgumentType]
+
+    @builtins.property
+    @jsii.member(jsii_name="remoteVolumeLocation")
+    def remote_volume_location(self) -> builtins.str:
+        return typing.cast(builtins.str, jsii.get(self, "remoteVolumeLocation"))
+
+    @remote_volume_location.setter
+    def remote_volume_location(self, value: builtins.str) -> None:
+        if __debug__:
+            type_hints = typing.get_type_hints(_typecheckingstub__8388dfe38b3f3d3f7716ad24400f9fc3a68b815499a7450f32a4409a0ed88de4)
+            check_type(argname="argument value", value=value, expected_type=type_hints["value"])
+        jsii.set(self, "remoteVolumeLocation", value) # pyright: ignore[reportArgumentType]
+
+    @builtins.property
+    @jsii.member(jsii_name="remoteVolumeResourceId")
+    def remote_volume_resource_id(self) -> builtins.str:
+        return typing.cast(builtins.str, jsii.get(self, "remoteVolumeResourceId"))
+
+    @remote_volume_resource_id.setter
+    def remote_volume_resource_id(self, value: builtins.str) -> None:
+        if __debug__:
+            type_hints = typing.get_type_hints(_typecheckingstub__eac1859a0d9dcd7d481b827412f15bf210f6a24eb29ec105d1b0ff9a86cf94ac)
+            check_type(argname="argument value", value=value, expected_type=type_hints["value"])
+        jsii.set(self, "remoteVolumeResourceId", value) # pyright: ignore[reportArgumentType]
+
+    @builtins.property
+    @jsii.member(jsii_name="replicationFrequency")
+    def replication_frequency(self) -> builtins.str:
+        return typing.cast(builtins.str, jsii.get(self, "replicationFrequency"))
+
+    @replication_frequency.setter
+    def replication_frequency(self, value: builtins.str) -> None:
+        if __debug__:
+            type_hints = typing.get_type_hints(_typecheckingstub__509cbee163c214c5d14b9fe64d0742f3a3253d1780c649441bb028a1be95aa01)
+            check_type(argname="argument value", value=value, expected_type=type_hints["value"])
+        jsii.set(self, "replicationFrequency", value) # pyright: ignore[reportArgumentType]
+
+    @builtins.property
+    @jsii.member(jsii_name="internalValue")
+    def internal_value(
+        self,
+    ) -> typing.Optional[NetappVolumeGroupOracleVolumeDataProtectionReplication]:
+        return typing.cast(typing.Optional[NetappVolumeGroupOracleVolumeDataProtectionReplication], jsii.get(self, "internalValue"))
+
+    @internal_value.setter
+    def internal_value(
+        self,
+        value: typing.Optional[NetappVolumeGroupOracleVolumeDataProtectionReplication],
+    ) -> None:
+        if __debug__:
+            type_hints = typing.get_type_hints(_typecheckingstub__bfa313564503a85b7afad73e381f4a8c01d132fa3b46575dbc420a044c4d3368)
+            check_type(argname="argument value", value=value, expected_type=type_hints["value"])
+        jsii.set(self, "internalValue", value) # pyright: ignore[reportArgumentType]
+
+
+@jsii.data_type(
     jsii_type="@cdktf/provider-azurerm.netappVolumeGroupOracle.NetappVolumeGroupOracleVolumeDataProtectionSnapshotPolicy",
     jsii_struct_bases=[],
     name_mapping={"snapshot_policy_id": "snapshotPolicyId"},
@@ -1076,7 +1283,7 @@ class NetappVolumeGroupOracleVolume:
 class NetappVolumeGroupOracleVolumeDataProtectionSnapshotPolicy:
     def __init__(self, *, snapshot_policy_id: builtins.str) -> None:
         '''
-        :param snapshot_policy_id: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.32.0/docs/resources/netapp_volume_group_oracle#snapshot_policy_id NetappVolumeGroupOracle#snapshot_policy_id}.
+        :param snapshot_policy_id: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.33.0/docs/resources/netapp_volume_group_oracle#snapshot_policy_id NetappVolumeGroupOracle#snapshot_policy_id}.
         '''
         if __debug__:
             type_hints = typing.get_type_hints(_typecheckingstub__5332bc7497a557e6c702523906e940675fc17fd9c4e251d04fa70d3defe51ec6)
@@ -1087,7 +1294,7 @@ class NetappVolumeGroupOracleVolumeDataProtectionSnapshotPolicy:
 
     @builtins.property
     def snapshot_policy_id(self) -> builtins.str:
-        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.32.0/docs/resources/netapp_volume_group_oracle#snapshot_policy_id NetappVolumeGroupOracle#snapshot_policy_id}.'''
+        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.33.0/docs/resources/netapp_volume_group_oracle#snapshot_policy_id NetappVolumeGroupOracle#snapshot_policy_id}.'''
         result = self._values.get("snapshot_policy_id")
         assert result is not None, "Required property 'snapshot_policy_id' is missing"
         return typing.cast(builtins.str, result)
@@ -1185,13 +1392,13 @@ class NetappVolumeGroupOracleVolumeExportPolicyRule:
         unix_read_write: typing.Optional[typing.Union[builtins.bool, _cdktf_9a9027ec.IResolvable]] = None,
     ) -> None:
         '''
-        :param allowed_clients: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.32.0/docs/resources/netapp_volume_group_oracle#allowed_clients NetappVolumeGroupOracle#allowed_clients}.
-        :param nfsv3_enabled: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.32.0/docs/resources/netapp_volume_group_oracle#nfsv3_enabled NetappVolumeGroupOracle#nfsv3_enabled}.
-        :param nfsv41_enabled: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.32.0/docs/resources/netapp_volume_group_oracle#nfsv41_enabled NetappVolumeGroupOracle#nfsv41_enabled}.
-        :param rule_index: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.32.0/docs/resources/netapp_volume_group_oracle#rule_index NetappVolumeGroupOracle#rule_index}.
-        :param root_access_enabled: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.32.0/docs/resources/netapp_volume_group_oracle#root_access_enabled NetappVolumeGroupOracle#root_access_enabled}.
-        :param unix_read_only: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.32.0/docs/resources/netapp_volume_group_oracle#unix_read_only NetappVolumeGroupOracle#unix_read_only}.
-        :param unix_read_write: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.32.0/docs/resources/netapp_volume_group_oracle#unix_read_write NetappVolumeGroupOracle#unix_read_write}.
+        :param allowed_clients: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.33.0/docs/resources/netapp_volume_group_oracle#allowed_clients NetappVolumeGroupOracle#allowed_clients}.
+        :param nfsv3_enabled: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.33.0/docs/resources/netapp_volume_group_oracle#nfsv3_enabled NetappVolumeGroupOracle#nfsv3_enabled}.
+        :param nfsv41_enabled: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.33.0/docs/resources/netapp_volume_group_oracle#nfsv41_enabled NetappVolumeGroupOracle#nfsv41_enabled}.
+        :param rule_index: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.33.0/docs/resources/netapp_volume_group_oracle#rule_index NetappVolumeGroupOracle#rule_index}.
+        :param root_access_enabled: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.33.0/docs/resources/netapp_volume_group_oracle#root_access_enabled NetappVolumeGroupOracle#root_access_enabled}.
+        :param unix_read_only: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.33.0/docs/resources/netapp_volume_group_oracle#unix_read_only NetappVolumeGroupOracle#unix_read_only}.
+        :param unix_read_write: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.33.0/docs/resources/netapp_volume_group_oracle#unix_read_write NetappVolumeGroupOracle#unix_read_write}.
         '''
         if __debug__:
             type_hints = typing.get_type_hints(_typecheckingstub__b45a9a9aa3f428d08ac0fba9094ab93284bbcb91d9907cf7840043cf0e066957)
@@ -1217,14 +1424,14 @@ class NetappVolumeGroupOracleVolumeExportPolicyRule:
 
     @builtins.property
     def allowed_clients(self) -> builtins.str:
-        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.32.0/docs/resources/netapp_volume_group_oracle#allowed_clients NetappVolumeGroupOracle#allowed_clients}.'''
+        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.33.0/docs/resources/netapp_volume_group_oracle#allowed_clients NetappVolumeGroupOracle#allowed_clients}.'''
         result = self._values.get("allowed_clients")
         assert result is not None, "Required property 'allowed_clients' is missing"
         return typing.cast(builtins.str, result)
 
     @builtins.property
     def nfsv3_enabled(self) -> typing.Union[builtins.bool, _cdktf_9a9027ec.IResolvable]:
-        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.32.0/docs/resources/netapp_volume_group_oracle#nfsv3_enabled NetappVolumeGroupOracle#nfsv3_enabled}.'''
+        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.33.0/docs/resources/netapp_volume_group_oracle#nfsv3_enabled NetappVolumeGroupOracle#nfsv3_enabled}.'''
         result = self._values.get("nfsv3_enabled")
         assert result is not None, "Required property 'nfsv3_enabled' is missing"
         return typing.cast(typing.Union[builtins.bool, _cdktf_9a9027ec.IResolvable], result)
@@ -1233,14 +1440,14 @@ class NetappVolumeGroupOracleVolumeExportPolicyRule:
     def nfsv41_enabled(
         self,
     ) -> typing.Union[builtins.bool, _cdktf_9a9027ec.IResolvable]:
-        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.32.0/docs/resources/netapp_volume_group_oracle#nfsv41_enabled NetappVolumeGroupOracle#nfsv41_enabled}.'''
+        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.33.0/docs/resources/netapp_volume_group_oracle#nfsv41_enabled NetappVolumeGroupOracle#nfsv41_enabled}.'''
         result = self._values.get("nfsv41_enabled")
         assert result is not None, "Required property 'nfsv41_enabled' is missing"
         return typing.cast(typing.Union[builtins.bool, _cdktf_9a9027ec.IResolvable], result)
 
     @builtins.property
     def rule_index(self) -> jsii.Number:
-        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.32.0/docs/resources/netapp_volume_group_oracle#rule_index NetappVolumeGroupOracle#rule_index}.'''
+        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.33.0/docs/resources/netapp_volume_group_oracle#rule_index NetappVolumeGroupOracle#rule_index}.'''
         result = self._values.get("rule_index")
         assert result is not None, "Required property 'rule_index' is missing"
         return typing.cast(jsii.Number, result)
@@ -1249,7 +1456,7 @@ class NetappVolumeGroupOracleVolumeExportPolicyRule:
     def root_access_enabled(
         self,
     ) -> typing.Optional[typing.Union[builtins.bool, _cdktf_9a9027ec.IResolvable]]:
-        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.32.0/docs/resources/netapp_volume_group_oracle#root_access_enabled NetappVolumeGroupOracle#root_access_enabled}.'''
+        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.33.0/docs/resources/netapp_volume_group_oracle#root_access_enabled NetappVolumeGroupOracle#root_access_enabled}.'''
         result = self._values.get("root_access_enabled")
         return typing.cast(typing.Optional[typing.Union[builtins.bool, _cdktf_9a9027ec.IResolvable]], result)
 
@@ -1257,7 +1464,7 @@ class NetappVolumeGroupOracleVolumeExportPolicyRule:
     def unix_read_only(
         self,
     ) -> typing.Optional[typing.Union[builtins.bool, _cdktf_9a9027ec.IResolvable]]:
-        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.32.0/docs/resources/netapp_volume_group_oracle#unix_read_only NetappVolumeGroupOracle#unix_read_only}.'''
+        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.33.0/docs/resources/netapp_volume_group_oracle#unix_read_only NetappVolumeGroupOracle#unix_read_only}.'''
         result = self._values.get("unix_read_only")
         return typing.cast(typing.Optional[typing.Union[builtins.bool, _cdktf_9a9027ec.IResolvable]], result)
 
@@ -1265,7 +1472,7 @@ class NetappVolumeGroupOracleVolumeExportPolicyRule:
     def unix_read_write(
         self,
     ) -> typing.Optional[typing.Union[builtins.bool, _cdktf_9a9027ec.IResolvable]]:
-        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.32.0/docs/resources/netapp_volume_group_oracle#unix_read_write NetappVolumeGroupOracle#unix_read_write}.'''
+        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.33.0/docs/resources/netapp_volume_group_oracle#unix_read_write NetappVolumeGroupOracle#unix_read_write}.'''
         result = self._values.get("unix_read_write")
         return typing.cast(typing.Optional[typing.Union[builtins.bool, _cdktf_9a9027ec.IResolvable]], result)
 
@@ -1698,6 +1905,30 @@ class NetappVolumeGroupOracleVolumeOutputReference(
             check_type(argname="argument complex_object_is_from_set", value=complex_object_is_from_set, expected_type=type_hints["complex_object_is_from_set"])
         jsii.create(self.__class__, self, [terraform_resource, terraform_attribute, complex_object_index, complex_object_is_from_set])
 
+    @jsii.member(jsii_name="putDataProtectionReplication")
+    def put_data_protection_replication(
+        self,
+        *,
+        remote_volume_location: builtins.str,
+        remote_volume_resource_id: builtins.str,
+        replication_frequency: builtins.str,
+        endpoint_type: typing.Optional[builtins.str] = None,
+    ) -> None:
+        '''
+        :param remote_volume_location: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.33.0/docs/resources/netapp_volume_group_oracle#remote_volume_location NetappVolumeGroupOracle#remote_volume_location}.
+        :param remote_volume_resource_id: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.33.0/docs/resources/netapp_volume_group_oracle#remote_volume_resource_id NetappVolumeGroupOracle#remote_volume_resource_id}.
+        :param replication_frequency: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.33.0/docs/resources/netapp_volume_group_oracle#replication_frequency NetappVolumeGroupOracle#replication_frequency}.
+        :param endpoint_type: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.33.0/docs/resources/netapp_volume_group_oracle#endpoint_type NetappVolumeGroupOracle#endpoint_type}.
+        '''
+        value = NetappVolumeGroupOracleVolumeDataProtectionReplication(
+            remote_volume_location=remote_volume_location,
+            remote_volume_resource_id=remote_volume_resource_id,
+            replication_frequency=replication_frequency,
+            endpoint_type=endpoint_type,
+        )
+
+        return typing.cast(None, jsii.invoke(self, "putDataProtectionReplication", [value]))
+
     @jsii.member(jsii_name="putDataProtectionSnapshotPolicy")
     def put_data_protection_snapshot_policy(
         self,
@@ -1705,7 +1936,7 @@ class NetappVolumeGroupOracleVolumeOutputReference(
         snapshot_policy_id: builtins.str,
     ) -> None:
         '''
-        :param snapshot_policy_id: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.32.0/docs/resources/netapp_volume_group_oracle#snapshot_policy_id NetappVolumeGroupOracle#snapshot_policy_id}.
+        :param snapshot_policy_id: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.33.0/docs/resources/netapp_volume_group_oracle#snapshot_policy_id NetappVolumeGroupOracle#snapshot_policy_id}.
         '''
         value = NetappVolumeGroupOracleVolumeDataProtectionSnapshotPolicy(
             snapshot_policy_id=snapshot_policy_id
@@ -1725,6 +1956,10 @@ class NetappVolumeGroupOracleVolumeOutputReference(
             type_hints = typing.get_type_hints(_typecheckingstub__03b64fbff9ab7900f34c569d557d58210b5a2b34bf986972a13eb68cd7b40d16)
             check_type(argname="argument value", value=value, expected_type=type_hints["value"])
         return typing.cast(None, jsii.invoke(self, "putExportPolicyRule", [value]))
+
+    @jsii.member(jsii_name="resetDataProtectionReplication")
+    def reset_data_protection_replication(self) -> None:
+        return typing.cast(None, jsii.invoke(self, "resetDataProtectionReplication", []))
 
     @jsii.member(jsii_name="resetDataProtectionSnapshotPolicy")
     def reset_data_protection_snapshot_policy(self) -> None:
@@ -1755,6 +1990,13 @@ class NetappVolumeGroupOracleVolumeOutputReference(
         return typing.cast(None, jsii.invoke(self, "resetZone", []))
 
     @builtins.property
+    @jsii.member(jsii_name="dataProtectionReplication")
+    def data_protection_replication(
+        self,
+    ) -> NetappVolumeGroupOracleVolumeDataProtectionReplicationOutputReference:
+        return typing.cast(NetappVolumeGroupOracleVolumeDataProtectionReplicationOutputReference, jsii.get(self, "dataProtectionReplication"))
+
+    @builtins.property
     @jsii.member(jsii_name="dataProtectionSnapshotPolicy")
     def data_protection_snapshot_policy(
         self,
@@ -1780,6 +2022,13 @@ class NetappVolumeGroupOracleVolumeOutputReference(
     @jsii.member(jsii_name="capacityPoolIdInput")
     def capacity_pool_id_input(self) -> typing.Optional[builtins.str]:
         return typing.cast(typing.Optional[builtins.str], jsii.get(self, "capacityPoolIdInput"))
+
+    @builtins.property
+    @jsii.member(jsii_name="dataProtectionReplicationInput")
+    def data_protection_replication_input(
+        self,
+    ) -> typing.Optional[NetappVolumeGroupOracleVolumeDataProtectionReplication]:
+        return typing.cast(typing.Optional[NetappVolumeGroupOracleVolumeDataProtectionReplication], jsii.get(self, "dataProtectionReplicationInput"))
 
     @builtins.property
     @jsii.member(jsii_name="dataProtectionSnapshotPolicyInput")
@@ -2110,6 +2359,8 @@ __all__ = [
     "NetappVolumeGroupOracleTimeouts",
     "NetappVolumeGroupOracleTimeoutsOutputReference",
     "NetappVolumeGroupOracleVolume",
+    "NetappVolumeGroupOracleVolumeDataProtectionReplication",
+    "NetappVolumeGroupOracleVolumeDataProtectionReplicationOutputReference",
     "NetappVolumeGroupOracleVolumeDataProtectionSnapshotPolicy",
     "NetappVolumeGroupOracleVolumeDataProtectionSnapshotPolicyOutputReference",
     "NetappVolumeGroupOracleVolumeExportPolicyRule",
@@ -2285,6 +2536,7 @@ def _typecheckingstub__bd0bdd20f40b8aa3e81a167a73e9eaac4d259d2ffe9069b3f4d62e1bf
     throughput_in_mibps: jsii.Number,
     volume_path: builtins.str,
     volume_spec_name: builtins.str,
+    data_protection_replication: typing.Optional[typing.Union[NetappVolumeGroupOracleVolumeDataProtectionReplication, typing.Dict[builtins.str, typing.Any]]] = None,
     data_protection_snapshot_policy: typing.Optional[typing.Union[NetappVolumeGroupOracleVolumeDataProtectionSnapshotPolicy, typing.Dict[builtins.str, typing.Any]]] = None,
     encryption_key_source: typing.Optional[builtins.str] = None,
     key_vault_private_endpoint_id: typing.Optional[builtins.str] = None,
@@ -2292,6 +2544,53 @@ def _typecheckingstub__bd0bdd20f40b8aa3e81a167a73e9eaac4d259d2ffe9069b3f4d62e1bf
     proximity_placement_group_id: typing.Optional[builtins.str] = None,
     tags: typing.Optional[typing.Mapping[builtins.str, builtins.str]] = None,
     zone: typing.Optional[builtins.str] = None,
+) -> None:
+    """Type checking stubs"""
+    pass
+
+def _typecheckingstub__ed0b26057499c88770b7dbbe2189cb2c5c8e985193f1ba33913e405ebc80b272(
+    *,
+    remote_volume_location: builtins.str,
+    remote_volume_resource_id: builtins.str,
+    replication_frequency: builtins.str,
+    endpoint_type: typing.Optional[builtins.str] = None,
+) -> None:
+    """Type checking stubs"""
+    pass
+
+def _typecheckingstub__84a7d102593d30129c0517049121beb90758d08e8f515623d9b0da90cb5c7dfa(
+    terraform_resource: _cdktf_9a9027ec.IInterpolatingParent,
+    terraform_attribute: builtins.str,
+) -> None:
+    """Type checking stubs"""
+    pass
+
+def _typecheckingstub__7fc7eb49363537733ec72f8dbf432f457da3e52e6d276815d30b55d4add9a8e2(
+    value: builtins.str,
+) -> None:
+    """Type checking stubs"""
+    pass
+
+def _typecheckingstub__8388dfe38b3f3d3f7716ad24400f9fc3a68b815499a7450f32a4409a0ed88de4(
+    value: builtins.str,
+) -> None:
+    """Type checking stubs"""
+    pass
+
+def _typecheckingstub__eac1859a0d9dcd7d481b827412f15bf210f6a24eb29ec105d1b0ff9a86cf94ac(
+    value: builtins.str,
+) -> None:
+    """Type checking stubs"""
+    pass
+
+def _typecheckingstub__509cbee163c214c5d14b9fe64d0742f3a3253d1780c649441bb028a1be95aa01(
+    value: builtins.str,
+) -> None:
+    """Type checking stubs"""
+    pass
+
+def _typecheckingstub__bfa313564503a85b7afad73e381f4a8c01d132fa3b46575dbc420a044c4d3368(
+    value: typing.Optional[NetappVolumeGroupOracleVolumeDataProtectionReplication],
 ) -> None:
     """Type checking stubs"""
     pass

@@ -25,6 +25,7 @@ else:
 __all__ = (
     "AdditionalOptionKeysType",
     "AggFunctionType",
+    "AllowFullTableExternalDataAccessEnumType",
     "AuthenticationTypeType",
     "BackfillErrorCodeType",
     "BlueprintRunStateType",
@@ -90,6 +91,8 @@ __all__ = (
     "GlueRecordTypeType",
     "GlueServiceName",
     "HudiTargetCompressionTypeType",
+    "HyperTargetCompressionTypeType",
+    "IcebergTargetCompressionTypeType",
     "InclusionAnnotationValueType",
     "IntegrationStatusType",
     "JDBCConnectionTypeType",
@@ -194,6 +197,7 @@ AggFunctionType = Literal[
     "var_pop",
     "var_samp",
 ]
+AllowFullTableExternalDataAccessEnumType = Literal["False", "True"]
 AuthenticationTypeType = Literal["BASIC", "CUSTOM", "IAM", "OAUTH2"]
 BackfillErrorCodeType = Literal[
     "ENCRYPTED_PARTITION_ERROR",
@@ -379,6 +383,8 @@ GlueRecordTypeType = Literal[
     "BIGDECIMAL", "BYTE", "DATE", "DOUBLE", "FLOAT", "INT", "LONG", "SHORT", "STRING", "TIMESTAMP"
 ]
 HudiTargetCompressionTypeType = Literal["gzip", "lzo", "snappy", "uncompressed"]
+HyperTargetCompressionTypeType = Literal["uncompressed"]
+IcebergTargetCompressionTypeType = Literal["gzip", "lzo", "snappy", "uncompressed"]
 InclusionAnnotationValueType = Literal["EXCLUDE", "INCLUDE"]
 IntegrationStatusType = Literal[
     "ACTIVE", "CREATING", "DELETING", "FAILED", "MODIFYING", "NEEDS_ATTENTION", "SYNCING"
@@ -461,7 +467,9 @@ MetadataOperationType = Literal["CREATE"]
 NodeTypeType = Literal["CRAWLER", "JOB", "TRIGGER"]
 OAuth2GrantTypeType = Literal["AUTHORIZATION_CODE", "CLIENT_CREDENTIALS", "JWT_BEARER"]
 ParamTypeType = Literal["bool", "complex", "float", "int", "list", "null", "str"]
-ParquetCompressionTypeType = Literal["gzip", "lzo", "none", "snappy", "uncompressed"]
+ParquetCompressionTypeType = Literal[
+    "brotli", "gzip", "lz4", "lzo", "none", "snappy", "uncompressed"
+]
 PartitionIndexStatusType = Literal["ACTIVE", "CREATING", "DELETING", "FAILED"]
 PermissionType = Literal[
     "ALL",
@@ -506,7 +514,9 @@ StatisticEvaluationLevelType = Literal["Column", "Dataset", "Multicolumn"]
 TableAttributesType = Literal["NAME", "TABLE_TYPE"]
 TableOptimizerEventTypeType = Literal["completed", "failed", "in_progress", "starting"]
 TableOptimizerTypeType = Literal["compaction", "orphan_file_deletion", "retention"]
-TargetFormatType = Literal["avro", "csv", "delta", "hudi", "json", "orc", "parquet"]
+TargetFormatType = Literal[
+    "avro", "csv", "delta", "hudi", "hyper", "iceberg", "json", "orc", "parquet", "xml"
+]
 TaskRunSortColumnTypeType = Literal["STARTED", "STATUS", "TASK_RUN_TYPE"]
 TaskStatusTypeType = Literal[
     "FAILED", "RUNNING", "STARTING", "STOPPED", "STOPPING", "SUCCEEDED", "TIMEOUT"
@@ -695,6 +705,7 @@ ServiceName = Literal[
     "freetier",
     "fsx",
     "gamelift",
+    "gameliftstreams",
     "geo-maps",
     "geo-places",
     "geo-routes",
@@ -720,6 +731,7 @@ ServiceName = Literal[
     "iot",
     "iot-data",
     "iot-jobs-data",
+    "iot-managed-integrations",
     "iotanalytics",
     "iotdeviceadvisor",
     "iotevents",
@@ -834,7 +846,6 @@ ServiceName = Literal[
     "pipes",
     "polly",
     "pricing",
-    "privatenetworks",
     "proton",
     "qapps",
     "qbusiness",
@@ -895,7 +906,6 @@ ServiceName = Literal[
     "signer",
     "simspaceweaver",
     "sms",
-    "sms-voice",
     "snow-device-management",
     "snowball",
     "sns",
@@ -903,6 +913,7 @@ ServiceName = Literal[
     "sqs",
     "ssm",
     "ssm-contacts",
+    "ssm-guiconnect",
     "ssm-incidents",
     "ssm-quicksetup",
     "ssm-sap",
@@ -999,6 +1010,7 @@ RegionName = Literal[
     "ap-southeast-3",
     "ap-southeast-4",
     "ap-southeast-5",
+    "ap-southeast-7",
     "ca-central-1",
     "ca-west-1",
     "eu-central-1",
@@ -1012,6 +1024,7 @@ RegionName = Literal[
     "il-central-1",
     "me-central-1",
     "me-south-1",
+    "mx-central-1",
     "sa-east-1",
     "us-east-1",
     "us-east-2",

@@ -95,6 +95,7 @@ __all__ = (
     "ResourceServiceName",
     "ResourceSignalStatusType",
     "ResourceStatusType",
+    "ScanTypeType",
     "ServiceName",
     "StackCreateCompleteWaiterName",
     "StackDeleteCompleteWaiterName",
@@ -294,6 +295,7 @@ ResourceStatusType = Literal[
     "UPDATE_ROLLBACK_FAILED",
     "UPDATE_ROLLBACK_IN_PROGRESS",
 ]
+ScanTypeType = Literal["FULL", "PARTIAL"]
 StackCreateCompleteWaiterName = Literal["stack_create_complete"]
 StackDeleteCompleteWaiterName = Literal["stack_delete_complete"]
 StackDriftDetectionStatusType = Literal[
@@ -545,6 +547,7 @@ ServiceName = Literal[
     "freetier",
     "fsx",
     "gamelift",
+    "gameliftstreams",
     "geo-maps",
     "geo-places",
     "geo-routes",
@@ -570,6 +573,7 @@ ServiceName = Literal[
     "iot",
     "iot-data",
     "iot-jobs-data",
+    "iot-managed-integrations",
     "iotanalytics",
     "iotdeviceadvisor",
     "iotevents",
@@ -684,7 +688,6 @@ ServiceName = Literal[
     "pipes",
     "polly",
     "pricing",
-    "privatenetworks",
     "proton",
     "qapps",
     "qbusiness",
@@ -745,7 +748,6 @@ ServiceName = Literal[
     "signer",
     "simspaceweaver",
     "sms",
-    "sms-voice",
     "snow-device-management",
     "snowball",
     "sns",
@@ -753,6 +755,7 @@ ServiceName = Literal[
     "sqs",
     "ssm",
     "ssm-contacts",
+    "ssm-guiconnect",
     "ssm-incidents",
     "ssm-quicksetup",
     "ssm-sap",

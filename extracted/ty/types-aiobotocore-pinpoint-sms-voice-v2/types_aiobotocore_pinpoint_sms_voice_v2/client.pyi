@@ -933,7 +933,7 @@ class PinpointSMSVoiceV2Client(AioBaseClient):
         self, **kwargs: Unpack[PutProtectConfigurationRuleSetNumberOverrideRequestTypeDef]
     ) -> PutProtectConfigurationRuleSetNumberOverrideResultTypeDef:
         """
-        Create or update a RuleSetNumberOverride and associate it with a protect
+        Create or update a phone number rule override and associate it with a protect
         configuration.
 
         [Show boto3 documentation](https://boto3.amazonaws.com/v1/documentation/api/latest/reference/services/pinpoint-sms-voice-v2/client/put_protect_configuration_rule_set_number_override.html)
@@ -1184,8 +1184,9 @@ class PinpointSMSVoiceV2Client(AioBaseClient):
         self, **kwargs: Unpack[UpdateProtectConfigurationCountryRuleSetRequestTypeDef]
     ) -> UpdateProtectConfigurationCountryRuleSetResultTypeDef:
         """
-        Update a country rule set to <code>ALLOW</code> or <code>BLOCK</code> messages
-        to be sent to the specified destination counties.
+        Update a country rule set to <code>ALLOW</code>, <code>BLOCK</code>,
+        <code>MONITOR</code>, or <code>FILTER</code> messages to be sent to the
+        specified destination counties.
 
         [Show boto3 documentation](https://boto3.amazonaws.com/v1/documentation/api/latest/reference/services/pinpoint-sms-voice-v2/client/update_protect_configuration_country_rule_set.html)
         [Show types-aiobotocore documentation](https://youtype.github.io/types_aiobotocore_docs/types_aiobotocore_pinpoint_sms_voice_v2/client/#update_protect_configuration_country_rule_set)

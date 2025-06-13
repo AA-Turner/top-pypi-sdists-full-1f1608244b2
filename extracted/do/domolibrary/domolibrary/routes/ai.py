@@ -7,7 +7,7 @@ __all__ = ['DataDictionary_ColumnsDict', 'ColumnsDict', 'generate_chat_body', 'l
 
 # %% ../../nbs/routes/ai.ipynb 1
 import httpx
-from enum import Enum
+from domolibrary.client.DomoEntity import DomoEnum
 from typing import List, TypedDict
 
 import domolibrary.client.get_data as gd
@@ -64,7 +64,7 @@ async def llm_generate_text(
     return res
 
 # %% ../../nbs/routes/ai.ipynb 7
-class OutputStyleEnum(Enum):
+class OutputStyleEnum(DomoEnum):
     BULLETED = "BULLETED"
     NUMBERED = "Numbered"
     PARAGRAPH = "PARAGRAPH"

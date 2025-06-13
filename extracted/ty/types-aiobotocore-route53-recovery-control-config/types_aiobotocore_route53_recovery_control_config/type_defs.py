@@ -18,7 +18,7 @@ from __future__ import annotations
 
 import sys
 
-from .literals import RuleTypeType, StatusType
+from .literals import NetworkTypeType, RuleTypeType, StatusType
 
 if sys.version_info >= (3, 9):
     from builtins import dict as Dict
@@ -94,6 +94,8 @@ __all__ = (
     "RuleTypeDef",
     "TagResourceRequestTypeDef",
     "UntagResourceRequestTypeDef",
+    "UpdateClusterRequestTypeDef",
+    "UpdateClusterResponseTypeDef",
     "UpdateControlPanelRequestTypeDef",
     "UpdateControlPanelResponseTypeDef",
     "UpdateRoutingControlRequestTypeDef",
@@ -138,6 +140,7 @@ class CreateClusterRequestTypeDef(TypedDict):
     ClusterName: str
     ClientToken: NotRequired[str]
     Tags: NotRequired[Mapping[str, str]]
+    NetworkType: NotRequired[NetworkTypeType]
 
 
 class ResponseMetadataTypeDef(TypedDict):
@@ -266,6 +269,11 @@ class UntagResourceRequestTypeDef(TypedDict):
     TagKeys: Sequence[str]
 
 
+class UpdateClusterRequestTypeDef(TypedDict):
+    ClusterArn: str
+    NetworkType: NetworkTypeType
+
+
 class UpdateControlPanelRequestTypeDef(TypedDict):
     ControlPanelArn: str
     ControlPanelName: str
@@ -322,6 +330,7 @@ class ClusterTypeDef(TypedDict):
     Name: NotRequired[str]
     Status: NotRequired[StatusType]
     Owner: NotRequired[str]
+    NetworkType: NotRequired[NetworkTypeType]
 
 
 class CreateControlPanelResponseTypeDef(TypedDict):
@@ -485,6 +494,11 @@ class ListClustersResponseTypeDef(TypedDict):
     Clusters: List[ClusterTypeDef]
     ResponseMetadata: ResponseMetadataTypeDef
     NextToken: NotRequired[str]
+
+
+class UpdateClusterResponseTypeDef(TypedDict):
+    Cluster: ClusterTypeDef
+    ResponseMetadata: ResponseMetadataTypeDef
 
 
 class ListSafetyRulesResponseTypeDef(TypedDict):

@@ -1,6 +1,6 @@
 Metadata-Version: 2.4
 Name: seleniumbase
-Version: 4.39.3
+Version: 4.39.4
 Summary: A complete web automation framework for end-to-end testing.
 Home-page: https://github.com/seleniumbase/SeleniumBase
 Author: Michael Mintz
@@ -40,6 +40,7 @@ Classifier: Programming Language :: Python :: 3.10
 Classifier: Programming Language :: Python :: 3.11
 Classifier: Programming Language :: Python :: 3.12
 Classifier: Programming Language :: Python :: 3.13
+Classifier: Programming Language :: Python :: 3.14
 Classifier: Topic :: Internet
 Classifier: Topic :: Internet :: WWW/HTTP :: Browsers
 Classifier: Topic :: Scientific/Engineering
@@ -139,9 +140,9 @@ Requires-Dist: allure-python-commons>=2.13.5; extra == "allure"
 Requires-Dist: allure-behave>=2.13.5; extra == "allure"
 Provides-Extra: coverage
 Requires-Dist: coverage>=7.6.1; python_version < "3.9" and extra == "coverage"
-Requires-Dist: coverage>=7.8.2; python_version >= "3.9" and extra == "coverage"
+Requires-Dist: coverage>=7.9.0; python_version >= "3.9" and extra == "coverage"
 Requires-Dist: pytest-cov>=5.0.0; python_version < "3.9" and extra == "coverage"
-Requires-Dist: pytest-cov>=6.1.1; python_version >= "3.9" and extra == "coverage"
+Requires-Dist: pytest-cov>=6.2.1; python_version >= "3.9" and extra == "coverage"
 Provides-Extra: flake8
 Requires-Dist: flake8==5.0.4; python_version < "3.9" and extra == "flake8"
 Requires-Dist: flake8==7.2.0; python_version >= "3.9" and extra == "flake8"
@@ -160,7 +161,7 @@ Provides-Extra: pdfminer
 Requires-Dist: pdfminer.six==20250324; python_version < "3.9" and extra == "pdfminer"
 Requires-Dist: pdfminer.six==20250506; python_version >= "3.9" and extra == "pdfminer"
 Requires-Dist: cryptography==39.0.2; python_version < "3.9" and extra == "pdfminer"
-Requires-Dist: cryptography==45.0.3; python_version >= "3.9" and extra == "pdfminer"
+Requires-Dist: cryptography==45.0.4; python_version >= "3.9" and extra == "pdfminer"
 Requires-Dist: cffi==1.17.1; extra == "pdfminer"
 Requires-Dist: pycparser==2.22; extra == "pdfminer"
 Provides-Extra: pillow

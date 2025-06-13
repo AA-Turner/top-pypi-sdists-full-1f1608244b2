@@ -24,6 +24,7 @@ else:
 __all__ = (
     "CanaryRunStateReasonCodeType",
     "CanaryRunStateType",
+    "CanaryRunTestResultType",
     "CanaryStateReasonCodeType",
     "CanaryStateType",
     "EncryptionModeType",
@@ -31,12 +32,14 @@ __all__ = (
     "RegionName",
     "ResourceServiceName",
     "ResourceToTagType",
+    "RunTypeType",
     "ServiceName",
     "SyntheticsServiceName",
 )
 
 CanaryRunStateReasonCodeType = Literal["CANARY_FAILURE", "EXECUTION_FAILURE"]
 CanaryRunStateType = Literal["FAILED", "PASSED", "RUNNING"]
+CanaryRunTestResultType = Literal["FAILED", "PASSED", "UNKNOWN"]
 CanaryStateReasonCodeType = Literal[
     "CREATE_FAILED",
     "CREATE_IN_PROGRESS",
@@ -65,6 +68,7 @@ CanaryStateType = Literal[
 EncryptionModeType = Literal["SSE_KMS", "SSE_S3"]
 ProvisionedResourceCleanupSettingType = Literal["AUTOMATIC", "OFF"]
 ResourceToTagType = Literal["lambda-function"]
+RunTypeType = Literal["CANARY_RUN", "DRY_RUN"]
 SyntheticsServiceName = Literal["synthetics"]
 ServiceName = Literal[
     "accessanalyzer",
@@ -222,6 +226,7 @@ ServiceName = Literal[
     "freetier",
     "fsx",
     "gamelift",
+    "gameliftstreams",
     "geo-maps",
     "geo-places",
     "geo-routes",
@@ -247,6 +252,7 @@ ServiceName = Literal[
     "iot",
     "iot-data",
     "iot-jobs-data",
+    "iot-managed-integrations",
     "iotanalytics",
     "iotdeviceadvisor",
     "iotevents",
@@ -361,7 +367,6 @@ ServiceName = Literal[
     "pipes",
     "polly",
     "pricing",
-    "privatenetworks",
     "proton",
     "qapps",
     "qbusiness",
@@ -422,7 +427,6 @@ ServiceName = Literal[
     "signer",
     "simspaceweaver",
     "sms",
-    "sms-voice",
     "snow-device-management",
     "snowball",
     "sns",
@@ -430,6 +434,7 @@ ServiceName = Literal[
     "sqs",
     "ssm",
     "ssm-contacts",
+    "ssm-guiconnect",
     "ssm-incidents",
     "ssm-quicksetup",
     "ssm-sap",

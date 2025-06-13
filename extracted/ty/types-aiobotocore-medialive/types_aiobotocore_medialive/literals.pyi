@@ -51,6 +51,7 @@ __all__ = (
     "Av1GopSizeUnitsType",
     "Av1LevelType",
     "Av1LookAheadRateControlType",
+    "Av1RateControlModeType",
     "Av1SceneChangeDetectType",
     "AvailBlankingStateType",
     "BandwidthReductionFilterStrengthType",
@@ -87,6 +88,8 @@ __all__ = (
     "CmafIngestSegmentLengthUnitsType",
     "CmafKLVBehaviorType",
     "CmafNielsenId3BehaviorType",
+    "CmafTimedMetadataId3FrameType",
+    "CmafTimedMetadataPassthroughType",
     "ColorSpaceType",
     "ContentTypeType",
     "DashRoleAudioType",
@@ -259,6 +262,7 @@ __all__ = (
     "ListNodesPaginatorName",
     "ListOfferingsPaginatorName",
     "ListReservationsPaginatorName",
+    "ListSdiSourcesPaginatorName",
     "ListSignalMapsPaginatorName",
     "LogLevelType",
     "M2tsAbsentInputAudioBehaviorType",
@@ -351,6 +355,9 @@ __all__ = (
     "Scte35SpliceInsertWebDeliveryAllowedBehaviorType",
     "Scte35TypeType",
     "Scte35WebDeliveryAllowedFlagType",
+    "SdiSourceModeType",
+    "SdiSourceStateType",
+    "SdiSourceTypeType",
     "ServiceName",
     "SignalMapCreatedWaiterName",
     "SignalMapMonitorDeletedWaiterName",
@@ -454,6 +461,7 @@ Av1LevelType = Literal[
     "AV1_LEVEL_AUTO",
 ]
 Av1LookAheadRateControlType = Literal["HIGH", "LOW", "MEDIUM"]
+Av1RateControlModeType = Literal["CBR", "QVBR"]
 Av1SceneChangeDetectType = Literal["DISABLED", "ENABLED"]
 AvailBlankingStateType = Literal["DISABLED", "ENABLED"]
 BandwidthReductionFilterStrengthType = Literal[
@@ -529,6 +537,8 @@ CmafId3BehaviorType = Literal["DISABLED", "ENABLED"]
 CmafIngestSegmentLengthUnitsType = Literal["MILLISECONDS", "SECONDS"]
 CmafKLVBehaviorType = Literal["NO_PASSTHROUGH", "PASSTHROUGH"]
 CmafNielsenId3BehaviorType = Literal["NO_PASSTHROUGH", "PASSTHROUGH"]
+CmafTimedMetadataId3FrameType = Literal["NONE", "PRIV", "TDRL"]
+CmafTimedMetadataPassthroughType = Literal["DISABLED", "ENABLED"]
 ColorSpaceType = Literal["HDR10", "HLG_2020", "REC_601", "REC_709"]
 ContentTypeType = Literal["image/jpeg"]
 DashRoleAudioType = Literal[
@@ -656,7 +666,7 @@ FollowPointType = Literal["END", "START"]
 FrameCaptureIntervalUnitType = Literal["MILLISECONDS", "SECONDS"]
 GlobalConfigurationInputEndActionType = Literal["NONE", "SWITCH_AND_LOOP_INPUTS"]
 GlobalConfigurationLowFramerateInputsType = Literal["DISABLED", "ENABLED"]
-GlobalConfigurationOutputLockingModeType = Literal["EPOCH_LOCKING", "PIPELINE_LOCKING"]
+GlobalConfigurationOutputLockingModeType = Literal["DISABLED", "EPOCH_LOCKING", "PIPELINE_LOCKING"]
 GlobalConfigurationOutputTimingSourceType = Literal["INPUT_CLOCK", "SYSTEM_CLOCK"]
 H264AdaptiveQuantizationType = Literal["AUTO", "HIGH", "HIGHER", "LOW", "MAX", "MEDIUM", "OFF"]
 H264ColorMetadataType = Literal["IGNORE", "INSERT"]
@@ -822,6 +832,8 @@ InputTypeType = Literal[
     "RTMP_PULL",
     "RTMP_PUSH",
     "RTP_PUSH",
+    "SDI",
+    "SMPTE_2110_RECEIVER_GROUP",
     "SRT_CALLER",
     "TS_FILE",
     "UDP_PUSH",
@@ -845,6 +857,7 @@ ListNetworksPaginatorName = Literal["list_networks"]
 ListNodesPaginatorName = Literal["list_nodes"]
 ListOfferingsPaginatorName = Literal["list_offerings"]
 ListReservationsPaginatorName = Literal["list_reservations"]
+ListSdiSourcesPaginatorName = Literal["list_sdi_sources"]
 ListSignalMapsPaginatorName = Literal["list_signal_maps"]
 LogLevelType = Literal["DEBUG", "DISABLED", "ERROR", "INFO", "WARNING"]
 M2tsAbsentInputAudioBehaviorType = Literal["DROP", "ENCODE_SILENCE"]
@@ -989,6 +1002,9 @@ Scte35SpliceInsertNoRegionalBlackoutBehaviorType = Literal["FOLLOW", "IGNORE"]
 Scte35SpliceInsertWebDeliveryAllowedBehaviorType = Literal["FOLLOW", "IGNORE"]
 Scte35TypeType = Literal["NONE", "SCTE_35_WITHOUT_SEGMENTATION"]
 Scte35WebDeliveryAllowedFlagType = Literal["WEB_DELIVERY_ALLOWED", "WEB_DELIVERY_NOT_ALLOWED"]
+SdiSourceModeType = Literal["INTERLEAVE", "QUADRANT"]
+SdiSourceStateType = Literal["DELETED", "IDLE", "IN_USE"]
+SdiSourceTypeType = Literal["QUAD", "SINGLE"]
 SignalMapCreatedWaiterName = Literal["signal_map_created"]
 SignalMapMonitorDeletedWaiterName = Literal["signal_map_monitor_deleted"]
 SignalMapMonitorDeployedWaiterName = Literal["signal_map_monitor_deployed"]
@@ -1229,6 +1245,7 @@ ServiceName = Literal[
     "freetier",
     "fsx",
     "gamelift",
+    "gameliftstreams",
     "geo-maps",
     "geo-places",
     "geo-routes",
@@ -1254,6 +1271,7 @@ ServiceName = Literal[
     "iot",
     "iot-data",
     "iot-jobs-data",
+    "iot-managed-integrations",
     "iotanalytics",
     "iotdeviceadvisor",
     "iotevents",
@@ -1368,7 +1386,6 @@ ServiceName = Literal[
     "pipes",
     "polly",
     "pricing",
-    "privatenetworks",
     "proton",
     "qapps",
     "qbusiness",
@@ -1429,7 +1446,6 @@ ServiceName = Literal[
     "signer",
     "simspaceweaver",
     "sms",
-    "sms-voice",
     "snow-device-management",
     "snowball",
     "sns",
@@ -1437,6 +1453,7 @@ ServiceName = Literal[
     "sqs",
     "ssm",
     "ssm-contacts",
+    "ssm-guiconnect",
     "ssm-incidents",
     "ssm-quicksetup",
     "ssm-sap",
@@ -1508,6 +1525,7 @@ PaginatorName = Literal[
     "list_nodes",
     "list_offerings",
     "list_reservations",
+    "list_sdi_sources",
     "list_signal_maps",
 ]
 WaiterName = Literal[

@@ -87,6 +87,7 @@ from .paginator import (
     DescribeLocalGatewayVirtualInterfaceGroupsPaginator,
     DescribeLocalGatewayVirtualInterfacesPaginator,
     DescribeMacHostsPaginator,
+    DescribeMacModificationTasksPaginator,
     DescribeManagedPrefixListsPaginator,
     DescribeMovingAddressesPaginator,
     DescribeNatGatewaysPaginator,
@@ -103,6 +104,9 @@ from .paginator import (
     DescribeReplaceRootVolumeTasksPaginator,
     DescribeReservedInstancesModificationsPaginator,
     DescribeReservedInstancesOfferingsPaginator,
+    DescribeRouteServerEndpointsPaginator,
+    DescribeRouteServerPeersPaginator,
+    DescribeRouteServersPaginator,
     DescribeRouteTablesPaginator,
     DescribeScheduledInstanceAvailabilityPaginator,
     DescribeScheduledInstancesPaginator,
@@ -229,6 +233,8 @@ from .type_defs import (
     AssociateIpamResourceDiscoveryResultTypeDef,
     AssociateNatGatewayAddressRequestTypeDef,
     AssociateNatGatewayAddressResultTypeDef,
+    AssociateRouteServerRequestTypeDef,
+    AssociateRouteServerResultTypeDef,
     AssociateRouteTableRequestTypeDef,
     AssociateRouteTableResultTypeDef,
     AssociateSecurityGroupVpcRequestTypeDef,
@@ -315,6 +321,8 @@ from .type_defs import (
     CreateDefaultSubnetResultTypeDef,
     CreateDefaultVpcRequestTypeDef,
     CreateDefaultVpcResultTypeDef,
+    CreateDelegateMacVolumeOwnershipTaskRequestTypeDef,
+    CreateDelegateMacVolumeOwnershipTaskResultTypeDef,
     CreateDhcpOptionsRequestTypeDef,
     CreateDhcpOptionsResultTypeDef,
     CreateEgressOnlyInternetGatewayRequestTypeDef,
@@ -358,6 +366,12 @@ from .type_defs import (
     CreateLocalGatewayRouteTableVirtualInterfaceGroupAssociationResultTypeDef,
     CreateLocalGatewayRouteTableVpcAssociationRequestTypeDef,
     CreateLocalGatewayRouteTableVpcAssociationResultTypeDef,
+    CreateLocalGatewayVirtualInterfaceGroupRequestTypeDef,
+    CreateLocalGatewayVirtualInterfaceGroupResultTypeDef,
+    CreateLocalGatewayVirtualInterfaceRequestTypeDef,
+    CreateLocalGatewayVirtualInterfaceResultTypeDef,
+    CreateMacSystemIntegrityProtectionModificationTaskRequestTypeDef,
+    CreateMacSystemIntegrityProtectionModificationTaskResultTypeDef,
     CreateManagedPrefixListRequestTypeDef,
     CreateManagedPrefixListResultTypeDef,
     CreateNatGatewayRequestTypeDef,
@@ -385,6 +399,12 @@ from .type_defs import (
     CreateRestoreImageTaskResultTypeDef,
     CreateRouteRequestTypeDef,
     CreateRouteResultTypeDef,
+    CreateRouteServerEndpointRequestTypeDef,
+    CreateRouteServerEndpointResultTypeDef,
+    CreateRouteServerPeerRequestTypeDef,
+    CreateRouteServerPeerResultTypeDef,
+    CreateRouteServerRequestTypeDef,
+    CreateRouteServerResultTypeDef,
     CreateRouteTableRequestTypeDef,
     CreateRouteTableResultTypeDef,
     CreateSecurityGroupRequestTypeDef,
@@ -505,6 +525,10 @@ from .type_defs import (
     DeleteLocalGatewayRouteTableVirtualInterfaceGroupAssociationResultTypeDef,
     DeleteLocalGatewayRouteTableVpcAssociationRequestTypeDef,
     DeleteLocalGatewayRouteTableVpcAssociationResultTypeDef,
+    DeleteLocalGatewayVirtualInterfaceGroupRequestTypeDef,
+    DeleteLocalGatewayVirtualInterfaceGroupResultTypeDef,
+    DeleteLocalGatewayVirtualInterfaceRequestTypeDef,
+    DeleteLocalGatewayVirtualInterfaceResultTypeDef,
     DeleteManagedPrefixListRequestTypeDef,
     DeleteManagedPrefixListResultTypeDef,
     DeleteNatGatewayRequestTypeDef,
@@ -528,6 +552,12 @@ from .type_defs import (
     DeleteQueuedReservedInstancesRequestTypeDef,
     DeleteQueuedReservedInstancesResultTypeDef,
     DeleteRouteRequestTypeDef,
+    DeleteRouteServerEndpointRequestTypeDef,
+    DeleteRouteServerEndpointResultTypeDef,
+    DeleteRouteServerPeerRequestTypeDef,
+    DeleteRouteServerPeerResultTypeDef,
+    DeleteRouteServerRequestTypeDef,
+    DeleteRouteServerResultTypeDef,
     DeleteRouteTableRequestTypeDef,
     DeleteSecurityGroupRequestTypeDef,
     DeleteSecurityGroupResultTypeDef,
@@ -598,6 +628,7 @@ from .type_defs import (
     DeprovisionPublicIpv4PoolCidrRequestTypeDef,
     DeprovisionPublicIpv4PoolCidrResultTypeDef,
     DeregisterImageRequestTypeDef,
+    DeregisterImageResultTypeDef,
     DeregisterInstanceEventNotificationAttributesRequestTypeDef,
     DeregisterInstanceEventNotificationAttributesResultTypeDef,
     DeregisterTransitGatewayMulticastGroupMembersRequestTypeDef,
@@ -762,6 +793,8 @@ from .type_defs import (
     DescribeLockedSnapshotsResultTypeDef,
     DescribeMacHostsRequestTypeDef,
     DescribeMacHostsResultTypeDef,
+    DescribeMacModificationTasksRequestTypeDef,
+    DescribeMacModificationTasksResultTypeDef,
     DescribeManagedPrefixListsRequestTypeDef,
     DescribeManagedPrefixListsResultTypeDef,
     DescribeMovingAddressesRequestTypeDef,
@@ -784,6 +817,8 @@ from .type_defs import (
     DescribeNetworkInterfacePermissionsResultTypeDef,
     DescribeNetworkInterfacesRequestTypeDef,
     DescribeNetworkInterfacesResultTypeDef,
+    DescribeOutpostLagsRequestTypeDef,
+    DescribeOutpostLagsResultTypeDef,
     DescribePlacementGroupsRequestTypeDef,
     DescribePlacementGroupsResultTypeDef,
     DescribePrefixListsRequestTypeDef,
@@ -804,6 +839,12 @@ from .type_defs import (
     DescribeReservedInstancesOfferingsResultTypeDef,
     DescribeReservedInstancesRequestTypeDef,
     DescribeReservedInstancesResultTypeDef,
+    DescribeRouteServerEndpointsRequestTypeDef,
+    DescribeRouteServerEndpointsResultTypeDef,
+    DescribeRouteServerPeersRequestTypeDef,
+    DescribeRouteServerPeersResultTypeDef,
+    DescribeRouteServersRequestTypeDef,
+    DescribeRouteServersResultTypeDef,
     DescribeRouteTablesRequestTypeDef,
     DescribeRouteTablesResultTypeDef,
     DescribeScheduledInstanceAvailabilityRequestTypeDef,
@@ -818,6 +859,8 @@ from .type_defs import (
     DescribeSecurityGroupsResultTypeDef,
     DescribeSecurityGroupVpcAssociationsRequestTypeDef,
     DescribeSecurityGroupVpcAssociationsResultTypeDef,
+    DescribeServiceLinkVirtualInterfacesRequestTypeDef,
+    DescribeServiceLinkVirtualInterfacesResultTypeDef,
     DescribeSnapshotAttributeRequestTypeDef,
     DescribeSnapshotAttributeResultTypeDef,
     DescribeSnapshotsRequestTypeDef,
@@ -954,6 +997,8 @@ from .type_defs import (
     DisableImageResultTypeDef,
     DisableIpamOrganizationAdminAccountRequestTypeDef,
     DisableIpamOrganizationAdminAccountResultTypeDef,
+    DisableRouteServerPropagationRequestTypeDef,
+    DisableRouteServerPropagationResultTypeDef,
     DisableSerialConsoleAccessRequestTypeDef,
     DisableSerialConsoleAccessResultTypeDef,
     DisableSnapshotBlockPublicAccessRequestTypeDef,
@@ -982,6 +1027,8 @@ from .type_defs import (
     DisassociateIpamResourceDiscoveryResultTypeDef,
     DisassociateNatGatewayAddressRequestTypeDef,
     DisassociateNatGatewayAddressResultTypeDef,
+    DisassociateRouteServerRequestTypeDef,
+    DisassociateRouteServerResultTypeDef,
     DisassociateRouteTableRequestTypeDef,
     DisassociateSecurityGroupVpcRequestTypeDef,
     DisassociateSecurityGroupVpcResultTypeDef,
@@ -1022,6 +1069,8 @@ from .type_defs import (
     EnableIpamOrganizationAdminAccountResultTypeDef,
     EnableReachabilityAnalyzerOrganizationSharingRequestTypeDef,
     EnableReachabilityAnalyzerOrganizationSharingResultTypeDef,
+    EnableRouteServerPropagationRequestTypeDef,
+    EnableRouteServerPropagationResultTypeDef,
     EnableSerialConsoleAccessRequestTypeDef,
     EnableSerialConsoleAccessResultTypeDef,
     EnableSnapshotBlockPublicAccessRequestTypeDef,
@@ -1044,6 +1093,8 @@ from .type_defs import (
     ExportTransitGatewayRoutesResultTypeDef,
     ExportVerifiedAccessInstanceClientConfigurationRequestTypeDef,
     ExportVerifiedAccessInstanceClientConfigurationResultTypeDef,
+    GetActiveVpnTunnelStatusRequestTypeDef,
+    GetActiveVpnTunnelStatusResultTypeDef,
     GetAllowedImagesSettingsRequestTypeDef,
     GetAllowedImagesSettingsResultTypeDef,
     GetAssociatedEnclaveCertificateIamRolesRequestTypeDef,
@@ -1112,6 +1163,12 @@ from .type_defs import (
     GetPasswordDataResultTypeDef,
     GetReservedInstancesExchangeQuoteRequestTypeDef,
     GetReservedInstancesExchangeQuoteResultTypeDef,
+    GetRouteServerAssociationsRequestTypeDef,
+    GetRouteServerAssociationsResultTypeDef,
+    GetRouteServerPropagationsRequestTypeDef,
+    GetRouteServerPropagationsResultTypeDef,
+    GetRouteServerRoutingDatabaseRequestTypeDef,
+    GetRouteServerRoutingDatabaseResultTypeDef,
     GetSecurityGroupsForVpcRequestTypeDef,
     GetSecurityGroupsForVpcResultTypeDef,
     GetSerialConsoleAccessStatusRequestTypeDef,
@@ -1232,8 +1289,12 @@ from .type_defs import (
     ModifyNetworkInterfaceAttributeRequestTypeDef,
     ModifyPrivateDnsNameOptionsRequestTypeDef,
     ModifyPrivateDnsNameOptionsResultTypeDef,
+    ModifyPublicIpDnsNameOptionsRequestTypeDef,
+    ModifyPublicIpDnsNameOptionsResultTypeDef,
     ModifyReservedInstancesRequestTypeDef,
     ModifyReservedInstancesResultTypeDef,
+    ModifyRouteServerRequestTypeDef,
+    ModifyRouteServerResultTypeDef,
     ModifySecurityGroupRulesRequestTypeDef,
     ModifySecurityGroupRulesResultTypeDef,
     ModifySnapshotAttributeRequestTypeDef,
@@ -1481,11 +1542,10 @@ from .waiter import (
 )
 
 if sys.version_info >= (3, 9):
-    from builtins import dict as Dict
     from builtins import type as Type
     from collections.abc import Mapping
 else:
-    from typing import Dict, Mapping, Type
+    from typing import Mapping, Type
 if sys.version_info >= (3, 12):
     from typing import Literal, Self, Unpack
 else:
@@ -1801,6 +1861,16 @@ class EC2Client(AioBaseClient):
 
         [Show boto3 documentation](https://boto3.amazonaws.com/v1/documentation/api/latest/reference/services/ec2/client/associate_nat_gateway_address.html)
         [Show types-aiobotocore documentation](https://youtype.github.io/types_aiobotocore_docs/types_aiobotocore_ec2/client/#associate_nat_gateway_address)
+        """
+
+    async def associate_route_server(
+        self, **kwargs: Unpack[AssociateRouteServerRequestTypeDef]
+    ) -> AssociateRouteServerResultTypeDef:
+        """
+        Associates a route server with a VPC to enable dynamic route updates.
+
+        [Show boto3 documentation](https://boto3.amazonaws.com/v1/documentation/api/latest/reference/services/ec2/client/associate_route_server.html)
+        [Show types-aiobotocore documentation](https://youtype.github.io/types_aiobotocore_docs/types_aiobotocore_ec2/client/#associate_route_server)
         """
 
     async def associate_route_table(
@@ -2254,6 +2324,17 @@ class EC2Client(AioBaseClient):
         [Show types-aiobotocore documentation](https://youtype.github.io/types_aiobotocore_docs/types_aiobotocore_ec2/client/#create_default_vpc)
         """
 
+    async def create_delegate_mac_volume_ownership_task(
+        self, **kwargs: Unpack[CreateDelegateMacVolumeOwnershipTaskRequestTypeDef]
+    ) -> CreateDelegateMacVolumeOwnershipTaskResultTypeDef:
+        """
+        Delegates ownership of the Amazon EBS root volume for an Apple silicon Mac
+        instance to an administrative user.
+
+        [Show boto3 documentation](https://boto3.amazonaws.com/v1/documentation/api/latest/reference/services/ec2/client/create_delegate_mac_volume_ownership_task.html)
+        [Show types-aiobotocore documentation](https://youtype.github.io/types_aiobotocore_docs/types_aiobotocore_ec2/client/#create_delegate_mac_volume_ownership_task)
+        """
+
     async def create_dhcp_options(
         self, **kwargs: Unpack[CreateDhcpOptionsRequestTypeDef]
     ) -> CreateDhcpOptionsResultTypeDef:
@@ -2482,6 +2563,37 @@ class EC2Client(AioBaseClient):
         [Show types-aiobotocore documentation](https://youtype.github.io/types_aiobotocore_docs/types_aiobotocore_ec2/client/#create_local_gateway_route_table_vpc_association)
         """
 
+    async def create_local_gateway_virtual_interface(
+        self, **kwargs: Unpack[CreateLocalGatewayVirtualInterfaceRequestTypeDef]
+    ) -> CreateLocalGatewayVirtualInterfaceResultTypeDef:
+        """
+        Create a virtual interface for a local gateway.
+
+        [Show boto3 documentation](https://boto3.amazonaws.com/v1/documentation/api/latest/reference/services/ec2/client/create_local_gateway_virtual_interface.html)
+        [Show types-aiobotocore documentation](https://youtype.github.io/types_aiobotocore_docs/types_aiobotocore_ec2/client/#create_local_gateway_virtual_interface)
+        """
+
+    async def create_local_gateway_virtual_interface_group(
+        self, **kwargs: Unpack[CreateLocalGatewayVirtualInterfaceGroupRequestTypeDef]
+    ) -> CreateLocalGatewayVirtualInterfaceGroupResultTypeDef:
+        """
+        Create a local gateway virtual interface group.
+
+        [Show boto3 documentation](https://boto3.amazonaws.com/v1/documentation/api/latest/reference/services/ec2/client/create_local_gateway_virtual_interface_group.html)
+        [Show types-aiobotocore documentation](https://youtype.github.io/types_aiobotocore_docs/types_aiobotocore_ec2/client/#create_local_gateway_virtual_interface_group)
+        """
+
+    async def create_mac_system_integrity_protection_modification_task(
+        self, **kwargs: Unpack[CreateMacSystemIntegrityProtectionModificationTaskRequestTypeDef]
+    ) -> CreateMacSystemIntegrityProtectionModificationTaskResultTypeDef:
+        """
+        Creates a System Integrity Protection (SIP) modification task to configure the
+        SIP settings for an x86 Mac instance or Apple silicon Mac instance.
+
+        [Show boto3 documentation](https://boto3.amazonaws.com/v1/documentation/api/latest/reference/services/ec2/client/create_mac_system_integrity_protection_modification_task.html)
+        [Show types-aiobotocore documentation](https://youtype.github.io/types_aiobotocore_docs/types_aiobotocore_ec2/client/#create_mac_system_integrity_protection_modification_task)
+        """
+
     async def create_managed_prefix_list(
         self, **kwargs: Unpack[CreateManagedPrefixListRequestTypeDef]
     ) -> CreateManagedPrefixListResultTypeDef:
@@ -2627,6 +2739,36 @@ class EC2Client(AioBaseClient):
 
         [Show boto3 documentation](https://boto3.amazonaws.com/v1/documentation/api/latest/reference/services/ec2/client/create_route.html)
         [Show types-aiobotocore documentation](https://youtype.github.io/types_aiobotocore_docs/types_aiobotocore_ec2/client/#create_route)
+        """
+
+    async def create_route_server(
+        self, **kwargs: Unpack[CreateRouteServerRequestTypeDef]
+    ) -> CreateRouteServerResultTypeDef:
+        """
+        Creates a new route server to manage dynamic routing in a VPC.
+
+        [Show boto3 documentation](https://boto3.amazonaws.com/v1/documentation/api/latest/reference/services/ec2/client/create_route_server.html)
+        [Show types-aiobotocore documentation](https://youtype.github.io/types_aiobotocore_docs/types_aiobotocore_ec2/client/#create_route_server)
+        """
+
+    async def create_route_server_endpoint(
+        self, **kwargs: Unpack[CreateRouteServerEndpointRequestTypeDef]
+    ) -> CreateRouteServerEndpointResultTypeDef:
+        """
+        Creates a new endpoint for a route server in a specified subnet.
+
+        [Show boto3 documentation](https://boto3.amazonaws.com/v1/documentation/api/latest/reference/services/ec2/client/create_route_server_endpoint.html)
+        [Show types-aiobotocore documentation](https://youtype.github.io/types_aiobotocore_docs/types_aiobotocore_ec2/client/#create_route_server_endpoint)
+        """
+
+    async def create_route_server_peer(
+        self, **kwargs: Unpack[CreateRouteServerPeerRequestTypeDef]
+    ) -> CreateRouteServerPeerResultTypeDef:
+        """
+        Creates a new BGP peer for a specified route server endpoint.
+
+        [Show boto3 documentation](https://boto3.amazonaws.com/v1/documentation/api/latest/reference/services/ec2/client/create_route_server_peer.html)
+        [Show types-aiobotocore documentation](https://youtype.github.io/types_aiobotocore_docs/types_aiobotocore_ec2/client/#create_route_server_peer)
         """
 
     async def create_route_table(
@@ -3286,6 +3428,26 @@ class EC2Client(AioBaseClient):
         [Show types-aiobotocore documentation](https://youtype.github.io/types_aiobotocore_docs/types_aiobotocore_ec2/client/#delete_local_gateway_route_table_vpc_association)
         """
 
+    async def delete_local_gateway_virtual_interface(
+        self, **kwargs: Unpack[DeleteLocalGatewayVirtualInterfaceRequestTypeDef]
+    ) -> DeleteLocalGatewayVirtualInterfaceResultTypeDef:
+        """
+        Deletes the specified local gateway virtual interface.
+
+        [Show boto3 documentation](https://boto3.amazonaws.com/v1/documentation/api/latest/reference/services/ec2/client/delete_local_gateway_virtual_interface.html)
+        [Show types-aiobotocore documentation](https://youtype.github.io/types_aiobotocore_docs/types_aiobotocore_ec2/client/#delete_local_gateway_virtual_interface)
+        """
+
+    async def delete_local_gateway_virtual_interface_group(
+        self, **kwargs: Unpack[DeleteLocalGatewayVirtualInterfaceGroupRequestTypeDef]
+    ) -> DeleteLocalGatewayVirtualInterfaceGroupResultTypeDef:
+        """
+        Delete the specified local gateway interface group.
+
+        [Show boto3 documentation](https://boto3.amazonaws.com/v1/documentation/api/latest/reference/services/ec2/client/delete_local_gateway_virtual_interface_group.html)
+        [Show types-aiobotocore documentation](https://youtype.github.io/types_aiobotocore_docs/types_aiobotocore_ec2/client/#delete_local_gateway_virtual_interface_group)
+        """
+
     async def delete_managed_prefix_list(
         self, **kwargs: Unpack[DeleteManagedPrefixListRequestTypeDef]
     ) -> DeleteManagedPrefixListResultTypeDef:
@@ -3425,6 +3587,36 @@ class EC2Client(AioBaseClient):
 
         [Show boto3 documentation](https://boto3.amazonaws.com/v1/documentation/api/latest/reference/services/ec2/client/delete_route.html)
         [Show types-aiobotocore documentation](https://youtype.github.io/types_aiobotocore_docs/types_aiobotocore_ec2/client/#delete_route)
+        """
+
+    async def delete_route_server(
+        self, **kwargs: Unpack[DeleteRouteServerRequestTypeDef]
+    ) -> DeleteRouteServerResultTypeDef:
+        """
+        Deletes the specified route server.
+
+        [Show boto3 documentation](https://boto3.amazonaws.com/v1/documentation/api/latest/reference/services/ec2/client/delete_route_server.html)
+        [Show types-aiobotocore documentation](https://youtype.github.io/types_aiobotocore_docs/types_aiobotocore_ec2/client/#delete_route_server)
+        """
+
+    async def delete_route_server_endpoint(
+        self, **kwargs: Unpack[DeleteRouteServerEndpointRequestTypeDef]
+    ) -> DeleteRouteServerEndpointResultTypeDef:
+        """
+        Deletes the specified route server endpoint.
+
+        [Show boto3 documentation](https://boto3.amazonaws.com/v1/documentation/api/latest/reference/services/ec2/client/delete_route_server_endpoint.html)
+        [Show types-aiobotocore documentation](https://youtype.github.io/types_aiobotocore_docs/types_aiobotocore_ec2/client/#delete_route_server_endpoint)
+        """
+
+    async def delete_route_server_peer(
+        self, **kwargs: Unpack[DeleteRouteServerPeerRequestTypeDef]
+    ) -> DeleteRouteServerPeerResultTypeDef:
+        """
+        Deletes the specified BGP peer from a route server.
+
+        [Show boto3 documentation](https://boto3.amazonaws.com/v1/documentation/api/latest/reference/services/ec2/client/delete_route_server_peer.html)
+        [Show types-aiobotocore documentation](https://youtype.github.io/types_aiobotocore_docs/types_aiobotocore_ec2/client/#delete_route_server_peer)
         """
 
     async def delete_route_table(
@@ -3832,7 +4024,7 @@ class EC2Client(AioBaseClient):
 
     async def deregister_image(
         self, **kwargs: Unpack[DeregisterImageRequestTypeDef]
-    ) -> Dict[str, Any]:
+    ) -> DeregisterImageResultTypeDef:
         """
         Deregisters the specified AMI.
 
@@ -4702,6 +4894,17 @@ class EC2Client(AioBaseClient):
         [Show types-aiobotocore documentation](https://youtype.github.io/types_aiobotocore_docs/types_aiobotocore_ec2/client/#describe_mac_hosts)
         """
 
+    async def describe_mac_modification_tasks(
+        self, **kwargs: Unpack[DescribeMacModificationTasksRequestTypeDef]
+    ) -> DescribeMacModificationTasksResultTypeDef:
+        """
+        Describes a System Integrity Protection (SIP) modification task or volume
+        ownership delegation task for an Amazon EC2 Mac instance.
+
+        [Show boto3 documentation](https://boto3.amazonaws.com/v1/documentation/api/latest/reference/services/ec2/client/describe_mac_modification_tasks.html)
+        [Show types-aiobotocore documentation](https://youtype.github.io/types_aiobotocore_docs/types_aiobotocore_ec2/client/#describe_mac_modification_tasks)
+        """
+
     async def describe_managed_prefix_lists(
         self, **kwargs: Unpack[DescribeManagedPrefixListsRequestTypeDef]
     ) -> DescribeManagedPrefixListsResultTypeDef:
@@ -4813,6 +5016,16 @@ class EC2Client(AioBaseClient):
         [Show types-aiobotocore documentation](https://youtype.github.io/types_aiobotocore_docs/types_aiobotocore_ec2/client/#describe_network_interfaces)
         """
 
+    async def describe_outpost_lags(
+        self, **kwargs: Unpack[DescribeOutpostLagsRequestTypeDef]
+    ) -> DescribeOutpostLagsResultTypeDef:
+        """
+        Describes the Outposts link aggregation groups (LAGs).
+
+        [Show boto3 documentation](https://boto3.amazonaws.com/v1/documentation/api/latest/reference/services/ec2/client/describe_outpost_lags.html)
+        [Show types-aiobotocore documentation](https://youtype.github.io/types_aiobotocore_docs/types_aiobotocore_ec2/client/#describe_outpost_lags)
+        """
+
     async def describe_placement_groups(
         self, **kwargs: Unpack[DescribePlacementGroupsRequestTypeDef]
     ) -> DescribePlacementGroupsResultTypeDef:
@@ -4917,6 +5130,36 @@ class EC2Client(AioBaseClient):
         [Show types-aiobotocore documentation](https://youtype.github.io/types_aiobotocore_docs/types_aiobotocore_ec2/client/#describe_reserved_instances_offerings)
         """
 
+    async def describe_route_server_endpoints(
+        self, **kwargs: Unpack[DescribeRouteServerEndpointsRequestTypeDef]
+    ) -> DescribeRouteServerEndpointsResultTypeDef:
+        """
+        Describes one or more route server endpoints.
+
+        [Show boto3 documentation](https://boto3.amazonaws.com/v1/documentation/api/latest/reference/services/ec2/client/describe_route_server_endpoints.html)
+        [Show types-aiobotocore documentation](https://youtype.github.io/types_aiobotocore_docs/types_aiobotocore_ec2/client/#describe_route_server_endpoints)
+        """
+
+    async def describe_route_server_peers(
+        self, **kwargs: Unpack[DescribeRouteServerPeersRequestTypeDef]
+    ) -> DescribeRouteServerPeersResultTypeDef:
+        """
+        Describes one or more route server peers.
+
+        [Show boto3 documentation](https://boto3.amazonaws.com/v1/documentation/api/latest/reference/services/ec2/client/describe_route_server_peers.html)
+        [Show types-aiobotocore documentation](https://youtype.github.io/types_aiobotocore_docs/types_aiobotocore_ec2/client/#describe_route_server_peers)
+        """
+
+    async def describe_route_servers(
+        self, **kwargs: Unpack[DescribeRouteServersRequestTypeDef]
+    ) -> DescribeRouteServersResultTypeDef:
+        """
+        Describes one or more route servers.
+
+        [Show boto3 documentation](https://boto3.amazonaws.com/v1/documentation/api/latest/reference/services/ec2/client/describe_route_servers.html)
+        [Show types-aiobotocore documentation](https://youtype.github.io/types_aiobotocore_docs/types_aiobotocore_ec2/client/#describe_route_servers)
+        """
+
     async def describe_route_tables(
         self, **kwargs: Unpack[DescribeRouteTablesRequestTypeDef]
     ) -> DescribeRouteTablesResultTypeDef:
@@ -4988,6 +5231,16 @@ class EC2Client(AioBaseClient):
 
         [Show boto3 documentation](https://boto3.amazonaws.com/v1/documentation/api/latest/reference/services/ec2/client/describe_security_groups.html)
         [Show types-aiobotocore documentation](https://youtype.github.io/types_aiobotocore_docs/types_aiobotocore_ec2/client/#describe_security_groups)
+        """
+
+    async def describe_service_link_virtual_interfaces(
+        self, **kwargs: Unpack[DescribeServiceLinkVirtualInterfacesRequestTypeDef]
+    ) -> DescribeServiceLinkVirtualInterfacesResultTypeDef:
+        """
+        Describes the Outpost service link virtual interfaces.
+
+        [Show boto3 documentation](https://boto3.amazonaws.com/v1/documentation/api/latest/reference/services/ec2/client/describe_service_link_virtual_interfaces.html)
+        [Show types-aiobotocore documentation](https://youtype.github.io/types_aiobotocore_docs/types_aiobotocore_ec2/client/#describe_service_link_virtual_interfaces)
         """
 
     async def describe_snapshot_attribute(
@@ -5707,6 +5960,16 @@ class EC2Client(AioBaseClient):
         [Show types-aiobotocore documentation](https://youtype.github.io/types_aiobotocore_docs/types_aiobotocore_ec2/client/#disable_ipam_organization_admin_account)
         """
 
+    async def disable_route_server_propagation(
+        self, **kwargs: Unpack[DisableRouteServerPropagationRequestTypeDef]
+    ) -> DisableRouteServerPropagationResultTypeDef:
+        """
+        Disables route propagation from a route server to a specified route table.
+
+        [Show boto3 documentation](https://boto3.amazonaws.com/v1/documentation/api/latest/reference/services/ec2/client/disable_route_server_propagation.html)
+        [Show types-aiobotocore documentation](https://youtype.github.io/types_aiobotocore_docs/types_aiobotocore_ec2/client/#disable_route_server_propagation)
+        """
+
     async def disable_serial_console_access(
         self, **kwargs: Unpack[DisableSerialConsoleAccessRequestTypeDef]
     ) -> DisableSerialConsoleAccessResultTypeDef:
@@ -5862,6 +6125,16 @@ class EC2Client(AioBaseClient):
 
         [Show boto3 documentation](https://boto3.amazonaws.com/v1/documentation/api/latest/reference/services/ec2/client/disassociate_nat_gateway_address.html)
         [Show types-aiobotocore documentation](https://youtype.github.io/types_aiobotocore_docs/types_aiobotocore_ec2/client/#disassociate_nat_gateway_address)
+        """
+
+    async def disassociate_route_server(
+        self, **kwargs: Unpack[DisassociateRouteServerRequestTypeDef]
+    ) -> DisassociateRouteServerResultTypeDef:
+        """
+        Disassociates a route server from a VPC.
+
+        [Show boto3 documentation](https://boto3.amazonaws.com/v1/documentation/api/latest/reference/services/ec2/client/disassociate_route_server.html)
+        [Show types-aiobotocore documentation](https://youtype.github.io/types_aiobotocore_docs/types_aiobotocore_ec2/client/#disassociate_route_server)
         """
 
     async def disassociate_route_table(
@@ -6070,6 +6343,16 @@ class EC2Client(AioBaseClient):
         [Show types-aiobotocore documentation](https://youtype.github.io/types_aiobotocore_docs/types_aiobotocore_ec2/client/#enable_reachability_analyzer_organization_sharing)
         """
 
+    async def enable_route_server_propagation(
+        self, **kwargs: Unpack[EnableRouteServerPropagationRequestTypeDef]
+    ) -> EnableRouteServerPropagationResultTypeDef:
+        """
+        Defines which route tables the route server can update with routes.
+
+        [Show boto3 documentation](https://boto3.amazonaws.com/v1/documentation/api/latest/reference/services/ec2/client/enable_route_server_propagation.html)
+        [Show types-aiobotocore documentation](https://youtype.github.io/types_aiobotocore_docs/types_aiobotocore_ec2/client/#enable_route_server_propagation)
+        """
+
     async def enable_serial_console_access(
         self, **kwargs: Unpack[EnableSerialConsoleAccessRequestTypeDef]
     ) -> EnableSerialConsoleAccessResultTypeDef:
@@ -6195,6 +6478,18 @@ class EC2Client(AioBaseClient):
 
         [Show boto3 documentation](https://boto3.amazonaws.com/v1/documentation/api/latest/reference/services/ec2/client/export_verified_access_instance_client_configuration.html)
         [Show types-aiobotocore documentation](https://youtype.github.io/types_aiobotocore_docs/types_aiobotocore_ec2/client/#export_verified_access_instance_client_configuration)
+        """
+
+    async def get_active_vpn_tunnel_status(
+        self, **kwargs: Unpack[GetActiveVpnTunnelStatusRequestTypeDef]
+    ) -> GetActiveVpnTunnelStatusResultTypeDef:
+        """
+        Returns the currently negotiated security parameters for an active VPN tunnel,
+        including IKE version, DH groups, encryption algorithms, and integrity
+        algorithms.
+
+        [Show boto3 documentation](https://boto3.amazonaws.com/v1/documentation/api/latest/reference/services/ec2/client/get_active_vpn_tunnel_status.html)
+        [Show types-aiobotocore documentation](https://youtype.github.io/types_aiobotocore_docs/types_aiobotocore_ec2/client/#get_active_vpn_tunnel_status)
         """
 
     async def get_allowed_images_settings(
@@ -6549,6 +6844,36 @@ class EC2Client(AioBaseClient):
 
         [Show boto3 documentation](https://boto3.amazonaws.com/v1/documentation/api/latest/reference/services/ec2/client/get_reserved_instances_exchange_quote.html)
         [Show types-aiobotocore documentation](https://youtype.github.io/types_aiobotocore_docs/types_aiobotocore_ec2/client/#get_reserved_instances_exchange_quote)
+        """
+
+    async def get_route_server_associations(
+        self, **kwargs: Unpack[GetRouteServerAssociationsRequestTypeDef]
+    ) -> GetRouteServerAssociationsResultTypeDef:
+        """
+        Gets information about the associations for the specified route server.
+
+        [Show boto3 documentation](https://boto3.amazonaws.com/v1/documentation/api/latest/reference/services/ec2/client/get_route_server_associations.html)
+        [Show types-aiobotocore documentation](https://youtype.github.io/types_aiobotocore_docs/types_aiobotocore_ec2/client/#get_route_server_associations)
+        """
+
+    async def get_route_server_propagations(
+        self, **kwargs: Unpack[GetRouteServerPropagationsRequestTypeDef]
+    ) -> GetRouteServerPropagationsResultTypeDef:
+        """
+        Gets information about the route propagations for the specified route server.
+
+        [Show boto3 documentation](https://boto3.amazonaws.com/v1/documentation/api/latest/reference/services/ec2/client/get_route_server_propagations.html)
+        [Show types-aiobotocore documentation](https://youtype.github.io/types_aiobotocore_docs/types_aiobotocore_ec2/client/#get_route_server_propagations)
+        """
+
+    async def get_route_server_routing_database(
+        self, **kwargs: Unpack[GetRouteServerRoutingDatabaseRequestTypeDef]
+    ) -> GetRouteServerRoutingDatabaseResultTypeDef:
+        """
+        Gets the routing database for the specified route server.
+
+        [Show boto3 documentation](https://boto3.amazonaws.com/v1/documentation/api/latest/reference/services/ec2/client/get_route_server_routing_database.html)
+        [Show types-aiobotocore documentation](https://youtype.github.io/types_aiobotocore_docs/types_aiobotocore_ec2/client/#get_route_server_routing_database)
         """
 
     async def get_security_groups_for_vpc(
@@ -7193,6 +7518,16 @@ class EC2Client(AioBaseClient):
         [Show types-aiobotocore documentation](https://youtype.github.io/types_aiobotocore_docs/types_aiobotocore_ec2/client/#modify_private_dns_name_options)
         """
 
+    async def modify_public_ip_dns_name_options(
+        self, **kwargs: Unpack[ModifyPublicIpDnsNameOptionsRequestTypeDef]
+    ) -> ModifyPublicIpDnsNameOptionsResultTypeDef:
+        """
+        Modify public hostname options for a network interface.
+
+        [Show boto3 documentation](https://boto3.amazonaws.com/v1/documentation/api/latest/reference/services/ec2/client/modify_public_ip_dns_name_options.html)
+        [Show types-aiobotocore documentation](https://youtype.github.io/types_aiobotocore_docs/types_aiobotocore_ec2/client/#modify_public_ip_dns_name_options)
+        """
+
     async def modify_reserved_instances(
         self, **kwargs: Unpack[ModifyReservedInstancesRequestTypeDef]
     ) -> ModifyReservedInstancesResultTypeDef:
@@ -7202,6 +7537,16 @@ class EC2Client(AioBaseClient):
 
         [Show boto3 documentation](https://boto3.amazonaws.com/v1/documentation/api/latest/reference/services/ec2/client/modify_reserved_instances.html)
         [Show types-aiobotocore documentation](https://youtype.github.io/types_aiobotocore_docs/types_aiobotocore_ec2/client/#modify_reserved_instances)
+        """
+
+    async def modify_route_server(
+        self, **kwargs: Unpack[ModifyRouteServerRequestTypeDef]
+    ) -> ModifyRouteServerResultTypeDef:
+        """
+        Modifies the configuration of an existing route server.
+
+        [Show boto3 documentation](https://boto3.amazonaws.com/v1/documentation/api/latest/reference/services/ec2/client/modify_route_server.html)
+        [Show types-aiobotocore documentation](https://youtype.github.io/types_aiobotocore_docs/types_aiobotocore_ec2/client/#modify_route_server)
         """
 
     async def modify_security_group_rules(
@@ -8969,6 +9314,17 @@ class EC2Client(AioBaseClient):
 
     @overload  # type: ignore[override]
     def get_paginator(  # type: ignore[override]
+        self, operation_name: Literal["describe_mac_modification_tasks"]
+    ) -> DescribeMacModificationTasksPaginator:
+        """
+        Create a paginator for an operation.
+
+        [Show boto3 documentation](https://boto3.amazonaws.com/v1/documentation/api/latest/reference/services/ec2/client/get_paginator.html)
+        [Show types-aiobotocore documentation](https://youtype.github.io/types_aiobotocore_docs/types_aiobotocore_ec2/client/#get_paginator)
+        """
+
+    @overload  # type: ignore[override]
+    def get_paginator(  # type: ignore[override]
         self, operation_name: Literal["describe_managed_prefix_lists"]
     ) -> DescribeManagedPrefixListsPaginator:
         """
@@ -9136,6 +9492,39 @@ class EC2Client(AioBaseClient):
     def get_paginator(  # type: ignore[override]
         self, operation_name: Literal["describe_reserved_instances_offerings"]
     ) -> DescribeReservedInstancesOfferingsPaginator:
+        """
+        Create a paginator for an operation.
+
+        [Show boto3 documentation](https://boto3.amazonaws.com/v1/documentation/api/latest/reference/services/ec2/client/get_paginator.html)
+        [Show types-aiobotocore documentation](https://youtype.github.io/types_aiobotocore_docs/types_aiobotocore_ec2/client/#get_paginator)
+        """
+
+    @overload  # type: ignore[override]
+    def get_paginator(  # type: ignore[override]
+        self, operation_name: Literal["describe_route_server_endpoints"]
+    ) -> DescribeRouteServerEndpointsPaginator:
+        """
+        Create a paginator for an operation.
+
+        [Show boto3 documentation](https://boto3.amazonaws.com/v1/documentation/api/latest/reference/services/ec2/client/get_paginator.html)
+        [Show types-aiobotocore documentation](https://youtype.github.io/types_aiobotocore_docs/types_aiobotocore_ec2/client/#get_paginator)
+        """
+
+    @overload  # type: ignore[override]
+    def get_paginator(  # type: ignore[override]
+        self, operation_name: Literal["describe_route_server_peers"]
+    ) -> DescribeRouteServerPeersPaginator:
+        """
+        Create a paginator for an operation.
+
+        [Show boto3 documentation](https://boto3.amazonaws.com/v1/documentation/api/latest/reference/services/ec2/client/get_paginator.html)
+        [Show types-aiobotocore documentation](https://youtype.github.io/types_aiobotocore_docs/types_aiobotocore_ec2/client/#get_paginator)
+        """
+
+    @overload  # type: ignore[override]
+    def get_paginator(  # type: ignore[override]
+        self, operation_name: Literal["describe_route_servers"]
+    ) -> DescribeRouteServersPaginator:
         """
         Create a paginator for an operation.
 

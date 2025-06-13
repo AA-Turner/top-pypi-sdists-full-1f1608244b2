@@ -8,9 +8,9 @@ Copyright 2025 Vlad Emelianov
 Usage::
 
     ```python
-    from types_aiobotocore_acm.literals import CertificateStatusType
+    from types_aiobotocore_acm.literals import CertificateManagedByType
 
-    data: CertificateStatusType = "EXPIRED"
+    data: CertificateManagedByType = "CLOUDFRONT"
     ```
 """
 
@@ -24,6 +24,7 @@ else:
 
 __all__ = (
     "ACMServiceName",
+    "CertificateManagedByType",
     "CertificateStatusType",
     "CertificateTransparencyLoggingPreferenceType",
     "CertificateTypeType",
@@ -49,6 +50,7 @@ __all__ = (
 )
 
 
+CertificateManagedByType = Literal["CLOUDFRONT"]
 CertificateStatusType = Literal[
     "EXPIRED",
     "FAILED",
@@ -125,11 +127,12 @@ RevocationReasonType = Literal[
     "PRIVILEGE_WITHDRAWN",
     "REMOVE_FROM_CRL",
     "SUPERCEDED",
+    "SUPERSEDED",
     "UNSPECIFIED",
 ]
 SortByType = Literal["CREATED_AT"]
 SortOrderType = Literal["ASCENDING", "DESCENDING"]
-ValidationMethodType = Literal["DNS", "EMAIL"]
+ValidationMethodType = Literal["DNS", "EMAIL", "HTTP"]
 ACMServiceName = Literal["acm"]
 ServiceName = Literal[
     "accessanalyzer",
@@ -287,6 +290,7 @@ ServiceName = Literal[
     "freetier",
     "fsx",
     "gamelift",
+    "gameliftstreams",
     "geo-maps",
     "geo-places",
     "geo-routes",
@@ -312,6 +316,7 @@ ServiceName = Literal[
     "iot",
     "iot-data",
     "iot-jobs-data",
+    "iot-managed-integrations",
     "iotanalytics",
     "iotdeviceadvisor",
     "iotevents",
@@ -426,7 +431,6 @@ ServiceName = Literal[
     "pipes",
     "polly",
     "pricing",
-    "privatenetworks",
     "proton",
     "qapps",
     "qbusiness",
@@ -487,7 +491,6 @@ ServiceName = Literal[
     "signer",
     "simspaceweaver",
     "sms",
-    "sms-voice",
     "snow-device-management",
     "snowball",
     "sns",
@@ -495,6 +498,7 @@ ServiceName = Literal[
     "sqs",
     "ssm",
     "ssm-contacts",
+    "ssm-guiconnect",
     "ssm-incidents",
     "ssm-quicksetup",
     "ssm-sap",

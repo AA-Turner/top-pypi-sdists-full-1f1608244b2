@@ -92,6 +92,19 @@ MODEL_PRICE = {
     "sora-1:1-480p-5s": 1.2,
     "dall-e-3": 0.03,
 
+    # rag
+    "qwen3-reranker-0.6b": 0.0011,
+    "qwen3-reranker-4b": 0.0011,
+    "qwen3-reranker-8b": 0.0011,
+
+    "qwen3-embedding-0.6b": 0.0011,
+    "qwen3-embedding-4b": 0.0011,
+    "qwen3-embedding-8b": 0.0011,
+
+    # 视频
+    "api-videos-3d": 0.01,
+    "api-videos-3d-1.5": 0.01,
+
     # 智能体
     "ppt": 0.1,
     "ppt-islide": 0.1,
@@ -667,6 +680,10 @@ MODEL_RATIO = {
     "meta-deepresearch": 2,
 
     # 豆包
+    "doubao-seed-1-6-flash-250615": 0.075,
+    "doubao-seed-1-6-250615": 0.4,
+    "doubao-seed-1-6-thinking-250615": 0.4,
+
     "doubao-1-5-ui-tars-250428": 1.75,
     "ui-tars-72b": 1.75,
     "doubao-1-5-pro-32k": 0.4,
@@ -725,6 +742,11 @@ MODEL_RATIO = {
     "hunyuan-standard-256k": 60,
 
     # 百度文心
+    "ernie-4.5-turbo-vl-32k": 0.45,
+    "ernie-4.5-turbo-128k": 0.12,
+    "ernie-x1-turbo-32k": 0.15,
+    "ernie-x1-32k-preview": 0.3,
+
     "ERNIE-Speed-8K": 0.2858,
     "ERNIE-Speed-128K": 0.2858,
 
@@ -912,6 +934,8 @@ MODEL_RATIO = {
     "o3": 5,
     "o3-2025-04-16": 5,
 
+    "o3-pro": 10,
+
     # 硅基
     "llama-3.1-8b-instruct": 0.01,
     "meta-llama/Meta-Llama-3.1-8B-Instruct": 0.01,
@@ -1023,6 +1047,7 @@ COMPLETION_RATIO = {
 
     "o3": 4,
     "o3-2025-04-16": 4,
+    "o3-pro": 4,
 
     "gpt-4o-realtime-preview": 4,
     "gpt-4o-realtime-preview-2024-10-01": 4,
@@ -1094,6 +1119,11 @@ COMPLETION_RATIO = {
 
     "ERNIE-4.0-Turbo-8K": 3,
     "ERNIE-4.0-8K": 3,
+
+    "ernie-4.5-turbo-vl-32k": 4,
+    "ernie-4.5-turbo-128k": 4,
+    "ernie-x1-turbo-32k": 4,
+    "ernie-x1-32k-preview": 4,
 
     "gemini-all": 5,
     "gemini-1.5-pro-001": 4,
@@ -1193,6 +1223,11 @@ COMPLETION_RATIO = {
     "deepseek-ai/deepseek-vl2": 4,
 
     # 豆包
+    "doubao-seed-1-6-flash-250615": 10,
+    # doubao-seed-1-6-flash-250615,doubao-seed-1-6-250615,doubao-seed-1-6-thinking-250615
+    "doubao-seed-1-6-250615": 10,
+    "doubao-seed-1-6-thinking-250615": 10,
+
     "doubao-1-5-ui-tars-250428": 3.43,
     "ui-tars-72b": 4,
 

@@ -34,6 +34,7 @@ __all__ = (
     "MemberAccountDiscountVisibilityType",
     "OrderType",
     "PaginatorName",
+    "PaymentOptionType",
     "RegionName",
     "ResourceServiceName",
     "ResourceTypeType",
@@ -41,6 +42,7 @@ __all__ = (
     "ServiceName",
     "SourceType",
     "SummaryMetricsType",
+    "TermType",
 )
 
 ActionTypeType = Literal[
@@ -62,8 +64,10 @@ ListRecommendationSummariesPaginatorName = Literal["list_recommendation_summarie
 ListRecommendationsPaginatorName = Literal["list_recommendations"]
 MemberAccountDiscountVisibilityType = Literal["All", "None"]
 OrderType = Literal["Asc", "Desc"]
+PaymentOptionType = Literal["AllUpfront", "NoUpfront", "PartialUpfront"]
 ResourceTypeType = Literal[
     "ComputeSavingsPlans",
+    "DynamoDbReservedCapacity",
     "EbsVolume",
     "Ec2AutoScalingGroup",
     "Ec2Instance",
@@ -72,6 +76,7 @@ ResourceTypeType = Literal[
     "EcsService",
     "ElastiCacheReservedInstances",
     "LambdaFunction",
+    "MemoryDbReservedInstances",
     "OpenSearchReservedInstances",
     "RdsDbInstance",
     "RdsDbInstanceStorage",
@@ -82,6 +87,7 @@ ResourceTypeType = Literal[
 SavingsEstimationModeType = Literal["AfterDiscounts", "BeforeDiscounts"]
 SourceType = Literal["ComputeOptimizer", "CostExplorer"]
 SummaryMetricsType = Literal["SavingsPercentage"]
+TermType = Literal["OneYear", "ThreeYears"]
 CostOptimizationHubServiceName = Literal["cost-optimization-hub"]
 ServiceName = Literal[
     "accessanalyzer",
@@ -239,6 +245,7 @@ ServiceName = Literal[
     "freetier",
     "fsx",
     "gamelift",
+    "gameliftstreams",
     "geo-maps",
     "geo-places",
     "geo-routes",
@@ -264,6 +271,7 @@ ServiceName = Literal[
     "iot",
     "iot-data",
     "iot-jobs-data",
+    "iot-managed-integrations",
     "iotanalytics",
     "iotdeviceadvisor",
     "iotevents",
@@ -378,7 +386,6 @@ ServiceName = Literal[
     "pipes",
     "polly",
     "pricing",
-    "privatenetworks",
     "proton",
     "qapps",
     "qbusiness",
@@ -439,7 +446,6 @@ ServiceName = Literal[
     "signer",
     "simspaceweaver",
     "sms",
-    "sms-voice",
     "snow-device-management",
     "snowball",
     "sns",
@@ -447,6 +453,7 @@ ServiceName = Literal[
     "sqs",
     "ssm",
     "ssm-contacts",
+    "ssm-guiconnect",
     "ssm-incidents",
     "ssm-quicksetup",
     "ssm-sap",

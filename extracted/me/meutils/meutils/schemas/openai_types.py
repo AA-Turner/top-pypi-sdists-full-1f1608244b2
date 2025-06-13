@@ -627,3 +627,5 @@ if __name__ == '__main__':
     # )
     #
     # print(chat_completion_chunk)
+
+    print(ImageRequest(prompt='xx'))

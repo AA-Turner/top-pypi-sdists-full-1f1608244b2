@@ -33,6 +33,7 @@ from .paginator import (
     DescribeTapeRecoveryPointsPaginator,
     DescribeTapesPaginator,
     DescribeVTLDevicesPaginator,
+    ListCacheReportsPaginator,
     ListFileSharesPaginator,
     ListFileSystemAssociationsPaginator,
     ListGatewaysPaginator,
@@ -1323,6 +1324,17 @@ class StorageGatewayClient(AioBaseClient):
     def get_paginator(  # type: ignore[override]
         self, operation_name: Literal["describe_vtl_devices"]
     ) -> DescribeVTLDevicesPaginator:
+        """
+        Create a paginator for an operation.
+
+        [Show boto3 documentation](https://boto3.amazonaws.com/v1/documentation/api/latest/reference/services/storagegateway/client/get_paginator.html)
+        [Show types-aiobotocore documentation](https://youtype.github.io/types_aiobotocore_docs/types_aiobotocore_storagegateway/client/#get_paginator)
+        """
+
+    @overload  # type: ignore[override]
+    def get_paginator(  # type: ignore[override]
+        self, operation_name: Literal["list_cache_reports"]
+    ) -> ListCacheReportsPaginator:
         """
         Create a paginator for an operation.
 

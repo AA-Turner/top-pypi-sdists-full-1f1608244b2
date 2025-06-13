@@ -34,6 +34,7 @@ from .literals import (
     EndpointTypeType,
     GatewayResponseTypeType,
     IntegrationTypeType,
+    IpAddressTypeType,
     LocationStatusTypeType,
     OpType,
     PutModeType,
@@ -579,6 +580,7 @@ EndpointConfigurationOutputTypeDef = TypedDict(
     "EndpointConfigurationOutputTypeDef",
     {
         "types": NotRequired[List[EndpointTypeType]],
+        "ipAddressType": NotRequired[IpAddressTypeType],
         "vpcEndpointIds": NotRequired[List[str]],
     },
 )
@@ -592,6 +594,7 @@ EndpointConfigurationTypeDef = TypedDict(
     "EndpointConfigurationTypeDef",
     {
         "types": NotRequired[Sequence[EndpointTypeType]],
+        "ipAddressType": NotRequired[IpAddressTypeType],
         "vpcEndpointIds": NotRequired[Sequence[str]],
     },
 )

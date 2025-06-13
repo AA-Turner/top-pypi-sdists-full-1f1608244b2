@@ -16,11 +16,13 @@ class StrategyName(str, enum.Enum):
     )
     SEARCH_REPLACE_FUNCTION_CALLING = "SEARCH_REPLACE_FUNCTION_CALLING"
     FULL_FILE_REWRITE = "FULL_FILE_REWRITE"
+    FUNCTION_CALLING = "FUNCTION_CALLING"
     RAW_GPT = "RAW_GPT"
     NATURAL_EDIT = "NATURAL_EDIT"
     AGENT = "AGENT"
     AGENT_STEP = "AGENT_STEP"
     DATABASE = "DATABASE"
+    DATABASE_AND_CLI = "DATABASE_AND_CLI"
     DATABASE_AGENT = "DATABASE_AGENT"
     DATABASE_AGENT_STEP = "DATABASE_AGENT_STEP"
     REVIEW_FILES = "REVIEW_FILES"
@@ -98,6 +100,14 @@ STRATEGY_INFO_LIST: list[StrategyInfo] = [
         is_agentic=False,
     ),
     StrategyInfo(
+        strategy_name=StrategyName.FUNCTION_CALLING,
+        display_name="Function Calling",
+        description="Using native function calling.",
+        disabled=True,
+        display_order=99,
+        is_agentic=False,
+    ),
+    StrategyInfo(
         strategy_name=StrategyName.RAW_GPT,
         display_name="Raw GPT",
         description="No description",
@@ -132,6 +142,14 @@ STRATEGY_INFO_LIST: list[StrategyInfo] = [
     StrategyInfo(
         strategy_name=StrategyName.DATABASE,
         display_name="Database",
+        description="No description",
+        disabled=True,
+        display_order=99,
+        is_agentic=False,
+    ),
+    StrategyInfo(
+        strategy_name=StrategyName.DATABASE_AND_CLI,
+        display_name="Database and CLI",
         description="No description",
         disabled=True,
         display_order=99,

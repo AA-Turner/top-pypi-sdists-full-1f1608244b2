@@ -15,6 +15,7 @@ Usage::
         ListApplicationsPaginator,
         ListBatchJobDefinitionsPaginator,
         ListBatchJobExecutionsPaginator,
+        ListDataSetExportHistoryPaginator,
         ListDataSetImportHistoryPaginator,
         ListDataSetsPaginator,
         ListDeploymentsPaginator,
@@ -33,6 +34,7 @@ Usage::
     list_applications_paginator: ListApplicationsPaginator = client.get_paginator("list_applications")
     list_batch_job_definitions_paginator: ListBatchJobDefinitionsPaginator = client.get_paginator("list_batch_job_definitions")
     list_batch_job_executions_paginator: ListBatchJobExecutionsPaginator = client.get_paginator("list_batch_job_executions")
+    list_data_set_export_history_paginator: ListDataSetExportHistoryPaginator = client.get_paginator("list_data_set_export_history")
     list_data_set_import_history_paginator: ListDataSetImportHistoryPaginator = client.get_paginator("list_data_set_import_history")
     list_data_sets_paginator: ListDataSetsPaginator = client.get_paginator("list_data_sets")
     list_deployments_paginator: ListDeploymentsPaginator = client.get_paginator("list_deployments")
@@ -47,6 +49,7 @@ from .paginator import (
     ListApplicationVersionsPaginator,
     ListBatchJobDefinitionsPaginator,
     ListBatchJobExecutionsPaginator,
+    ListDataSetExportHistoryPaginator,
     ListDataSetImportHistoryPaginator,
     ListDataSetsPaginator,
     ListDeploymentsPaginator,
@@ -62,6 +65,7 @@ __all__ = (
     "ListApplicationsPaginator",
     "ListBatchJobDefinitionsPaginator",
     "ListBatchJobExecutionsPaginator",
+    "ListDataSetExportHistoryPaginator",
     "ListDataSetImportHistoryPaginator",
     "ListDataSetsPaginator",
     "ListDeploymentsPaginator",

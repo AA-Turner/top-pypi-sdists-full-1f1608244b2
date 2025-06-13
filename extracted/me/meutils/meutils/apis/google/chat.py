@@ -62,9 +62,9 @@ tools = [
 # )
 
 class Completions(object):
-    def __init__(self, api_key: Optional[str] = None):
+    def __init__(self, api_key: Optional[str] = None, base_url: Optional[str] = None):
         self.api_key = api_key
-        self.base_url = "https://g.chatfire.cn"
+        self.base_url = base_url or "https://g.chatfire.cn"
         self.client = None  ####
 
     async def create_for_search(self, request: CompletionRequest):
@@ -278,7 +278,7 @@ class Completions(object):
         # 两轮即可连续编辑图片
 
         messages = []
-        for m in request.messages:
+        for m in request.messages or []:
             contents = m.get("content")
             if m.get("role") == "assistant":
                 assistant_content = str(contents)

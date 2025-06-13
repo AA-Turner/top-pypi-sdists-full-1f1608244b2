@@ -1,6 +1,6 @@
 Metadata-Version: 2.4
 Name: arize-phoenix
-Version: 10.10.0
+Version: 10.11.0
 Summary: AI Observability and Evaluation
 Project-URL: Documentation, https://arize.com/docs/phoenix/
 Project-URL: Issues, https://github.com/Arize-ai/phoenix/issues
@@ -108,7 +108,7 @@ Requires-Dist: tox-uv==1.11.3; extra == 'dev'
 Requires-Dist: tox==4.18.1; extra == 'dev'
 Requires-Dist: types-jsonschema; extra == 'dev'
 Requires-Dist: types-tabulate; extra == 'dev'
-Requires-Dist: uv==0.4.8; extra == 'dev'
+Requires-Dist: uv==0.7.12; extra == 'dev'
 Requires-Dist: uvloop; (platform_system != 'Windows') and extra == 'dev'
 Provides-Extra: embeddings
 Requires-Dist: fast-hdbscan>=0.2.0; extra == 'embeddings'

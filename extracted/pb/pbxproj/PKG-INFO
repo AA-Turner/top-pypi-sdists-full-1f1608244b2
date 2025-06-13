@@ -1,6 +1,6 @@
-Metadata-Version: 2.1
+Metadata-Version: 2.4
 Name: pbxproj
-Version: 4.2.1
+Version: 4.3.0
 Summary: XCode Project manipulation library for Python
 Home-page: http://github.com/kronenthaler/mod-pbxproj
 Author: Ignacio Calderon
@@ -9,6 +9,14 @@ Requires-Python: >=3.8
 Description-Content-Type: text/x-rst
 Requires-Dist: openstep_parser>=1.5.1
 Requires-Dist: docopt
+Dynamic: author
+Dynamic: description
+Dynamic: description-content-type
+Dynamic: home-page
+Dynamic: license
+Dynamic: requires-dist
+Dynamic: requires-python
+Dynamic: summary
 
 
 .. image:: https://img.shields.io/github/actions/workflow/status/kronenthaler/mod-pbxproj/branch-check.yml?event=push&style=flat&logo=github&color=4da533

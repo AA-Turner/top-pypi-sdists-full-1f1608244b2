@@ -70,7 +70,7 @@ class FlowDeletedWaiter(AIOWaiter):
     """
 
     async def wait(  # type: ignore[override]
-        self, **kwargs: Unpack[DescribeFlowRequestWaitExtraExtraTypeDef]
+        self, **kwargs: Unpack[DescribeFlowRequestWaitExtraTypeDef]
     ) -> None:
         """
         [Show boto3 documentation](https://boto3.amazonaws.com/v1/documentation/api/latest/reference/services/mediaconnect/waiter/FlowDeleted.html#MediaConnect.Waiter.FlowDeleted.wait)
@@ -85,7 +85,7 @@ class FlowStandbyWaiter(AIOWaiter):
     """
 
     async def wait(  # type: ignore[override]
-        self, **kwargs: Unpack[DescribeFlowRequestWaitExtraTypeDef]
+        self, **kwargs: Unpack[DescribeFlowRequestWaitExtraExtraTypeDef]
     ) -> None:
         """
         [Show boto3 documentation](https://boto3.amazonaws.com/v1/documentation/api/latest/reference/services/mediaconnect/waiter/FlowStandby.html#MediaConnect.Waiter.FlowStandby.wait)

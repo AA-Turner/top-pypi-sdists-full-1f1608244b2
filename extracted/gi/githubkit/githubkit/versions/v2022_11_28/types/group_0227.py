@@ -9,36 +9,18 @@ See https://github.com/github/rest-api-description for more information.
 
 from __future__ import annotations
 
-from typing_extensions import NotRequired, TypedDict
-
-from .group_0220 import BranchProtectionType
-from .group_0225 import CommitType
+from typing import Union
+from typing_extensions import TypedDict
 
 
-class BranchWithProtectionType(TypedDict):
-    """Branch With Protection
+class VerificationType(TypedDict):
+    """Verification"""
 
-    Branch With Protection
-    """
-
-    name: str
-    commit: CommitType
-    links: BranchWithProtectionPropLinksType
-    protected: bool
-    protection: BranchProtectionType
-    protection_url: str
-    pattern: NotRequired[str]
-    required_approving_review_count: NotRequired[int]
+    verified: bool
+    reason: str
+    payload: Union[str, None]
+    signature: Union[str, None]
+    verified_at: Union[str, None]
 
 
-class BranchWithProtectionPropLinksType(TypedDict):
-    """BranchWithProtectionPropLinks"""
-
-    html: str
-    self_: str
-
-
-__all__ = (
-    "BranchWithProtectionPropLinksType",
-    "BranchWithProtectionType",
-)
+__all__ = ("VerificationType",)

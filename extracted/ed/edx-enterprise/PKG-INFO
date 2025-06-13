@@ -1,6 +1,6 @@
 Metadata-Version: 2.1
 Name: edx-enterprise
-Version: 6.2.2
+Version: 6.2.4
 Summary: Your project description goes here
 Home-page: https://github.com/openedx/edx-enterprise
 Author: edX
@@ -108,6 +108,14 @@ Change Log
 Unreleased
 ----------
 * nothing unreleased
+
+[6.2.4]
+--------
+* feat: creates EnterpriseCustomerAdmin records for EnterpriseCustomerUsers with admin roles
+
+[6.2.3]
+--------
+* chore: upgrades python requirements
 
 [6.2.2]
 * fix: fix RenameIndex migrations to also handle Django Model level analysis

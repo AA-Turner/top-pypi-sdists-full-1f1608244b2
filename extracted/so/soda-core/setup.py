@@ -4,7 +4,7 @@ from setuptools import find_namespace_packages, setup
 
 package_name = "soda-core"
 # Managed by tbump - do not change manually
-package_version = "3.5.4"
+package_version = "3.5.5"
 description = "Soda Core"
 
 requires = [
@@ -18,6 +18,7 @@ requires = [
     "sqlparse~=0.4",
     "inflect~=7.0",
     "pydantic>=2.0.0,<3.0.0",
+    "python-dotenv~=1.0",
 ]
 
 setup(

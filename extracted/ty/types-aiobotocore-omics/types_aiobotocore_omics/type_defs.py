@@ -117,6 +117,8 @@ __all__ = (
     "CreateVariantStoreResponseTypeDef",
     "CreateWorkflowRequestTypeDef",
     "CreateWorkflowResponseTypeDef",
+    "CreateWorkflowVersionRequestTypeDef",
+    "CreateWorkflowVersionResponseTypeDef",
     "DeleteAnnotationStoreRequestTypeDef",
     "DeleteAnnotationStoreResponseTypeDef",
     "DeleteAnnotationStoreVersionsRequestTypeDef",
@@ -133,6 +135,7 @@ __all__ = (
     "DeleteVariantStoreRequestTypeDef",
     "DeleteVariantStoreResponseTypeDef",
     "DeleteWorkflowRequestTypeDef",
+    "DeleteWorkflowVersionRequestTypeDef",
     "ETagTypeDef",
     "EmptyResponseMetadataTypeDef",
     "ExportReadSetDetailTypeDef",
@@ -203,6 +206,9 @@ __all__ = (
     "GetWorkflowRequestTypeDef",
     "GetWorkflowRequestWaitTypeDef",
     "GetWorkflowResponseTypeDef",
+    "GetWorkflowVersionRequestTypeDef",
+    "GetWorkflowVersionRequestWaitTypeDef",
+    "GetWorkflowVersionResponseTypeDef",
     "ImportReadSetFilterTypeDef",
     "ImportReadSetJobItemTypeDef",
     "ImportReadSetSourceItemTypeDef",
@@ -276,6 +282,9 @@ __all__ = (
     "ListVariantStoresRequestPaginateTypeDef",
     "ListVariantStoresRequestTypeDef",
     "ListVariantStoresResponseTypeDef",
+    "ListWorkflowVersionsRequestPaginateTypeDef",
+    "ListWorkflowVersionsRequestTypeDef",
+    "ListWorkflowVersionsResponseTypeDef",
     "ListWorkflowsRequestPaginateTypeDef",
     "ListWorkflowsRequestTypeDef",
     "ListWorkflowsResponseTypeDef",
@@ -350,6 +359,7 @@ __all__ = (
     "UpdateVariantStoreRequestTypeDef",
     "UpdateVariantStoreResponseTypeDef",
     "UpdateWorkflowRequestTypeDef",
+    "UpdateWorkflowVersionRequestTypeDef",
     "UploadReadSetPartRequestTypeDef",
     "UploadReadSetPartResponseTypeDef",
     "VariantImportItemDetailTypeDef",
@@ -364,6 +374,7 @@ __all__ = (
     "WaiterConfigTypeDef",
     "WorkflowListItemTypeDef",
     "WorkflowParameterTypeDef",
+    "WorkflowVersionListItemTypeDef",
 )
 
 
@@ -628,6 +639,11 @@ DeleteWorkflowRequestTypeDef = TypedDict(
 )
 
 
+class DeleteWorkflowVersionRequestTypeDef(TypedDict):
+    workflowId: str
+    versionName: str
+
+
 class ETagTypeDef(TypedDict):
     algorithm: NotRequired[ETagAlgorithmType]
     source1: NotRequired[str]
@@ -871,6 +887,16 @@ GetWorkflowRequestTypeDef = TypedDict(
         "workflowOwnerId": NotRequired[str],
     },
 )
+GetWorkflowVersionRequestTypeDef = TypedDict(
+    "GetWorkflowVersionRequestTypeDef",
+    {
+        "workflowId": str,
+        "versionName": str,
+        "type": NotRequired[WorkflowTypeType],
+        "export": NotRequired[Sequence[Literal["DEFINITION"]]],
+        "workflowOwnerId": NotRequired[str],
+    },
+)
 ImportReadSetJobItemTypeDef = TypedDict(
     "ImportReadSetJobItemTypeDef",
     {
@@ -1052,6 +1078,7 @@ RunListItemTypeDef = TypedDict(
         "startTime": NotRequired[datetime],
         "stopTime": NotRequired[datetime],
         "storageType": NotRequired[StorageTypeType],
+        "workflowVersionName": NotRequired[str],
     },
 )
 
@@ -1085,6 +1112,30 @@ class ListVariantStoresFilterTypeDef(TypedDict):
     status: NotRequired[StoreStatusType]
 
 
+ListWorkflowVersionsRequestTypeDef = TypedDict(
+    "ListWorkflowVersionsRequestTypeDef",
+    {
+        "workflowId": str,
+        "type": NotRequired[WorkflowTypeType],
+        "workflowOwnerId": NotRequired[str],
+        "startingToken": NotRequired[str],
+        "maxResults": NotRequired[int],
+    },
+)
+WorkflowVersionListItemTypeDef = TypedDict(
+    "WorkflowVersionListItemTypeDef",
+    {
+        "arn": NotRequired[str],
+        "workflowId": NotRequired[str],
+        "versionName": NotRequired[str],
+        "description": NotRequired[str],
+        "status": NotRequired[WorkflowStatusType],
+        "type": NotRequired[WorkflowTypeType],
+        "digest": NotRequired[str],
+        "creationTime": NotRequired[datetime],
+        "metadata": NotRequired[Dict[str, str]],
+    },
+)
 ListWorkflowsRequestTypeDef = TypedDict(
     "ListWorkflowsRequestTypeDef",
     {
@@ -1156,6 +1207,7 @@ class StartRunRequestTypeDef(TypedDict):
     retentionMode: NotRequired[RunRetentionModeType]
     storageType: NotRequired[StorageTypeType]
     workflowOwnerId: NotRequired[str]
+    workflowVersionName: NotRequired[str]
 
 
 class VariantImportItemSourceTypeDef(TypedDict):
@@ -1240,8 +1292,18 @@ UpdateWorkflowRequestTypeDef = TypedDict(
         "id": str,
         "name": NotRequired[str],
         "description": NotRequired[str],
+        "storageType": NotRequired[StorageTypeType],
+        "storageCapacity": NotRequired[int],
     },
 )
+
+
+class UpdateWorkflowVersionRequestTypeDef(TypedDict):
+    workflowId: str
+    versionName: str
+    description: NotRequired[str]
+    storageType: NotRequired[StorageTypeType]
+    storageCapacity: NotRequired[int]
 
 
 class AcceptShareResponseTypeDef(TypedDict):
@@ -1304,9 +1366,20 @@ CreateWorkflowResponseTypeDef = TypedDict(
         "id": str,
         "status": WorkflowStatusType,
         "tags": Dict[str, str],
+        "uuid": str,
         "ResponseMetadata": ResponseMetadataTypeDef,
     },
 )
+
+
+class CreateWorkflowVersionResponseTypeDef(TypedDict):
+    arn: str
+    workflowId: str
+    versionName: str
+    status: WorkflowStatusType
+    tags: Dict[str, str]
+    uuid: str
+    ResponseMetadata: ResponseMetadataTypeDef
 
 
 class DeleteAnnotationStoreResponseTypeDef(TypedDict):
@@ -1856,6 +1929,24 @@ class CreateWorkflowRequestTypeDef(TypedDict):
     storageCapacity: NotRequired[int]
     tags: NotRequired[Mapping[str, str]]
     accelerators: NotRequired[Literal["GPU"]]
+    storageType: NotRequired[StorageTypeType]
+
+
+class CreateWorkflowVersionRequestTypeDef(TypedDict):
+    workflowId: str
+    versionName: str
+    requestId: str
+    definitionZip: NotRequired[BlobTypeDef]
+    definitionUri: NotRequired[str]
+    accelerators: NotRequired[Literal["GPU"]]
+    description: NotRequired[str]
+    engine: NotRequired[WorkflowEngineType]
+    main: NotRequired[str]
+    parameterTemplate: NotRequired[Mapping[str, WorkflowParameterTypeDef]]
+    storageType: NotRequired[StorageTypeType]
+    storageCapacity: NotRequired[int]
+    tags: NotRequired[Mapping[str, str]]
+    workflowBucketOwnerId: NotRequired[str]
 
 
 GetWorkflowResponseTypeDef = TypedDict(
@@ -1878,6 +1969,34 @@ GetWorkflowResponseTypeDef = TypedDict(
         "tags": Dict[str, str],
         "metadata": Dict[str, str],
         "accelerators": Literal["GPU"],
+        "storageType": StorageTypeType,
+        "uuid": str,
+        "ResponseMetadata": ResponseMetadataTypeDef,
+    },
+)
+GetWorkflowVersionResponseTypeDef = TypedDict(
+    "GetWorkflowVersionResponseTypeDef",
+    {
+        "arn": str,
+        "workflowId": str,
+        "versionName": str,
+        "accelerators": Literal["GPU"],
+        "creationTime": datetime,
+        "description": str,
+        "definition": str,
+        "digest": str,
+        "engine": WorkflowEngineType,
+        "main": str,
+        "metadata": Dict[str, str],
+        "parameterTemplate": Dict[str, WorkflowParameterTypeDef],
+        "status": WorkflowStatusType,
+        "statusMessage": str,
+        "storageType": StorageTypeType,
+        "storageCapacity": int,
+        "type": WorkflowTypeType,
+        "tags": Dict[str, str],
+        "uuid": str,
+        "workflowBucketOwnerId": str,
         "ResponseMetadata": ResponseMetadataTypeDef,
     },
 )
@@ -2054,6 +2173,17 @@ GetWorkflowRequestWaitTypeDef = TypedDict(
         "WaiterConfig": NotRequired[WaiterConfigTypeDef],
     },
 )
+GetWorkflowVersionRequestWaitTypeDef = TypedDict(
+    "GetWorkflowVersionRequestWaitTypeDef",
+    {
+        "workflowId": str,
+        "versionName": str,
+        "type": NotRequired[WorkflowTypeType],
+        "export": NotRequired[Sequence[Literal["DEFINITION"]]],
+        "workflowOwnerId": NotRequired[str],
+        "WaiterConfig": NotRequired[WaiterConfigTypeDef],
+    },
+)
 ReadSetListItemTypeDef = TypedDict(
     "ReadSetListItemTypeDef",
     {
@@ -2125,6 +2255,8 @@ GetRunResponseTypeDef = TypedDict(
         "runOutputUri": str,
         "storageType": StorageTypeType,
         "workflowOwnerId": str,
+        "workflowVersionName": str,
+        "workflowUuid": str,
         "ResponseMetadata": ResponseMetadataTypeDef,
     },
 )
@@ -2257,6 +2389,15 @@ ListSharesRequestPaginateTypeDef = TypedDict(
         "PaginationConfig": NotRequired[PaginatorConfigTypeDef],
     },
 )
+ListWorkflowVersionsRequestPaginateTypeDef = TypedDict(
+    "ListWorkflowVersionsRequestPaginateTypeDef",
+    {
+        "workflowId": str,
+        "type": NotRequired[WorkflowTypeType],
+        "workflowOwnerId": NotRequired[str],
+        "PaginationConfig": NotRequired[PaginatorConfigTypeDef],
+    },
+)
 ListWorkflowsRequestPaginateTypeDef = TypedDict(
     "ListWorkflowsRequestPaginateTypeDef",
     {
@@ -2385,6 +2526,12 @@ ListVariantStoresRequestTypeDef = TypedDict(
         "filter": NotRequired[ListVariantStoresFilterTypeDef],
     },
 )
+
+
+class ListWorkflowVersionsResponseTypeDef(TypedDict):
+    items: List[WorkflowVersionListItemTypeDef]
+    ResponseMetadata: ResponseMetadataTypeDef
+    nextToken: NotRequired[str]
 
 
 class ListWorkflowsResponseTypeDef(TypedDict):

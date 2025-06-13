@@ -31,6 +31,7 @@ from .literals import (
     DomainNameStatusType,
     EndpointTypeType,
     IntegrationTypeType,
+    IpAddressTypeType,
     JSONYAMLType,
     LoggingLevelType,
     PassthroughBehaviorType,
@@ -281,6 +282,7 @@ class DomainNameConfigurationOutputTypeDef(TypedDict):
     DomainNameStatusMessage: NotRequired[str]
     EndpointType: NotRequired[EndpointTypeType]
     HostedZoneId: NotRequired[str]
+    IpAddressType: NotRequired[IpAddressTypeType]
     SecurityPolicy: NotRequired[SecurityPolicyType]
     OwnershipVerificationCertificateArn: NotRequired[str]
 
@@ -632,6 +634,7 @@ class ApiTypeDef(TypedDict):
     DisableSchemaValidation: NotRequired[bool]
     DisableExecuteApiEndpoint: NotRequired[bool]
     ImportInfo: NotRequired[List[str]]
+    IpAddressType: NotRequired[IpAddressTypeType]
     Tags: NotRequired[Dict[str, str]]
     Version: NotRequired[str]
     Warnings: NotRequired[List[str]]
@@ -669,6 +672,7 @@ class CreateApiResponseTypeDef(TypedDict):
     DisableSchemaValidation: bool
     DisableExecuteApiEndpoint: bool
     ImportInfo: List[str]
+    IpAddressType: IpAddressTypeType
     Name: str
     ProtocolType: ProtocolTypeType
     RouteSelectionExpression: str
@@ -759,6 +763,7 @@ class GetApiResponseTypeDef(TypedDict):
     DisableSchemaValidation: bool
     DisableExecuteApiEndpoint: bool
     ImportInfo: List[str]
+    IpAddressType: IpAddressTypeType
     Name: str
     ProtocolType: ProtocolTypeType
     RouteSelectionExpression: str
@@ -838,6 +843,7 @@ class ImportApiResponseTypeDef(TypedDict):
     DisableSchemaValidation: bool
     DisableExecuteApiEndpoint: bool
     ImportInfo: List[str]
+    IpAddressType: IpAddressTypeType
     Name: str
     ProtocolType: ProtocolTypeType
     RouteSelectionExpression: str
@@ -857,6 +863,7 @@ class ReimportApiResponseTypeDef(TypedDict):
     DisableSchemaValidation: bool
     DisableExecuteApiEndpoint: bool
     ImportInfo: List[str]
+    IpAddressType: IpAddressTypeType
     Name: str
     ProtocolType: ProtocolTypeType
     RouteSelectionExpression: str
@@ -883,6 +890,7 @@ class UpdateApiResponseTypeDef(TypedDict):
     DisableSchemaValidation: bool
     DisableExecuteApiEndpoint: bool
     ImportInfo: List[str]
+    IpAddressType: IpAddressTypeType
     Name: str
     ProtocolType: ProtocolTypeType
     RouteSelectionExpression: str
@@ -1352,6 +1360,7 @@ class DomainNameConfigurationTypeDef(TypedDict):
     DomainNameStatusMessage: NotRequired[str]
     EndpointType: NotRequired[EndpointTypeType]
     HostedZoneId: NotRequired[str]
+    IpAddressType: NotRequired[IpAddressTypeType]
     SecurityPolicy: NotRequired[SecurityPolicyType]
     OwnershipVerificationCertificateArn: NotRequired[str]
 
@@ -1431,6 +1440,7 @@ class CreateApiRequestTypeDef(TypedDict):
     Description: NotRequired[str]
     DisableSchemaValidation: NotRequired[bool]
     DisableExecuteApiEndpoint: NotRequired[bool]
+    IpAddressType: NotRequired[IpAddressTypeType]
     RouteKey: NotRequired[str]
     RouteSelectionExpression: NotRequired[str]
     Tags: NotRequired[Mapping[str, str]]
@@ -1445,6 +1455,7 @@ class UpdateApiRequestTypeDef(TypedDict):
     Description: NotRequired[str]
     DisableSchemaValidation: NotRequired[bool]
     DisableExecuteApiEndpoint: NotRequired[bool]
+    IpAddressType: NotRequired[IpAddressTypeType]
     Name: NotRequired[str]
     RouteKey: NotRequired[str]
     RouteSelectionExpression: NotRequired[str]

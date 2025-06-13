@@ -46,7 +46,7 @@ from __future__ import annotations
 
 import sys
 from datetime import datetime
-from typing import Any, NoReturn
+from typing import NoReturn
 
 from aioboto3.resources.base import AIOBoto3ServiceResource
 from aioboto3.resources.collection import AIOResourceCollection
@@ -71,6 +71,7 @@ from .literals import (
     ResourceTypeType,
     RouteOriginType,
     RouteStateType,
+    ServiceManagedType,
     SnapshotStateType,
     SpreadLevelType,
     SSETypeType,
@@ -159,6 +160,7 @@ from .type_defs import (
     DeleteVpcPeeringConnectionResultTypeDef,
     DeleteVpcRequestVpcDeleteTypeDef,
     DeregisterImageRequestImageDeregisterTypeDef,
+    DeregisterImageResultTypeDef,
     DescribeImageAttributeRequestImageDescribeAttributeTypeDef,
     DescribeInstanceAttributeRequestInstanceDescribeAttributeTypeDef,
     DescribeNetworkInterfaceAttributeRequestNetworkInterfaceDescribeAttributeTypeDef,
@@ -242,6 +244,7 @@ from .type_defs import (
     PrivateDnsNameOptionsResponseTypeDef,
     ProductCodeTypeDef,
     PropagatingVgwTypeDef,
+    PublicIpDnsNameOptionsTypeDef,
     RebootInstancesRequestInstanceRebootTypeDef,
     RegisterImageRequestServiceResourceRegisterImageTypeDef,
     RejectVpcPeeringConnectionRequestVpcPeeringConnectionRejectTypeDef,
@@ -291,6 +294,7 @@ from .type_defs import (
     VolumeCreateTagsRequestTypeDef,
     VpcCidrBlockAssociationTypeDef,
     VpcCreateTagsRequestTypeDef,
+    VpcEncryptionControlTypeDef,
     VpcIpv6CidrBlockAssociationTypeDef,
     VpcPeeringConnectionStateReasonTypeDef,
     VpcPeeringConnectionVpcInfoTypeDef,
@@ -301,11 +305,10 @@ try:
 except ImportError:
     from builtins import object as ResourceMeta  # type: ignore[assignment]
 if sys.version_info >= (3, 9):
-    from builtins import dict as Dict
     from builtins import list as List
     from collections.abc import AsyncIterator, Awaitable, Sequence
 else:
-    from typing import AsyncIterator, Awaitable, Dict, List, Sequence
+    from typing import AsyncIterator, Awaitable, List, Sequence
 if sys.version_info >= (3, 12):
     from typing import Literal, Unpack
 else:
@@ -3068,6 +3071,7 @@ class ClassicAddress(AIOBoto3ServiceResource):
     customer_owned_ip: Awaitable[str]
     customer_owned_ipv4_pool: Awaitable[str]
     carrier_ip: Awaitable[str]
+    service_managed: Awaitable[ServiceManagedType]
     instance_id: Awaitable[str]
     meta: EC2ResourceMeta  # type: ignore[override]
 
@@ -3258,7 +3262,7 @@ class Image(AIOBoto3ServiceResource):
 
     async def deregister(
         self, **kwargs: Unpack[DeregisterImageRequestImageDeregisterTypeDef]
-    ) -> Dict[str, Any]:
+    ) -> DeregisterImageResultTypeDef:
         """
         Deregisters the specified AMI.
 
@@ -3961,6 +3965,8 @@ class NetworkInterface(AIOBoto3ServiceResource):
     outpost_arn: Awaitable[str]
     owner_id: Awaitable[str]
     private_dns_name: Awaitable[str]
+    public_dns_name: Awaitable[str]
+    public_ip_dns_name_options: Awaitable[PublicIpDnsNameOptionsTypeDef]
     private_ip_address: Awaitable[str]
     private_ip_addresses: Awaitable[List[NetworkInterfacePrivateIpAddressTypeDef]]
     ipv4_prefixes: Awaitable[List[Ipv4PrefixSpecificationTypeDef]]
@@ -4791,6 +4797,7 @@ class Volume(AIOBoto3ServiceResource):
     throughput: Awaitable[int]
     sse_type: Awaitable[SSETypeType]
     operator: Awaitable[OperatorResponseTypeDef]
+    volume_initialization_rate: Awaitable[int]
     volume_id: Awaitable[str]
     size: Awaitable[int]
     snapshot_id: Awaitable[str]
@@ -4935,6 +4942,7 @@ class Vpc(AIOBoto3ServiceResource):
     ipv6_cidr_block_association_set: Awaitable[List[VpcIpv6CidrBlockAssociationTypeDef]]
     cidr_block_association_set: Awaitable[List[VpcCidrBlockAssociationTypeDef]]
     is_default: Awaitable[bool]
+    encryption_control: Awaitable[VpcEncryptionControlTypeDef]
     tags: Awaitable[List[TagTypeDef]]
     block_public_access_states: Awaitable[BlockPublicAccessStatesTypeDef]
     vpc_id: Awaitable[str]
@@ -5243,6 +5251,7 @@ class VpcAddress(AIOBoto3ServiceResource):
     customer_owned_ip: Awaitable[str]
     customer_owned_ipv4_pool: Awaitable[str]
     carrier_ip: Awaitable[str]
+    service_managed: Awaitable[ServiceManagedType]
     instance_id: Awaitable[str]
     public_ip: Awaitable[str]
     meta: EC2ResourceMeta  # type: ignore[override]

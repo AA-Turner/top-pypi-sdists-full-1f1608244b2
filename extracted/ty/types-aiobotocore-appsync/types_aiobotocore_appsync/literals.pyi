@@ -42,6 +42,8 @@ __all__ = (
     "GraphQLApiIntrospectionConfigType",
     "GraphQLApiTypeType",
     "GraphQLApiVisibilityType",
+    "HandlerBehaviorType",
+    "InvokeTypeType",
     "ListApiKeysPaginatorName",
     "ListApisPaginatorName",
     "ListChannelNamespacesPaginatorName",
@@ -123,6 +125,8 @@ FieldLogLevelType = Literal["ALL", "DEBUG", "ERROR", "INFO", "NONE"]
 GraphQLApiIntrospectionConfigType = Literal["DISABLED", "ENABLED"]
 GraphQLApiTypeType = Literal["GRAPHQL", "MERGED"]
 GraphQLApiVisibilityType = Literal["GLOBAL", "PRIVATE"]
+HandlerBehaviorType = Literal["CODE", "DIRECT"]
+InvokeTypeType = Literal["EVENT", "REQUEST_RESPONSE"]
 ListApiKeysPaginatorName = Literal["list_api_keys"]
 ListApisPaginatorName = Literal["list_apis"]
 ListChannelNamespacesPaginatorName = Literal["list_channel_namespaces"]
@@ -315,6 +319,7 @@ ServiceName = Literal[
     "freetier",
     "fsx",
     "gamelift",
+    "gameliftstreams",
     "geo-maps",
     "geo-places",
     "geo-routes",
@@ -340,6 +345,7 @@ ServiceName = Literal[
     "iot",
     "iot-data",
     "iot-jobs-data",
+    "iot-managed-integrations",
     "iotanalytics",
     "iotdeviceadvisor",
     "iotevents",
@@ -454,7 +460,6 @@ ServiceName = Literal[
     "pipes",
     "polly",
     "pricing",
-    "privatenetworks",
     "proton",
     "qapps",
     "qbusiness",
@@ -515,7 +520,6 @@ ServiceName = Literal[
     "signer",
     "simspaceweaver",
     "sms",
-    "sms-voice",
     "snow-device-management",
     "snowball",
     "sns",
@@ -523,6 +527,7 @@ ServiceName = Literal[
     "sqs",
     "ssm",
     "ssm-contacts",
+    "ssm-guiconnect",
     "ssm-incidents",
     "ssm-quicksetup",
     "ssm-sap",

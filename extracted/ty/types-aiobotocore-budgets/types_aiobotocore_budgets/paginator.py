@@ -56,7 +56,7 @@ from .type_defs import (
     DescribeBudgetPerformanceHistoryRequestPaginateTypeDef,
     DescribeBudgetPerformanceHistoryResponseTypeDef,
     DescribeBudgetsRequestPaginateTypeDef,
-    DescribeBudgetsResponseTypeDef,
+    DescribeBudgetsResponsePaginatorTypeDef,
     DescribeNotificationsForBudgetRequestPaginateTypeDef,
     DescribeNotificationsForBudgetResponseTypeDef,
     DescribeSubscribersForNotificationRequestPaginateTypeDef,
@@ -199,7 +199,7 @@ class DescribeBudgetPerformanceHistoryPaginator(_DescribeBudgetPerformanceHistor
 
 
 if TYPE_CHECKING:
-    _DescribeBudgetsPaginatorBase = AioPaginator[DescribeBudgetsResponseTypeDef]
+    _DescribeBudgetsPaginatorBase = AioPaginator[DescribeBudgetsResponsePaginatorTypeDef]
 else:
     _DescribeBudgetsPaginatorBase = AioPaginator  # type: ignore[assignment]
 
@@ -212,7 +212,7 @@ class DescribeBudgetsPaginator(_DescribeBudgetsPaginatorBase):
 
     def paginate(  # type: ignore[override]
         self, **kwargs: Unpack[DescribeBudgetsRequestPaginateTypeDef]
-    ) -> AioPageIterator[DescribeBudgetsResponseTypeDef]:
+    ) -> AioPageIterator[DescribeBudgetsResponsePaginatorTypeDef]:
         """
         [Show boto3 documentation](https://boto3.amazonaws.com/v1/documentation/api/latest/reference/services/budgets/paginator/DescribeBudgets.html#Budgets.Paginator.DescribeBudgets.paginate)
         [Show types-aiobotocore documentation](https://youtype.github.io/types_aiobotocore_docs/types_aiobotocore_budgets/paginators/#describebudgetspaginator)

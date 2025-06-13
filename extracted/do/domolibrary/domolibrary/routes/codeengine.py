@@ -9,21 +9,23 @@ __all__ = ['CodeEngine_API_Error', 'get_packages', 'CodeEngine_Package_Parts', '
 # %% ../../nbs/routes/codeengine.ipynb 2
 import httpx
 
-from enum import Enum, auto
+from domolibrary.client.DomoEntity import DomoEnum
 from typing import List, Callable
 from functools import partial
 
 import re
 
 import domolibrary.client.get_data as gd
-import domolibrary.client.DomoError as de
+import domolibrary.client.DomoError as dmde
 import domolibrary.client.ResponseGetData as rgd
 import domolibrary.client.DomoAuth as dmda
 
 # %% ../../nbs/routes/codeengine.ipynb 5
-class CodeEngine_API_Error(de.DomoError):
+class CodeEngine_API_Error(dmde.DomoError):
     def __init__(self, res : rgd.ResponseGetData ):
         super().__init__(res = res)
+
+
 
 @gd.route_function
 async def get_packages(
@@ -52,12 +54,17 @@ async def get_packages(
     return res
 
 # %% ../../nbs/routes/codeengine.ipynb 7
-class CodeEngine_Package_Parts(Enum):
-    VERSIONS = auto()
-    FUNCTIONS = auto()
-    CODE = auto()
+class CodeEngine_Package_Parts(DomoEnum):
+    VERSIONS = 'versions'
+    FUNCTIONS = 'functions'
+    CODE = 'code'
 
 # %% ../../nbs/routes/codeengine.ipynb 8
+class CodeEngine_FunctionCallError(dmde.DomoError):
+    def __init__(self, message: str, auth: dmda.DomoAuth):
+        super().__init__(message=message, domo_instance=auth.domo_instance)
+
+
 @gd.route_function
 async def get_codeengine_package_by_id(
     package_id,
@@ -72,9 +79,15 @@ async def get_codeengine_package_by_id(
         f"https://{auth.domo_instance}.domo.com/api/codeengine/v2/packages/{package_id}"
     )
 
+    if not package_id:
+        raise CodeEngine_FunctionCallError(
+            message="Package ID must be provided.",
+            auth=auth,
+        )
+    
     params = params or {"parts": "versions"}
 
-    return await gd.get_data(
+    res = await gd.get_data(
         auth=auth,
         url=url,
         method="GET",
@@ -84,6 +97,11 @@ async def get_codeengine_package_by_id(
         parent_class=parent_class,
         num_stacks_to_drop=debug_num_stacks_to_drop,
     )
+
+    if not res.is_success:
+        raise CodeEngine_API_Error(res=res)
+
+    return res
 
 # %% ../../nbs/routes/codeengine.ipynb 10
 @gd.route_function
@@ -96,6 +114,12 @@ async def get_package_versions(
     session : httpx.AsyncClient = None
 ):
     """each package can have one or many version"""
+
+    if not package_id:
+        raise CodeEngine_FunctionCallError(
+            message="Package ID must be provided.",
+            auth=auth,
+        )
 
     url = f"https://{auth.domo_instance}.domo.com/api/codeengine/v2/packages/{package_id}/versions/"
 
@@ -129,11 +153,18 @@ async def get_codeengine_package_by_id_and_version(
     parent_class: str = None,
     debug_num_stacks_to_drop=1,
 ) -> rgd.ResponseGetData:
+    
+    if not package_id or not version:
+        raise CodeEngine_FunctionCallError(
+            message= f"Package ID {package_id or 'not provided '} and version {version or ' not provided  '} must be provided.",
+            auth=auth,
+        )
+    
     url = f"https://{auth.domo_instance}.domo.com/api/codeengine/v2/packages/{package_id}/versions/{version}"
 
     params = params or {"parts": "functions,code"}
 
-    return await gd.get_data(
+    res = await gd.get_data(
         auth=auth,
         url=url,
         method="GET",
@@ -143,6 +174,11 @@ async def get_codeengine_package_by_id_and_version(
         parent_class=parent_class,
         num_stacks_to_drop=debug_num_stacks_to_drop,
     )
+
+    if not res.is_success:
+        raise CodeEngine_API_Error(res=res)
+    
+    return res
 
 # %% ../../nbs/routes/codeengine.ipynb 16
 def remove_javascript_comments(code, **kwargs):
@@ -197,7 +233,7 @@ def parse_python(function_name, code):
     return match.group(0)
 
 
-class parse_functions_factory(Enum):
+class parse_functions_factory(DomoEnum):
     PYTHON = partial(parse_python)
     JAVASCRIPT = partial(parse_javascript)
 

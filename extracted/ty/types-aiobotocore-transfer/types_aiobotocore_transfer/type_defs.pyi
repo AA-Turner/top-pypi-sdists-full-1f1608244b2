@@ -54,6 +54,7 @@ from .literals import (
     StateType,
     TlsSessionResumptionModeType,
     TransferTableStatusType,
+    WebAppEndpointPolicyType,
     WorkflowStepTypeType,
 )
 
@@ -237,11 +238,16 @@ __all__ = (
     "SftpConnectorConfigOutputTypeDef",
     "SftpConnectorConfigTypeDef",
     "SftpConnectorConfigUnionTypeDef",
+    "SftpConnectorConnectionDetailsTypeDef",
     "SshPublicKeyTypeDef",
     "StartDirectoryListingRequestTypeDef",
     "StartDirectoryListingResponseTypeDef",
     "StartFileTransferRequestTypeDef",
     "StartFileTransferResponseTypeDef",
+    "StartRemoteDeleteRequestTypeDef",
+    "StartRemoteDeleteResponseTypeDef",
+    "StartRemoteMoveRequestTypeDef",
+    "StartRemoteMoveResponseTypeDef",
     "StartServerRequestTypeDef",
     "StopServerRequestTypeDef",
     "TagResourceRequestTypeDef",
@@ -480,6 +486,7 @@ class PosixProfileOutputTypeDef(TypedDict):
 class SftpConnectorConfigOutputTypeDef(TypedDict):
     UserSecretId: NotRequired[str]
     TrustedHostKeys: NotRequired[List[str]]
+    MaxConcurrentConnections: NotRequired[int]
 
 class LoggingConfigurationTypeDef(TypedDict):
     LoggingRole: NotRequired[str]
@@ -728,6 +735,10 @@ class UserDetailsTypeDef(TypedDict):
 class SftpConnectorConfigTypeDef(TypedDict):
     UserSecretId: NotRequired[str]
     TrustedHostKeys: NotRequired[Sequence[str]]
+    MaxConcurrentConnections: NotRequired[int]
+
+class SftpConnectorConnectionDetailsTypeDef(TypedDict):
+    HostKey: NotRequired[str]
 
 class StartDirectoryListingRequestTypeDef(TypedDict):
     ConnectorId: str
@@ -741,6 +752,15 @@ class StartFileTransferRequestTypeDef(TypedDict):
     RetrieveFilePaths: NotRequired[Sequence[str]]
     LocalDirectoryPath: NotRequired[str]
     RemoteDirectoryPath: NotRequired[str]
+
+class StartRemoteDeleteRequestTypeDef(TypedDict):
+    ConnectorId: str
+    DeletePath: str
+
+class StartRemoteMoveRequestTypeDef(TypedDict):
+    ConnectorId: str
+    SourcePath: str
+    TargetPath: str
 
 class StartServerRequestTypeDef(TypedDict):
     ServerId: str
@@ -855,10 +875,12 @@ class StartFileTransferResponseTypeDef(TypedDict):
     TransferId: str
     ResponseMetadata: ResponseMetadataTypeDef
 
-class TestConnectionResponseTypeDef(TypedDict):
-    ConnectorId: str
-    Status: str
-    StatusMessage: str
+class StartRemoteDeleteResponseTypeDef(TypedDict):
+    DeleteId: str
+    ResponseMetadata: ResponseMetadataTypeDef
+
+class StartRemoteMoveResponseTypeDef(TypedDict):
+    MoveId: str
     ResponseMetadata: ResponseMetadataTypeDef
 
 class TestIdentityProviderResponseTypeDef(TypedDict):
@@ -1220,6 +1242,13 @@ SftpConnectorConfigUnionTypeDef = Union[
     SftpConnectorConfigTypeDef, SftpConnectorConfigOutputTypeDef
 ]
 
+class TestConnectionResponseTypeDef(TypedDict):
+    ConnectorId: str
+    Status: str
+    StatusMessage: str
+    SftpConnectionDetails: SftpConnectorConnectionDetailsTypeDef
+    ResponseMetadata: ResponseMetadataTypeDef
+
 class UpdateWebAppIdentityProviderDetailsTypeDef(TypedDict):
     IdentityCenterConfig: NotRequired[UpdateWebAppIdentityCenterConfigTypeDef]
 
@@ -1264,6 +1293,7 @@ class DescribedWebAppTypeDef(TypedDict):
     WebAppEndpoint: NotRequired[str]
     WebAppUnits: NotRequired[WebAppUnitsTypeDef]
     Tags: NotRequired[List[TagTypeDef]]
+    WebAppEndpointPolicy: NotRequired[WebAppEndpointPolicyType]
 
 class DescribeUserResponseTypeDef(TypedDict):
     ServerId: str
@@ -1279,6 +1309,7 @@ class CreateWebAppRequestTypeDef(TypedDict):
     AccessEndpoint: NotRequired[str]
     WebAppUnits: NotRequired[WebAppUnitsTypeDef]
     Tags: NotRequired[Sequence[TagTypeDef]]
+    WebAppEndpointPolicy: NotRequired[WebAppEndpointPolicyType]
 
 class CopyStepDetailsTypeDef(TypedDict):
     Name: NotRequired[str]

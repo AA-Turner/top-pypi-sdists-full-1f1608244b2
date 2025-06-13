@@ -9,30 +9,25 @@ See https://github.com/github/rest-api-description for more information.
 
 from __future__ import annotations
 
-from typing import Union
+from datetime import datetime
+from typing import Literal
 from typing_extensions import NotRequired, TypedDict
 
 
-class GroupMappingType(TypedDict):
-    """GroupMapping
+class RuleSuitesItemsType(TypedDict):
+    """RuleSuitesItems"""
 
-    External Groups to be mapped to a team for membership
-    """
-
-    groups: NotRequired[list[GroupMappingPropGroupsItemsType]]
-
-
-class GroupMappingPropGroupsItemsType(TypedDict):
-    """GroupMappingPropGroupsItems"""
-
-    group_id: str
-    group_name: str
-    group_description: str
-    status: NotRequired[str]
-    synced_at: NotRequired[Union[str, None]]
+    id: NotRequired[int]
+    actor_id: NotRequired[int]
+    actor_name: NotRequired[str]
+    before_sha: NotRequired[str]
+    after_sha: NotRequired[str]
+    ref: NotRequired[str]
+    repository_id: NotRequired[int]
+    repository_name: NotRequired[str]
+    pushed_at: NotRequired[datetime]
+    result: NotRequired[Literal["pass", "fail", "bypass"]]
+    evaluation_result: NotRequired[Literal["pass", "fail", "bypass"]]
 
 
-__all__ = (
-    "GroupMappingPropGroupsItemsType",
-    "GroupMappingType",
-)
+__all__ = ("RuleSuitesItemsType",)

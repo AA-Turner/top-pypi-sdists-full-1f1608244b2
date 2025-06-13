@@ -17,7 +17,9 @@ from typing import (
     Tuple,
     Type,
     cast,
-    Set, Protocol, Mapping,
+    Set,
+    Protocol,
+    Mapping,
 )
 
 from typing_extensions import TypeGuard
@@ -209,32 +211,22 @@ class FeaturesImpl(metaclass=FeaturesMeta):
         raise NotImplementedError
 
 
-# Hack to get VSCode/Pylance/Pyright to type Features as Type[FeatureImpl]
-# but IntelliJ to type it as Type[Any]
-# Vscode can parse through literal dicts; IntelliJ can't
 if TYPE_CHECKING:
 
     class FeaturesProtocol(FeaturesImpl):
-        def __class_getitem__(cls, item: Any) -> "FeaturesProtocol":
-            ...
+        def __class_getitem__(cls, item: Any) -> "FeaturesProtocol": ...
 
-    _dummy_dict = {"0": FeaturesProtocol}
+    Features = FeaturesProtocol
 else:
-    _dummy_dict = {"0": FeaturesImpl}
-
-Features = _dummy_dict["0"]
+    Features = FeaturesImpl
 
 
 class FeatureRegistryProtocol(Protocol):
+    def get_feature_sets(self) -> Mapping[str, Type[Features]]: ...
 
-    def get_feature_sets(self) -> Mapping[str, Type[Features]]:
-        ...
+    def add_feature_set(self, updated_class: Type[Features]): ...
 
-    def add_feature_set(self, updated_class: Type[Features]):
-        ...
-
-    def get_singletons(self) -> Mapping[str, Type[Features]]:
-        ...
+    def get_singletons(self) -> Mapping[str, Type[Features]]: ...
 
 
 class FeatureSetBase:
@@ -273,7 +265,11 @@ class FeatureSetBaseWrapper(FeatureRegistryProtocol):
     def add_feature_set(self, updated_class: Type[Features]):
         namespace = updated_class.namespace
         previous_features_class = FeatureSetBase.registry.get(namespace)
-        if notebook.is_notebook() and previous_features_class is not None and notebook.is_defined_in_module(previous_features_class):
+        if (
+            notebook.is_notebook()
+            and previous_features_class is not None
+            and notebook.is_defined_in_module(previous_features_class)
+        ):
             # Not generating an LSP here because we're in a notebook anyway
             # TODO: See if we can pretty-print lsp errors in notebooks, at which point we can generate one that points to the old feature class
             raise ValueError(
@@ -303,8 +299,11 @@ class FeatureSetBaseWrapper(FeatureRegistryProtocol):
     def get_singletons(self) -> Mapping[str, Type[Features]]:
         return FeatureSetBase.__chalk_singletons__
 
+
 _DEFAULT_FEATURE_REGISTRY: FeatureRegistryProtocol = FeatureSetBaseWrapper()
-CURRENT_FEATURE_REGISTRY: contextvars.ContextVar[FeatureRegistryProtocol] = contextvars.ContextVar("CURRENT_FEATURE_REGISTRY", default=_DEFAULT_FEATURE_REGISTRY)
+CURRENT_FEATURE_REGISTRY: contextvars.ContextVar[FeatureRegistryProtocol] = contextvars.ContextVar(
+    "CURRENT_FEATURE_REGISTRY", default=_DEFAULT_FEATURE_REGISTRY
+)
 
 
 def is_features_cls(maybe_features: Any) -> TypeGuard[Type[Features]]:

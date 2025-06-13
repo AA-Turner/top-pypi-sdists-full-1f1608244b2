@@ -62,6 +62,7 @@ from .literals import (
     S3PermissionType,
     S3SSEAlgorithmType,
     S3StorageClassType,
+    ScopePermissionType,
     SseKmsEncryptedObjectsStatusType,
     TransitionStorageClassType,
 )
@@ -125,6 +126,7 @@ __all__ = (
     "DeleteAccessPointPolicyForObjectLambdaRequestTypeDef",
     "DeleteAccessPointPolicyRequestTypeDef",
     "DeleteAccessPointRequestTypeDef",
+    "DeleteAccessPointScopeRequestTypeDef",
     "DeleteBucketLifecycleConfigurationRequestTypeDef",
     "DeleteBucketPolicyRequestTypeDef",
     "DeleteBucketReplicationRequestTypeDef",
@@ -178,6 +180,8 @@ __all__ = (
     "GetAccessPointPolicyStatusResultTypeDef",
     "GetAccessPointRequestTypeDef",
     "GetAccessPointResultTypeDef",
+    "GetAccessPointScopeRequestTypeDef",
+    "GetAccessPointScopeResultTypeDef",
     "GetBucketLifecycleConfigurationRequestTypeDef",
     "GetBucketLifecycleConfigurationResultTypeDef",
     "GetBucketPolicyRequestTypeDef",
@@ -259,6 +263,9 @@ __all__ = (
     "ListAccessGrantsLocationsResultTypeDef",
     "ListAccessGrantsRequestTypeDef",
     "ListAccessGrantsResultTypeDef",
+    "ListAccessPointsForDirectoryBucketsRequestPaginateTypeDef",
+    "ListAccessPointsForDirectoryBucketsRequestTypeDef",
+    "ListAccessPointsForDirectoryBucketsResultTypeDef",
     "ListAccessPointsForObjectLambdaRequestPaginateTypeDef",
     "ListAccessPointsForObjectLambdaRequestTypeDef",
     "ListAccessPointsForObjectLambdaResultTypeDef",
@@ -311,6 +318,7 @@ __all__ = (
     "PutAccessPointConfigurationForObjectLambdaRequestTypeDef",
     "PutAccessPointPolicyForObjectLambdaRequestTypeDef",
     "PutAccessPointPolicyRequestTypeDef",
+    "PutAccessPointScopeRequestTypeDef",
     "PutBucketLifecycleConfigurationRequestTypeDef",
     "PutBucketPolicyRequestTypeDef",
     "PutBucketReplicationRequestTypeDef",
@@ -371,6 +379,9 @@ __all__ = (
     "S3TagTypeDef",
     "SSEKMSEncryptionTypeDef",
     "SSEKMSTypeDef",
+    "ScopeOutputTypeDef",
+    "ScopeTypeDef",
+    "ScopeUnionTypeDef",
     "SelectionCriteriaTypeDef",
     "SourceSelectionCriteriaTypeDef",
     "SseKmsEncryptedObjectsTypeDef",
@@ -543,6 +554,10 @@ class DeleteAccessPointRequestTypeDef(TypedDict):
     AccountId: str
     Name: str
 
+class DeleteAccessPointScopeRequestTypeDef(TypedDict):
+    AccountId: str
+    Name: str
+
 class DeleteBucketLifecycleConfigurationRequestTypeDef(TypedDict):
     AccountId: str
     Bucket: str
@@ -664,6 +679,14 @@ class GetAccessPointPolicyStatusRequestTypeDef(TypedDict):
 class GetAccessPointRequestTypeDef(TypedDict):
     AccountId: str
     Name: str
+
+class GetAccessPointScopeRequestTypeDef(TypedDict):
+    AccountId: str
+    Name: str
+
+class ScopeOutputTypeDef(TypedDict):
+    Prefixes: NotRequired[List[str]]
+    Permissions: NotRequired[List[ScopePermissionType]]
 
 class GetBucketLifecycleConfigurationRequestTypeDef(TypedDict):
     AccountId: str
@@ -854,6 +877,12 @@ class PaginatorConfigTypeDef(TypedDict):
     PageSize: NotRequired[int]
     StartingToken: NotRequired[str]
 
+class ListAccessPointsForDirectoryBucketsRequestTypeDef(TypedDict):
+    AccountId: str
+    DirectoryBucket: NotRequired[str]
+    NextToken: NotRequired[str]
+    MaxResults: NotRequired[int]
+
 class ListAccessPointsForObjectLambdaRequestTypeDef(TypedDict):
     AccountId: str
     NextToken: NotRequired[str]
@@ -1011,6 +1040,10 @@ class S3RetentionOutputTypeDef(TypedDict):
 
 class SSEKMSTypeDef(TypedDict):
     KeyId: str
+
+class ScopeTypeDef(TypedDict):
+    Prefixes: NotRequired[Sequence[str]]
+    Permissions: NotRequired[Sequence[ScopePermissionType]]
 
 class SseKmsEncryptedObjectsTypeDef(TypedDict):
     Status: SseKmsEncryptedObjectsStatusType
@@ -1266,14 +1299,6 @@ class ObjectLambdaAccessPointTypeDef(TypedDict):
     ObjectLambdaAccessPointArn: NotRequired[str]
     Alias: NotRequired[ObjectLambdaAccessPointAliasTypeDef]
 
-class CreateAccessPointRequestTypeDef(TypedDict):
-    AccountId: str
-    Name: str
-    Bucket: str
-    VpcConfiguration: NotRequired[VpcConfigurationTypeDef]
-    PublicAccessBlockConfiguration: NotRequired[PublicAccessBlockConfigurationTypeDef]
-    BucketAccountId: NotRequired[str]
-
 class GetAccessPointForObjectLambdaResultTypeDef(TypedDict):
     Name: str
     PublicAccessBlockConfiguration: PublicAccessBlockConfigurationTypeDef
@@ -1369,6 +1394,7 @@ class CreateMultiRegionAccessPointInputTypeDef(TypedDict):
 class GetDataAccessResultTypeDef(TypedDict):
     Credentials: CredentialsTypeDef
     MatchedGrantTarget: str
+    Grantee: GranteeTypeDef
     ResponseMetadata: ResponseMetadataTypeDef
 
 class GeneratedManifestEncryptionOutputTypeDef(TypedDict):
@@ -1389,6 +1415,10 @@ class GetAccessPointPolicyStatusResultTypeDef(TypedDict):
 
 class GetMultiRegionAccessPointPolicyStatusResultTypeDef(TypedDict):
     Established: PolicyStatusTypeDef
+    ResponseMetadata: ResponseMetadataTypeDef
+
+class GetAccessPointScopeResultTypeDef(TypedDict):
+    Scope: ScopeOutputTypeDef
     ResponseMetadata: ResponseMetadataTypeDef
 
 class GetMultiRegionAccessPointRoutesResultTypeDef(TypedDict):
@@ -1484,6 +1514,11 @@ class ListAccessGrantsLocationsResultTypeDef(TypedDict):
     AccessGrantsLocationsList: List[ListAccessGrantsLocationsEntryTypeDef]
     ResponseMetadata: ResponseMetadataTypeDef
     NextToken: NotRequired[str]
+
+class ListAccessPointsForDirectoryBucketsRequestPaginateTypeDef(TypedDict):
+    AccountId: str
+    DirectoryBucket: NotRequired[str]
+    PaginationConfig: NotRequired[PaginatorConfigTypeDef]
 
 class ListAccessPointsForObjectLambdaRequestPaginateTypeDef(TypedDict):
     AccountId: str
@@ -1595,6 +1630,8 @@ class StorageLensDataExportEncryptionTypeDef(TypedDict):
     SSES3: NotRequired[Mapping[str, Any]]
     SSEKMS: NotRequired[SSEKMSTypeDef]
 
+ScopeUnionTypeDef = Union[ScopeTypeDef, ScopeOutputTypeDef]
+
 class SourceSelectionCriteriaTypeDef(TypedDict):
     SseKmsEncryptedObjects: NotRequired[SseKmsEncryptedObjectsTypeDef]
     ReplicaModifications: NotRequired[ReplicaModificationsTypeDef]
@@ -1604,6 +1641,11 @@ class StorageLensGroupLevelOutputTypeDef(TypedDict):
 
 class StorageLensGroupLevelTypeDef(TypedDict):
     SelectionCriteria: NotRequired[StorageLensGroupLevelSelectionCriteriaTypeDef]
+
+class ListAccessPointsForDirectoryBucketsResultTypeDef(TypedDict):
+    AccessPointList: List[AccessPointTypeDef]
+    ResponseMetadata: ResponseMetadataTypeDef
+    NextToken: NotRequired[str]
 
 class ListAccessPointsResultTypeDef(TypedDict):
     AccessPointList: List[AccessPointTypeDef]
@@ -1808,6 +1850,20 @@ class S3BucketDestinationTypeDef(TypedDict):
     Arn: str
     Prefix: NotRequired[str]
     Encryption: NotRequired[StorageLensDataExportEncryptionTypeDef]
+
+class CreateAccessPointRequestTypeDef(TypedDict):
+    AccountId: str
+    Name: str
+    Bucket: str
+    VpcConfiguration: NotRequired[VpcConfigurationTypeDef]
+    PublicAccessBlockConfiguration: NotRequired[PublicAccessBlockConfigurationTypeDef]
+    BucketAccountId: NotRequired[str]
+    Scope: NotRequired[ScopeUnionTypeDef]
+
+class PutAccessPointScopeRequestTypeDef(TypedDict):
+    AccountId: str
+    Name: str
+    Scope: ScopeUnionTypeDef
 
 class ObjectLambdaConfigurationOutputTypeDef(TypedDict):
     SupportingAccessPoint: str

@@ -160,6 +160,7 @@ __all__ = (
     "HttpRequestMethodConditionConfigOutputTypeDef",
     "HttpRequestMethodConditionConfigTypeDef",
     "HttpRequestMethodConditionConfigUnionTypeDef",
+    "IpamPoolsTypeDef",
     "LimitTypeDef",
     "ListenerAttributeTypeDef",
     "ListenerTypeDef",
@@ -171,6 +172,8 @@ __all__ = (
     "MinimumLoadBalancerCapacityTypeDef",
     "ModifyCapacityReservationInputTypeDef",
     "ModifyCapacityReservationOutputTypeDef",
+    "ModifyIpPoolsInputTypeDef",
+    "ModifyIpPoolsOutputTypeDef",
     "ModifyListenerAttributesInputTypeDef",
     "ModifyListenerAttributesOutputTypeDef",
     "ModifyListenerInputTypeDef",
@@ -356,6 +359,9 @@ class MutualAuthenticationAttributesTypeDef(TypedDict):
     IgnoreClientCertificateExpiry: NotRequired[bool]
     TrustStoreAssociationStatus: NotRequired[TrustStoreAssociationStatusEnumType]
     AdvertiseTrustStoreCaNames: NotRequired[AdvertiseTrustStoreCaNamesEnumType]
+
+class IpamPoolsTypeDef(TypedDict):
+    Ipv4IpamPoolId: NotRequired[str]
 
 class SubnetMappingTypeDef(TypedDict):
     SubnetId: NotRequired[str]
@@ -688,6 +694,15 @@ class SslPolicyTypeDef(TypedDict):
     Name: NotRequired[str]
     SupportedLoadBalancerTypes: NotRequired[List[str]]
 
+class ModifyIpPoolsInputTypeDef(TypedDict):
+    LoadBalancerArn: str
+    IpamPools: NotRequired[IpamPoolsTypeDef]
+    RemoveIpamPools: NotRequired[Sequence[Literal["ipv4"]]]
+
+class ModifyIpPoolsOutputTypeDef(TypedDict):
+    IpamPools: IpamPoolsTypeDef
+    ResponseMetadata: ResponseMetadataTypeDef
+
 CreateLoadBalancerInputTypeDef = TypedDict(
     "CreateLoadBalancerInputTypeDef",
     {
@@ -701,6 +716,7 @@ CreateLoadBalancerInputTypeDef = TypedDict(
         "IpAddressType": NotRequired[IpAddressTypeType],
         "CustomerOwnedIpv4Pool": NotRequired[str],
         "EnablePrefixForIpv6SourceNat": NotRequired[EnablePrefixForIpv6SourceNatEnumType],
+        "IpamPools": NotRequired[IpamPoolsTypeDef],
     },
 )
 
@@ -981,6 +997,7 @@ LoadBalancerTypeDef = TypedDict(
         "CustomerOwnedIpv4Pool": NotRequired[str],
         "EnforceSecurityGroupInboundRulesOnPrivateLinkTraffic": NotRequired[str],
         "EnablePrefixForIpv6SourceNat": NotRequired[EnablePrefixForIpv6SourceNatEnumType],
+        "IpamPools": NotRequired[IpamPoolsTypeDef],
     },
 )
 

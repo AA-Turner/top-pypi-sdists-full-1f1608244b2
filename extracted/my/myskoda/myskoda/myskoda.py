@@ -85,7 +85,7 @@ from .models.event import (
 )
 from .models.health import Health
 from .models.info import CapabilityId, Info
-from .models.maintenance import Maintenance
+from .models.maintenance import Maintenance, MaintenanceReport
 from .models.position import Positions
 from .models.spin import Spin
 from .models.status import Status
@@ -165,7 +165,7 @@ class MySkoda:
         self.session = session
         self.authorization = MySkodaAuthorization(session)
         self.rest_api = RestApi(self.session, self.authorization)
-        self.ssl_context = ssl_context  # TODO @dvx76: this isn't used anywhere?
+        self.ssl_context = ssl_context
         if mqtt_enabled:
             self.mqtt = self._create_mqtt_client()
 
@@ -313,8 +313,12 @@ class MySkoda:
         return (await self.rest_api.get_trip_statistics(vin, anonymize=anonymize)).result
 
     async def get_maintenance(self, vin: Vin, anonymize: bool = False) -> Maintenance:
-        """Retrieve maintenance report."""
+        """Retrieve maintenance report, settings and history."""
         return (await self.rest_api.get_maintenance(vin, anonymize=anonymize)).result
+
+    async def get_maintenance_report(self, vin: Vin, anonymize: bool = False) -> MaintenanceReport:
+        """Retrieve maintenance report only."""
+        return (await self.rest_api.get_maintenance_report(vin, anonymize=anonymize)).result
 
     async def get_health(self, vin: Vin, anonymize: bool = False) -> Health:
         """Retrieve health information for the specified vehicle."""
@@ -610,6 +614,13 @@ class MySkoda:
             self._notify_callbacks(vin)
 
     @async_debounce(immediate=True)
+    async def refresh_maintenance_report(self, vin: Vin, notify: bool = True) -> None:
+        """Refresh only the maintenance report for the provided Vin."""
+        self._vehicles[vin].maintenance.maintenance_report = await self.get_maintenance_report(vin)
+        if notify:
+            self._notify_callbacks(vin)
+
+    @async_debounce(immediate=True)
     async def refresh_health(self, vin: Vin, notify: bool = True) -> None:
         """Refresh health data for the provided Vin."""
         self._vehicles[vin].health = await self.get_health(vin)
@@ -784,7 +795,7 @@ class MySkoda:
                 task.add_done_callback(background_tasks.discard)
 
     def _create_mqtt_client(self) -> MySkodaMqttClient:
-        mqtt = MySkodaMqttClient(authorization=self.authorization)
+        mqtt = MySkodaMqttClient(authorization=self.authorization, ssl_context=self.ssl_context)
         mqtt.subscribe(self._on_mqtt_event)
         return mqtt
 
@@ -810,8 +821,7 @@ class MySkoda:
         elif isinstance(event, ServiceEventDeparture):
             await self.refresh_positions(event.vin)
         elif isinstance(event, ServiceEventOdometer):
-            await self.refresh_info(event.vin)
-            await self.refresh_maintenance(event.vin)
+            await self.refresh_maintenance_report(event.vin)
 
     async def _process_operation_event(self, event: OperationEvent) -> None:
         """Refresh the appropriate vehicle data based on the operation details."""

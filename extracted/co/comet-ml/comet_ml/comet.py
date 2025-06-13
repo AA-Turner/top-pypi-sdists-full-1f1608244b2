@@ -821,7 +821,7 @@ class Streamer(BaseStreamer):
                     isinstance(exc, CometRestApiException)
                     and exc.response.status_code == HTTPStatus.TOO_MANY_REQUESTS
                 ):
-                    # create common throttling error message
+                    # create a common throttling error message
                     if self.use_raw_throttling_messages:
                         msg = exc.safe_msg
                     else:
@@ -1534,6 +1534,8 @@ class OfflineStreamer(BaseStreamer):
         except Exception as ex:
             LOGGER.warning(UNEXPECTED_OFFLINE_STREAMER_ERROR, ex, exc_info=True)
             self._report_experiment_error(UNEXPECTED_OFFLINE_STREAMER_ERROR % ex)
+
+        return None
 
     def _report_experiment_error(self, message: str, has_crashed: bool = False):
         if self.on_error is not None:

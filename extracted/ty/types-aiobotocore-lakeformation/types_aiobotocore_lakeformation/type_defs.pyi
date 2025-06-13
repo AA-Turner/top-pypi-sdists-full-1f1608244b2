@@ -258,6 +258,9 @@ class ErrorDetailTypeDef(TypedDict):
     ErrorCode: NotRequired[str]
     ErrorMessage: NotRequired[str]
 
+class ConditionTypeDef(TypedDict):
+    Expression: NotRequired[str]
+
 class DataLakePrincipalTypeDef(TypedDict):
     DataLakePrincipalIdentifier: NotRequired[str]
 
@@ -280,9 +283,6 @@ class ColumnWildcardTypeDef(TypedDict):
 
 class CommitTransactionRequestTypeDef(TypedDict):
     TransactionId: str
-
-class ConditionTypeDef(TypedDict):
-    Expression: NotRequired[str]
 
 class CreateLFTagRequestTypeDef(TypedDict):
     TagKey: str
@@ -356,6 +356,7 @@ class ResourceInfoTypeDef(TypedDict):
     LastModified: NotRequired[datetime]
     WithFederation: NotRequired[bool]
     HybridAccessEnabled: NotRequired[bool]
+    WithPrivilegedAccess: NotRequired[bool]
 
 class DescribeTransactionRequestTypeDef(TypedDict):
     TransactionId: str
@@ -516,6 +517,7 @@ class RegisterResourceRequestTypeDef(TypedDict):
     RoleArn: NotRequired[str]
     WithFederation: NotRequired[bool]
     HybridAccessEnabled: NotRequired[bool]
+    WithPrivilegedAccess: NotRequired[bool]
 
 class TableResourceOutputTypeDef(TypedDict):
     DatabaseName: str
@@ -998,6 +1000,7 @@ class BatchPermissionsRequestEntryOutputTypeDef(TypedDict):
     Principal: NotRequired[DataLakePrincipalTypeDef]
     Resource: NotRequired[ResourceOutputTypeDef]
     Permissions: NotRequired[List[PermissionType]]
+    Condition: NotRequired[ConditionTypeDef]
     PermissionsWithGrantOption: NotRequired[List[PermissionType]]
 
 class LakeFormationOptInsInfoTypeDef(TypedDict):
@@ -1075,15 +1078,18 @@ class BatchPermissionsRequestEntryTypeDef(TypedDict):
     Principal: NotRequired[DataLakePrincipalTypeDef]
     Resource: NotRequired[ResourceUnionTypeDef]
     Permissions: NotRequired[Sequence[PermissionType]]
+    Condition: NotRequired[ConditionTypeDef]
     PermissionsWithGrantOption: NotRequired[Sequence[PermissionType]]
 
 class CreateLakeFormationOptInRequestTypeDef(TypedDict):
     Principal: DataLakePrincipalTypeDef
     Resource: ResourceUnionTypeDef
+    Condition: NotRequired[ConditionTypeDef]
 
 class DeleteLakeFormationOptInRequestTypeDef(TypedDict):
     Principal: DataLakePrincipalTypeDef
     Resource: ResourceUnionTypeDef
+    Condition: NotRequired[ConditionTypeDef]
 
 class GetResourceLFTagsRequestTypeDef(TypedDict):
     Resource: ResourceUnionTypeDef
@@ -1095,6 +1101,7 @@ class GrantPermissionsRequestTypeDef(TypedDict):
     Resource: ResourceUnionTypeDef
     Permissions: Sequence[PermissionType]
     CatalogId: NotRequired[str]
+    Condition: NotRequired[ConditionTypeDef]
     PermissionsWithGrantOption: NotRequired[Sequence[PermissionType]]
 
 class ListLakeFormationOptInsRequestTypeDef(TypedDict):
@@ -1122,6 +1129,7 @@ class RevokePermissionsRequestTypeDef(TypedDict):
     Resource: ResourceUnionTypeDef
     Permissions: Sequence[PermissionType]
     CatalogId: NotRequired[str]
+    Condition: NotRequired[ConditionTypeDef]
     PermissionsWithGrantOption: NotRequired[Sequence[PermissionType]]
 
 BatchPermissionsRequestEntryUnionTypeDef = Union[

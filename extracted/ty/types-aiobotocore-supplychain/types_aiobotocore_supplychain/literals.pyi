@@ -23,16 +23,25 @@ else:
 
 __all__ = (
     "ConfigurationJobStatusType",
+    "DataIntegrationEventDatasetLoadStatusType",
+    "DataIntegrationEventDatasetOperationTypeType",
     "DataIntegrationEventTypeType",
+    "DataIntegrationFlowDedupeStrategyTypeType",
+    "DataIntegrationFlowExecutionStatusType",
+    "DataIntegrationFlowFieldPriorityDedupeSortOrderType",
     "DataIntegrationFlowFileTypeType",
     "DataIntegrationFlowLoadTypeType",
     "DataIntegrationFlowSourceTypeType",
     "DataIntegrationFlowTargetTypeType",
     "DataIntegrationFlowTransformationTypeType",
+    "DataLakeDatasetPartitionTransformTypeType",
     "DataLakeDatasetSchemaFieldTypeType",
     "InstanceStateType",
+    "ListDataIntegrationEventsPaginatorName",
+    "ListDataIntegrationFlowExecutionsPaginatorName",
     "ListDataIntegrationFlowsPaginatorName",
     "ListDataLakeDatasetsPaginatorName",
+    "ListDataLakeNamespacesPaginatorName",
     "ListInstancesPaginatorName",
     "PaginatorName",
     "ResourceServiceName",
@@ -41,7 +50,10 @@ __all__ = (
 )
 
 ConfigurationJobStatusType = Literal["FAILED", "IN_PROGRESS", "NEW", "QUEUED", "SUCCESS"]
+DataIntegrationEventDatasetLoadStatusType = Literal["FAILED", "IN_PROGRESS", "SUCCEEDED"]
+DataIntegrationEventDatasetOperationTypeType = Literal["APPEND", "DELETE", "UPSERT"]
 DataIntegrationEventTypeType = Literal[
+    "scn.data.dataset",
     "scn.data.forecast",
     "scn.data.inboundorder",
     "scn.data.inboundorderline",
@@ -58,17 +70,24 @@ DataIntegrationEventTypeType = Literal[
     "scn.data.shipmentstoporder",
     "scn.data.supplyplan",
 ]
+DataIntegrationFlowDedupeStrategyTypeType = Literal["FIELD_PRIORITY"]
+DataIntegrationFlowExecutionStatusType = Literal["FAILED", "IN_PROGRESS", "SUCCEEDED"]
+DataIntegrationFlowFieldPriorityDedupeSortOrderType = Literal["ASC", "DESC"]
 DataIntegrationFlowFileTypeType = Literal["CSV", "JSON", "PARQUET"]
 DataIntegrationFlowLoadTypeType = Literal["INCREMENTAL", "REPLACE"]
 DataIntegrationFlowSourceTypeType = Literal["DATASET", "S3"]
 DataIntegrationFlowTargetTypeType = Literal["DATASET", "S3"]
 DataIntegrationFlowTransformationTypeType = Literal["NONE", "SQL"]
-DataLakeDatasetSchemaFieldTypeType = Literal["DOUBLE", "INT", "STRING", "TIMESTAMP"]
+DataLakeDatasetPartitionTransformTypeType = Literal["DAY", "HOUR", "IDENTITY", "MONTH", "YEAR"]
+DataLakeDatasetSchemaFieldTypeType = Literal["DOUBLE", "INT", "LONG", "STRING", "TIMESTAMP"]
 InstanceStateType = Literal[
     "Active", "CreateFailed", "DeleteFailed", "Deleted", "Deleting", "Initializing"
 ]
+ListDataIntegrationEventsPaginatorName = Literal["list_data_integration_events"]
+ListDataIntegrationFlowExecutionsPaginatorName = Literal["list_data_integration_flow_executions"]
 ListDataIntegrationFlowsPaginatorName = Literal["list_data_integration_flows"]
 ListDataLakeDatasetsPaginatorName = Literal["list_data_lake_datasets"]
+ListDataLakeNamespacesPaginatorName = Literal["list_data_lake_namespaces"]
 ListInstancesPaginatorName = Literal["list_instances"]
 SupplyChainServiceName = Literal["supplychain"]
 ServiceName = Literal[
@@ -227,6 +246,7 @@ ServiceName = Literal[
     "freetier",
     "fsx",
     "gamelift",
+    "gameliftstreams",
     "geo-maps",
     "geo-places",
     "geo-routes",
@@ -252,6 +272,7 @@ ServiceName = Literal[
     "iot",
     "iot-data",
     "iot-jobs-data",
+    "iot-managed-integrations",
     "iotanalytics",
     "iotdeviceadvisor",
     "iotevents",
@@ -366,7 +387,6 @@ ServiceName = Literal[
     "pipes",
     "polly",
     "pricing",
-    "privatenetworks",
     "proton",
     "qapps",
     "qbusiness",
@@ -427,7 +447,6 @@ ServiceName = Literal[
     "signer",
     "simspaceweaver",
     "sms",
-    "sms-voice",
     "snow-device-management",
     "snowball",
     "sns",
@@ -435,6 +454,7 @@ ServiceName = Literal[
     "sqs",
     "ssm",
     "ssm-contacts",
+    "ssm-guiconnect",
     "ssm-incidents",
     "ssm-quicksetup",
     "ssm-sap",
@@ -487,4 +507,11 @@ ResourceServiceName = Literal[
     "sns",
     "sqs",
 ]
-PaginatorName = Literal["list_data_integration_flows", "list_data_lake_datasets", "list_instances"]
+PaginatorName = Literal[
+    "list_data_integration_events",
+    "list_data_integration_flow_executions",
+    "list_data_integration_flows",
+    "list_data_lake_datasets",
+    "list_data_lake_namespaces",
+    "list_instances",
+]

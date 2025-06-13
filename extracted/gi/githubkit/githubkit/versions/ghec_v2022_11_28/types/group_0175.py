@@ -9,21 +9,21 @@ See https://github.com/github/rest-api-description for more information.
 
 from __future__ import annotations
 
+from typing import Literal, Union
 from typing_extensions import NotRequired, TypedDict
 
+from .group_0058 import SimpleRepositoryType
 
-class ActionsPublicKeyType(TypedDict):
-    """ActionsPublicKey
 
-    The public key used for setting Actions Secrets.
+class DependabotRepositoryAccessDetailsType(TypedDict):
+    """Dependabot Repository Access Details
+
+    Information about repositories that Dependabot is able to access in an
+    organization
     """
 
-    key_id: str
-    key: str
-    id: NotRequired[int]
-    url: NotRequired[str]
-    title: NotRequired[str]
-    created_at: NotRequired[str]
+    default_level: NotRequired[Union[None, Literal["public", "internal"]]]
+    accessible_repositories: NotRequired[list[Union[None, SimpleRepositoryType]]]
 
 
-__all__ = ("ActionsPublicKeyType",)
+__all__ = ("DependabotRepositoryAccessDetailsType",)

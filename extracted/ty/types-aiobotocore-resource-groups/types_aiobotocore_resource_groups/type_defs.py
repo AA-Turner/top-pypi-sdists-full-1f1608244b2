@@ -271,25 +271,6 @@ class ListTagSyncTasksFilterTypeDef(TypedDict):
     GroupName: NotRequired[str]
 
 
-class TagSyncTaskItemTypeDef(TypedDict):
-    GroupArn: NotRequired[str]
-    GroupName: NotRequired[str]
-    TaskArn: NotRequired[str]
-    TagKey: NotRequired[str]
-    TagValue: NotRequired[str]
-    RoleArn: NotRequired[str]
-    Status: NotRequired[TagSyncTaskStatusType]
-    ErrorMessage: NotRequired[str]
-    CreatedAt: NotRequired[datetime]
-
-
-class StartTagSyncTaskInputTypeDef(TypedDict):
-    Group: str
-    TagKey: str
-    TagValue: str
-    RoleArn: str
-
-
 class TagInputTypeDef(TypedDict):
     Arn: str
     Tags: Mapping[str, str]
@@ -329,6 +310,27 @@ class SearchResourcesInputTypeDef(TypedDict):
     NextToken: NotRequired[str]
 
 
+class StartTagSyncTaskInputTypeDef(TypedDict):
+    Group: str
+    RoleArn: str
+    TagKey: NotRequired[str]
+    TagValue: NotRequired[str]
+    ResourceQuery: NotRequired[ResourceQueryTypeDef]
+
+
+class TagSyncTaskItemTypeDef(TypedDict):
+    GroupArn: NotRequired[str]
+    GroupName: NotRequired[str]
+    TaskArn: NotRequired[str]
+    TagKey: NotRequired[str]
+    TagValue: NotRequired[str]
+    ResourceQuery: NotRequired[ResourceQueryTypeDef]
+    RoleArn: NotRequired[str]
+    Status: NotRequired[TagSyncTaskStatusType]
+    ErrorMessage: NotRequired[str]
+    CreatedAt: NotRequired[datetime]
+
+
 class UpdateGroupQueryInputTypeDef(TypedDict):
     ResourceQuery: ResourceQueryTypeDef
     GroupName: NotRequired[str]
@@ -360,6 +362,7 @@ class GetTagSyncTaskOutputTypeDef(TypedDict):
     TaskArn: str
     TagKey: str
     TagValue: str
+    ResourceQuery: ResourceQueryTypeDef
     RoleArn: str
     Status: TagSyncTaskStatusType
     ErrorMessage: str
@@ -379,6 +382,7 @@ class StartTagSyncTaskOutputTypeDef(TypedDict):
     TaskArn: str
     TagKey: str
     TagValue: str
+    ResourceQuery: ResourceQueryTypeDef
     RoleArn: str
     ResponseMetadata: ResponseMetadataTypeDef
 
@@ -512,12 +516,6 @@ class ListTagSyncTasksInputTypeDef(TypedDict):
     NextToken: NotRequired[str]
 
 
-class ListTagSyncTasksOutputTypeDef(TypedDict):
-    TagSyncTasks: List[TagSyncTaskItemTypeDef]
-    ResponseMetadata: ResponseMetadataTypeDef
-    NextToken: NotRequired[str]
-
-
 class GetGroupQueryOutputTypeDef(TypedDict):
     GroupQuery: GroupQueryTypeDef
     ResponseMetadata: ResponseMetadataTypeDef
@@ -526,6 +524,12 @@ class GetGroupQueryOutputTypeDef(TypedDict):
 class UpdateGroupQueryOutputTypeDef(TypedDict):
     GroupQuery: GroupQueryTypeDef
     ResponseMetadata: ResponseMetadataTypeDef
+
+
+class ListTagSyncTasksOutputTypeDef(TypedDict):
+    TagSyncTasks: List[TagSyncTaskItemTypeDef]
+    ResponseMetadata: ResponseMetadataTypeDef
+    NextToken: NotRequired[str]
 
 
 class GroupConfigurationTypeDef(TypedDict):

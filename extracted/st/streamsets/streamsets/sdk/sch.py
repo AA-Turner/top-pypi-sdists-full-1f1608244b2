@@ -4243,7 +4243,7 @@ class ControlHub:
         delete_deployment_exception = None
         for deployment in deployments:
             try:
-                self.api_client.wait_for_deployment_to_be_deleted(deployment_id=deployment.id)
+                self.api_client.wait_for_deployment_to_be_deleted(deployment_id=deployment.deployment_id)
             except Exception as ex:
                 # just log the exceptions and ultimately raise the last one.
                 logger.debug(ex)

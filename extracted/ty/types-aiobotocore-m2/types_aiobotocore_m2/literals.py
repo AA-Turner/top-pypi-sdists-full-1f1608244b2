@@ -36,6 +36,7 @@ __all__ = (
     "ListApplicationsPaginatorName",
     "ListBatchJobDefinitionsPaginatorName",
     "ListBatchJobExecutionsPaginatorName",
+    "ListDataSetExportHistoryPaginatorName",
     "ListDataSetImportHistoryPaginatorName",
     "ListDataSetsPaginatorName",
     "ListDeploymentsPaginatorName",
@@ -88,6 +89,7 @@ ListApplicationVersionsPaginatorName = Literal["list_application_versions"]
 ListApplicationsPaginatorName = Literal["list_applications"]
 ListBatchJobDefinitionsPaginatorName = Literal["list_batch_job_definitions"]
 ListBatchJobExecutionsPaginatorName = Literal["list_batch_job_executions"]
+ListDataSetExportHistoryPaginatorName = Literal["list_data_set_export_history"]
 ListDataSetImportHistoryPaginatorName = Literal["list_data_set_import_history"]
 ListDataSetsPaginatorName = Literal["list_data_sets"]
 ListDeploymentsPaginatorName = Literal["list_deployments"]
@@ -251,6 +253,7 @@ ServiceName = Literal[
     "freetier",
     "fsx",
     "gamelift",
+    "gameliftstreams",
     "geo-maps",
     "geo-places",
     "geo-routes",
@@ -276,6 +279,7 @@ ServiceName = Literal[
     "iot",
     "iot-data",
     "iot-jobs-data",
+    "iot-managed-integrations",
     "iotanalytics",
     "iotdeviceadvisor",
     "iotevents",
@@ -390,7 +394,6 @@ ServiceName = Literal[
     "pipes",
     "polly",
     "pricing",
-    "privatenetworks",
     "proton",
     "qapps",
     "qbusiness",
@@ -451,7 +454,6 @@ ServiceName = Literal[
     "signer",
     "simspaceweaver",
     "sms",
-    "sms-voice",
     "snow-device-management",
     "snowball",
     "sns",
@@ -459,6 +461,7 @@ ServiceName = Literal[
     "sqs",
     "ssm",
     "ssm-contacts",
+    "ssm-guiconnect",
     "ssm-incidents",
     "ssm-quicksetup",
     "ssm-sap",
@@ -516,6 +519,7 @@ PaginatorName = Literal[
     "list_applications",
     "list_batch_job_definitions",
     "list_batch_job_executions",
+    "list_data_set_export_history",
     "list_data_set_import_history",
     "list_data_sets",
     "list_deployments",

@@ -18,10 +18,13 @@ Usage::
         ListBuildBatchesPaginator,
         ListBuildsForProjectPaginator,
         ListBuildsPaginator,
+        ListCommandExecutionsForSandboxPaginator,
         ListProjectsPaginator,
         ListReportGroupsPaginator,
         ListReportsForReportGroupPaginator,
         ListReportsPaginator,
+        ListSandboxesForProjectPaginator,
+        ListSandboxesPaginator,
         ListSharedProjectsPaginator,
         ListSharedReportGroupsPaginator,
     )
@@ -36,10 +39,13 @@ Usage::
         list_build_batches_paginator: ListBuildBatchesPaginator = client.get_paginator("list_build_batches")
         list_builds_for_project_paginator: ListBuildsForProjectPaginator = client.get_paginator("list_builds_for_project")
         list_builds_paginator: ListBuildsPaginator = client.get_paginator("list_builds")
+        list_command_executions_for_sandbox_paginator: ListCommandExecutionsForSandboxPaginator = client.get_paginator("list_command_executions_for_sandbox")
         list_projects_paginator: ListProjectsPaginator = client.get_paginator("list_projects")
         list_report_groups_paginator: ListReportGroupsPaginator = client.get_paginator("list_report_groups")
         list_reports_for_report_group_paginator: ListReportsForReportGroupPaginator = client.get_paginator("list_reports_for_report_group")
         list_reports_paginator: ListReportsPaginator = client.get_paginator("list_reports")
+        list_sandboxes_for_project_paginator: ListSandboxesForProjectPaginator = client.get_paginator("list_sandboxes_for_project")
+        list_sandboxes_paginator: ListSandboxesPaginator = client.get_paginator("list_sandboxes")
         list_shared_projects_paginator: ListSharedProjectsPaginator = client.get_paginator("list_shared_projects")
         list_shared_report_groups_paginator: ListSharedReportGroupsPaginator = client.get_paginator("list_shared_report_groups")
     ```
@@ -65,6 +71,8 @@ from .type_defs import (
     ListBuildsForProjectOutputTypeDef,
     ListBuildsInputPaginateTypeDef,
     ListBuildsOutputTypeDef,
+    ListCommandExecutionsForSandboxInputPaginateTypeDef,
+    ListCommandExecutionsForSandboxOutputTypeDef,
     ListProjectsInputPaginateTypeDef,
     ListProjectsOutputTypeDef,
     ListReportGroupsInputPaginateTypeDef,
@@ -73,6 +81,10 @@ from .type_defs import (
     ListReportsForReportGroupOutputTypeDef,
     ListReportsInputPaginateTypeDef,
     ListReportsOutputTypeDef,
+    ListSandboxesForProjectInputPaginateTypeDef,
+    ListSandboxesForProjectOutputTypeDef,
+    ListSandboxesInputPaginateTypeDef,
+    ListSandboxesOutputTypeDef,
     ListSharedProjectsInputPaginateTypeDef,
     ListSharedProjectsOutputTypeDef,
     ListSharedReportGroupsInputPaginateTypeDef,
@@ -92,10 +104,13 @@ __all__ = (
     "ListBuildBatchesPaginator",
     "ListBuildsForProjectPaginator",
     "ListBuildsPaginator",
+    "ListCommandExecutionsForSandboxPaginator",
     "ListProjectsPaginator",
     "ListReportGroupsPaginator",
     "ListReportsForReportGroupPaginator",
     "ListReportsPaginator",
+    "ListSandboxesForProjectPaginator",
+    "ListSandboxesPaginator",
     "ListSharedProjectsPaginator",
     "ListSharedReportGroupsPaginator",
 )
@@ -228,6 +243,29 @@ class ListBuildsPaginator(_ListBuildsPaginatorBase):
 
 
 if TYPE_CHECKING:
+    _ListCommandExecutionsForSandboxPaginatorBase = AioPaginator[
+        ListCommandExecutionsForSandboxOutputTypeDef
+    ]
+else:
+    _ListCommandExecutionsForSandboxPaginatorBase = AioPaginator  # type: ignore[assignment]
+
+
+class ListCommandExecutionsForSandboxPaginator(_ListCommandExecutionsForSandboxPaginatorBase):
+    """
+    [Show boto3 documentation](https://boto3.amazonaws.com/v1/documentation/api/latest/reference/services/codebuild/paginator/ListCommandExecutionsForSandbox.html#CodeBuild.Paginator.ListCommandExecutionsForSandbox)
+    [Show types-aiobotocore documentation](https://youtype.github.io/types_aiobotocore_docs/types_aiobotocore_codebuild/paginators/#listcommandexecutionsforsandboxpaginator)
+    """
+
+    def paginate(  # type: ignore[override]
+        self, **kwargs: Unpack[ListCommandExecutionsForSandboxInputPaginateTypeDef]
+    ) -> AioPageIterator[ListCommandExecutionsForSandboxOutputTypeDef]:
+        """
+        [Show boto3 documentation](https://boto3.amazonaws.com/v1/documentation/api/latest/reference/services/codebuild/paginator/ListCommandExecutionsForSandbox.html#CodeBuild.Paginator.ListCommandExecutionsForSandbox.paginate)
+        [Show types-aiobotocore documentation](https://youtype.github.io/types_aiobotocore_docs/types_aiobotocore_codebuild/paginators/#listcommandexecutionsforsandboxpaginator)
+        """
+
+
+if TYPE_CHECKING:
     _ListProjectsPaginatorBase = AioPaginator[ListProjectsOutputTypeDef]
 else:
     _ListProjectsPaginatorBase = AioPaginator  # type: ignore[assignment]
@@ -308,6 +346,48 @@ class ListReportsPaginator(_ListReportsPaginatorBase):
         """
         [Show boto3 documentation](https://boto3.amazonaws.com/v1/documentation/api/latest/reference/services/codebuild/paginator/ListReports.html#CodeBuild.Paginator.ListReports.paginate)
         [Show types-aiobotocore documentation](https://youtype.github.io/types_aiobotocore_docs/types_aiobotocore_codebuild/paginators/#listreportspaginator)
+        """
+
+
+if TYPE_CHECKING:
+    _ListSandboxesForProjectPaginatorBase = AioPaginator[ListSandboxesForProjectOutputTypeDef]
+else:
+    _ListSandboxesForProjectPaginatorBase = AioPaginator  # type: ignore[assignment]
+
+
+class ListSandboxesForProjectPaginator(_ListSandboxesForProjectPaginatorBase):
+    """
+    [Show boto3 documentation](https://boto3.amazonaws.com/v1/documentation/api/latest/reference/services/codebuild/paginator/ListSandboxesForProject.html#CodeBuild.Paginator.ListSandboxesForProject)
+    [Show types-aiobotocore documentation](https://youtype.github.io/types_aiobotocore_docs/types_aiobotocore_codebuild/paginators/#listsandboxesforprojectpaginator)
+    """
+
+    def paginate(  # type: ignore[override]
+        self, **kwargs: Unpack[ListSandboxesForProjectInputPaginateTypeDef]
+    ) -> AioPageIterator[ListSandboxesForProjectOutputTypeDef]:
+        """
+        [Show boto3 documentation](https://boto3.amazonaws.com/v1/documentation/api/latest/reference/services/codebuild/paginator/ListSandboxesForProject.html#CodeBuild.Paginator.ListSandboxesForProject.paginate)
+        [Show types-aiobotocore documentation](https://youtype.github.io/types_aiobotocore_docs/types_aiobotocore_codebuild/paginators/#listsandboxesforprojectpaginator)
+        """
+
+
+if TYPE_CHECKING:
+    _ListSandboxesPaginatorBase = AioPaginator[ListSandboxesOutputTypeDef]
+else:
+    _ListSandboxesPaginatorBase = AioPaginator  # type: ignore[assignment]
+
+
+class ListSandboxesPaginator(_ListSandboxesPaginatorBase):
+    """
+    [Show boto3 documentation](https://boto3.amazonaws.com/v1/documentation/api/latest/reference/services/codebuild/paginator/ListSandboxes.html#CodeBuild.Paginator.ListSandboxes)
+    [Show types-aiobotocore documentation](https://youtype.github.io/types_aiobotocore_docs/types_aiobotocore_codebuild/paginators/#listsandboxespaginator)
+    """
+
+    def paginate(  # type: ignore[override]
+        self, **kwargs: Unpack[ListSandboxesInputPaginateTypeDef]
+    ) -> AioPageIterator[ListSandboxesOutputTypeDef]:
+        """
+        [Show boto3 documentation](https://boto3.amazonaws.com/v1/documentation/api/latest/reference/services/codebuild/paginator/ListSandboxes.html#CodeBuild.Paginator.ListSandboxes.paginate)
+        [Show types-aiobotocore documentation](https://youtype.github.io/types_aiobotocore_docs/types_aiobotocore_codebuild/paginators/#listsandboxespaginator)
         """
 
 

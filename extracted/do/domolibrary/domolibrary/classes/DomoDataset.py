@@ -7,6 +7,7 @@ __all__ = ['DomoDataset']
 
 # %% ../../nbs/classes/50_DomoDataset.ipynb 4
 from ..routes.datacenter import SearchDatacenter_NoResultsFound, Datacenter_Enum 
+
 from domolibrary.routes.dataset import (
     ShareDataset_AccessLevelEnum,
     DatasetNotFoundError,
@@ -51,8 +52,8 @@ from nbdev.showdoc import patch_to
 class DomoDataset(DomoEntity_w_Lineage):
     "interacts with domo datasets"
 
+    id: str
     auth: dmda.DomoAuth = field(repr=False)
-    id: str = ""
 
     display_type: str = ""
     data_provider_type: str = ""
@@ -76,7 +77,7 @@ class DomoDataset(DomoEntity_w_Lineage):
 
 
     def __post_init__(self):
-        self.Lineage = dmdl.DomoLineage.from_parent(
+        self.Lineage = dmdl.DomoLineage._from_parent(
             auth = self.auth, 
             parent = self)
         
@@ -124,6 +125,7 @@ class DomoDataset(DomoEntity_w_Lineage):
         ds = cls(
             auth=auth,
             id=dd.id,
+            raw = res.response,
             display_type=dd.displayType,
             data_provider_type=dd.dataProviderType,
             name=dd.name,
@@ -162,12 +164,10 @@ class DomoDataset(DomoEntity_w_Lineage):
         )
         
 
-# %% ../../nbs/classes/50_DomoDataset.ipynb 19
-@patch_to(DomoDataset, cls_method=True)
+# %% ../../nbs/classes/50_DomoDataset.ipynb 15
+@patch_to(DomoDataset)
 async def query_dataset_private(
-    cls: DomoDataset,
-    auth: dmda.DomoAuth,
-    dataset_id: str,
+    self: DomoDataset,
     sql: str,
     session: Optional[httpx.AsyncClient] = None,
     filter_pdp_policy_id_ls: List[int] = None,  # filter by pdp policy
@@ -180,11 +180,9 @@ async def query_dataset_private(
     debug_num_stacks_to_drop: int = 2,
     timeout=10,  # larger API requests may require a longer response time
     maximum_retry: int = 5,
-    parent_class: str = None,
     is_return_dataframe: bool = True,
 ) -> pd.DataFrame:
 
-    parent_class = parent_class or cls.__name__
     res = None
     retry = 1
 
@@ -194,8 +192,8 @@ async def query_dataset_private(
     while (not res or not res.is_success) and retry <= maximum_retry:
         try:
             res = await dataset_routes.query_dataset_private(
-                auth=auth,
-                dataset_id=dataset_id,
+                auth=self.auth,
+                dataset_id=self.id,
                 sql=sql,
                 maximum=maximum,
                 filter_pdp_policy_id_ls=filter_pdp_policy_id_ls,
@@ -207,23 +205,19 @@ async def query_dataset_private(
                 debug_api=debug_api,
                 timeout=timeout,
                 debug_num_stacks_to_drop=debug_num_stacks_to_drop,
-                parent_class=parent_class,
+                parent_class = self.__class__.__name__
             )
-        except dataset_routes.DatasetNotFoundError as e:
-            print(e)
-            return res
-
-        except dataset_routes.QueryRequestError as e:
-            print(e)
-            return res
 
         except dmde.DomoError as e:
-            if retry <= maximum_retry:
+            if isinstance(e, (DatasetNotFoundError, QueryRequestError)):
+                raise e from e
+            
+            if retry <= maximum_retry and e:
                 print(
-                    f"⚠️ Error.  Attempt {retry} / {maximum_retry} - {e} - while query dataset {dataset_id} in {auth.domo_instance} with {sql}"
+                    f"⚠️ Error.  Attempt {retry} / {maximum_retry} - {e} - while query dataset {self.id} in {self.auth.domo_instance} with {sql}"
                 )
 
-            if retry == maximum_retry:
+            if retry == maximum_retry :
                 raise e from e
 
             retry += 1
@@ -234,7 +228,7 @@ async def query_dataset_private(
     return pd.DataFrame(res.response)
 
 
-# %% ../../nbs/classes/50_DomoDataset.ipynb 21
+# %% ../../nbs/classes/50_DomoDataset.ipynb 17
 @patch_to(DomoDataset)
 async def delete(
     self: DomoDataset,
@@ -253,7 +247,7 @@ async def delete(
 
     return res
 
-# %% ../../nbs/classes/50_DomoDataset.ipynb 22
+# %% ../../nbs/classes/50_DomoDataset.ipynb 18
 @patch_to(DomoDataset)
 async def share(
     self: DomoDataset,
@@ -283,7 +277,7 @@ async def share(
 
     return res
 
-# %% ../../nbs/classes/50_DomoDataset.ipynb 26
+# %% ../../nbs/classes/50_DomoDataset.ipynb 21
 @patch_to(DomoDataset)
 async def index_dataset(
     self: DomoDataset,
@@ -299,7 +293,7 @@ async def index_dataset(
         auth=auth, dataset_id=dataset_id, debug_api=debug_api, session=session
     )
 
-# %% ../../nbs/classes/50_DomoDataset.ipynb 27
+# %% ../../nbs/classes/50_DomoDataset.ipynb 22
 @patch_to(DomoDataset)
 async def upload_data(
     self: DomoDataset,
@@ -428,7 +422,7 @@ async def upload_data(
 
     return res
 
-# %% ../../nbs/classes/50_DomoDataset.ipynb 29
+# %% ../../nbs/classes/50_DomoDataset.ipynb 24
 @patch_to(DomoDataset)
 async def list_partitions(
     self: DomoDataset,
@@ -449,7 +443,7 @@ async def list_partitions(
 
     return res.response
 
-# %% ../../nbs/classes/50_DomoDataset.ipynb 32
+# %% ../../nbs/classes/50_DomoDataset.ipynb 27
 @patch_to(DomoDataset, cls_method=True)
 async def create(
     cls: DomoDataset,
@@ -484,7 +478,7 @@ async def create(
 
     return await cls.get_by_id(dataset_id=dataset_id, auth=auth)
 
-# %% ../../nbs/classes/50_DomoDataset.ipynb 35
+# %% ../../nbs/classes/50_DomoDataset.ipynb 30
 @patch_to(DomoDataset)
 async def delete_partition(
     self: DomoDataset,
@@ -503,8 +497,6 @@ async def delete_partition(
 
     if empty_df is None:
         empty_df = await self.query_dataset_private(
-            auth=auth,
-            dataset_id=dataset_id,
             sql="SELECT * from table limit 1",
             debug_api=debug_api,
         )
@@ -557,7 +549,7 @@ async def delete_partition(
 
     return res.response
 
-# %% ../../nbs/classes/50_DomoDataset.ipynb 38
+# %% ../../nbs/classes/50_DomoDataset.ipynb 33
 @patch_to(DomoDataset)
 async def reset_dataset(
     self: DomoDataset,
@@ -615,7 +607,7 @@ async def reset_dataset(
 
     return res
 
-# %% ../../nbs/classes/50_DomoDataset.ipynb 39
+# %% ../../nbs/classes/50_DomoDataset.ipynb 34
 @patch_to(DomoDataset)
 async def upsert_connector(
     self,

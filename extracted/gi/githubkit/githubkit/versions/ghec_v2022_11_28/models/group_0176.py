@@ -10,7 +10,7 @@ See https://github.com/github/rest-api-description for more information.
 from __future__ import annotations
 
 from datetime import datetime
-from typing import Literal, Union
+from typing import Union
 
 from pydantic import Field
 
@@ -18,143 +18,143 @@ from githubkit.compat import GitHubModel, model_rebuild
 from githubkit.typing import Missing
 from githubkit.utils import UNSET
 
-from .group_0053 import BypassResponse
 
+class OrganizationFull(GitHubModel):
+    """Organization Full
 
-class SecretScanningBypassRequest(GitHubModel):
-    """Secret scanning bypass request
+    Prevents users in the organization from using insecure methods of two-factor
+    authentication to fulfill a two-factor requirement.
+    Removes non-compliant outside collaborators from the organization and its
+    repositories.
 
-    A bypass request made by a user asking to be exempted from push protection in
-    this repository.
+    GitHub currently defines SMS as an insecure method of two-factor authentication.
+
+    If your users are managed by the enterprise this policy will not affect them.
+    The first admin account of the enterprise will still be affected.
     """
 
-    id: Missing[int] = Field(
-        default=UNSET, description="The unique identifier of the bypass request."
-    )
-    number: Missing[int] = Field(
+    login: str = Field()
+    id: int = Field()
+    node_id: str = Field()
+    url: str = Field()
+    repos_url: str = Field()
+    events_url: str = Field()
+    hooks_url: str = Field()
+    issues_url: str = Field()
+    members_url: str = Field()
+    public_members_url: str = Field()
+    avatar_url: str = Field()
+    description: Union[str, None] = Field()
+    name: Missing[Union[str, None]] = Field(default=UNSET)
+    company: Missing[Union[str, None]] = Field(default=UNSET)
+    blog: Missing[Union[str, None]] = Field(default=UNSET)
+    location: Missing[Union[str, None]] = Field(default=UNSET)
+    email: Missing[Union[str, None]] = Field(default=UNSET)
+    twitter_username: Missing[Union[str, None]] = Field(default=UNSET)
+    is_verified: Missing[bool] = Field(default=UNSET)
+    has_organization_projects: bool = Field()
+    has_repository_projects: bool = Field()
+    public_repos: int = Field()
+    public_gists: int = Field()
+    followers: int = Field()
+    following: int = Field()
+    html_url: str = Field()
+    type: str = Field()
+    total_private_repos: Missing[int] = Field(default=UNSET)
+    owned_private_repos: Missing[int] = Field(default=UNSET)
+    private_gists: Missing[Union[int, None]] = Field(default=UNSET)
+    disk_usage: Missing[Union[int, None]] = Field(default=UNSET)
+    collaborators: Missing[Union[int, None]] = Field(
         default=UNSET,
-        description="The number uniquely identifying the bypass request within its repository.",
+        description="The number of collaborators on private repositories.\n\nThis field may be null if the number of private repositories is over 50,000.",
     )
-    repository: Missing[SecretScanningBypassRequestPropRepository] = Field(
-        default=UNSET, description="The repository the bypass request is for."
-    )
-    organization: Missing[SecretScanningBypassRequestPropOrganization] = Field(
+    billing_email: Missing[Union[str, None]] = Field(default=UNSET)
+    plan: Missing[OrganizationFullPropPlan] = Field(default=UNSET)
+    default_repository_permission: Missing[Union[str, None]] = Field(default=UNSET)
+    default_repository_branch: Missing[Union[str, None]] = Field(
         default=UNSET,
-        description="The organization associated with the repository the bypass request is for.",
+        description="The default branch for repositories created in this organization.",
     )
-    requester: Missing[SecretScanningBypassRequestPropRequester] = Field(
-        default=UNSET, description="The user who requested the bypass."
+    members_can_create_repositories: Missing[Union[bool, None]] = Field(default=UNSET)
+    two_factor_requirement_enabled: Missing[Union[bool, None]] = Field(default=UNSET)
+    members_allowed_repository_creation_type: Missing[str] = Field(default=UNSET)
+    members_can_create_public_repositories: Missing[bool] = Field(default=UNSET)
+    members_can_create_private_repositories: Missing[bool] = Field(default=UNSET)
+    members_can_create_internal_repositories: Missing[bool] = Field(default=UNSET)
+    members_can_create_pages: Missing[bool] = Field(default=UNSET)
+    members_can_create_public_pages: Missing[bool] = Field(default=UNSET)
+    members_can_create_private_pages: Missing[bool] = Field(default=UNSET)
+    members_can_delete_repositories: Missing[bool] = Field(default=UNSET)
+    members_can_change_repo_visibility: Missing[bool] = Field(default=UNSET)
+    members_can_invite_outside_collaborators: Missing[bool] = Field(default=UNSET)
+    members_can_delete_issues: Missing[bool] = Field(default=UNSET)
+    display_commenter_full_name_setting_enabled: Missing[bool] = Field(default=UNSET)
+    readers_can_create_discussions: Missing[bool] = Field(default=UNSET)
+    members_can_create_teams: Missing[bool] = Field(default=UNSET)
+    members_can_view_dependency_insights: Missing[bool] = Field(default=UNSET)
+    members_can_fork_private_repositories: Missing[Union[bool, None]] = Field(
+        default=UNSET
     )
-    request_type: Missing[str] = Field(
-        default=UNSET, description="The type of request."
-    )
-    data: Missing[Union[list[SecretScanningBypassRequestPropDataItems], None]] = Field(
+    web_commit_signoff_required: Missing[bool] = Field(default=UNSET)
+    advanced_security_enabled_for_new_repositories: Missing[bool] = Field(
         default=UNSET,
-        description="Data describing the push rules that are being requested to be bypassed.",
+        description="**Endpoint closing down notice.** Please use [code security configurations](https://docs.github.com/enterprise-cloud@latest//rest/code-security/configurations) instead.\n\nWhether GitHub Advanced Security is enabled for new repositories and repositories transferred to this organization.\n\nThis field is only visible to organization owners or members of a team with the security manager role.",
     )
-    resource_identifier: Missing[str] = Field(
+    dependabot_alerts_enabled_for_new_repositories: Missing[bool] = Field(
         default=UNSET,
-        description="The unique identifier for the request type of the bypass request. For example, a commit SHA.",
+        description="**Endpoint closing down notice.** Please use [code security configurations](https://docs.github.com/enterprise-cloud@latest//rest/code-security/configurations) instead.\n\nWhether Dependabot alerts are automatically enabled for new repositories and repositories transferred to this organization.\n\nThis field is only visible to organization owners or members of a team with the security manager role.",
     )
-    status: Missing[
-        Literal[
-            "pending", "denied", "approved", "cancelled", "completed", "expired", "open"
-        ]
-    ] = Field(default=UNSET, description="The status of the bypass request.")
-    requester_comment: Missing[Union[str, None]] = Field(
+    dependabot_security_updates_enabled_for_new_repositories: Missing[bool] = Field(
         default=UNSET,
-        description="The comment the requester provided when creating the bypass request.",
+        description="**Endpoint closing down notice.** Please use [code security configurations](https://docs.github.com/enterprise-cloud@latest//rest/code-security/configurations) instead.\n\nWhether Dependabot security updates are automatically enabled for new repositories and repositories transferred to this organization.\n\nThis field is only visible to organization owners or members of a team with the security manager role.",
     )
-    expires_at: Missing[datetime] = Field(
-        default=UNSET, description="The date and time the bypass request will expire."
-    )
-    created_at: Missing[datetime] = Field(
-        default=UNSET, description="The date and time the bypass request was created."
-    )
-    responses: Missing[Union[list[BypassResponse], None]] = Field(
-        default=UNSET, description="The responses to the bypass request."
-    )
-    url: Missing[str] = Field(default=UNSET)
-    html_url: Missing[str] = Field(
-        default=UNSET, description="The URL to view the bypass request in a browser."
-    )
-
-
-class SecretScanningBypassRequestPropRepository(GitHubModel):
-    """SecretScanningBypassRequestPropRepository
-
-    The repository the bypass request is for.
-    """
-
-    id: Missing[int] = Field(
-        default=UNSET, description="The ID of the repository the bypass request is for."
-    )
-    name: Missing[str] = Field(
+    dependency_graph_enabled_for_new_repositories: Missing[bool] = Field(
         default=UNSET,
-        description="The name of the repository the bypass request is for.",
+        description="**Endpoint closing down notice.** Please use [code security configurations](https://docs.github.com/enterprise-cloud@latest//rest/code-security/configurations) instead.\n\nWhether dependency graph is automatically enabled for new repositories and repositories transferred to this organization.\n\nThis field is only visible to organization owners or members of a team with the security manager role.",
     )
-    full_name: Missing[str] = Field(
+    secret_scanning_enabled_for_new_repositories: Missing[bool] = Field(
         default=UNSET,
-        description="The full name of the repository the bypass request is for.",
+        description="**Endpoint closing down notice.** Please use [code security configurations](https://docs.github.com/enterprise-cloud@latest//rest/code-security/configurations) instead.\n\nWhether secret scanning is automatically enabled for new repositories and repositories transferred to this organization.\n\nThis field is only visible to organization owners or members of a team with the security manager role.",
     )
-
-
-class SecretScanningBypassRequestPropOrganization(GitHubModel):
-    """SecretScanningBypassRequestPropOrganization
-
-    The organization associated with the repository the bypass request is for.
-    """
-
-    id: Missing[int] = Field(default=UNSET, description="The ID of the organization.")
-    name: Missing[str] = Field(
-        default=UNSET, description="The name of the organization."
-    )
-
-
-class SecretScanningBypassRequestPropRequester(GitHubModel):
-    """SecretScanningBypassRequestPropRequester
-
-    The user who requested the bypass.
-    """
-
-    actor_id: Missing[int] = Field(
-        default=UNSET, description="The ID of the GitHub user who requested the bypass."
-    )
-    actor_name: Missing[str] = Field(
+    secret_scanning_push_protection_enabled_for_new_repositories: Missing[bool] = Field(
         default=UNSET,
-        description="The name of the GitHub user who requested the bypass.",
+        description="**Endpoint closing down notice.** Please use [code security configurations](https://docs.github.com/enterprise-cloud@latest//rest/code-security/configurations) instead.\n\nWhether secret scanning push protection is automatically enabled for new repositories and repositories transferred to this organization.\n\nThis field is only visible to organization owners or members of a team with the security manager role.",
     )
-
-
-class SecretScanningBypassRequestPropDataItems(GitHubModel):
-    """SecretScanningBypassRequestPropDataItems"""
-
-    secret_type: Missing[str] = Field(
-        default=UNSET, description="The type of secret that secret scanning detected."
-    )
-    bypass_reason: Missing[Literal["used_in_tests", "false_positive", "fix_later"]] = (
-        Field(default=UNSET, description="The reason the bypass was requested.")
-    )
-    path: Missing[str] = Field(
+    secret_scanning_push_protection_custom_link_enabled: Missing[bool] = Field(
         default=UNSET,
-        description="The path in the repo where the secret was located during the request.",
+        description="Whether a custom link is shown to contributors who are blocked from pushing a secret by push protection.",
     )
-    branch: Missing[str] = Field(
+    secret_scanning_push_protection_custom_link: Missing[Union[str, None]] = Field(
         default=UNSET,
-        description="The branch in the repo where the secret was located during the request.",
+        description="An optional URL string to display to contributors who are blocked from pushing a secret.",
+    )
+    secret_scanning_validity_checks_enabled: Missing[bool] = Field(
+        default=UNSET,
+        description="**Endpoint closing down notice.** Please use [code security configurations](https://docs.github.com/enterprise-cloud@latest//rest/code-security/configurations) instead.\n\nWhether secret scanning automatic validity checks on supported partner tokens is enabled for all repositories under this organization.",
+    )
+    created_at: datetime = Field()
+    updated_at: datetime = Field()
+    archived_at: Union[datetime, None] = Field()
+    deploy_keys_enabled_for_repositories: Missing[bool] = Field(
+        default=UNSET,
+        description="Controls whether or not deploy keys may be added and used for repositories in the organization.",
     )
 
 
-model_rebuild(SecretScanningBypassRequest)
-model_rebuild(SecretScanningBypassRequestPropRepository)
-model_rebuild(SecretScanningBypassRequestPropOrganization)
-model_rebuild(SecretScanningBypassRequestPropRequester)
-model_rebuild(SecretScanningBypassRequestPropDataItems)
+class OrganizationFullPropPlan(GitHubModel):
+    """OrganizationFullPropPlan"""
+
+    name: str = Field()
+    space: int = Field()
+    private_repos: int = Field()
+    filled_seats: Missing[int] = Field(default=UNSET)
+    seats: Missing[int] = Field(default=UNSET)
+
+
+model_rebuild(OrganizationFull)
+model_rebuild(OrganizationFullPropPlan)
 
 __all__ = (
-    "SecretScanningBypassRequest",
-    "SecretScanningBypassRequestPropDataItems",
-    "SecretScanningBypassRequestPropOrganization",
-    "SecretScanningBypassRequestPropRepository",
-    "SecretScanningBypassRequestPropRequester",
+    "OrganizationFull",
+    "OrganizationFullPropPlan",
 )

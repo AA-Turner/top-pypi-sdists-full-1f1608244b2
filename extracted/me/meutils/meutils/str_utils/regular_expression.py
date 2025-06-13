@@ -8,6 +8,7 @@
 # @Software     : PyCharm
 # @Description  :
 import json
+import re
 
 from meutils.pipe import *
 from urllib.parse import unquote, unquote_plus
@@ -66,6 +67,9 @@ def get_parse_and_index(text, pattern):
 
 @lru_cache()
 def parse_url(text: str, for_image=False, fn: Optional[Callable] = None):
+    if text.strip().startswith("http") and len(re.findall("http", text)) == 1:  # http开头且是单链接
+        return text.split(maxsplit=1)[:1]
+
     fn = fn or (lambda x: x.removesuffix(")"))
 
     # url_pattern = r'http[s]?://(?:[a-zA-Z]|[0-9]|[$-_@.&+]|[!*\\(\\),]|(?:%[0-9a-fA-F][0-9a-fA-F]))+'
@@ -97,9 +101,7 @@ def parse_url(text: str, for_image=False, fn: Optional[Callable] = None):
 
     valid_urls = []
     for url in urls:
-        url = url.strip(r"\n")
-        if fn:
-            url = fn(url)  # lambda x: x.removesuffix(")")
+        url = fn(url.strip(r"\n"))
 
         valid_urls.append(url)
 
@@ -171,7 +173,16 @@ if __name__ == '__main__':
 
     # print(parse_url(text, True))
     text = """
-    https://p3-bot-workflow-sign.byteimg.com/tos-cn-i-mdko3gqilj/1fe07cca46224208bfbed8c0f3c50ed8.png~tplv-mdko3gqilj-image.image?rk3s=81d4c505&x-expires=1780112531&x-signature=e7q1NOMjqCHvMz%2FC3dVAEVisAh4%3D&x-wf-file_name=9748f6214970f744fe7fd7a3699cfa2.png \nA young woman holding a lipstick tube with a black body and gold decorative rings, featuring a nude or light brown lipstick bullet. The lipstick product faces the camera, positioned slightly below her face. In the background, a close-up of lips coated with the same nude or light brown shade, creating a natural and soft effect.
-    """
-    print(parse_url(text, for_image=True))
+https://p26-bot-workflow-sign.byteimg.com/tos-cn-i-mdko3gqilj/f13171faeed2447b8b9c301ba912f25c.jpg~tplv-mdko3gqilj-image.image?rk3s=81d4c505&x-expires=1779880356&x-signature=AJop4%2FM8VjCUfjqiEzUugprc0CI%3D&x-wf-file_name=B0DCGKG71N.MAIN.jpg
 
+还有这种url，两个.jpg的也能兼容么
+    """
+    print(parse_url(text))
+
+
+    # print(parse_url(text, for_image=False))
+
+    # text = """https://photog.art/api/oss/R2yh8N Convert this portrait into a straight-on,front-facing ID-style headshot."""
+    # print(parse_url(text))
+    #
+    # valid_urls = parse_url(text, for_image=True)

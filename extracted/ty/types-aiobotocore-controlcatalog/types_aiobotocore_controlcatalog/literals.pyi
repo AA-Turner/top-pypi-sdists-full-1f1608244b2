@@ -25,6 +25,7 @@ __all__ = (
     "ControlBehaviorType",
     "ControlCatalogServiceName",
     "ControlScopeType",
+    "ControlSeverityType",
     "ListCommonControlsPaginatorName",
     "ListControlsPaginatorName",
     "ListDomainsPaginatorName",
@@ -36,6 +37,7 @@ __all__ = (
 
 ControlBehaviorType = Literal["DETECTIVE", "PREVENTIVE", "PROACTIVE"]
 ControlScopeType = Literal["GLOBAL", "REGIONAL"]
+ControlSeverityType = Literal["CRITICAL", "HIGH", "LOW", "MEDIUM"]
 ListCommonControlsPaginatorName = Literal["list_common_controls"]
 ListControlsPaginatorName = Literal["list_controls"]
 ListDomainsPaginatorName = Literal["list_domains"]
@@ -197,6 +199,7 @@ ServiceName = Literal[
     "freetier",
     "fsx",
     "gamelift",
+    "gameliftstreams",
     "geo-maps",
     "geo-places",
     "geo-routes",
@@ -222,6 +225,7 @@ ServiceName = Literal[
     "iot",
     "iot-data",
     "iot-jobs-data",
+    "iot-managed-integrations",
     "iotanalytics",
     "iotdeviceadvisor",
     "iotevents",
@@ -336,7 +340,6 @@ ServiceName = Literal[
     "pipes",
     "polly",
     "pricing",
-    "privatenetworks",
     "proton",
     "qapps",
     "qbusiness",
@@ -397,7 +400,6 @@ ServiceName = Literal[
     "signer",
     "simspaceweaver",
     "sms",
-    "sms-voice",
     "snow-device-management",
     "snowball",
     "sns",
@@ -405,6 +407,7 @@ ServiceName = Literal[
     "sqs",
     "ssm",
     "ssm-contacts",
+    "ssm-guiconnect",
     "ssm-incidents",
     "ssm-quicksetup",
     "ssm-sap",

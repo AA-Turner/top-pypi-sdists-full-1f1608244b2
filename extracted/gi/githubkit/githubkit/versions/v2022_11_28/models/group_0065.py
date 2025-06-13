@@ -9,27 +9,33 @@ See https://github.com/github/rest-api-description for more information.
 
 from __future__ import annotations
 
+from typing import Literal, Union
+
 from pydantic import Field
 
 from githubkit.compat import GitHubModel, model_rebuild
+from githubkit.typing import Missing
+from githubkit.utils import UNSET
+
+from .group_0031 import SimpleRepository
 
 
-class ActionsHostedRunnerMachineSpec(GitHubModel):
-    """Github-owned VM details.
+class DependabotRepositoryAccessDetails(GitHubModel):
+    """Dependabot Repository Access Details
 
-    Provides details of a particular machine spec.
+    Information about repositories that Dependabot is able to access in an
+    organization
     """
 
-    id: str = Field(
-        description="The ID used for the `size` parameter when creating a new runner."
+    default_level: Missing[Union[None, Literal["public", "internal"]]] = Field(
+        default=UNSET,
+        description="The default repository access level for Dependabot updates.",
     )
-    cpu_cores: int = Field(description="The number of cores.")
-    memory_gb: int = Field(description="The available RAM for the machine spec.")
-    storage_gb: int = Field(
-        description="The available SSD storage for the machine spec."
+    accessible_repositories: Missing[list[Union[None, SimpleRepository]]] = Field(
+        default=UNSET
     )
 
 
-model_rebuild(ActionsHostedRunnerMachineSpec)
+model_rebuild(DependabotRepositoryAccessDetails)
 
-__all__ = ("ActionsHostedRunnerMachineSpec",)
+__all__ = ("DependabotRepositoryAccessDetails",)

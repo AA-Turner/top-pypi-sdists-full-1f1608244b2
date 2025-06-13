@@ -1,6 +1,5 @@
 from __future__ import annotations
 
-import datetime as dt
 import re
 from collections.abc import Callable, Iterable, Mapping, Sequence
 from contextlib import suppress
@@ -14,6 +13,7 @@ from pathlib import Path
 from re import Pattern, search
 from typing import TYPE_CHECKING, Any, Literal, Self, assert_never, overload, override
 from uuid import UUID
+from zoneinfo import ZoneInfo
 
 from orjson import (
     OPT_PASSTHROUGH_DATACLASS,
@@ -21,6 +21,15 @@ from orjson import (
     OPT_SORT_KEYS,
     dumps,
     loads,
+)
+from whenever import (
+    Date,
+    DateDelta,
+    DateTimeDelta,
+    PlainDateTime,
+    Time,
+    TimeDelta,
+    ZonedDateTime,
 )
 
 from utilities.concurrent import concurrent_map
@@ -35,29 +44,10 @@ from utilities.iterables import (
 )
 from utilities.logging import get_logging_level_number
 from utilities.math import MAX_INT64, MIN_INT64
-from utilities.types import (
-    Dataclass,
-    DateOrDateTime,
-    LogLevel,
-    MaybeIterable,
-    PathLike,
-    StrMapping,
-)
-from utilities.tzlocal import get_local_time_zone
-from utilities.uuid import UUID_PATTERN
+from utilities.types import Dataclass, LogLevel, MaybeIterable, PathLike, StrMapping
+from utilities.tzlocal import LOCAL_TIME_ZONE
 from utilities.version import Version, parse_version
-from utilities.whenever import (
-    parse_date,
-    parse_plain_datetime,
-    parse_time,
-    parse_timedelta,
-    parse_zoned_datetime,
-    serialize_date,
-    serialize_datetime,
-    serialize_time,
-    serialize_timedelta,
-)
-from utilities.zoneinfo import ensure_time_zone
+from utilities.whenever2 import from_timestamp
 
 if TYPE_CHECKING:
     from collections.abc import Set as AbstractSet
@@ -73,25 +63,25 @@ if TYPE_CHECKING:
 class _Prefixes(Enum):
     dataclass = "dc"
     date = "d"
-    datetime = "dt"
+    date_delta = "dd"
+    date_time_delta = "D"
     enum = "e"
-    exception_class = "exc"
-    exception_instance = "exi"
+    exception_class = "Ex"
+    exception_instance = "ex"
     float_ = "fl"
     frozenset_ = "fr"
     list_ = "l"
-    nan = "nan"
     none = "none"
     path = "p"
-    pos_inf = "pos_inf"
-    neg_inf = "neg_inf"
+    plain_date_time = "pd"
     set_ = "s"
-    timedelta = "td"
-    time = "tm"
+    time = "ti"
+    time_delta = "td"
     tuple_ = "tu"
     unserializable = "un"
     uuid = "uu"
     version = "v"
+    zoned_date_time = "zd"
 
 
 type _DataclassHook = Callable[[type[Dataclass], StrMapping], StrMapping]
@@ -162,14 +152,12 @@ def _pre_process(
         # singletons
         case None:
             return f"[{_Prefixes.none.value}]"
-        case dt.datetime() as datetime:
-            return f"[{_Prefixes.datetime.value}]{serialize_datetime(datetime)}"
-        case dt.date() as date:  # after datetime
-            return f"[{_Prefixes.date.value}]{serialize_date(date)}"
-        case dt.time() as time:
-            return f"[{_Prefixes.time.value}]{serialize_time(time)}"
-        case dt.timedelta() as timedelta:
-            return f"[{_Prefixes.timedelta.value}]{serialize_timedelta(timedelta)}"
+        case Date() as date:
+            return f"[{_Prefixes.date.value}]{date}"
+        case DateDelta() as date:
+            return f"[{_Prefixes.date_delta.value}]{date}"
+        case DateTimeDelta() as date:
+            return f"[{_Prefixes.date_time_delta.value}]{date}"
         case Exception() as error_:
             return {
                 f"[{_Prefixes.exception_instance.value}|{type(error_).__qualname__}]": pre(
@@ -184,16 +172,24 @@ def _pre_process(
             if MIN_INT64 <= int_ <= MAX_INT64:
                 return int_
             raise _SerializeIntegerError(obj=int_)
-        case UUID() as uuid:
-            return f"[{_Prefixes.uuid.value}]{uuid}"
         case Path() as path:
             return f"[{_Prefixes.path.value}]{path!s}"
+        case PlainDateTime() as datetime:
+            return f"[{_Prefixes.plain_date_time.value}]{datetime}"
         case str() as str_:
             return str_
+        case Time() as time:
+            return f"[{_Prefixes.time.value}]{time}"
+        case TimeDelta() as time_delta:
+            return f"[{_Prefixes.time_delta.value}]{time_delta}"
         case type() as error_cls if issubclass(error_cls, Exception):
             return f"[{_Prefixes.exception_class.value}|{error_cls.__qualname__}]"
+        case UUID() as uuid:
+            return f"[{_Prefixes.uuid.value}]{uuid}"
         case Version() as version:
             return f"[{_Prefixes.version.value}]{version!s}"
+        case ZonedDateTime() as datetime:
+            return f"[{_Prefixes.zoned_date_time.value}]{datetime}"
         # contains
         case Dataclass() as dataclass:
             asdict = dataclass_to_dict(
@@ -338,46 +334,36 @@ def deserialize(
     )
 
 
-_NONE_PATTERN = re.compile(r"^\[" + _Prefixes.none.value + r"\]$")
-_LOCAL_DATETIME_PATTERN = re.compile(
-    r"^\["
-    + _Prefixes.datetime.value
-    + r"\](\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}(?:\.\d{1,6})?)$"
-)
-_UUID_PATTERN = re.compile(r"^\[" + _Prefixes.uuid.value + r"\](" + UUID_PATTERN + ")$")
-_ZONED_DATETIME_PATTERN = re.compile(
-    r"^\["
-    + _Prefixes.datetime.value
-    + r"\](\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}(?:\.\d{1,6})?[\+\-]\d{2}:\d{2}(?::\d{2})?\[(?!(?:dt\.)).+?\])$"
-)
-
-
-def _make_unit_pattern(prefix: _Prefixes, /) -> Pattern[str]:
-    return re.compile(r"^\[" + prefix.value + r"\](.+)$")
-
-
 (
     _DATE_PATTERN,
+    _DATE_DELTA_PATTERN,
+    _DATE_TIME_DELTA_PATTERN,
     _FLOAT_PATTERN,
+    _NONE_PATTERN,
     _PATH_PATTERN,
+    _PLAIN_DATE_TIME_PATTERN,
     _TIME_PATTERN,
-    _TIMEDELTA_PATTERN,
+    _TIME_DELTA_PATTERN,
+    _UUID_PATTERN,
     _VERSION_PATTERN,
-) = map(
-    _make_unit_pattern,
-    [
+    _ZONED_DATE_TIME_PATTERN,
+) = [
+    re.compile(r"^\[" + p.value + r"\](" + ".*" + ")$")
+    for p in [
         _Prefixes.date,
+        _Prefixes.date_delta,
+        _Prefixes.date_time_delta,
         _Prefixes.float_,
+        _Prefixes.none,
         _Prefixes.path,
+        _Prefixes.plain_date_time,
         _Prefixes.time,
-        _Prefixes.timedelta,
+        _Prefixes.time_delta,
+        _Prefixes.uuid,
         _Prefixes.version,
-    ],
-)
-
-
-def _make_container_pattern(prefix: _Prefixes, /) -> Pattern[str]:
-    return re.compile(r"^\[" + prefix.value + r"(?:\|(.+))?\]$")
+        _Prefixes.zoned_date_time,
+    ]
+]
 
 
 (
@@ -389,9 +375,9 @@ def _make_container_pattern(prefix: _Prefixes, /) -> Pattern[str]:
     _LIST_PATTERN,
     _SET_PATTERN,
     _TUPLE_PATTERN,
-) = map(
-    _make_container_pattern,
-    [
+) = [
+    re.compile(r"^\[" + p.value + r"(?:\|(.+))?\]$")
+    for p in [
         _Prefixes.dataclass,
         _Prefixes.enum,
         _Prefixes.exception_class,
@@ -400,8 +386,8 @@ def _make_container_pattern(prefix: _Prefixes, /) -> Pattern[str]:
         _Prefixes.list_,
         _Prefixes.set_,
         _Prefixes.tuple_,
-    ],
-)
+    ]
+]
 
 
 def _object_hook(
@@ -420,23 +406,27 @@ def _object_hook(
             if match := _NONE_PATTERN.search(text):
                 return None
             if match := _DATE_PATTERN.search(text):
-                return parse_date(match.group(1))
+                return Date.parse_common_iso(match.group(1))
+            if match := _DATE_DELTA_PATTERN.search(text):
+                return DateDelta.parse_common_iso(match.group(1))
+            if match := _DATE_TIME_DELTA_PATTERN.search(text):
+                return DateTimeDelta.parse_common_iso(match.group(1))
             if match := _FLOAT_PATTERN.search(text):
                 return float(match.group(1))
-            if match := _LOCAL_DATETIME_PATTERN.search(text):
-                return parse_plain_datetime(match.group(1))
             if match := _PATH_PATTERN.search(text):
                 return Path(match.group(1))
+            if match := _PLAIN_DATE_TIME_PATTERN.search(text):
+                return PlainDateTime.parse_common_iso(match.group(1))
             if match := _TIME_PATTERN.search(text):
-                return parse_time(match.group(1))
-            if match := _TIMEDELTA_PATTERN.search(text):
-                return parse_timedelta(match.group(1))
+                return Time.parse_common_iso(match.group(1))
+            if match := _TIME_DELTA_PATTERN.search(text):
+                return TimeDelta.parse_common_iso(match.group(1))
             if match := _UUID_PATTERN.search(text):
                 return UUID(match.group(1))
             if match := _VERSION_PATTERN.search(text):
                 return parse_version(match.group(1))
-            if match := _ZONED_DATETIME_PATTERN.search(text):
-                return parse_zoned_datetime(match.group(1))
+            if match := _ZONED_DATE_TIME_PATTERN.search(text):
+                return ZonedDateTime.parse_common_iso(match.group(1))
             if (
                 exc_class := _object_hook_exception_class(
                     text, data=data, objects=objects, redirects=redirects
@@ -753,9 +743,7 @@ class OrjsonFormatter(Formatter):
             path_name=Path(record.pathname),
             line_num=record.lineno,
             message=record.getMessage(),
-            datetime=dt.datetime.fromtimestamp(
-                record.created, tz=get_local_time_zone()
-            ),
+            datetime=from_timestamp(record.created, time_zone=LOCAL_TIME_ZONE),
             func_name=record.funcName,
             extra=extra if len(extra) >= 1 else None,
         )
@@ -859,11 +847,16 @@ class GetLogRecordsOutput:
             for r in self.records
         ]
         if len(records) >= 1:
-            time_zone = one_unique(ensure_time_zone(r.datetime) for r in records)
+            time_zone = one_unique(ZoneInfo(r.datetime.tz) for r in records)
         else:
-            time_zone = get_local_time_zone()
+            time_zone = LOCAL_TIME_ZONE
         return DataFrame(
-            data=[dataclass_to_dict(r, recursive=False) for r in records],
+            data=[
+                dataclass_to_dict(
+                    replace(r, datetime=r.datetime.py_datetime()), recursive=False
+                )
+                for r in records
+            ],
             schema={
                 "index": UInt64,
                 "name": String,
@@ -891,9 +884,12 @@ class GetLogRecordsOutput:
         level: LogLevel | None = None,
         min_level: LogLevel | None = None,
         max_level: LogLevel | None = None,
-        date_or_datetime: DateOrDateTime | None = None,
-        min_date_or_datetime: DateOrDateTime | None = None,
-        max_date_or_datetime: DateOrDateTime | None = None,
+        date: Date | None = None,
+        min_date: Date | None = None,
+        max_date: Date | None = None,
+        datetime: ZonedDateTime | None = None,
+        min_datetime: ZonedDateTime | None = None,
+        max_datetime: ZonedDateTime | None = None,
         func_name: bool | str | None = None,
         extra: bool | MaybeIterable[str] | None = None,
         log_file: bool | PathLike | None = None,
@@ -932,30 +928,18 @@ class GetLogRecordsOutput:
             records = [
                 r for r in records if r.level <= get_logging_level_number(max_level)
             ]
-        if date_or_datetime is not None:
-            match date_or_datetime:
-                case dt.datetime() as datetime:
-                    records = [r for r in records if r.datetime == datetime]
-                case dt.date() as date:
-                    records = [r for r in records if r.date == date]
-                case _ as never:
-                    assert_never(never)
-        if min_date_or_datetime is not None:
-            match min_date_or_datetime:
-                case dt.datetime() as min_datetime:
-                    records = [r for r in records if r.datetime >= min_datetime]
-                case dt.date() as min_date:
-                    records = [r for r in records if r.date >= min_date]
-                case _ as never:
-                    assert_never(never)
-        if max_date_or_datetime is not None:
-            match max_date_or_datetime:
-                case dt.datetime() as max_datetime:
-                    records = [r for r in records if r.datetime <= max_datetime]
-                case dt.date() as max_date:
-                    records = [r for r in records if r.date <= max_date]
-                case _ as never:
-                    assert_never(never)
+        if date is not None:
+            records = [r for r in records if r.date == date]
+        if min_date is not None:
+            records = [r for r in records if r.date >= min_date]
+        if max_date is not None:
+            records = [r for r in records if r.date <= max_date]
+        if datetime is not None:
+            records = [r for r in records if r.datetime == datetime]
+        if min_datetime is not None:
+            records = [r for r in records if r.datetime >= min_datetime]
+        if max_datetime is not None:
+            records = [r for r in records if r.datetime <= max_datetime]
         if func_name is not None:
             match func_name:
                 case bool() as has_func_name:
@@ -1058,7 +1042,7 @@ class OrjsonLogRecord:
     level: int
     path_name: Path
     line_num: int
-    datetime: dt.datetime
+    datetime: ZonedDateTime
     func_name: str | None = None
     stack_info: str | None = None
     extra: StrMapping | None = None
@@ -1066,7 +1050,7 @@ class OrjsonLogRecord:
     log_file_line_num: int | None = None
 
     @cached_property
-    def date(self) -> dt.date:
+    def date(self) -> Date:
         return self.datetime.date()
 
 

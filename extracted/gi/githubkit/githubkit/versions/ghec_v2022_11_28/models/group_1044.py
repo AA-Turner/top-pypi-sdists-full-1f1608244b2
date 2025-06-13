@@ -9,20 +9,48 @@ See https://github.com/github/rest-api-description for more information.
 
 from __future__ import annotations
 
+from datetime import datetime
+from typing import Literal, Union
+
 from pydantic import Field
 
 from githubkit.compat import GitHubModel, model_rebuild
+from githubkit.typing import Missing
+from githubkit.utils import UNSET
 
-from .group_0076 import NetworkConfiguration
 
-
-class OrgsOrgSettingsNetworkConfigurationsGetResponse200(GitHubModel):
-    """OrgsOrgSettingsNetworkConfigurationsGetResponse200"""
+class OrgsOrgPrivateRegistriesGetResponse200(GitHubModel):
+    """OrgsOrgPrivateRegistriesGetResponse200"""
 
     total_count: int = Field()
-    network_configurations: list[NetworkConfiguration] = Field()
+    configurations: list[OrgPrivateRegistryConfiguration] = Field()
 
 
-model_rebuild(OrgsOrgSettingsNetworkConfigurationsGetResponse200)
+class OrgPrivateRegistryConfiguration(GitHubModel):
+    """Organization private registry
 
-__all__ = ("OrgsOrgSettingsNetworkConfigurationsGetResponse200",)
+    Private registry configuration for an organization
+    """
+
+    name: str = Field(description="The name of the private registry configuration.")
+    registry_type: Literal["maven_repository", "nuget_feed", "goproxy_server"] = Field(
+        description="The registry type."
+    )
+    username: Missing[Union[str, None]] = Field(
+        default=UNSET,
+        description="The username to use when authenticating with the private registry.",
+    )
+    visibility: Literal["all", "private", "selected"] = Field(
+        description="Which type of organization repositories have access to the private registry."
+    )
+    created_at: datetime = Field()
+    updated_at: datetime = Field()
+
+
+model_rebuild(OrgsOrgPrivateRegistriesGetResponse200)
+model_rebuild(OrgPrivateRegistryConfiguration)
+
+__all__ = (
+    "OrgPrivateRegistryConfiguration",
+    "OrgsOrgPrivateRegistriesGetResponse200",
+)

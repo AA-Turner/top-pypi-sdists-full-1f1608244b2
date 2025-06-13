@@ -13,11 +13,10 @@ from typing import Literal
 from typing_extensions import NotRequired, TypedDict
 
 
-class ReposOwnerRepoActionsPermissionsPutBodyType(TypedDict):
-    """ReposOwnerRepoActionsPermissionsPutBody"""
+class ProjectsProjectIdCollaboratorsUsernamePutBodyType(TypedDict):
+    """ProjectsProjectIdCollaboratorsUsernamePutBody"""
 
-    enabled: bool
-    allowed_actions: NotRequired[Literal["all", "local_only", "selected"]]
+    permission: NotRequired[Literal["read", "write", "admin"]]
 
 
-__all__ = ("ReposOwnerRepoActionsPermissionsPutBodyType",)
+__all__ = ("ProjectsProjectIdCollaboratorsUsernamePutBodyType",)

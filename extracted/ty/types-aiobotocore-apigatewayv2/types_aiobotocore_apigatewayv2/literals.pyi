@@ -41,6 +41,7 @@ __all__ = (
     "GetRoutesPaginatorName",
     "GetStagesPaginatorName",
     "IntegrationTypeType",
+    "IpAddressTypeType",
     "JSONYAMLType",
     "LoggingLevelType",
     "OAS30Type",
@@ -75,6 +76,7 @@ GetRouteResponsesPaginatorName = Literal["get_route_responses"]
 GetRoutesPaginatorName = Literal["get_routes"]
 GetStagesPaginatorName = Literal["get_stages"]
 IntegrationTypeType = Literal["AWS", "AWS_PROXY", "HTTP", "HTTP_PROXY", "MOCK"]
+IpAddressTypeType = Literal["dualstack", "ipv4"]
 JSONYAMLType = Literal["JSON", "YAML"]
 LoggingLevelType = Literal["ERROR", "INFO", "OFF"]
 OAS30Type = Literal["OAS30"]
@@ -240,6 +242,7 @@ ServiceName = Literal[
     "freetier",
     "fsx",
     "gamelift",
+    "gameliftstreams",
     "geo-maps",
     "geo-places",
     "geo-routes",
@@ -265,6 +268,7 @@ ServiceName = Literal[
     "iot",
     "iot-data",
     "iot-jobs-data",
+    "iot-managed-integrations",
     "iotanalytics",
     "iotdeviceadvisor",
     "iotevents",
@@ -379,7 +383,6 @@ ServiceName = Literal[
     "pipes",
     "polly",
     "pricing",
-    "privatenetworks",
     "proton",
     "qapps",
     "qbusiness",
@@ -440,7 +443,6 @@ ServiceName = Literal[
     "signer",
     "simspaceweaver",
     "sms",
-    "sms-voice",
     "snow-device-management",
     "snowball",
     "sns",
@@ -448,6 +450,7 @@ ServiceName = Literal[
     "sqs",
     "ssm",
     "ssm-contacts",
+    "ssm-guiconnect",
     "ssm-incidents",
     "ssm-quicksetup",
     "ssm-sap",

@@ -119,6 +119,7 @@ __all__ = (
     "ListUsersPaginatorName",
     "ListViewVersionsPaginatorName",
     "ListViewsPaginatorName",
+    "MediaStreamTypeType",
     "MeetingFeatureStatusType",
     "MonitorCapabilityType",
     "NotificationContentTypeType",
@@ -129,8 +130,10 @@ __all__ = (
     "OverrideDaysType",
     "PaginatorName",
     "ParticipantRoleType",
+    "ParticipantStateType",
     "ParticipantTimerActionType",
     "ParticipantTimerTypeType",
+    "ParticipantTypeType",
     "PhoneNumberCountryCodeType",
     "PhoneNumberTypeType",
     "PhoneNumberWorkflowStatusType",
@@ -145,6 +148,7 @@ __all__ = (
     "RealTimeContactAnalysisSentimentLabelType",
     "RealTimeContactAnalysisStatusType",
     "RealTimeContactAnalysisSupportedChannelType",
+    "RecordingStatusType",
     "ReferenceStatusType",
     "ReferenceTypeType",
     "RegionName",
@@ -175,10 +179,13 @@ __all__ = (
     "SearchableQueueTypeType",
     "ServiceName",
     "SingleSelectQuestionRuleCategoryAutomationConditionType",
+    "SlaAssignmentTypeType",
+    "SlaTypeType",
     "SortOrderType",
     "SortableFieldNameType",
     "SourceTypeType",
     "StatisticType",
+    "StatusType",
     "StorageTypeType",
     "StringComparisonTypeType",
     "TargetListTypeType",
@@ -199,6 +206,7 @@ __all__ = (
 
 ActionTypeType = Literal[
     "ASSIGN_CONTACT_CATEGORY",
+    "ASSIGN_SLA",
     "CREATE_CASE",
     "CREATE_TASK",
     "END_ASSOCIATED_TASKS",
@@ -316,6 +324,7 @@ EventSourceNameType = Literal[
     "OnRealTimeCallAnalysisAvailable",
     "OnRealTimeChatAnalysisAvailable",
     "OnSalesforceCaseCreate",
+    "OnSlaBreach",
     "OnZendeskTicketCreate",
     "OnZendeskTicketStatusUpdate",
 ]
@@ -483,6 +492,7 @@ ListUserProficienciesPaginatorName = Literal["list_user_proficiencies"]
 ListUsersPaginatorName = Literal["list_users"]
 ListViewVersionsPaginatorName = Literal["list_view_versions"]
 ListViewsPaginatorName = Literal["list_views"]
+MediaStreamTypeType = Literal["AUDIO", "VIDEO"]
 MeetingFeatureStatusType = Literal["AVAILABLE", "UNAVAILABLE"]
 MonitorCapabilityType = Literal["BARGE", "SILENT_MONITOR"]
 NotificationContentTypeType = Literal["PLAIN_TEXT"]
@@ -505,8 +515,10 @@ OverrideDaysType = Literal[
     "FRIDAY", "MONDAY", "SATURDAY", "SUNDAY", "THURSDAY", "TUESDAY", "WEDNESDAY"
 ]
 ParticipantRoleType = Literal["AGENT", "CUSTOMER", "CUSTOM_BOT", "SUPERVISOR", "SYSTEM"]
+ParticipantStateType = Literal["CONNECTED", "DISCONNECTED", "INITIAL", "MISSED"]
 ParticipantTimerActionType = Literal["Unset"]
 ParticipantTimerTypeType = Literal["DISCONNECT_NONCUSTOMER", "IDLE"]
+ParticipantTypeType = Literal["AGENT", "ALL", "CUSTOMER", "MANAGER", "THIRDPARTY"]
 PhoneNumberCountryCodeType = Literal[
     "AD",
     "AE",
@@ -769,6 +781,7 @@ RealTimeContactAnalysisSegmentTypeType = Literal[
 RealTimeContactAnalysisSentimentLabelType = Literal["NEGATIVE", "NEUTRAL", "POSITIVE"]
 RealTimeContactAnalysisStatusType = Literal["COMPLETED", "FAILED", "IN_PROGRESS"]
 RealTimeContactAnalysisSupportedChannelType = Literal["CHAT", "VOICE"]
+RecordingStatusType = Literal["AVAILABLE", "DELETED"]
 ReferenceStatusType = Literal[
     "APPROVED", "AVAILABLE", "DELETED", "FAILED", "PROCESSING", "REJECTED"
 ]
@@ -805,6 +818,8 @@ SearchUsersPaginatorName = Literal["search_users"]
 SearchVocabulariesPaginatorName = Literal["search_vocabularies"]
 SearchableQueueTypeType = Literal["STANDARD"]
 SingleSelectQuestionRuleCategoryAutomationConditionType = Literal["NOT_PRESENT", "PRESENT"]
+SlaAssignmentTypeType = Literal["CASES"]
+SlaTypeType = Literal["CaseField"]
 SortOrderType = Literal["ASCENDING", "DESCENDING"]
 SortableFieldNameType = Literal[
     "CHANNEL",
@@ -816,6 +831,7 @@ SortableFieldNameType = Literal[
 ]
 SourceTypeType = Literal["CASES", "SALESFORCE", "ZENDESK"]
 StatisticType = Literal["AVG", "MAX", "SUM"]
+StatusType = Literal["COMPLETE", "DELETED", "IN_PROGRESS"]
 StorageTypeType = Literal["KINESIS_FIREHOSE", "KINESIS_STREAM", "KINESIS_VIDEO_STREAM", "S3"]
 StringComparisonTypeType = Literal["CONTAINS", "EXACT", "STARTS_WITH"]
 TargetListTypeType = Literal["PROFICIENCIES"]
@@ -1047,6 +1063,7 @@ ServiceName = Literal[
     "freetier",
     "fsx",
     "gamelift",
+    "gameliftstreams",
     "geo-maps",
     "geo-places",
     "geo-routes",
@@ -1072,6 +1089,7 @@ ServiceName = Literal[
     "iot",
     "iot-data",
     "iot-jobs-data",
+    "iot-managed-integrations",
     "iotanalytics",
     "iotdeviceadvisor",
     "iotevents",
@@ -1186,7 +1204,6 @@ ServiceName = Literal[
     "pipes",
     "polly",
     "pricing",
-    "privatenetworks",
     "proton",
     "qapps",
     "qbusiness",
@@ -1247,7 +1264,6 @@ ServiceName = Literal[
     "signer",
     "simspaceweaver",
     "sms",
-    "sms-voice",
     "snow-device-management",
     "snowball",
     "sns",
@@ -1255,6 +1271,7 @@ ServiceName = Literal[
     "sqs",
     "ssm",
     "ssm-contacts",
+    "ssm-guiconnect",
     "ssm-incidents",
     "ssm-quicksetup",
     "ssm-sap",

@@ -20,14 +20,18 @@ import sys
 from datetime import datetime
 
 from .literals import (
+    DeriveKeyUsageType,
     KeyAlgorithmType,
     KeyCheckValueAlgorithmType,
     KeyClassType,
+    KeyDerivationFunctionType,
+    KeyDerivationHashAlgorithmType,
     KeyExportabilityType,
     KeyMaterialTypeType,
     KeyOriginType,
     KeyStateType,
     KeyUsageType,
+    SymmetricKeyAlgorithmType,
     WrappedKeyMaterialFormatType,
     WrappingKeySpecType,
 )
@@ -53,7 +57,9 @@ __all__ = (
     "DeleteAliasInputTypeDef",
     "DeleteKeyInputTypeDef",
     "DeleteKeyOutputTypeDef",
+    "DiffieHellmanDerivationDataTypeDef",
     "ExportAttributesTypeDef",
+    "ExportDiffieHellmanTr31KeyBlockTypeDef",
     "ExportDukptInitialKeyTypeDef",
     "ExportKeyCryptogramTypeDef",
     "ExportKeyInputTypeDef",
@@ -71,6 +77,7 @@ __all__ = (
     "GetParametersForImportOutputTypeDef",
     "GetPublicKeyCertificateInputTypeDef",
     "GetPublicKeyCertificateOutputTypeDef",
+    "ImportDiffieHellmanTr31KeyBlockTypeDef",
     "ImportKeyCryptogramTypeDef",
     "ImportKeyInputTypeDef",
     "ImportKeyMaterialTypeDef",
@@ -140,6 +147,10 @@ class DeleteAliasInputTypeDef(TypedDict):
 class DeleteKeyInputTypeDef(TypedDict):
     KeyIdentifier: str
     DeleteKeyInDays: NotRequired[int]
+
+
+class DiffieHellmanDerivationDataTypeDef(TypedDict):
+    SharedInformation: NotRequired[str]
 
 
 class ExportDukptInitialKeyTypeDef(TypedDict):
@@ -310,6 +321,17 @@ class TagResourceInputTypeDef(TypedDict):
     Tags: Sequence[TagTypeDef]
 
 
+class ImportDiffieHellmanTr31KeyBlockTypeDef(TypedDict):
+    PrivateKeyIdentifier: str
+    CertificateAuthorityPublicKeyIdentifier: str
+    PublicKeyCertificate: str
+    DeriveKeyAlgorithm: SymmetricKeyAlgorithmType
+    KeyDerivationFunction: KeyDerivationFunctionType
+    KeyDerivationHashAlgorithm: KeyDerivationHashAlgorithmType
+    DerivationData: DiffieHellmanDerivationDataTypeDef
+    WrappedKeyBlock: str
+
+
 class ExportAttributesTypeDef(TypedDict):
     ExportDukptInitialKey: NotRequired[ExportDukptInitialKeyTypeDef]
     KeyCheckValueAlgorithm: NotRequired[KeyCheckValueAlgorithmType]
@@ -355,6 +377,7 @@ class CreateKeyInputTypeDef(TypedDict):
     KeyCheckValueAlgorithm: NotRequired[KeyCheckValueAlgorithmType]
     Enabled: NotRequired[bool]
     Tags: NotRequired[Sequence[TagTypeDef]]
+    DeriveKeyUsage: NotRequired[DeriveKeyUsageType]
 
 
 class ImportKeyCryptogramTypeDef(TypedDict):
@@ -388,6 +411,7 @@ class KeyTypeDef(TypedDict):
     UsageStopTimestamp: NotRequired[datetime]
     DeletePendingTimestamp: NotRequired[datetime]
     DeleteTimestamp: NotRequired[datetime]
+    DeriveKeyUsage: NotRequired[DeriveKeyUsageType]
 
 
 class RootCertificatePublicKeyTypeDef(TypedDict):
@@ -399,6 +423,17 @@ class TrustedCertificatePublicKeyTypeDef(TypedDict):
     KeyAttributes: KeyAttributesTypeDef
     PublicKeyCertificate: str
     CertificateAuthorityPublicKeyIdentifier: str
+
+
+class ExportDiffieHellmanTr31KeyBlockTypeDef(TypedDict):
+    PrivateKeyIdentifier: str
+    CertificateAuthorityPublicKeyIdentifier: str
+    PublicKeyCertificate: str
+    DeriveKeyAlgorithm: SymmetricKeyAlgorithmType
+    KeyDerivationFunction: KeyDerivationFunctionType
+    KeyDerivationHashAlgorithm: KeyDerivationHashAlgorithmType
+    DerivationData: DiffieHellmanDerivationDataTypeDef
+    KeyBlockHeaders: NotRequired[KeyBlockHeadersTypeDef]
 
 
 class ExportTr31KeyBlockTypeDef(TypedDict):
@@ -462,12 +497,14 @@ class ImportKeyMaterialTypeDef(TypedDict):
     Tr31KeyBlock: NotRequired[ImportTr31KeyBlockTypeDef]
     Tr34KeyBlock: NotRequired[ImportTr34KeyBlockTypeDef]
     KeyCryptogram: NotRequired[ImportKeyCryptogramTypeDef]
+    DiffieHellmanTr31KeyBlock: NotRequired[ImportDiffieHellmanTr31KeyBlockTypeDef]
 
 
 class ExportKeyMaterialTypeDef(TypedDict):
     Tr31KeyBlock: NotRequired[ExportTr31KeyBlockTypeDef]
     Tr34KeyBlock: NotRequired[ExportTr34KeyBlockTypeDef]
     KeyCryptogram: NotRequired[ExportKeyCryptogramTypeDef]
+    DiffieHellmanTr31KeyBlock: NotRequired[ExportDiffieHellmanTr31KeyBlockTypeDef]
 
 
 class ImportKeyInputTypeDef(TypedDict):

@@ -24,8 +24,10 @@ from .literals import (
     AdMarkerDashType,
     CmafEncryptionMethodType,
     ContainerTypeType,
+    DashCompactnessType,
     DashDrmSignalingType,
     DashPeriodTriggerType,
+    DashTtmlProfileType,
     DashUtcTimingModeType,
     DrmSystemType,
     EndpointErrorConditionType,
@@ -64,6 +66,15 @@ __all__ = (
     "CreateLowLatencyHlsManifestConfigurationTypeDef",
     "CreateOriginEndpointRequestTypeDef",
     "CreateOriginEndpointResponseTypeDef",
+    "DashBaseUrlTypeDef",
+    "DashDvbFontDownloadTypeDef",
+    "DashDvbMetricsReportingTypeDef",
+    "DashDvbSettingsOutputTypeDef",
+    "DashDvbSettingsTypeDef",
+    "DashDvbSettingsUnionTypeDef",
+    "DashProgramInformationTypeDef",
+    "DashSubtitleConfigurationTypeDef",
+    "DashTtmlConfigurationTypeDef",
     "DashUtcTimingTypeDef",
     "DeleteChannelGroupRequestTypeDef",
     "DeleteChannelPolicyRequestTypeDef",
@@ -132,6 +143,10 @@ __all__ = (
     "PaginatorConfigTypeDef",
     "PutChannelPolicyRequestTypeDef",
     "PutOriginEndpointPolicyRequestTypeDef",
+    "ResetChannelStateRequestTypeDef",
+    "ResetChannelStateResponseTypeDef",
+    "ResetOriginEndpointStateRequestTypeDef",
+    "ResetOriginEndpointStateResponseTypeDef",
     "ResponseMetadataTypeDef",
     "S3DestinationConfigTypeDef",
     "ScteDashTypeDef",
@@ -211,6 +226,21 @@ class IngestEndpointTypeDef(TypedDict):
     Url: NotRequired[str]
 
 
+class DashBaseUrlTypeDef(TypedDict):
+    Url: str
+    ServiceLocation: NotRequired[str]
+    DvbPriority: NotRequired[int]
+    DvbWeight: NotRequired[int]
+
+
+class DashProgramInformationTypeDef(TypedDict):
+    Title: NotRequired[str]
+    Source: NotRequired[str]
+    Copyright: NotRequired[str]
+    LanguageCode: NotRequired[str]
+    MoreInformationUrl: NotRequired[str]
+
+
 class DashUtcTimingTypeDef(TypedDict):
     TimingMode: NotRequired[DashUtcTimingModeType]
     TimingSource: NotRequired[str]
@@ -236,6 +266,21 @@ class StartTagTypeDef(TypedDict):
 
 class ForceEndpointErrorConfigurationOutputTypeDef(TypedDict):
     EndpointErrorConditions: NotRequired[List[EndpointErrorConditionType]]
+
+
+class DashDvbFontDownloadTypeDef(TypedDict):
+    Url: NotRequired[str]
+    MimeType: NotRequired[str]
+    FontFamily: NotRequired[str]
+
+
+class DashDvbMetricsReportingTypeDef(TypedDict):
+    ReportingUrl: str
+    Probability: NotRequired[int]
+
+
+class DashTtmlConfigurationTypeDef(TypedDict):
+    TtmlProfile: DashTtmlProfileType
 
 
 class DeleteChannelGroupRequestTypeDef(TypedDict):
@@ -411,6 +456,17 @@ class PutOriginEndpointPolicyRequestTypeDef(TypedDict):
     Policy: str
 
 
+class ResetChannelStateRequestTypeDef(TypedDict):
+    ChannelGroupName: str
+    ChannelName: str
+
+
+class ResetOriginEndpointStateRequestTypeDef(TypedDict):
+    ChannelGroupName: str
+    ChannelName: str
+    OriginEndpointName: str
+
+
 class ScteOutputTypeDef(TypedDict):
     ScteFilter: NotRequired[List[ScteFilterType]]
 
@@ -495,6 +551,23 @@ class ListTagsForResourceResponseTypeDef(TypedDict):
     ResponseMetadata: ResponseMetadataTypeDef
 
 
+class ResetChannelStateResponseTypeDef(TypedDict):
+    ChannelGroupName: str
+    ChannelName: str
+    Arn: str
+    ResetAt: datetime
+    ResponseMetadata: ResponseMetadataTypeDef
+
+
+class ResetOriginEndpointStateResponseTypeDef(TypedDict):
+    ChannelGroupName: str
+    ChannelName: str
+    OriginEndpointName: str
+    Arn: str
+    ResetAt: datetime
+    ResponseMetadata: ResponseMetadataTypeDef
+
+
 class UpdateChannelGroupResponseTypeDef(TypedDict):
     ChannelGroupName: str
     Arn: str
@@ -549,6 +622,7 @@ class GetChannelResponseTypeDef(TypedDict):
     ChannelGroupName: str
     CreatedAt: datetime
     ModifiedAt: datetime
+    ResetAt: datetime
     Description: str
     IngestEndpoints: List[IngestEndpointTypeDef]
     InputType: InputTypeType
@@ -575,6 +649,20 @@ class UpdateChannelResponseTypeDef(TypedDict):
     ResponseMetadata: ResponseMetadataTypeDef
 
 
+class DashDvbSettingsOutputTypeDef(TypedDict):
+    FontDownload: NotRequired[DashDvbFontDownloadTypeDef]
+    ErrorMetrics: NotRequired[List[DashDvbMetricsReportingTypeDef]]
+
+
+class DashDvbSettingsTypeDef(TypedDict):
+    FontDownload: NotRequired[DashDvbFontDownloadTypeDef]
+    ErrorMetrics: NotRequired[Sequence[DashDvbMetricsReportingTypeDef]]
+
+
+class DashSubtitleConfigurationTypeDef(TypedDict):
+    TtmlConfiguration: NotRequired[DashTtmlConfigurationTypeDef]
+
+
 class DestinationTypeDef(TypedDict):
     S3Destination: S3DestinationConfigTypeDef
 
@@ -595,21 +683,6 @@ class SpekeKeyProviderTypeDef(TypedDict):
     Url: str
 
 
-class GetDashManifestConfigurationTypeDef(TypedDict):
-    ManifestName: str
-    Url: str
-    ManifestWindowSeconds: NotRequired[int]
-    FilterConfiguration: NotRequired[FilterConfigurationOutputTypeDef]
-    MinUpdatePeriodSeconds: NotRequired[int]
-    MinBufferTimeSeconds: NotRequired[int]
-    SuggestedPresentationDelaySeconds: NotRequired[int]
-    SegmentTemplateFormat: NotRequired[Literal["NUMBER_WITH_TIMELINE"]]
-    PeriodTriggers: NotRequired[List[DashPeriodTriggerType]]
-    ScteDash: NotRequired[ScteDashTypeDef]
-    DrmSignaling: NotRequired[DashDrmSignalingType]
-    UtcTiming: NotRequired[DashUtcTimingTypeDef]
-
-
 class GetHlsManifestConfigurationTypeDef(TypedDict):
     ManifestName: str
     Url: str
@@ -619,6 +692,7 @@ class GetHlsManifestConfigurationTypeDef(TypedDict):
     ScteHls: NotRequired[ScteHlsTypeDef]
     FilterConfiguration: NotRequired[FilterConfigurationOutputTypeDef]
     StartTag: NotRequired[StartTagTypeDef]
+    UrlEncodeChildManifest: NotRequired[bool]
 
 
 class GetLowLatencyHlsManifestConfigurationTypeDef(TypedDict):
@@ -630,6 +704,7 @@ class GetLowLatencyHlsManifestConfigurationTypeDef(TypedDict):
     ScteHls: NotRequired[ScteHlsTypeDef]
     FilterConfiguration: NotRequired[FilterConfigurationOutputTypeDef]
     StartTag: NotRequired[StartTagTypeDef]
+    UrlEncodeChildManifest: NotRequired[bool]
 
 
 class FilterConfigurationTypeDef(TypedDict):
@@ -706,6 +781,30 @@ class OriginEndpointListConfigurationTypeDef(TypedDict):
     LowLatencyHlsManifests: NotRequired[List[ListLowLatencyHlsManifestConfigurationTypeDef]]
     DashManifests: NotRequired[List[ListDashManifestConfigurationTypeDef]]
     ForceEndpointErrorConfiguration: NotRequired[ForceEndpointErrorConfigurationOutputTypeDef]
+
+
+DashDvbSettingsUnionTypeDef = Union[DashDvbSettingsTypeDef, DashDvbSettingsOutputTypeDef]
+
+
+class GetDashManifestConfigurationTypeDef(TypedDict):
+    ManifestName: str
+    Url: str
+    ManifestWindowSeconds: NotRequired[int]
+    FilterConfiguration: NotRequired[FilterConfigurationOutputTypeDef]
+    MinUpdatePeriodSeconds: NotRequired[int]
+    MinBufferTimeSeconds: NotRequired[int]
+    SuggestedPresentationDelaySeconds: NotRequired[int]
+    SegmentTemplateFormat: NotRequired[Literal["NUMBER_WITH_TIMELINE"]]
+    PeriodTriggers: NotRequired[List[DashPeriodTriggerType]]
+    ScteDash: NotRequired[ScteDashTypeDef]
+    DrmSignaling: NotRequired[DashDrmSignalingType]
+    UtcTiming: NotRequired[DashUtcTimingTypeDef]
+    Profiles: NotRequired[List[Literal["DVB_DASH"]]]
+    BaseUrls: NotRequired[List[DashBaseUrlTypeDef]]
+    ProgramInformation: NotRequired[DashProgramInformationTypeDef]
+    DvbSettings: NotRequired[DashDvbSettingsOutputTypeDef]
+    Compactness: NotRequired[DashCompactnessType]
+    SubtitleConfiguration: NotRequired[DashSubtitleConfigurationTypeDef]
 
 
 class EncryptionOutputTypeDef(TypedDict):
@@ -826,6 +925,12 @@ class CreateDashManifestConfigurationTypeDef(TypedDict):
     ScteDash: NotRequired[ScteDashTypeDef]
     DrmSignaling: NotRequired[DashDrmSignalingType]
     UtcTiming: NotRequired[DashUtcTimingTypeDef]
+    Profiles: NotRequired[Sequence[Literal["DVB_DASH"]]]
+    BaseUrls: NotRequired[Sequence[DashBaseUrlTypeDef]]
+    ProgramInformation: NotRequired[DashProgramInformationTypeDef]
+    DvbSettings: NotRequired[DashDvbSettingsUnionTypeDef]
+    Compactness: NotRequired[DashCompactnessType]
+    SubtitleConfiguration: NotRequired[DashSubtitleConfigurationTypeDef]
 
 
 class CreateHlsManifestConfigurationTypeDef(TypedDict):
@@ -836,6 +941,7 @@ class CreateHlsManifestConfigurationTypeDef(TypedDict):
     ManifestWindowSeconds: NotRequired[int]
     ProgramDateTimeIntervalSeconds: NotRequired[int]
     FilterConfiguration: NotRequired[FilterConfigurationUnionTypeDef]
+    UrlEncodeChildManifest: NotRequired[bool]
 
 
 class CreateLowLatencyHlsManifestConfigurationTypeDef(TypedDict):
@@ -846,6 +952,7 @@ class CreateLowLatencyHlsManifestConfigurationTypeDef(TypedDict):
     ManifestWindowSeconds: NotRequired[int]
     ProgramDateTimeIntervalSeconds: NotRequired[int]
     FilterConfiguration: NotRequired[FilterConfigurationUnionTypeDef]
+    UrlEncodeChildManifest: NotRequired[bool]
 
 
 class ListHarvestJobsResponseTypeDef(TypedDict):
@@ -896,6 +1003,7 @@ class GetOriginEndpointResponseTypeDef(TypedDict):
     Segment: SegmentOutputTypeDef
     CreatedAt: datetime
     ModifiedAt: datetime
+    ResetAt: datetime
     Description: str
     StartoverWindowSeconds: int
     HlsManifests: List[GetHlsManifestConfigurationTypeDef]

@@ -169,6 +169,7 @@ def generate_body_from_policy(
     )
 
 # %% ../../nbs/classes/50_DomoPDP.ipynb 14
+@dataclass
 class Dataset_PDP_Policies:
 
     dataset = None  # domo dataset class

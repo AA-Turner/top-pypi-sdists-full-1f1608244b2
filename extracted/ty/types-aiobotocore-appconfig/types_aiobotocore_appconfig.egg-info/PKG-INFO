@@ -1,7 +1,7 @@
 Metadata-Version: 2.4
 Name: types-aiobotocore-appconfig
-Version: 2.22.0
-Summary: Type annotations for aiobotocore AppConfig 2.22.0 service generated with mypy-boto3-builder 8.10.1
+Version: 2.23.0
+Summary: Type annotations for aiobotocore AppConfig 2.23.0 service generated with mypy-boto3-builder 8.11.0
 Home-page: https://github.com/youtype/mypy_boto3_builder
 Author: Vlad Emelianov
 Author-email: vlad.emelianov.nz@gmail.com
@@ -57,7 +57,7 @@ Dynamic: summary
 ![boto3.typed](https://github.com/youtype/mypy_boto3_builder/raw/main/logo.png)
 
 Type annotations for
-[aiobotocore AppConfig 2.22.0](https://pypi.org/project/aiobotocore/)
+[aiobotocore AppConfig 2.23.0](https://pypi.org/project/aiobotocore/)
 compatible with [VSCode](https://code.visualstudio.com/),
 [PyCharm](https://www.jetbrains.com/pycharm/),
 [Emacs](https://www.gnu.org/software/emacs/),
@@ -66,7 +66,7 @@ compatible with [VSCode](https://code.visualstudio.com/),
 [pyright](https://github.com/microsoft/pyright) and other tools.
 
 Generated with
-[mypy-boto3-builder 8.10.1](https://github.com/youtype/mypy_boto3_builder).
+[mypy-boto3-builder 8.11.0](https://github.com/youtype/mypy_boto3_builder).
 
 More information can be found on
 [types-aiobotocore](https://pypi.org/project/types-aiobotocore/) page and in
@@ -93,6 +93,7 @@ See how it helps you find and fix potential bugs:
   - [Explicit type annotations](#explicit-type-annotations)
     - [Client annotations](#client-annotations)
     - [Paginators annotations](#paginators-annotations)
+    - [Waiters annotations](#waiters-annotations)
     - [Literals](#literals)
     - [Type definitions](#type-definitions)
   - [How it works](#how-it-works)
@@ -118,7 +119,7 @@ You can generate type annotations for `aiobotocore` package locally with
 isolation.
 
 1. Run mypy-boto3-builder in your package root directory:
-   `uvx --with 'aiobotocore==2.22.0' mypy-boto3-builder`
+   `uvx --with 'aiobotocore==2.23.0' mypy-boto3-builder`
 2. Select `aiobotocore` AWS SDK.
 3. Add `AppConfig` service.
 4. Use provided commands to install generated packages.
@@ -382,6 +383,34 @@ async with session.create_client("appconfig") as client:
     list_extensions_paginator: ListExtensionsPaginator = client.get_paginator("list_extensions")
     list_hosted_configuration_versions_paginator: ListHostedConfigurationVersionsPaginator = (
         client.get_paginator("list_hosted_configuration_versions")
+    )
+```
+
+<a id="waiters-annotations"></a>
+
+### Waiters annotations
+
+`types_aiobotocore_appconfig.waiter` module contains type annotations for all
+waiters.
+
+```python
+from aiobotocore.session import get_session
+
+from types_aiobotocore_appconfig.client import AppConfigClient
+from types_aiobotocore_appconfig.waiter import (
+    DeploymentCompleteWaiter,
+    EnvironmentReadyForDeploymentWaiter,
+)
+
+session = get_session()
+async with session.create_client("appconfig") as client:
+    client: AppConfigClient
+
+    # Explicit type annotations are optional here
+    # Types should be correctly discovered by mypy and IDEs
+    deployment_complete_waiter: DeploymentCompleteWaiter = client.get_waiter("deployment_complete")
+    environment_ready_for_deployment_waiter: EnvironmentReadyForDeploymentWaiter = (
+        client.get_waiter("environment_ready_for_deployment")
     )
 ```
 

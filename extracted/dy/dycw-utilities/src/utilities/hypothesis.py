@@ -48,7 +48,15 @@ from hypothesis.strategies import (
     uuids,
 )
 from hypothesis.utils.conventions import not_set
-from whenever import Date, DateDelta, PlainDateTime, Time, TimeDelta
+from whenever import (
+    Date,
+    DateDelta,
+    DateTimeDelta,
+    PlainDateTime,
+    Time,
+    TimeDelta,
+    ZonedDateTime,
+)
 
 from utilities.datetime import (
     DATETIME_MAX_NAIVE,
@@ -97,12 +105,19 @@ from utilities.whenever2 import (
     DATE_DELTA_PARSABLE_MIN,
     DATE_MAX,
     DATE_MIN,
+    DATE_TIME_DELTA_MAX,
+    DATE_TIME_DELTA_MIN,
+    DATE_TIME_DELTA_PARSABLE_MAX,
+    DATE_TIME_DELTA_PARSABLE_MIN,
     PLAIN_DATE_TIME_MAX,
     PLAIN_DATE_TIME_MIN,
     TIME_DELTA_MAX,
     TIME_DELTA_MIN,
     TIME_MAX,
     TIME_MIN,
+    to_date_time_delta,
+    to_days,
+    to_nanos,
 )
 from utilities.zoneinfo import UTC, ensure_time_zone
 
@@ -112,10 +127,9 @@ if TYPE_CHECKING:
 
     from hypothesis.database import ExampleDatabase
     from numpy.random import RandomState
-    from whenever import ZonedDateTime
 
     from utilities.numpy import NDArrayB, NDArrayF, NDArrayI, NDArrayO
-    from utilities.types import Duration, Number, RoundMode, TimeZoneLike
+    from utilities.types import Duration, MathRoundMode, Number, TimeZoneLike
 
 
 _T = TypeVar("_T")
@@ -200,25 +214,11 @@ def date_deltas_whenever(
             ...
         case _ as never:
             assert_never(never)
-    min_years, min_months, min_days = min_value_.in_years_months_days()
-    assert min_years == 0
-    assert min_months == 0
-    max_years, max_months, max_days = max_value_.in_years_months_days()
-    assert max_years == 0
-    assert max_months == 0
+    min_days = to_days(min_value_)
+    max_days = to_days(max_value_)
     if draw2(draw, parsable):
-        parsable_min_years, parsable_min_months, parsable_min_days = (
-            DATE_DELTA_PARSABLE_MIN.in_years_months_days()
-        )
-        assert parsable_min_years == 0
-        assert parsable_min_months == 0
-        min_days = max(min_days, parsable_min_days)
-        parsable_max_years, parsable_max_months, parsable_max_days = (
-            DATE_DELTA_PARSABLE_MAX.in_years_months_days()
-        )
-        assert parsable_max_years == 0
-        assert parsable_max_months == 0
-        max_days = min(max_days, parsable_max_days)
+        min_days = max(min_days, to_days(DATE_DELTA_PARSABLE_MIN))
+        max_days = min(max_days, to_days(DATE_DELTA_PARSABLE_MAX))
     days = draw(integers(min_value=min_days, max_value=max_days))
     return DateDelta(days=days)
 
@@ -283,6 +283,42 @@ def _is_between_timedelta(
     timedelta: dt.timedelta, /, *, min_: dt.timedelta, max_: dt.timedelta
 ) -> bool:
     return min_ <= timedelta <= max_
+
+
+##
+
+
+@composite
+def date_time_deltas_whenever(
+    draw: DrawFn,
+    /,
+    *,
+    min_value: MaybeSearchStrategy[DateTimeDelta | None] = None,
+    max_value: MaybeSearchStrategy[DateTimeDelta | None] = None,
+    parsable: MaybeSearchStrategy[bool] = False,
+) -> DateTimeDelta:
+    """Strategy for generating date deltas."""
+    min_value_, max_value_ = [draw2(draw, v) for v in [min_value, max_value]]
+    match min_value_:
+        case None:
+            min_value_ = DATE_TIME_DELTA_MIN
+        case DateTimeDelta():
+            ...
+        case _ as never:
+            assert_never(never)
+    match max_value_:
+        case None:
+            max_value_ = DATE_TIME_DELTA_MAX
+        case DateTimeDelta():
+            ...
+        case _ as never:
+            assert_never(never)
+    min_nanos, max_nanos = map(to_nanos, [min_value_, max_value_])
+    if draw2(draw, parsable):
+        min_nanos = max(min_nanos, to_nanos(DATE_TIME_DELTA_PARSABLE_MIN))
+        max_nanos = min(max_nanos, to_nanos(DATE_TIME_DELTA_PARSABLE_MAX))
+    nanos = draw(integers(min_value=min_nanos, max_value=max_nanos))
+    return to_date_time_delta(nanos)
 
 
 ##
@@ -718,218 +754,6 @@ def lists_fixed_length(
 
 
 @composite
-def min_and_max_datetimes(
-    draw: DrawFn,
-    /,
-    *,
-    min_value: MaybeSearchStrategy[dt.datetime | None] = None,
-    max_value: MaybeSearchStrategy[dt.datetime | None] = None,
-    time_zone: MaybeSearchStrategy[ZoneInfo | timezone] = UTC,
-    round_: RoundMode | None = None,
-    timedelta: dt.timedelta | None = None,
-    rel_tol: float | None = None,
-    abs_tol: float | None = None,
-    valid: bool = False,
-) -> tuple[dt.datetime, dt.datetime]:
-    """Strategy for generating min/max datetimes."""
-    match min_value, max_value:
-        case None, None:
-            return draw(
-                pairs(
-                    zoned_datetimes(
-                        time_zone=time_zone,
-                        round_=round_,
-                        timedelta=timedelta,
-                        rel_tol=rel_tol,
-                        abs_tol=abs_tol,
-                        valid=valid,
-                    ),
-                    sorted=True,
-                )
-            )
-        case None, dt.datetime():
-            min_value_ = draw(
-                zoned_datetimes(
-                    max_value=max_value,
-                    time_zone=time_zone,
-                    round_=round_,
-                    timedelta=timedelta,
-                    rel_tol=rel_tol,
-                    abs_tol=abs_tol,
-                    valid=valid,
-                )
-            )
-            return min_value_, max_value
-        case dt.datetime(), None:
-            max_value_ = draw(
-                zoned_datetimes(
-                    min_value=min_value,
-                    time_zone=time_zone,
-                    round_=round_,
-                    timedelta=timedelta,
-                    rel_tol=rel_tol,
-                    abs_tol=abs_tol,
-                    valid=valid,
-                )
-            )
-            return min_value, max_value_
-        case dt.datetime(), dt.datetime():
-            _ = assume(min_value <= max_value)
-            return min_value, max_value
-        case _, _:
-            strategy = zoned_datetimes(
-                time_zone=time_zone,
-                round_=round_,
-                timedelta=timedelta,
-                rel_tol=rel_tol,
-                abs_tol=abs_tol,
-                valid=valid,
-            )
-            min_value_ = draw2(draw, min_value, strategy)
-            max_value_ = draw2(draw, max_value, strategy)
-            _ = assume(min_value_ <= max_value_)
-            return min_value_, max_value_
-        case _ as never:
-            assert_never(never)
-
-
-##
-
-
-@composite
-def min_and_maybe_max_datetimes(
-    draw: DrawFn,
-    /,
-    *,
-    min_value: MaybeSearchStrategy[dt.datetime | None] = None,
-    max_value: MaybeSearchStrategy[dt.datetime | None | Sentinel] = sentinel,
-    time_zone: MaybeSearchStrategy[ZoneInfo | timezone] = UTC,
-    round_: RoundMode | None = None,
-    timedelta: dt.timedelta | None = None,
-    rel_tol: float | None = None,
-    abs_tol: float | None = None,
-    valid: bool = False,
-) -> tuple[dt.datetime, dt.datetime | None]:
-    match min_value, max_value:
-        case None, Sentinel():
-            min_value_, max_value_ = draw(
-                pairs(
-                    zoned_datetimes(
-                        time_zone=time_zone,
-                        round_=round_,
-                        timedelta=timedelta,
-                        rel_tol=rel_tol,
-                        abs_tol=abs_tol,
-                        valid=valid,
-                    ),
-                    sorted=True,
-                )
-            )
-            return min_value_, draw(just(max_value_) | none())
-        case None, None:
-            min_value_ = draw(
-                zoned_datetimes(
-                    time_zone=time_zone,
-                    round_=round_,
-                    timedelta=timedelta,
-                    rel_tol=rel_tol,
-                    abs_tol=abs_tol,
-                    valid=valid,
-                )
-            )
-            return min_value_, None
-        case None, dt.datetime():
-            min_value_ = draw(
-                zoned_datetimes(
-                    max_value=max_value,
-                    time_zone=time_zone,
-                    round_=round_,
-                    timedelta=timedelta,
-                    rel_tol=rel_tol,
-                    abs_tol=abs_tol,
-                    valid=valid,
-                )
-            )
-            return min_value_, max_value
-        case dt.datetime(), Sentinel():
-            max_value_ = draw(
-                zoned_datetimes(
-                    min_value=min_value,
-                    time_zone=time_zone,
-                    round_=round_,
-                    timedelta=timedelta,
-                    rel_tol=rel_tol,
-                    abs_tol=abs_tol,
-                    valid=valid,
-                )
-                | none()
-            )
-            return min_value, max_value_
-        case dt.datetime(), None:
-            return min_value, None
-        case dt.datetime(), dt.datetime():
-            _ = assume(min_value <= max_value)
-            return min_value, max_value
-        case _, _:
-            strategy = zoned_datetimes(
-                time_zone=time_zone,
-                round_=round_,
-                timedelta=timedelta,
-                rel_tol=rel_tol,
-                abs_tol=abs_tol,
-                valid=valid,
-            )
-            min_value_ = draw2(draw, min_value, strategy)
-            max_value_ = draw2(draw, max_value, strategy | none(), sentinel=True)
-            _ = assume((max_value_ is None) or (min_value_ <= max_value_))
-            return min_value_, max_value_
-        case _ as never:
-            assert_never(never)
-
-
-##
-
-
-@composite
-def min_and_maybe_max_sizes(
-    draw: DrawFn,
-    /,
-    *,
-    min_value: MaybeSearchStrategy[int | None] = None,
-    max_value: MaybeSearchStrategy[int | None | Sentinel] = sentinel,
-) -> tuple[int, int | None]:
-    match min_value, max_value:
-        case None, Sentinel():
-            min_value_, max_value_ = draw(pairs(integers(min_value=0), sorted=True))
-            return min_value_, draw(just(max_value_) | none())
-        case None, None:
-            min_value_ = draw(integers(min_value=0))
-            return min_value_, None
-        case None, int():
-            min_value_ = draw(integers(0, max_value))
-            return min_value_, max_value
-        case int(), Sentinel():
-            max_value_ = draw(integers(min_value=min_value) | none())
-            return min_value, max_value_
-        case int(), None:
-            return min_value, None
-        case int(), int():
-            _ = assume(min_value <= max_value)
-            return min_value, max_value
-        case _, _:
-            strategy = integers(min_value=0)
-            min_value_ = draw2(draw, min_value, strategy)
-            max_value_ = draw2(draw, max_value, strategy | none(), sentinel=True)
-            _ = assume((max_value_ is None) or (min_value_ <= max_value_))
-            return min_value_, max_value_
-        case _ as never:
-            assert_never(never)
-
-
-##
-
-
-@composite
 def months(
     draw: DrawFn,
     /,
@@ -1036,7 +860,7 @@ def plain_datetimes(
     *,
     min_value: MaybeSearchStrategy[dt.datetime] = DATETIME_MIN_NAIVE,
     max_value: MaybeSearchStrategy[dt.datetime] = DATETIME_MAX_NAIVE,
-    round_: RoundMode | None = None,
+    round_: MathRoundMode | None = None,
     timedelta: dt.timedelta | None = None,
     rel_tol: float | None = None,
     abs_tol: float | None = None,
@@ -1056,7 +880,7 @@ def plain_datetimes(
 
 @dataclass(kw_only=True, slots=True)
 class PlainDateTimesError(Exception):
-    round_: RoundMode
+    round_: MathRoundMode
 
     @override
     def __str__(self) -> str:
@@ -1577,7 +1401,7 @@ def zoned_datetimes(
     min_value: MaybeSearchStrategy[dt.datetime] = DATETIME_MIN_UTC + DAY,
     max_value: MaybeSearchStrategy[dt.datetime] = DATETIME_MAX_UTC - DAY,
     time_zone: MaybeSearchStrategy[ZoneInfo | timezone] = UTC,
-    round_: RoundMode | None = None,
+    round_: MathRoundMode | None = None,
     timedelta: dt.timedelta | None = None,
     rel_tol: float | None = None,
     abs_tol: float | None = None,
@@ -1626,7 +1450,7 @@ def zoned_datetimes(
 
 @dataclass(kw_only=True, slots=True)
 class ZonedDateTimesError(Exception):
-    round_: RoundMode
+    round_: MathRoundMode
 
     @override
     def __str__(self) -> str:
@@ -1646,8 +1470,6 @@ def zoned_datetimes_whenever(
     time_zone: MaybeSearchStrategy[TimeZoneLike] = UTC,
 ) -> ZonedDateTime:
     """Strategy for generating zoned datetimes."""
-    from whenever import PlainDateTime, ZonedDateTime
-
     min_value_, max_value_ = [draw2(draw, v) for v in [min_value, max_value]]
     time_zone_ = ensure_time_zone(draw2(draw, time_zone))
     match min_value_:
@@ -1683,6 +1505,7 @@ __all__ = [
     "bool_arrays",
     "date_deltas_whenever",
     "date_durations",
+    "date_time_deltas_whenever",
     "dates_two_digit_year",
     "dates_whenever",
     "datetime_durations",
@@ -1697,16 +1520,11 @@ __all__ = [
     "int64s",
     "int_arrays",
     "lists_fixed_length",
-    "min_and_max_datetimes",
-    "min_and_maybe_max_datetimes",
-    "min_and_maybe_max_sizes",
-    "min_and_maybe_max_sizes",
     "months",
     "namespace_mixins",
     "numbers",
     "pairs",
     "paths",
-    "plain_datetimes",
     "plain_datetimes",
     "plain_datetimes_whenever",
     "random_states",

@@ -147,6 +147,7 @@ from .type_defs import (
     ModifyAccountRequestTypeDef,
     ModifyCertificateBasedAuthPropertiesRequestTypeDef,
     ModifyClientPropertiesRequestTypeDef,
+    ModifyEndpointEncryptionModeRequestTypeDef,
     ModifySamlPropertiesRequestTypeDef,
     ModifySelfservicePermissionsRequestTypeDef,
     ModifyStreamingPropertiesRequestTypeDef,
@@ -886,6 +887,17 @@ class WorkSpacesClient(AioBaseClient):
 
         [Show boto3 documentation](https://boto3.amazonaws.com/v1/documentation/api/latest/reference/services/workspaces/client/modify_client_properties.html)
         [Show types-aiobotocore documentation](https://youtype.github.io/types_aiobotocore_docs/types_aiobotocore_workspaces/client/#modify_client_properties)
+        """
+
+    async def modify_endpoint_encryption_mode(
+        self, **kwargs: Unpack[ModifyEndpointEncryptionModeRequestTypeDef]
+    ) -> Dict[str, Any]:
+        """
+        Modifies the endpoint encryption mode that allows you to configure the
+        specified directory between Standard TLS and FIPS 140-2 validated mode.
+
+        [Show boto3 documentation](https://boto3.amazonaws.com/v1/documentation/api/latest/reference/services/workspaces/client/modify_endpoint_encryption_mode.html)
+        [Show types-aiobotocore documentation](https://youtype.github.io/types_aiobotocore_docs/types_aiobotocore_workspaces/client/#modify_endpoint_encryption_mode)
         """
 
     async def modify_saml_properties(

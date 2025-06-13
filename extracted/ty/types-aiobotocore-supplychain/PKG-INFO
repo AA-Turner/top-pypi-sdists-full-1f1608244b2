@@ -1,7 +1,7 @@
 Metadata-Version: 2.4
 Name: types-aiobotocore-supplychain
-Version: 2.22.0
-Summary: Type annotations for aiobotocore SupplyChain 2.22.0 service generated with mypy-boto3-builder 8.10.1
+Version: 2.23.0
+Summary: Type annotations for aiobotocore SupplyChain 2.23.0 service generated with mypy-boto3-builder 8.11.0
 Home-page: https://github.com/youtype/mypy_boto3_builder
 Author: Vlad Emelianov
 Author-email: vlad.emelianov.nz@gmail.com
@@ -57,7 +57,7 @@ Dynamic: summary
 ![boto3.typed](https://github.com/youtype/mypy_boto3_builder/raw/main/logo.png)
 
 Type annotations for
-[aiobotocore SupplyChain 2.22.0](https://pypi.org/project/aiobotocore/)
+[aiobotocore SupplyChain 2.23.0](https://pypi.org/project/aiobotocore/)
 compatible with [VSCode](https://code.visualstudio.com/),
 [PyCharm](https://www.jetbrains.com/pycharm/),
 [Emacs](https://www.gnu.org/software/emacs/),
@@ -66,7 +66,7 @@ compatible with [VSCode](https://code.visualstudio.com/),
 [pyright](https://github.com/microsoft/pyright) and other tools.
 
 Generated with
-[mypy-boto3-builder 8.10.1](https://github.com/youtype/mypy_boto3_builder).
+[mypy-boto3-builder 8.11.0](https://github.com/youtype/mypy_boto3_builder).
 
 More information can be found on
 [types-aiobotocore](https://pypi.org/project/types-aiobotocore/) page and in
@@ -118,7 +118,7 @@ You can generate type annotations for `aiobotocore` package locally with
 isolation.
 
 1. Run mypy-boto3-builder in your package root directory:
-   `uvx --with 'aiobotocore==2.22.0' mypy-boto3-builder`
+   `uvx --with 'aiobotocore==2.23.0' mypy-boto3-builder`
 2. Select `aiobotocore` AWS SDK.
 3. Add `SupplyChain` service.
 4. Use provided commands to install generated packages.
@@ -347,8 +347,11 @@ from aiobotocore.session import get_session
 
 from types_aiobotocore_supplychain import SupplyChainClient
 from types_aiobotocore_supplychain.paginator import (
+    ListDataIntegrationEventsPaginator,
+    ListDataIntegrationFlowExecutionsPaginator,
     ListDataIntegrationFlowsPaginator,
     ListDataLakeDatasetsPaginator,
+    ListDataLakeNamespacesPaginator,
     ListInstancesPaginator,
 )
 
@@ -358,11 +361,20 @@ async with session.create_client("supplychain") as client:
 
     # Explicit type annotations are optional here
     # Types should be correctly discovered by mypy and IDEs
+    list_data_integration_events_paginator: ListDataIntegrationEventsPaginator = (
+        client.get_paginator("list_data_integration_events")
+    )
+    list_data_integration_flow_executions_paginator: ListDataIntegrationFlowExecutionsPaginator = (
+        client.get_paginator("list_data_integration_flow_executions")
+    )
     list_data_integration_flows_paginator: ListDataIntegrationFlowsPaginator = client.get_paginator(
         "list_data_integration_flows"
     )
     list_data_lake_datasets_paginator: ListDataLakeDatasetsPaginator = client.get_paginator(
         "list_data_lake_datasets"
+    )
+    list_data_lake_namespaces_paginator: ListDataLakeNamespacesPaginator = client.get_paginator(
+        "list_data_lake_namespaces"
     )
     list_instances_paginator: ListInstancesPaginator = client.get_paginator("list_instances")
 ```

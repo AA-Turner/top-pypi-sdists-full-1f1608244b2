@@ -54,6 +54,7 @@ async def create_draft_content(request: ImageRequest, token: str):
     main_component_id = str(uuid.uuid4())
     if (urls := parse_url(request.prompt)) or image_uri:  # 图生  # todo: image base64
         request.model = "high_aes_general_v20_L:general_v2.0_L"  # 2.1不支持图片编辑 某些不支持
+        request.model = "high_aes_general_v30l:general_v3.0_18b"
 
         if image_uri:
             pass
@@ -667,7 +668,7 @@ if __name__ == '__main__':
 
     # request = ImageRequest(prompt=prompt, size="2048*2048")
 
-    task = arun(create_task(request))
+    # task = arun(create_task(request))
     # task = arun(create_task(request, "d2d142fc877e696484cc2fc521127b36"))
     # task = arun(create_task(request, "d2d142fc877e696484cc2fc521127b36"))
 
@@ -683,4 +684,4 @@ if __name__ == '__main__':
 
     # arun(get_task("16132262728706", "d2d142fc877e696484cc2fc521127b36"))
 
-    # arun(generate(request))
+    arun(generate(request))

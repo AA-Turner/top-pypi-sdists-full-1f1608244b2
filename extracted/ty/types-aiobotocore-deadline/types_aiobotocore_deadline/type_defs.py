@@ -53,6 +53,7 @@ from .literals import (
     QueueLimitAssociationStatusType,
     QueueStatusType,
     RunAsType,
+    SearchTermMatchingTypeType,
     ServiceManagedFleetOperatingSystemFamilyType,
     SessionActionStatusType,
     SessionLifecycleStatusType,
@@ -62,6 +63,7 @@ from .literals import (
     StepParameterTypeType,
     StepTargetTaskRunStatusType,
     StorageProfileOperatingSystemFamilyType,
+    TagPropagationModeType,
     TaskRunStatusType,
     TaskTargetRunStatusType,
     UpdatedWorkerStatusType,
@@ -246,6 +248,7 @@ __all__ = (
     "GetTaskResponseTypeDef",
     "GetWorkerRequestTypeDef",
     "GetWorkerResponseTypeDef",
+    "HostConfigurationTypeDef",
     "HostPropertiesRequestTypeDef",
     "HostPropertiesResponseTypeDef",
     "IpAddressesOutputTypeDef",
@@ -651,6 +654,11 @@ class CreateFarmRequestTypeDef(TypedDict):
     description: NotRequired[str]
     kmsKeyArn: NotRequired[str]
     tags: NotRequired[Mapping[str, str]]
+
+
+class HostConfigurationTypeDef(TypedDict):
+    scriptBody: str
+    scriptTimeoutSeconds: NotRequired[int]
 
 
 JobParameterTypeDef = TypedDict(
@@ -1527,6 +1535,7 @@ class PutMeteredProductRequestTypeDef(TypedDict):
 
 class SearchTermFilterExpressionTypeDef(TypedDict):
     searchTerm: str
+    matchType: NotRequired[SearchTermMatchingTypeType]
 
 
 StringFilterExpressionTypeDef = TypedDict(
@@ -1556,8 +1565,8 @@ class SyncInputJobAttachmentsSessionActionDefinitionSummaryTypeDef(TypedDict):
 
 
 class TaskRunSessionActionDefinitionSummaryTypeDef(TypedDict):
-    taskId: str
     stepId: str
+    taskId: NotRequired[str]
 
 
 class SyncInputJobAttachmentsSessionActionDefinitionTypeDef(TypedDict):
@@ -1712,15 +1721,15 @@ class AcceleratorCapabilitiesTypeDef(TypedDict):
 
 
 class AssignedTaskRunSessionActionDefinitionTypeDef(TypedDict):
-    taskId: str
     stepId: str
     parameters: Dict[str, TaskParameterValueTypeDef]
+    taskId: NotRequired[str]
 
 
 class TaskRunSessionActionDefinitionTypeDef(TypedDict):
-    taskId: str
     stepId: str
     parameters: Dict[str, TaskParameterValueTypeDef]
+    taskId: NotRequired[str]
 
 
 class TaskSearchSummaryTypeDef(TypedDict):
@@ -1957,11 +1966,6 @@ class StartSessionsStatisticsAggregationResponseTypeDef(TypedDict):
     ResponseMetadata: ResponseMetadataTypeDef
 
 
-class UpdateWorkerResponseTypeDef(TypedDict):
-    log: LogConfigurationTypeDef
-    ResponseMetadata: ResponseMetadataTypeDef
-
-
 class AttachmentsOutputTypeDef(TypedDict):
     manifests: List[ManifestPropertiesOutputTypeDef]
     fileSystem: NotRequired[JobAttachmentsFileSystemType]
@@ -1995,6 +1999,12 @@ class CopyJobTemplateRequestTypeDef(TypedDict):
     jobId: str
     queueId: str
     targetS3Location: S3LocationTypeDef
+
+
+class UpdateWorkerResponseTypeDef(TypedDict):
+    log: LogConfigurationTypeDef
+    hostConfiguration: HostConfigurationTypeDef
+    ResponseMetadata: ResponseMetadataTypeDef
 
 
 class JobSearchSummaryTypeDef(TypedDict):
@@ -2696,12 +2706,14 @@ class CustomerManagedFleetConfigurationOutputTypeDef(TypedDict):
     mode: AutoScalingModeType
     workerCapabilities: CustomerManagedWorkerCapabilitiesOutputTypeDef
     storageProfileId: NotRequired[str]
+    tagPropagationMode: NotRequired[TagPropagationModeType]
 
 
 class CustomerManagedFleetConfigurationTypeDef(TypedDict):
     mode: AutoScalingModeType
     workerCapabilities: CustomerManagedWorkerCapabilitiesTypeDef
     storageProfileId: NotRequired[str]
+    tagPropagationMode: NotRequired[TagPropagationModeType]
 
 
 class SearchFilterExpressionTypeDef(TypedDict):
@@ -2914,11 +2926,13 @@ class GetStepResponseTypeDef(TypedDict):
 class ServiceManagedEc2FleetConfigurationOutputTypeDef(TypedDict):
     instanceCapabilities: ServiceManagedEc2InstanceCapabilitiesOutputTypeDef
     instanceMarketOptions: ServiceManagedEc2InstanceMarketOptionsTypeDef
+    storageProfileId: NotRequired[str]
 
 
 class ServiceManagedEc2FleetConfigurationTypeDef(TypedDict):
     instanceCapabilities: ServiceManagedEc2InstanceCapabilitiesTypeDef
     instanceMarketOptions: ServiceManagedEc2InstanceMarketOptionsTypeDef
+    storageProfileId: NotRequired[str]
 
 
 class AssignedSessionActionTypeDef(TypedDict):
@@ -2986,6 +3000,7 @@ class CreateWorkerRequestTypeDef(TypedDict):
     fleetId: str
     hostProperties: NotRequired[HostPropertiesRequestTypeDef]
     clientToken: NotRequired[str]
+    tags: NotRequired[Mapping[str, str]]
 
 
 class UpdateWorkerRequestTypeDef(TypedDict):
@@ -3131,6 +3146,7 @@ class GetFleetResponseTypeDef(TypedDict):
     minWorkerCount: int
     maxWorkerCount: int
     configuration: FleetConfigurationOutputTypeDef
+    hostConfiguration: HostConfigurationTypeDef
     capabilities: FleetCapabilitiesTypeDef
     roleArn: str
     createdAt: datetime
@@ -3167,6 +3183,7 @@ class CreateFleetRequestTypeDef(TypedDict):
     description: NotRequired[str]
     minWorkerCount: NotRequired[int]
     tags: NotRequired[Mapping[str, str]]
+    hostConfiguration: NotRequired[HostConfigurationTypeDef]
 
 
 class UpdateFleetRequestTypeDef(TypedDict):
@@ -3179,3 +3196,4 @@ class UpdateFleetRequestTypeDef(TypedDict):
     minWorkerCount: NotRequired[int]
     maxWorkerCount: NotRequired[int]
     configuration: NotRequired[FleetConfigurationUnionTypeDef]
+    hostConfiguration: NotRequired[HostConfigurationTypeDef]

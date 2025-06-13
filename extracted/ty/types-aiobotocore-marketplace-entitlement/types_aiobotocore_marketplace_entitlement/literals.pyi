@@ -10,7 +10,7 @@ Usage::
     ```python
     from types_aiobotocore_marketplace_entitlement.literals import GetEntitlementFilterNameType
 
-    data: GetEntitlementFilterNameType = "CUSTOMER_IDENTIFIER"
+    data: GetEntitlementFilterNameType = "CUSTOMER_AWS_ACCOUNT_ID"
     ```
 """
 
@@ -31,7 +31,9 @@ __all__ = (
     "ServiceName",
 )
 
-GetEntitlementFilterNameType = Literal["CUSTOMER_IDENTIFIER", "DIMENSION"]
+GetEntitlementFilterNameType = Literal[
+    "CUSTOMER_AWS_ACCOUNT_ID", "CUSTOMER_IDENTIFIER", "DIMENSION"
+]
 GetEntitlementsPaginatorName = Literal["get_entitlements"]
 MarketplaceEntitlementServiceServiceName = Literal["marketplace-entitlement"]
 ServiceName = Literal[
@@ -190,6 +192,7 @@ ServiceName = Literal[
     "freetier",
     "fsx",
     "gamelift",
+    "gameliftstreams",
     "geo-maps",
     "geo-places",
     "geo-routes",
@@ -215,6 +218,7 @@ ServiceName = Literal[
     "iot",
     "iot-data",
     "iot-jobs-data",
+    "iot-managed-integrations",
     "iotanalytics",
     "iotdeviceadvisor",
     "iotevents",
@@ -329,7 +333,6 @@ ServiceName = Literal[
     "pipes",
     "polly",
     "pricing",
-    "privatenetworks",
     "proton",
     "qapps",
     "qbusiness",
@@ -390,7 +393,6 @@ ServiceName = Literal[
     "signer",
     "simspaceweaver",
     "sms",
-    "sms-voice",
     "snow-device-management",
     "snowball",
     "sns",
@@ -398,6 +400,7 @@ ServiceName = Literal[
     "sqs",
     "ssm",
     "ssm-contacts",
+    "ssm-guiconnect",
     "ssm-incidents",
     "ssm-quicksetup",
     "ssm-sap",

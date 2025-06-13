@@ -5,7 +5,7 @@ __all__ = ['ApiClient_GET_Error', 'get_api_clients', 'get_client_by_id', 'ApiCli
            'create_api_client', 'ApiClient_RevokeError', 'revoke_api_client']
 
 # %% ../../nbs/routes/instance_config_api_client.ipynb 2
-from enum import Enum
+from domolibrary.client.DomoEntity import DomoEnum
 from typing import List
 import datetime as dt
 
@@ -30,7 +30,7 @@ async def get_api_clients(
     debug_num_stacks_to_drop=1,
     parent_class=None,
     session: httpx.AsyncClient = None,
-    return_raw: bool = False,
+    # return_raw: bool = False,
 ) -> rgd.ResponseGetData:
 
     url = f"https://{auth.domo_instance}.domo.com/api/identity/v1/developer-tokens"
@@ -47,10 +47,11 @@ async def get_api_clients(
     if not res.is_success:
         raise ApiClient_GET_Error(res=res)
 
-    if return_raw:
-        return res
+    # if return_raw:
+    #     return res
 
-    res.response = res.response["entries"]
+    # API response change 6/10/2025
+    # res.response = res.response["entries"]
 
     return res
 
@@ -121,7 +122,7 @@ class ApiClient_CRUD_Error(dmde.RouteError):
     def __init__(self, res: rgd.ResponseGetData, message: str = None):
         super().__init__(res=res, message=message)
 
-class ApiClient_ScopeEnum(Enum):
+class ApiClient_ScopeEnum(DomoEnum):
     DATA = 'data'
     WORKFLOW = 'workflow'
     AUDIT = 'audit'

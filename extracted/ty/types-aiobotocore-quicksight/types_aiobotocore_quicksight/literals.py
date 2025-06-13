@@ -89,6 +89,7 @@ __all__ = (
     "DataLabelPositionType",
     "DataSetFilterAttributeType",
     "DataSetImportModeType",
+    "DataSetUseAsType",
     "DataSourceErrorInfoTypeType",
     "DataSourceFilterAttributeType",
     "DataSourceTypeType",
@@ -211,6 +212,7 @@ __all__ = (
     "PropertyUsageType",
     "PurchaseModeType",
     "QAResultTypeType",
+    "QBusinessInsightsStatusType",
     "QSearchStatusType",
     "QueryExecutionModeType",
     "QuickSightServiceName",
@@ -221,6 +223,7 @@ __all__ = (
     "ReferenceLinePatternTypeType",
     "ReferenceLineSeriesTypeType",
     "ReferenceLineValueLabelRelativePositionType",
+    "RefreshFailureAlertStatusType",
     "RefreshIntervalType",
     "RegionName",
     "RelativeDateTypeType",
@@ -293,6 +296,7 @@ __all__ = (
     "TopicSortDirectionType",
     "TopicTimeGranularityType",
     "TopicUserExperienceVersionType",
+    "TransposedColumnTypeType",
     "URLTargetConfigurationType",
     "UndefinedSpecifiedValueTypeType",
     "UserRoleType",
@@ -303,6 +307,7 @@ __all__ = (
     "VerticalTextAlignmentType",
     "VisibilityType",
     "VisualCustomActionTriggerType",
+    "VisualHighlightTriggerType",
     "VisualRoleType",
     "WidgetStatusType",
     "WordCloudCloudLayoutType",
@@ -365,7 +370,9 @@ ArcThicknessType = Literal["LARGE", "MEDIUM", "SMALL", "WHOLE"]
 AssetBundleExportFormatType = Literal["CLOUDFORMATION_JSON", "QUICKSIGHT_JSON"]
 AssetBundleExportJobAnalysisPropertyToOverrideType = Literal["Name"]
 AssetBundleExportJobDashboardPropertyToOverrideType = Literal["Name"]
-AssetBundleExportJobDataSetPropertyToOverrideType = Literal["Name"]
+AssetBundleExportJobDataSetPropertyToOverrideType = Literal[
+    "Name", "RefreshFailureEmailAlertStatus"
+]
 AssetBundleExportJobDataSourcePropertyToOverrideType = Literal[
     "Catalog",
     "ClusterId",
@@ -523,6 +530,7 @@ DataSetFilterAttributeType = Literal[
     "QUICKSIGHT_VIEWER_OR_OWNER",
 ]
 DataSetImportModeType = Literal["DIRECT_QUERY", "SPICE"]
+DataSetUseAsType = Literal["RLS_RULES"]
 DataSourceErrorInfoTypeType = Literal[
     "ACCESS_DENIED",
     "CONFLICT",
@@ -866,6 +874,7 @@ PropertyRoleType = Literal["ID", "PRIMARY"]
 PropertyUsageType = Literal["DIMENSION", "INHERIT", "MEASURE"]
 PurchaseModeType = Literal["AUTO_PURCHASE", "MANUAL"]
 QAResultTypeType = Literal["DASHBOARD_VISUAL", "GENERATED_ANSWER", "NO_ANSWER"]
+QBusinessInsightsStatusType = Literal["DISABLED", "ENABLED"]
 QSearchStatusType = Literal["DISABLED", "ENABLED"]
 QueryExecutionModeType = Literal["AUTO", "MANUAL"]
 RadarChartAxesRangeScaleType = Literal["AUTO", "INDEPENDENT", "SHARED"]
@@ -875,6 +884,7 @@ ReferenceLineLabelVerticalPositionType = Literal["ABOVE", "BELOW"]
 ReferenceLinePatternTypeType = Literal["DASHED", "DOTTED", "SOLID"]
 ReferenceLineSeriesTypeType = Literal["BAR", "LINE"]
 ReferenceLineValueLabelRelativePositionType = Literal["AFTER_CUSTOM_LABEL", "BEFORE_CUSTOM_LABEL"]
+RefreshFailureAlertStatusType = Literal["DISABLED", "ENABLED"]
 RefreshIntervalType = Literal["DAILY", "HOURLY", "MINUTE15", "MINUTE30", "MONTHLY", "WEEKLY"]
 RelativeDateTypeType = Literal["LAST", "NEXT", "NOW", "PREVIOUS", "THIS"]
 RelativeFontSizeType = Literal["EXTRA_LARGE", "EXTRA_SMALL", "LARGE", "MEDIUM", "SMALL"]
@@ -1011,6 +1021,7 @@ TopicTimeGranularityType = Literal[
     "DAY", "HOUR", "MINUTE", "MONTH", "QUARTER", "SECOND", "WEEK", "YEAR"
 ]
 TopicUserExperienceVersionType = Literal["LEGACY", "NEW_READER_EXPERIENCE"]
+TransposedColumnTypeType = Literal["ROW_HEADER_COLUMN", "VALUE_COLUMN"]
 URLTargetConfigurationType = Literal["NEW_TAB", "NEW_WINDOW", "SAME_TAB"]
 UndefinedSpecifiedValueTypeType = Literal["LEAST", "MOST"]
 UserRoleType = Literal[
@@ -1040,6 +1051,7 @@ ValueWhenUnsetOptionType = Literal["NULL", "RECOMMENDED_VALUE"]
 VerticalTextAlignmentType = Literal["AUTO", "BOTTOM", "MIDDLE", "TOP"]
 VisibilityType = Literal["HIDDEN", "VISIBLE"]
 VisualCustomActionTriggerType = Literal["DATA_POINT_CLICK", "DATA_POINT_MENU"]
+VisualHighlightTriggerType = Literal["DATA_POINT_CLICK", "DATA_POINT_HOVER", "NONE"]
 VisualRoleType = Literal["COMPLIMENTARY", "FALLBACK", "FRAGMENT", "MULTI_INTENT", "PRIMARY"]
 WidgetStatusType = Literal["DISABLED", "ENABLED"]
 WordCloudCloudLayoutType = Literal["FLUID", "NORMAL"]
@@ -1204,6 +1216,7 @@ ServiceName = Literal[
     "freetier",
     "fsx",
     "gamelift",
+    "gameliftstreams",
     "geo-maps",
     "geo-places",
     "geo-routes",
@@ -1229,6 +1242,7 @@ ServiceName = Literal[
     "iot",
     "iot-data",
     "iot-jobs-data",
+    "iot-managed-integrations",
     "iotanalytics",
     "iotdeviceadvisor",
     "iotevents",
@@ -1343,7 +1357,6 @@ ServiceName = Literal[
     "pipes",
     "polly",
     "pricing",
-    "privatenetworks",
     "proton",
     "qapps",
     "qbusiness",
@@ -1404,7 +1417,6 @@ ServiceName = Literal[
     "signer",
     "simspaceweaver",
     "sms",
-    "sms-voice",
     "snow-device-management",
     "snowball",
     "sns",
@@ -1412,6 +1424,7 @@ ServiceName = Literal[
     "sqs",
     "ssm",
     "ssm-contacts",
+    "ssm-guiconnect",
     "ssm-incidents",
     "ssm-quicksetup",
     "ssm-sap",
@@ -1514,6 +1527,7 @@ RegionName = Literal[
     "eu-central-2",
     "eu-north-1",
     "eu-south-1",
+    "eu-south-2",
     "eu-west-1",
     "eu-west-2",
     "eu-west-3",

@@ -1,6 +1,6 @@
 [project]
 name = "devstack-cli"
-version = "11.0.158"
+version = "11.0.159"
 authors = [
     { name="Stefan Mückstein", email="stefan@cloudomation.com" },
 ]

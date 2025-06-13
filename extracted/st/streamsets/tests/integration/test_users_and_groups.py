@@ -18,8 +18,8 @@ def test_update_user(sch, test_user, test_group):
     for role in roles_to_update:
         assert role in updated_user.organization_roles
     assert len(updated_user.organization_roles) == len(roles_to_update)
-    assert updated_user.groups.get(id=test_group.id)
-    assert updated_user.groups.get(id=all_group.id)
+    assert updated_user.groups.get(group_id=test_group.group_id)
+    assert updated_user.groups.get(group_id=all_group.group_id)
 
 
 def test_activate_and_deactivate_user(sch, test_user):

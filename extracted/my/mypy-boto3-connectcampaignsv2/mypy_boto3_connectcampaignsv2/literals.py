@@ -36,6 +36,7 @@ __all__ = (
     "FailureCodeType",
     "GetCampaignStateBatchFailureCodeType",
     "InstanceIdFilterOperatorType",
+    "InstanceLimitsHandlingType",
     "InstanceOnboardingJobFailureCodeType",
     "InstanceOnboardingJobStatusCodeType",
     "ListCampaignsPaginatorName",
@@ -65,6 +66,7 @@ EventTypeType = Literal[
 FailureCodeType = Literal["BufferLimitExceeded", "InvalidInput", "RequestThrottled", "UnknownError"]
 GetCampaignStateBatchFailureCodeType = Literal["ResourceNotFound", "UnknownError"]
 InstanceIdFilterOperatorType = Literal["Eq"]
+InstanceLimitsHandlingType = Literal["OPT_IN", "OPT_OUT"]
 InstanceOnboardingJobFailureCodeType = Literal[
     "EVENT_BRIDGE_ACCESS_DENIED",
     "EVENT_BRIDGE_MANAGED_RULE_LIMIT_EXCEEDED",
@@ -226,6 +228,7 @@ ServiceName = Literal[
     "es",
     "events",
     "evidently",
+    "evs",
     "finspace",
     "finspace-data",
     "firehose",
@@ -378,7 +381,6 @@ ServiceName = Literal[
     "pipes",
     "polly",
     "pricing",
-    "privatenetworks",
     "proton",
     "qapps",
     "qbusiness",
@@ -439,7 +441,6 @@ ServiceName = Literal[
     "signer",
     "simspaceweaver",
     "sms",
-    "sms-voice",
     "snow-device-management",
     "snowball",
     "sns",
@@ -447,6 +448,7 @@ ServiceName = Literal[
     "sqs",
     "ssm",
     "ssm-contacts",
+    "ssm-guiconnect",
     "ssm-incidents",
     "ssm-quicksetup",
     "ssm-sap",

@@ -632,6 +632,9 @@ if TYPE_CHECKING:
         DependabotPublicKey as DependabotPublicKey,
     )
     from githubkit.versions.v2022_11_28.models import (
+        DependabotRepositoryAccessDetails as DependabotRepositoryAccessDetails,
+    )
+    from githubkit.versions.v2022_11_28.models import (
         DependabotSecret as DependabotSecret,
     )
     from githubkit.versions.v2022_11_28.models import Dependency as Dependency
@@ -1051,6 +1054,9 @@ if TYPE_CHECKING:
         MinimalRepository as MinimalRepository,
     )
     from githubkit.versions.v2022_11_28.models import (
+        MinimalRepositoryPropCustomProperties as MinimalRepositoryPropCustomProperties,
+    )
+    from githubkit.versions.v2022_11_28.models import (
         MinimalRepositoryPropLicense as MinimalRepositoryPropLicense,
     )
     from githubkit.versions.v2022_11_28.models import (
@@ -1141,6 +1147,12 @@ if TYPE_CHECKING:
     )
     from githubkit.versions.v2022_11_28.models import (
         OrganizationSimpleWebhooks as OrganizationSimpleWebhooks,
+    )
+    from githubkit.versions.v2022_11_28.models import (
+        OrganizationsOrgDependabotRepositoryAccessDefaultLevelPutBody as OrganizationsOrgDependabotRepositoryAccessDefaultLevelPutBody,
+    )
+    from githubkit.versions.v2022_11_28.models import (
+        OrganizationsOrgDependabotRepositoryAccessPatchBody as OrganizationsOrgDependabotRepositoryAccessPatchBody,
     )
     from githubkit.versions.v2022_11_28.models import (
         OrganizationUpdateIssueType as OrganizationUpdateIssueType,
@@ -1278,6 +1290,18 @@ if TYPE_CHECKING:
     )
     from githubkit.versions.v2022_11_28.models import (
         OrgsOrgActionsVariablesPostBody as OrgsOrgActionsVariablesPostBody,
+    )
+    from githubkit.versions.v2022_11_28.models import (
+        OrgsOrgAttestationsBulkListPostBody as OrgsOrgAttestationsBulkListPostBody,
+    )
+    from githubkit.versions.v2022_11_28.models import (
+        OrgsOrgAttestationsBulkListPostResponse200 as OrgsOrgAttestationsBulkListPostResponse200,
+    )
+    from githubkit.versions.v2022_11_28.models import (
+        OrgsOrgAttestationsBulkListPostResponse200PropAttestationsSubjectDigests as OrgsOrgAttestationsBulkListPostResponse200PropAttestationsSubjectDigests,
+    )
+    from githubkit.versions.v2022_11_28.models import (
+        OrgsOrgAttestationsBulkListPostResponse200PropPageInfo as OrgsOrgAttestationsBulkListPostResponse200PropPageInfo,
     )
     from githubkit.versions.v2022_11_28.models import (
         OrgsOrgAttestationsSubjectDigestGetResponse200 as OrgsOrgAttestationsSubjectDigestGetResponse200,
@@ -1964,6 +1988,9 @@ if TYPE_CHECKING:
     )
     from githubkit.versions.v2022_11_28.models import (
         RepositoryInvitation as RepositoryInvitation,
+    )
+    from githubkit.versions.v2022_11_28.models import (
+        RepositoryPropCodeSearchIndexStatus as RepositoryPropCodeSearchIndexStatus,
     )
     from githubkit.versions.v2022_11_28.models import (
         RepositoryPropPermissions as RepositoryPropPermissions,
@@ -3418,6 +3445,12 @@ if TYPE_CHECKING:
     )
     from githubkit.versions.v2022_11_28.models import (
         UserSshSigningKeysPostBody as UserSshSigningKeysPostBody,
+    )
+    from githubkit.versions.v2022_11_28.models import (
+        UsersUsernameAttestationsDeleteRequestPostBodyOneof0 as UsersUsernameAttestationsDeleteRequestPostBodyOneof0,
+    )
+    from githubkit.versions.v2022_11_28.models import (
+        UsersUsernameAttestationsDeleteRequestPostBodyOneof1 as UsersUsernameAttestationsDeleteRequestPostBodyOneof1,
     )
     from githubkit.versions.v2022_11_28.models import (
         UsersUsernameAttestationsSubjectDigestGetResponse200 as UsersUsernameAttestationsSubjectDigestGetResponse200,
@@ -9773,6 +9806,7 @@ else:
             "LicenseSimple",
             "Repository",
             "RepositoryPropPermissions",
+            "RepositoryPropCodeSearchIndexStatus",
             "InstallationToken",
             "ScopedInstallation",
             "Authorization",
@@ -9805,6 +9839,19 @@ else:
             "DependabotAlertSecurityAdvisoryPropReferencesItems",
             "DependabotAlertWithRepository",
             "DependabotAlertWithRepositoryPropDependency",
+            "SecretScanningLocationCommit",
+            "SecretScanningLocationWikiCommit",
+            "SecretScanningLocationIssueBody",
+            "SecretScanningLocationDiscussionTitle",
+            "SecretScanningLocationDiscussionComment",
+            "SecretScanningLocationPullRequestBody",
+            "SecretScanningLocationPullRequestReview",
+            "SecretScanningLocationIssueTitle",
+            "SecretScanningLocationIssueComment",
+            "SecretScanningLocationPullRequestTitle",
+            "SecretScanningLocationPullRequestReviewComment",
+            "SecretScanningLocationDiscussionBody",
+            "SecretScanningLocationPullRequestComment",
             "OrganizationSecretScanningAlert",
             "Milestone",
             "IssueType",
@@ -9859,10 +9906,12 @@ else:
             "CodeOfConduct",
             "MinimalRepositoryPropPermissions",
             "MinimalRepositoryPropLicense",
+            "MinimalRepositoryPropCustomProperties",
             "Thread",
             "ThreadPropSubject",
             "ThreadSubscription",
             "OrganizationSimple",
+            "DependabotRepositoryAccessDetails",
             "BillingUsageReport",
             "BillingUsageReportPropUsageItemsItems",
             "OrganizationFull",
@@ -10406,6 +10455,7 @@ else:
             "RepositoryRuleDetailedOneof19",
             "RepositoryRuleDetailedOneof20",
             "SecretScanningAlert",
+            "SecretScanningLocation",
             "SecretScanningPushProtectionBypass",
             "SecretScanningScanHistory",
             "SecretScanningScan",
@@ -12464,20 +12514,6 @@ else:
             "WebhookRepositoryVulnerabilityAlertResolvePropAlertPropDismisser",
             "WebhookSecretScanningAlertCreated",
             "WebhookSecretScanningAlertLocationCreated",
-            "SecretScanningLocation",
-            "SecretScanningLocationCommit",
-            "SecretScanningLocationWikiCommit",
-            "SecretScanningLocationIssueTitle",
-            "SecretScanningLocationIssueBody",
-            "SecretScanningLocationIssueComment",
-            "SecretScanningLocationDiscussionTitle",
-            "SecretScanningLocationDiscussionBody",
-            "SecretScanningLocationDiscussionComment",
-            "SecretScanningLocationPullRequestTitle",
-            "SecretScanningLocationPullRequestBody",
-            "SecretScanningLocationPullRequestComment",
-            "SecretScanningLocationPullRequestReview",
-            "SecretScanningLocationPullRequestReviewComment",
             "WebhookSecretScanningAlertLocationCreatedFormEncoded",
             "WebhookSecretScanningAlertPubliclyLeaked",
             "WebhookSecretScanningAlertReopened",
@@ -12675,6 +12711,8 @@ else:
             "NotificationsPutBody",
             "NotificationsPutResponse202",
             "NotificationsThreadsThreadIdSubscriptionPutBody",
+            "OrganizationsOrgDependabotRepositoryAccessPatchBody",
+            "OrganizationsOrgDependabotRepositoryAccessDefaultLevelPutBody",
             "OrgsOrgPatchBody",
             "OrgsOrgActionsCacheUsageByRepositoryGetResponse200",
             "ActionsCacheUsageByRepository",
@@ -12716,6 +12754,10 @@ else:
             "OrgsOrgActionsVariablesNamePatchBody",
             "OrgsOrgActionsVariablesNameRepositoriesGetResponse200",
             "OrgsOrgActionsVariablesNameRepositoriesPutBody",
+            "OrgsOrgAttestationsBulkListPostBody",
+            "OrgsOrgAttestationsBulkListPostResponse200",
+            "OrgsOrgAttestationsBulkListPostResponse200PropAttestationsSubjectDigests",
+            "OrgsOrgAttestationsBulkListPostResponse200PropPageInfo",
             "OrgsOrgAttestationsSubjectDigestGetResponse200",
             "OrgsOrgAttestationsSubjectDigestGetResponse200PropAttestationsItems",
             "OrgsOrgAttestationsSubjectDigestGetResponse200PropAttestationsItemsPropBundle",
@@ -13100,6 +13142,8 @@ else:
             "UserSocialAccountsPostBody",
             "UserSocialAccountsDeleteBody",
             "UserSshSigningKeysPostBody",
+            "UsersUsernameAttestationsDeleteRequestPostBodyOneof0",
+            "UsersUsernameAttestationsDeleteRequestPostBodyOneof1",
             "UsersUsernameAttestationsSubjectDigestGetResponse200",
             "UsersUsernameAttestationsSubjectDigestGetResponse200PropAttestationsItems",
             "UsersUsernameAttestationsSubjectDigestGetResponse200PropAttestationsItemsPropBundle",

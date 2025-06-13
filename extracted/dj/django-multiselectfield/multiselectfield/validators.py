@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 # Copyright (c) 2013 by Pablo Martín <goinnn@gmail.com>
 #
 # This program is free software: you can redistribute it and/or modify
@@ -12,7 +11,7 @@
 # GNU Lesser General Public License for more details.
 #
 # You should have received a copy of the GNU Lesser General Public License
-# along with this programe.  If not, see <http://www.gnu.org/licenses/>.
+# along with this programe.  If not, see <https://www.gnu.org/licenses/>.
 
 
 from django.core import validators
@@ -27,10 +26,10 @@ class MaxValueMultiFieldValidator(validators.MaxLengthValidator):
 
 
 class MinChoicesValidator(validators.MinLengthValidator):
-    message = _('You must select a minimum of  %(limit_value)d choices.')
+    message = _('You must select a minimum of %(limit_value)d choices.')
     code = 'min_choices'
 
 
 class MaxChoicesValidator(validators.MaxLengthValidator):
-    message = _('You must select a maximum of  %(limit_value)d choices.')
+    message = _('You must select a maximum of %(limit_value)d choices.')
     code = 'max_choices'

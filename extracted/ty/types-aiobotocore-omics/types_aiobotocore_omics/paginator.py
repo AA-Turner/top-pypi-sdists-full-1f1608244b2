@@ -32,6 +32,7 @@ Usage::
         ListSharesPaginator,
         ListVariantImportJobsPaginator,
         ListVariantStoresPaginator,
+        ListWorkflowVersionsPaginator,
         ListWorkflowsPaginator,
     )
 
@@ -59,6 +60,7 @@ Usage::
         list_shares_paginator: ListSharesPaginator = client.get_paginator("list_shares")
         list_variant_import_jobs_paginator: ListVariantImportJobsPaginator = client.get_paginator("list_variant_import_jobs")
         list_variant_stores_paginator: ListVariantStoresPaginator = client.get_paginator("list_variant_stores")
+        list_workflow_versions_paginator: ListWorkflowVersionsPaginator = client.get_paginator("list_workflow_versions")
         list_workflows_paginator: ListWorkflowsPaginator = client.get_paginator("list_workflows")
     ```
 """
@@ -113,6 +115,8 @@ from .type_defs import (
     ListVariantStoresResponseTypeDef,
     ListWorkflowsRequestPaginateTypeDef,
     ListWorkflowsResponseTypeDef,
+    ListWorkflowVersionsRequestPaginateTypeDef,
+    ListWorkflowVersionsResponseTypeDef,
 )
 
 if sys.version_info >= (3, 12):
@@ -142,6 +146,7 @@ __all__ = (
     "ListSharesPaginator",
     "ListVariantImportJobsPaginator",
     "ListVariantStoresPaginator",
+    "ListWorkflowVersionsPaginator",
     "ListWorkflowsPaginator",
 )
 
@@ -567,6 +572,27 @@ class ListVariantStoresPaginator(_ListVariantStoresPaginatorBase):
         """
         [Show boto3 documentation](https://boto3.amazonaws.com/v1/documentation/api/latest/reference/services/omics/paginator/ListVariantStores.html#Omics.Paginator.ListVariantStores.paginate)
         [Show types-aiobotocore documentation](https://youtype.github.io/types_aiobotocore_docs/types_aiobotocore_omics/paginators/#listvariantstorespaginator)
+        """
+
+
+if TYPE_CHECKING:
+    _ListWorkflowVersionsPaginatorBase = AioPaginator[ListWorkflowVersionsResponseTypeDef]
+else:
+    _ListWorkflowVersionsPaginatorBase = AioPaginator  # type: ignore[assignment]
+
+
+class ListWorkflowVersionsPaginator(_ListWorkflowVersionsPaginatorBase):
+    """
+    [Show boto3 documentation](https://boto3.amazonaws.com/v1/documentation/api/latest/reference/services/omics/paginator/ListWorkflowVersions.html#Omics.Paginator.ListWorkflowVersions)
+    [Show types-aiobotocore documentation](https://youtype.github.io/types_aiobotocore_docs/types_aiobotocore_omics/paginators/#listworkflowversionspaginator)
+    """
+
+    def paginate(  # type: ignore[override]
+        self, **kwargs: Unpack[ListWorkflowVersionsRequestPaginateTypeDef]
+    ) -> AioPageIterator[ListWorkflowVersionsResponseTypeDef]:
+        """
+        [Show boto3 documentation](https://boto3.amazonaws.com/v1/documentation/api/latest/reference/services/omics/paginator/ListWorkflowVersions.html#Omics.Paginator.ListWorkflowVersions.paginate)
+        [Show types-aiobotocore documentation](https://youtype.github.io/types_aiobotocore_docs/types_aiobotocore_omics/paginators/#listworkflowversionspaginator)
         """
 
 

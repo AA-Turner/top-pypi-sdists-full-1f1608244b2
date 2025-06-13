@@ -253,7 +253,7 @@ class MediaConnectClient(AioBaseClient):
         self, **kwargs: Unpack[AddFlowSourcesRequestTypeDef]
     ) -> AddFlowSourcesResponseTypeDef:
         """
-        Adds Sources to flow.
+        Adds sources to a flow.
 
         [Show boto3 documentation](https://boto3.amazonaws.com/v1/documentation/api/latest/reference/services/mediaconnect/client/add_flow_sources.html)
         [Show types-aiobotocore documentation](https://youtype.github.io/types_aiobotocore_docs/types_aiobotocore_mediaconnect/client/#add_flow_sources)
@@ -263,7 +263,7 @@ class MediaConnectClient(AioBaseClient):
         self, **kwargs: Unpack[AddFlowVpcInterfacesRequestTypeDef]
     ) -> AddFlowVpcInterfacesResponseTypeDef:
         """
-        Adds VPC interfaces to flow.
+        Adds VPC interfaces to a flow.
 
         [Show boto3 documentation](https://boto3.amazonaws.com/v1/documentation/api/latest/reference/services/mediaconnect/client/add_flow_vpc_interfaces.html)
         [Show types-aiobotocore documentation](https://youtype.github.io/types_aiobotocore_docs/types_aiobotocore_mediaconnect/client/#add_flow_vpc_interfaces)
@@ -363,7 +363,8 @@ class MediaConnectClient(AioBaseClient):
         self, **kwargs: Unpack[DescribeFlowSourceMetadataRequestTypeDef]
     ) -> DescribeFlowSourceMetadataResponseTypeDef:
         """
-        Displays details of the flow's source stream.
+        The <code>DescribeFlowSourceMetadata</code> API is used to view information
+        about the flow's source transport stream and programs.
 
         [Show boto3 documentation](https://boto3.amazonaws.com/v1/documentation/api/latest/reference/services/mediaconnect/client/describe_flow_source_metadata.html)
         [Show types-aiobotocore documentation](https://youtype.github.io/types_aiobotocore_docs/types_aiobotocore_mediaconnect/client/#describe_flow_source_metadata)
@@ -373,7 +374,7 @@ class MediaConnectClient(AioBaseClient):
         self, **kwargs: Unpack[DescribeFlowSourceThumbnailRequestTypeDef]
     ) -> DescribeFlowSourceThumbnailResponseTypeDef:
         """
-        Displays the thumbnail details of a flow's source stream.
+        Describes the thumbnail for the flow source.
 
         [Show boto3 documentation](https://boto3.amazonaws.com/v1/documentation/api/latest/reference/services/mediaconnect/client/describe_flow_source_thumbnail.html)
         [Show types-aiobotocore documentation](https://youtype.github.io/types_aiobotocore_docs/types_aiobotocore_mediaconnect/client/#describe_flow_source_thumbnail)
@@ -434,7 +435,7 @@ class MediaConnectClient(AioBaseClient):
     ) -> ListBridgesResponseTypeDef:
         """
         Displays a list of bridges that are associated with this account and an
-        optionally specified Arn.
+        optionally specified Amazon Resource Name (ARN).
 
         [Show boto3 documentation](https://boto3.amazonaws.com/v1/documentation/api/latest/reference/services/mediaconnect/client/list_bridges.html)
         [Show types-aiobotocore documentation](https://youtype.github.io/types_aiobotocore_docs/types_aiobotocore_mediaconnect/client/#list_bridges)
@@ -464,7 +465,7 @@ class MediaConnectClient(AioBaseClient):
         self, **kwargs: Unpack[ListGatewayInstancesRequestTypeDef]
     ) -> ListGatewayInstancesResponseTypeDef:
         """
-        Displays a list of instances associated with the AWS account.
+        Displays a list of instances associated with the Amazon Web Services account.
 
         [Show boto3 documentation](https://boto3.amazonaws.com/v1/documentation/api/latest/reference/services/mediaconnect/client/list_gateway_instances.html)
         [Show types-aiobotocore documentation](https://youtype.github.io/types_aiobotocore_docs/types_aiobotocore_mediaconnect/client/#list_gateway_instances)
@@ -485,7 +486,7 @@ class MediaConnectClient(AioBaseClient):
     ) -> ListOfferingsResponseTypeDef:
         """
         Displays a list of all offerings that are available to this account in the
-        current AWS Region.
+        current Amazon Web Services Region.
 
         [Show boto3 documentation](https://boto3.amazonaws.com/v1/documentation/api/latest/reference/services/mediaconnect/client/list_offerings.html)
         [Show types-aiobotocore documentation](https://youtype.github.io/types_aiobotocore_docs/types_aiobotocore_mediaconnect/client/#list_offerings)
@@ -496,7 +497,7 @@ class MediaConnectClient(AioBaseClient):
     ) -> ListReservationsResponseTypeDef:
         """
         Displays a list of all reservations that have been purchased by this account in
-        the current AWS Region.
+        the current Amazon Web Services Region.
 
         [Show boto3 documentation](https://boto3.amazonaws.com/v1/documentation/api/latest/reference/services/mediaconnect/client/list_reservations.html)
         [Show types-aiobotocore documentation](https://youtype.github.io/types_aiobotocore_docs/types_aiobotocore_mediaconnect/client/#list_reservations)
@@ -506,7 +507,7 @@ class MediaConnectClient(AioBaseClient):
         self, **kwargs: Unpack[ListTagsForResourceRequestTypeDef]
     ) -> ListTagsForResourceResponseTypeDef:
         """
-        List all tags on an AWS Elemental MediaConnect resource.
+        List all tags on a MediaConnect resource.
 
         [Show boto3 documentation](https://boto3.amazonaws.com/v1/documentation/api/latest/reference/services/mediaconnect/client/list_tags_for_resource.html)
         [Show types-aiobotocore documentation](https://youtype.github.io/types_aiobotocore_docs/types_aiobotocore_mediaconnect/client/#list_tags_for_resource)
@@ -614,7 +615,8 @@ class MediaConnectClient(AioBaseClient):
         self, **kwargs: Unpack[TagResourceRequestTypeDef]
     ) -> EmptyResponseMetadataTypeDef:
         """
-        Associates the specified tags to a resource with the specified resourceArn.
+        Associates the specified tags to a resource with the specified
+        <code>resourceArn</code>.
 
         [Show boto3 documentation](https://boto3.amazonaws.com/v1/documentation/api/latest/reference/services/mediaconnect/client/tag_resource.html)
         [Show types-aiobotocore documentation](https://youtype.github.io/types_aiobotocore_docs/types_aiobotocore_mediaconnect/client/#tag_resource)
@@ -674,7 +676,7 @@ class MediaConnectClient(AioBaseClient):
         self, **kwargs: Unpack[UpdateFlowRequestTypeDef]
     ) -> UpdateFlowResponseTypeDef:
         """
-        Updates flow.
+        Updates an existing flow.
 
         [Show boto3 documentation](https://boto3.amazonaws.com/v1/documentation/api/latest/reference/services/mediaconnect/client/update_flow.html)
         [Show types-aiobotocore documentation](https://youtype.github.io/types_aiobotocore_docs/types_aiobotocore_mediaconnect/client/#update_flow)
@@ -684,7 +686,7 @@ class MediaConnectClient(AioBaseClient):
         self, **kwargs: Unpack[UpdateFlowEntitlementRequestTypeDef]
     ) -> UpdateFlowEntitlementResponseTypeDef:
         """
-        You can change an entitlement's description, subscribers, and encryption.
+        Updates an entitlement.
 
         [Show boto3 documentation](https://boto3.amazonaws.com/v1/documentation/api/latest/reference/services/mediaconnect/client/update_flow_entitlement.html)
         [Show types-aiobotocore documentation](https://youtype.github.io/types_aiobotocore_docs/types_aiobotocore_mediaconnect/client/#update_flow_entitlement)
@@ -724,7 +726,7 @@ class MediaConnectClient(AioBaseClient):
         self, **kwargs: Unpack[UpdateGatewayInstanceRequestTypeDef]
     ) -> UpdateGatewayInstanceResponseTypeDef:
         """
-        Updates the configuration of an existing Gateway Instance.
+        Updates an existing gateway instance.
 
         [Show boto3 documentation](https://boto3.amazonaws.com/v1/documentation/api/latest/reference/services/mediaconnect/client/update_gateway_instance.html)
         [Show types-aiobotocore documentation](https://youtype.github.io/types_aiobotocore_docs/types_aiobotocore_mediaconnect/client/#update_gateway_instance)

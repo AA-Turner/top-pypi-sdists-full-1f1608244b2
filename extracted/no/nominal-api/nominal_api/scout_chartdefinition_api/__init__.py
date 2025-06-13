@@ -1,5 +1,6 @@
 # coding=utf-8
 from .._impl import (
+    scout_chartdefinition_api_AlwaysConnectDisconnectedValues as AlwaysConnectDisconnectedValues,
     scout_chartdefinition_api_AxisDisplayOptions as AxisDisplayOptions,
     scout_chartdefinition_api_AxisDomainType as AxisDomainType,
     scout_chartdefinition_api_AxisId as AxisId,
@@ -25,6 +26,8 @@ from .._impl import (
     scout_chartdefinition_api_ColorStyleVisitor as ColorStyleVisitor,
     scout_chartdefinition_api_DataSourceRefName as DataSourceRefName,
     scout_chartdefinition_api_DefaultFill as DefaultFill,
+    scout_chartdefinition_api_DisconnectedValueVisualization as DisconnectedValueVisualization,
+    scout_chartdefinition_api_DisconnectedValueVisualizationVisitor as DisconnectedValueVisualizationVisitor,
     scout_chartdefinition_api_EnumCellConfig as EnumCellConfig,
     scout_chartdefinition_api_EnumRawVisualisation as EnumRawVisualisation,
     scout_chartdefinition_api_EnumValueChannel as EnumValueChannel,
@@ -99,6 +102,7 @@ from .._impl import (
     scout_chartdefinition_api_Scatter3dDecimationStrategy as Scatter3dDecimationStrategy,
     scout_chartdefinition_api_Scatter3dTraceComputeConfig as Scatter3dTraceComputeConfig,
     scout_chartdefinition_api_Threshold as Threshold,
+    scout_chartdefinition_api_ThresholdDisconnectedValues as ThresholdDisconnectedValues,
     scout_chartdefinition_api_ThresholdLineStyle as ThresholdLineStyle,
     scout_chartdefinition_api_ThresholdShadingConfig as ThresholdShadingConfig,
     scout_chartdefinition_api_TimeSeriesChartDefinition as TimeSeriesChartDefinition,
@@ -143,6 +147,7 @@ from .._impl import (
 )
 
 __all__ = [
+    'AlwaysConnectDisconnectedValues',
     'AxisDisplayOptions',
     'AxisDomainType',
     'AxisId',
@@ -168,6 +173,8 @@ __all__ = [
     'ColorStyleVisitor',
     'DataSourceRefName',
     'DefaultFill',
+    'DisconnectedValueVisualization',
+    'DisconnectedValueVisualizationVisitor',
     'EnumCellConfig',
     'EnumRawVisualisation',
     'EnumValueChannel',
@@ -242,6 +249,7 @@ __all__ = [
     'Scatter3dDecimationStrategy',
     'Scatter3dTraceComputeConfig',
     'Threshold',
+    'ThresholdDisconnectedValues',
     'ThresholdLineStyle',
     'ThresholdShadingConfig',
     'TimeSeriesChartDefinition',

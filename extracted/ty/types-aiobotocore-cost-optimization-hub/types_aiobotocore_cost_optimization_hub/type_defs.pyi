@@ -27,9 +27,11 @@ from .literals import (
     ImplementationEffortType,
     MemberAccountDiscountVisibilityType,
     OrderType,
+    PaymentOptionType,
     ResourceTypeType,
     SavingsEstimationModeType,
     SourceType,
+    TermType,
 )
 
 if sys.version_info >= (3, 9):
@@ -50,6 +52,8 @@ __all__ = (
     "ComputeSavingsPlansConfigurationTypeDef",
     "ComputeSavingsPlansTypeDef",
     "DbInstanceConfigurationTypeDef",
+    "DynamoDbReservedCapacityConfigurationTypeDef",
+    "DynamoDbReservedCapacityTypeDef",
     "EbsVolumeConfigurationTypeDef",
     "EbsVolumeTypeDef",
     "Ec2AutoScalingGroupConfigurationTypeDef",
@@ -81,11 +85,14 @@ __all__ = (
     "ListRecommendationsRequestPaginateTypeDef",
     "ListRecommendationsRequestTypeDef",
     "ListRecommendationsResponseTypeDef",
+    "MemoryDbReservedInstancesConfigurationTypeDef",
+    "MemoryDbReservedInstancesTypeDef",
     "MixedInstanceConfigurationTypeDef",
     "OpenSearchReservedInstancesConfigurationTypeDef",
     "OpenSearchReservedInstancesTypeDef",
     "OrderByTypeDef",
     "PaginatorConfigTypeDef",
+    "PreferredCommitmentTypeDef",
     "RdsDbInstanceConfigurationTypeDef",
     "RdsDbInstanceStorageConfigurationTypeDef",
     "RdsDbInstanceStorageTypeDef",
@@ -141,6 +148,17 @@ class ComputeSavingsPlansConfigurationTypeDef(TypedDict):
 class DbInstanceConfigurationTypeDef(TypedDict):
     dbInstanceClass: NotRequired[str]
 
+class DynamoDbReservedCapacityConfigurationTypeDef(TypedDict):
+    accountScope: NotRequired[str]
+    service: NotRequired[str]
+    term: NotRequired[str]
+    paymentOption: NotRequired[str]
+    reservedInstancesRegion: NotRequired[str]
+    upfrontCost: NotRequired[str]
+    monthlyRecurringCost: NotRequired[str]
+    numberOfCapacityUnitsToPurchase: NotRequired[str]
+    capacityUnits: NotRequired[str]
+
 StorageConfigurationTypeDef = TypedDict(
     "StorageConfigurationTypeDef",
     {
@@ -172,35 +190,35 @@ class Ec2InstanceSavingsPlansConfigurationTypeDef(TypedDict):
 class Ec2ReservedInstancesConfigurationTypeDef(TypedDict):
     accountScope: NotRequired[str]
     service: NotRequired[str]
-    normalizedUnitsToPurchase: NotRequired[str]
     term: NotRequired[str]
     paymentOption: NotRequired[str]
+    reservedInstancesRegion: NotRequired[str]
+    upfrontCost: NotRequired[str]
+    monthlyRecurringCost: NotRequired[str]
+    normalizedUnitsToPurchase: NotRequired[str]
     numberOfInstancesToPurchase: NotRequired[str]
     offeringClass: NotRequired[str]
     instanceFamily: NotRequired[str]
     instanceType: NotRequired[str]
-    reservedInstancesRegion: NotRequired[str]
     currentGeneration: NotRequired[str]
     platform: NotRequired[str]
     tenancy: NotRequired[str]
     sizeFlexEligible: NotRequired[bool]
-    upfrontCost: NotRequired[str]
-    monthlyRecurringCost: NotRequired[str]
 
 class ElastiCacheReservedInstancesConfigurationTypeDef(TypedDict):
     accountScope: NotRequired[str]
     service: NotRequired[str]
-    normalizedUnitsToPurchase: NotRequired[str]
     term: NotRequired[str]
     paymentOption: NotRequired[str]
+    reservedInstancesRegion: NotRequired[str]
+    upfrontCost: NotRequired[str]
+    monthlyRecurringCost: NotRequired[str]
+    normalizedUnitsToPurchase: NotRequired[str]
     numberOfInstancesToPurchase: NotRequired[str]
     instanceFamily: NotRequired[str]
     instanceType: NotRequired[str]
-    reservedInstancesRegion: NotRequired[str]
     currentGeneration: NotRequired[str]
     sizeFlexEligible: NotRequired[bool]
-    upfrontCost: NotRequired[str]
-    monthlyRecurringCost: NotRequired[str]
 
 class EstimatedDiscountsTypeDef(TypedDict):
     savingsPlansDiscount: NotRequired[float]
@@ -210,6 +228,10 @@ class EstimatedDiscountsTypeDef(TypedDict):
 class TagTypeDef(TypedDict):
     key: NotRequired[str]
     value: NotRequired[str]
+
+class PreferredCommitmentTypeDef(TypedDict):
+    term: NotRequired[TermType]
+    paymentOption: NotRequired[PaymentOptionType]
 
 class ResponseMetadataTypeDef(TypedDict):
     RequestId: str
@@ -244,19 +266,34 @@ class OrderByTypeDef(TypedDict):
     dimension: NotRequired[str]
     order: NotRequired[OrderType]
 
+class MemoryDbReservedInstancesConfigurationTypeDef(TypedDict):
+    accountScope: NotRequired[str]
+    service: NotRequired[str]
+    term: NotRequired[str]
+    paymentOption: NotRequired[str]
+    reservedInstancesRegion: NotRequired[str]
+    upfrontCost: NotRequired[str]
+    monthlyRecurringCost: NotRequired[str]
+    normalizedUnitsToPurchase: NotRequired[str]
+    numberOfInstancesToPurchase: NotRequired[str]
+    instanceType: NotRequired[str]
+    instanceFamily: NotRequired[str]
+    sizeFlexEligible: NotRequired[bool]
+    currentGeneration: NotRequired[str]
+
 class OpenSearchReservedInstancesConfigurationTypeDef(TypedDict):
     accountScope: NotRequired[str]
     service: NotRequired[str]
-    normalizedUnitsToPurchase: NotRequired[str]
     term: NotRequired[str]
     paymentOption: NotRequired[str]
-    numberOfInstancesToPurchase: NotRequired[str]
-    instanceType: NotRequired[str]
     reservedInstancesRegion: NotRequired[str]
-    currentGeneration: NotRequired[str]
-    sizeFlexEligible: NotRequired[bool]
     upfrontCost: NotRequired[str]
     monthlyRecurringCost: NotRequired[str]
+    normalizedUnitsToPurchase: NotRequired[str]
+    numberOfInstancesToPurchase: NotRequired[str]
+    instanceType: NotRequired[str]
+    currentGeneration: NotRequired[str]
+    sizeFlexEligible: NotRequired[bool]
 
 class RdsDbInstanceStorageConfigurationTypeDef(TypedDict):
     storageType: NotRequired[str]
@@ -267,17 +304,17 @@ class RdsDbInstanceStorageConfigurationTypeDef(TypedDict):
 class RdsReservedInstancesConfigurationTypeDef(TypedDict):
     accountScope: NotRequired[str]
     service: NotRequired[str]
-    normalizedUnitsToPurchase: NotRequired[str]
     term: NotRequired[str]
     paymentOption: NotRequired[str]
+    reservedInstancesRegion: NotRequired[str]
+    upfrontCost: NotRequired[str]
+    monthlyRecurringCost: NotRequired[str]
+    normalizedUnitsToPurchase: NotRequired[str]
     numberOfInstancesToPurchase: NotRequired[str]
     instanceFamily: NotRequired[str]
     instanceType: NotRequired[str]
-    reservedInstancesRegion: NotRequired[str]
     sizeFlexEligible: NotRequired[bool]
     currentGeneration: NotRequired[str]
-    upfrontCost: NotRequired[str]
-    monthlyRecurringCost: NotRequired[str]
     licenseModel: NotRequired[str]
     databaseEdition: NotRequired[str]
     databaseEngine: NotRequired[str]
@@ -286,17 +323,17 @@ class RdsReservedInstancesConfigurationTypeDef(TypedDict):
 class RedshiftReservedInstancesConfigurationTypeDef(TypedDict):
     accountScope: NotRequired[str]
     service: NotRequired[str]
-    normalizedUnitsToPurchase: NotRequired[str]
     term: NotRequired[str]
     paymentOption: NotRequired[str]
+    reservedInstancesRegion: NotRequired[str]
+    upfrontCost: NotRequired[str]
+    monthlyRecurringCost: NotRequired[str]
+    normalizedUnitsToPurchase: NotRequired[str]
     numberOfInstancesToPurchase: NotRequired[str]
     instanceFamily: NotRequired[str]
     instanceType: NotRequired[str]
-    reservedInstancesRegion: NotRequired[str]
     sizeFlexEligible: NotRequired[bool]
     currentGeneration: NotRequired[str]
-    upfrontCost: NotRequired[str]
-    monthlyRecurringCost: NotRequired[str]
 
 class ReservedInstancesPricingTypeDef(TypedDict):
     estimatedOnDemandCost: NotRequired[float]
@@ -326,10 +363,6 @@ class SavingsPlansPricingTypeDef(TypedDict):
 class UpdateEnrollmentStatusRequestTypeDef(TypedDict):
     status: EnrollmentStatusType
     includeMemberAccounts: NotRequired[bool]
-
-class UpdatePreferencesRequestTypeDef(TypedDict):
-    savingsEstimationMode: NotRequired[SavingsEstimationModeType]
-    memberAccountDiscountVisibility: NotRequired[MemberAccountDiscountVisibilityType]
 
 class EcsServiceConfigurationTypeDef(TypedDict):
     compute: NotRequired[ComputeConfigurationTypeDef]
@@ -400,9 +433,15 @@ class RecommendationTypeDef(TypedDict):
     source: NotRequired[SourceType]
     tags: NotRequired[List[TagTypeDef]]
 
+class UpdatePreferencesRequestTypeDef(TypedDict):
+    savingsEstimationMode: NotRequired[SavingsEstimationModeType]
+    memberAccountDiscountVisibility: NotRequired[MemberAccountDiscountVisibilityType]
+    preferredCommitment: NotRequired[PreferredCommitmentTypeDef]
+
 class GetPreferencesResponseTypeDef(TypedDict):
     savingsEstimationMode: SavingsEstimationModeType
     memberAccountDiscountVisibility: MemberAccountDiscountVisibilityType
+    preferredCommitment: PreferredCommitmentTypeDef
     ResponseMetadata: ResponseMetadataTypeDef
 
 class ListEnrollmentStatusesResponseTypeDef(TypedDict):
@@ -418,6 +457,7 @@ class UpdateEnrollmentStatusResponseTypeDef(TypedDict):
 class UpdatePreferencesResponseTypeDef(TypedDict):
     savingsEstimationMode: SavingsEstimationModeType
     memberAccountDiscountVisibility: MemberAccountDiscountVisibilityType
+    preferredCommitment: PreferredCommitmentTypeDef
     ResponseMetadata: ResponseMetadataTypeDef
 
 class ListEnrollmentStatusesRequestPaginateTypeDef(TypedDict):
@@ -488,12 +528,20 @@ class ListRecommendationsResponseTypeDef(TypedDict):
     ResponseMetadata: ResponseMetadataTypeDef
     nextToken: NotRequired[str]
 
+class DynamoDbReservedCapacityTypeDef(TypedDict):
+    configuration: NotRequired[DynamoDbReservedCapacityConfigurationTypeDef]
+    costCalculation: NotRequired[ReservedInstancesCostCalculationTypeDef]
+
 class Ec2ReservedInstancesTypeDef(TypedDict):
     configuration: NotRequired[Ec2ReservedInstancesConfigurationTypeDef]
     costCalculation: NotRequired[ReservedInstancesCostCalculationTypeDef]
 
 class ElastiCacheReservedInstancesTypeDef(TypedDict):
     configuration: NotRequired[ElastiCacheReservedInstancesConfigurationTypeDef]
+    costCalculation: NotRequired[ReservedInstancesCostCalculationTypeDef]
+
+class MemoryDbReservedInstancesTypeDef(TypedDict):
+    configuration: NotRequired[MemoryDbReservedInstancesConfigurationTypeDef]
     costCalculation: NotRequired[ReservedInstancesCostCalculationTypeDef]
 
 class OpenSearchReservedInstancesTypeDef(TypedDict):
@@ -564,6 +612,8 @@ class ResourceDetailsTypeDef(TypedDict):
     sageMakerSavingsPlans: NotRequired[SageMakerSavingsPlansTypeDef]
     rdsDbInstance: NotRequired[RdsDbInstanceTypeDef]
     rdsDbInstanceStorage: NotRequired[RdsDbInstanceStorageTypeDef]
+    dynamoDbReservedCapacity: NotRequired[DynamoDbReservedCapacityTypeDef]
+    memoryDbReservedInstances: NotRequired[MemoryDbReservedInstancesTypeDef]
 
 class GetRecommendationResponseTypeDef(TypedDict):
     recommendationId: str

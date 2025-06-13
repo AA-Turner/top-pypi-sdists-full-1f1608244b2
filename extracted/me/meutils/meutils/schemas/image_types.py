@@ -9,7 +9,8 @@
 # @Description  : todo: 通用比例适配
 
 from meutils.pipe import *
-from meutils.str_utils.regular_expression import parse_url
+from meutils.str_utils import parse_url
+from meutils.math_utils import size2aspect_ratio
 
 from pydantic import constr
 from openai.types import ImagesResponse as _ImagesResponse, Image
@@ -124,11 +125,7 @@ class ImageRequest(BaseModel):  # openai
             self.size = ASPECT_RATIOS.get(self.aspect_ratio, '1024x1024')
 
         elif self.size:  # 适配尺寸
-            if ':' in self.size:
-                self.aspect_ratio = self.size
-
-            else:
-                self.aspect_ratio = ASPECT_RATIOS.get(self.size, '1:1')
+            self.aspect_ratio = size2aspect_ratio(self.size)
 
             self.size = self.size if 'x' in self.size else '512x512'
 
@@ -138,13 +135,18 @@ class ImageRequest(BaseModel):  # openai
             if len(prompts) == 2:
                 return prompts
             else:
-                return prompts + [' ']
+                return prompts + [' ']  # 只有 单url
 
         elif "http" in self.prompt and (images := parse_url(self.prompt)):
             return images[0], self.prompt.replace(images[0], "")
 
         else:
             return None, self.prompt
+
+    def prompt2aspect_ratio(self, aspect_ratios):  # 提示词优先级最高：从支持的比例中选择匹配
+        for aspect_ratio in aspect_ratios:
+            if aspect_ratio in self.prompt:
+                return aspect_ratio
 
     class Config:
         extra = "allow"
@@ -160,6 +162,40 @@ class ImageRequest(BaseModel):  # openai
                 },
             ]
         }
+
+
+class ImageEditRequest(BaseModel):
+    model: Union[str, Literal["dall-e-2", "dall-e-3", "gpt-image-1"]]
+
+    prompt: str
+    image: Any  # 图片
+
+    mask: Optional[Any] = None  # 图片
+    background: Optional[Literal["transparent", "opaque", "auto"]] = None
+
+    n: Optional[int] = 1
+    quality: Optional[Literal["standard", "low", "medium", "high", "auto"]] = None
+    size: Optional[
+        Union[str, Literal["256x256", "512x512", "1024x1024", "1536x1024", "1024x1536", "auto"]]] = "1024x1024"
+    response_format: Optional[Literal["url", "b64_json"]] = None
+
+    aspect_ratio: Optional[str] = None
+
+    user: Optional[str] = None
+
+    def __init__(self, /, **data: Any):
+        super().__init__(**data)
+        if not isinstance(self.image, list):
+            self.image = [self.image]
+
+        if self.aspect_ratio:  # 适配比例
+            self.size = ASPECT_RATIOS.get(self.aspect_ratio, '1024x1024')
+
+        elif self.size:  # 适配尺寸
+
+            self.aspect_ratio = size2aspect_ratio(self.size)
+
+            self.size = self.size if 'x' in self.size else '512x512'
 
 
 class FalImageRequest(ImageRequest):
@@ -525,40 +561,6 @@ class ImageProcess(BaseModel):
     #     extra = "allow"
 
 
-class ImageEditRequest(BaseModel):
-    model: Union[str, Literal["dall-e-2", "dall-e-3", "gpt-image-1"]]
-
-    prompt: str
-    image: Any  # 图片
-
-    mask: Optional[Any] = None  # 图片
-    background: Optional[Literal["transparent", "opaque", "auto"]] = None
-
-    n: Optional[int] = 1
-    quality: Optional[Literal["standard", "low", "medium", "high", "auto"]] = None
-    size: Optional[
-        Union[str, Literal["256x256", "512x512", "1024x1024", "1536x1024", "1024x1536", "auto"]]] = "1024x1024"
-    response_format: Optional[Literal["url", "b64_json"]] = None
-
-    aspect_ratio: Optional[str] = None
-
-    user: Optional[str] = None
-
-    def __init__(self, /, **data: Any):
-        super().__init__(**data)
-        if not isinstance(self.image, list):
-            self.image = [self.image]
-
-        if self.aspect_ratio:  # 适配比例
-            self.size = ASPECT_RATIOS.get(self.aspect_ratio, '1024x1024')
-
-        elif self.size:  # 适配尺寸
-            if ':' in self.size:
-                self.aspect_ratio = self.size
-
-            self.size = self.size if 'x' in self.size else '512x512'
-
-
 if __name__ == '__main__':
     # print(ASPECT_RATIOS.items())
 
@@ -599,9 +601,18 @@ if __name__ == '__main__':
 
     data = {
         "model": "flux-kontext-pro",
-        "prompt": "a cat",
+        "prompt": "a cat and a dog",
         "size": "512x1024",
+        # "aspect_ratio": "16:9"
+    }
+
+    dd = {
+        "model": "flux-kontext-pro",
+        "prompt": "a cat and a dog",
+        "size": "5121x1024",
+        # "aspect_ratio": "16:9"
     }
 
     r = ImageRequest(**data)
 
+    print(ImagesResponse())

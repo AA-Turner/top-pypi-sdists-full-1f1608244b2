@@ -12,7 +12,7 @@ __all__ = ['DatasetNotFoundError', 'Dataset_GetError', 'Dataset_CRUDError', 'Que
 
 # %% ../../nbs/routes/dataset.ipynb 3
 from typing import Optional, List
-from enum import Enum
+from domolibrary.client.DomoEntity import DomoEnum
 
 import io
 import pandas as pd
@@ -887,7 +887,7 @@ async def delete(
     return res
 
 # %% ../../nbs/routes/dataset.ipynb 43
-class ShareDataset_AccessLevelEnum(Enum):
+class ShareDataset_AccessLevelEnum(DomoEnum):
     CO_OWNER = "CO_OWNER"
     CAN_EDIT = "CAN_EDIT"
     CAN_SHARE = "CAN_SHARE"

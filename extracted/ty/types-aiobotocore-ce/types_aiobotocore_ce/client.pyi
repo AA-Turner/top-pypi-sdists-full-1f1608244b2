@@ -21,13 +21,20 @@ from __future__ import annotations
 
 import sys
 from types import TracebackType
-from typing import Any
+from typing import Any, overload
 
 from aiobotocore.client import AioBaseClient
 from botocore.client import ClientMeta
 from botocore.errorfactory import BaseClientExceptions
 from botocore.exceptions import ClientError as BotocoreClientError
 
+from .paginator import (
+    GetAnomaliesPaginator,
+    GetAnomalyMonitorsPaginator,
+    GetAnomalySubscriptionsPaginator,
+    GetCostAndUsageComparisonsPaginator,
+    GetCostComparisonDriversPaginator,
+)
 from .type_defs import (
     CreateAnomalyMonitorRequestTypeDef,
     CreateAnomalyMonitorResponseTypeDef,
@@ -51,12 +58,16 @@ from .type_defs import (
     GetApproximateUsageRecordsResponseTypeDef,
     GetCommitmentPurchaseAnalysisRequestTypeDef,
     GetCommitmentPurchaseAnalysisResponseTypeDef,
+    GetCostAndUsageComparisonsRequestTypeDef,
+    GetCostAndUsageComparisonsResponseTypeDef,
     GetCostAndUsageRequestTypeDef,
     GetCostAndUsageResponseTypeDef,
     GetCostAndUsageWithResourcesRequestTypeDef,
     GetCostAndUsageWithResourcesResponseTypeDef,
     GetCostCategoriesRequestTypeDef,
     GetCostCategoriesResponseTypeDef,
+    GetCostComparisonDriversRequestTypeDef,
+    GetCostComparisonDriversResponseTypeDef,
     GetCostForecastRequestTypeDef,
     GetCostForecastResponseTypeDef,
     GetDimensionValuesRequestTypeDef,
@@ -121,9 +132,9 @@ if sys.version_info >= (3, 9):
 else:
     from typing import Dict, Mapping, Type
 if sys.version_info >= (3, 12):
-    from typing import Self, Unpack
+    from typing import Literal, Self, Unpack
 else:
-    from typing_extensions import Self, Unpack
+    from typing_extensions import Literal, Self, Unpack
 
 __all__ = ("CostExplorerClient",)
 
@@ -314,6 +325,17 @@ class CostExplorerClient(AioBaseClient):
         [Show types-aiobotocore documentation](https://youtype.github.io/types_aiobotocore_docs/types_aiobotocore_ce/client/#get_cost_and_usage)
         """
 
+    async def get_cost_and_usage_comparisons(
+        self, **kwargs: Unpack[GetCostAndUsageComparisonsRequestTypeDef]
+    ) -> GetCostAndUsageComparisonsResponseTypeDef:
+        """
+        Retrieves cost and usage comparisons for your account between two periods
+        within the last 13 months.
+
+        [Show boto3 documentation](https://boto3.amazonaws.com/v1/documentation/api/latest/reference/services/ce/client/get_cost_and_usage_comparisons.html)
+        [Show types-aiobotocore documentation](https://youtype.github.io/types_aiobotocore_docs/types_aiobotocore_ce/client/#get_cost_and_usage_comparisons)
+        """
+
     async def get_cost_and_usage_with_resources(
         self, **kwargs: Unpack[GetCostAndUsageWithResourcesRequestTypeDef]
     ) -> GetCostAndUsageWithResourcesResponseTypeDef:
@@ -332,6 +354,18 @@ class CostExplorerClient(AioBaseClient):
 
         [Show boto3 documentation](https://boto3.amazonaws.com/v1/documentation/api/latest/reference/services/ce/client/get_cost_categories.html)
         [Show types-aiobotocore documentation](https://youtype.github.io/types_aiobotocore_docs/types_aiobotocore_ce/client/#get_cost_categories)
+        """
+
+    async def get_cost_comparison_drivers(
+        self, **kwargs: Unpack[GetCostComparisonDriversRequestTypeDef]
+    ) -> GetCostComparisonDriversResponseTypeDef:
+        """
+        Retrieves key factors driving cost changes between two time periods within the
+        last 13 months, such as usage changes, discount changes, and commitment-based
+        savings.
+
+        [Show boto3 documentation](https://boto3.amazonaws.com/v1/documentation/api/latest/reference/services/ce/client/get_cost_comparison_drivers.html)
+        [Show types-aiobotocore documentation](https://youtype.github.io/types_aiobotocore_docs/types_aiobotocore_ce/client/#get_cost_comparison_drivers)
         """
 
     async def get_cost_forecast(
@@ -629,6 +663,61 @@ class CostExplorerClient(AioBaseClient):
 
         [Show boto3 documentation](https://boto3.amazonaws.com/v1/documentation/api/latest/reference/services/ce/client/update_cost_category_definition.html)
         [Show types-aiobotocore documentation](https://youtype.github.io/types_aiobotocore_docs/types_aiobotocore_ce/client/#update_cost_category_definition)
+        """
+
+    @overload  # type: ignore[override]
+    def get_paginator(  # type: ignore[override]
+        self, operation_name: Literal["get_anomalies"]
+    ) -> GetAnomaliesPaginator:
+        """
+        Create a paginator for an operation.
+
+        [Show boto3 documentation](https://boto3.amazonaws.com/v1/documentation/api/latest/reference/services/ce/client/get_paginator.html)
+        [Show types-aiobotocore documentation](https://youtype.github.io/types_aiobotocore_docs/types_aiobotocore_ce/client/#get_paginator)
+        """
+
+    @overload  # type: ignore[override]
+    def get_paginator(  # type: ignore[override]
+        self, operation_name: Literal["get_anomaly_monitors"]
+    ) -> GetAnomalyMonitorsPaginator:
+        """
+        Create a paginator for an operation.
+
+        [Show boto3 documentation](https://boto3.amazonaws.com/v1/documentation/api/latest/reference/services/ce/client/get_paginator.html)
+        [Show types-aiobotocore documentation](https://youtype.github.io/types_aiobotocore_docs/types_aiobotocore_ce/client/#get_paginator)
+        """
+
+    @overload  # type: ignore[override]
+    def get_paginator(  # type: ignore[override]
+        self, operation_name: Literal["get_anomaly_subscriptions"]
+    ) -> GetAnomalySubscriptionsPaginator:
+        """
+        Create a paginator for an operation.
+
+        [Show boto3 documentation](https://boto3.amazonaws.com/v1/documentation/api/latest/reference/services/ce/client/get_paginator.html)
+        [Show types-aiobotocore documentation](https://youtype.github.io/types_aiobotocore_docs/types_aiobotocore_ce/client/#get_paginator)
+        """
+
+    @overload  # type: ignore[override]
+    def get_paginator(  # type: ignore[override]
+        self, operation_name: Literal["get_cost_and_usage_comparisons"]
+    ) -> GetCostAndUsageComparisonsPaginator:
+        """
+        Create a paginator for an operation.
+
+        [Show boto3 documentation](https://boto3.amazonaws.com/v1/documentation/api/latest/reference/services/ce/client/get_paginator.html)
+        [Show types-aiobotocore documentation](https://youtype.github.io/types_aiobotocore_docs/types_aiobotocore_ce/client/#get_paginator)
+        """
+
+    @overload  # type: ignore[override]
+    def get_paginator(  # type: ignore[override]
+        self, operation_name: Literal["get_cost_comparison_drivers"]
+    ) -> GetCostComparisonDriversPaginator:
+        """
+        Create a paginator for an operation.
+
+        [Show boto3 documentation](https://boto3.amazonaws.com/v1/documentation/api/latest/reference/services/ce/client/get_paginator.html)
+        [Show types-aiobotocore documentation](https://youtype.github.io/types_aiobotocore_docs/types_aiobotocore_ce/client/#get_paginator)
         """
 
     async def __aenter__(self) -> Self:

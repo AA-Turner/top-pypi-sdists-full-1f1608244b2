@@ -9,7 +9,7 @@ See https://github.com/github/rest-api-description for more information.
 
 from __future__ import annotations
 
-from typing import Literal
+from typing import Literal, Union
 
 from pydantic import Field
 
@@ -17,24 +17,41 @@ from githubkit.compat import GitHubModel, model_rebuild
 from githubkit.typing import Missing
 from githubkit.utils import UNSET
 
+from .group_0003 import SimpleUser
+from .group_0036 import OrganizationSimple
 
-class OrganizationCustomOrganizationRoleCreateSchema(GitHubModel):
-    """OrganizationCustomOrganizationRoleCreateSchema"""
 
-    name: str = Field(description="The name of the custom role.")
-    description: Missing[str] = Field(
-        default=UNSET,
-        description="A short description about the intended usage of this role or what permissions it grants.",
+class OrgMembership(GitHubModel):
+    """Org Membership
+
+    Org Membership
+    """
+
+    url: str = Field()
+    state: Literal["active", "pending"] = Field(
+        description="The state of the member in the organization. The `pending` state indicates the user has not yet accepted an invitation."
     )
-    permissions: list[str] = Field(
-        description="A list of additional permissions included in this role."
+    role: Literal["admin", "member", "billing_manager"] = Field(
+        description="The user's membership type in the organization."
     )
-    base_role: Missing[Literal["read", "triage", "write", "maintain", "admin"]] = Field(
-        default=UNSET,
-        description="The system role from which this role can inherit permissions.",
+    organization_url: str = Field()
+    organization: OrganizationSimple = Field(
+        title="Organization Simple", description="A GitHub organization."
     )
+    user: Union[None, SimpleUser] = Field()
+    permissions: Missing[OrgMembershipPropPermissions] = Field(default=UNSET)
 
 
-model_rebuild(OrganizationCustomOrganizationRoleCreateSchema)
+class OrgMembershipPropPermissions(GitHubModel):
+    """OrgMembershipPropPermissions"""
 
-__all__ = ("OrganizationCustomOrganizationRoleCreateSchema",)
+    can_create_repository: bool = Field()
+
+
+model_rebuild(OrgMembership)
+model_rebuild(OrgMembershipPropPermissions)
+
+__all__ = (
+    "OrgMembership",
+    "OrgMembershipPropPermissions",
+)
